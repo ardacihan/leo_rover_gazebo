@@ -1,77 +1,32 @@
-# ros_gz_project_template
-A template project integrating ROS 2 and Gazebo simulator.
+# Leo Rover Gazebo Simulation
 
-## Included packages
-
-* `ros_gz_example_description` - holds the sdf description of the simulated system and any other assets.
-
-* `ros_gz_example_gazebo` - holds gazebo specific code and configurations. Namely this is where systems end up.
-
-* `ros_gz_example_application` - holds ros2 specific code and configurations.
-
-* `ros_gz_example_bringup` - holds launch files and high level utilities.
-
-
-## Install
-
-For using the template with Gazebo Fortress switch to the `fortress` branch of this repository, otherwise use the default branch `main` for Gazebo Harmonic onwards.
-
-### Requirements
-
-1. Choose a ROS and Gazebo combination https://gazebosim.org/docs/latest/ros_installation
-
-   Note: If you're using a specific and unsupported Gazebo version with ROS 2, you might need to set the `GZ_VERSION` environment variable, for example:
-
+## Requirements
+*   **OS:** Ubuntu 24.04 (Noble)
+*   **ROS 2:** Jazzy
+*   **Dependencies:**
     ```bash
-    export GZ_VERSION=harmonic
-    ```
-    Also need to build [`ros_gz`](https://github.com/gazebosim/ros_gz) and [`sdformat_urdf`](https://github.com/ros/sdformat_urdf) from source if binaries are not available for your chosen combination.
-
-1. Install necessary tools
-
-    ```bash
-    sudo apt install python3-vcstool python3-colcon-common-extensions git wget
+    sudo apt install ros-jazzy-ros-gz-sim ros-jazzy-xacro
     ```
 
-### Use as template
-Directly `Use this template` and create your project repository on Github.
+---
 
-Or start by creating a workspace and cloning the template repository:
+## Build
 
-   ```bash
-   mkdir -p ~/template_ws/src
-   cd ~/template_ws/src
-   git clone https://github.com/gazebosim/ros_gz_project_template.git
-   ```
+```bash
+# Remove the directories
+rm -rf build/ install/ log/
+colcon build --symlink-install
+source install/setup.bash
+```
 
-## Usage
+---
 
-1. Install dependencies
+## Run Simulation
 
-    ```bash
-    cd ~/template_ws
-    source /opt/ros/$ROS_DISTRO/setup.bash
-    sudo rosdep init
-    rosdep update
-    rosdep install --from-paths src --ignore-src -r -i -y --rosdistro <ROS_DISTRO>
-    ```
+Spawn multiple robots with a single command. Each rover will be isolated in its own namespace (e.g., `/leo1`, `/leo2`).
 
-1. Build the project
+```bash
+ros2 launch leo_rover_gazebo two_robots.launch.py num_robots:=3
+```
 
-    ```bash
-    colcon build --cmake-args -DBUILD_TESTING=ON
-    ```
-
-1. Source the workspace
-
-    ```bash
-    . ~/template_ws/install/setup.sh
-    ```
-
-1. Launch the simulation
-
-    ```bash
-    ros2 launch ros_gz_example_bringup diff_drive.launch.py
-    ```
-
-For a more detailed guide on using this template see [documentation](https://gazebosim.org/docs/latest/ros_gz_project_template_guide).
+**Default:** `num_robots:=2`
