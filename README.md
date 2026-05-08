@@ -26,7 +26,7 @@ source install/setup.bash
 Spawn multiple robots with a single command. Each rover will be isolated in its own namespace (e.g., `/leo1`, `/leo2`).
 
 ```bash
-ros2 launch leo_rover_gazebo two_robots.launch.py num_robots:=3
+ros2 launch leo_rover_gazebo two_robots.launch.py 
 ```
 
-**Default:** `num_robots:=2`
+**Default:** Number of robots is 2. To change how many robots are spawned, change `num_robots` in two_robots.launch.py

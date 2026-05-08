@@ -1,72 +1,122 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="leo_rover">
 
-  <!-- REQUIRED ARGUMENT -->
+  <!-- Expose the namespace argument so the launch file can pass "leo1", "leo2", etc. -->
   <xacro:arg name="robot_ns" default="leo"/>
 
-  <!-- Base Leo model -->
+  <!-- Include the base Leo Rover macro -->
   <xacro:include filename="$(find leo_description)/urdf/leo_sim.urdf.xacro"/>
 
-  <!-- LiDAR -->
-  <gazebo reference="base_link">
-    <sensor name="lidar" type="gpu_lidar">
+  <!-- ================= SENSOR LINKS & JOINTS ================= -->
+  <!-- Simplified dummy links with minimal inertia for Gazebo physics stability -->
+
+  <link name="sensor_lidar_link">
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+    </inertial>
+  </link>
+  <joint name="sensor_lidar_joint" type="fixed">
+    <parent link="$(arg robot_ns)/base_link"/>
+    <child link="sensor_lidar_link"/>
+    <origin xyz="0.2 0 0.4" rpy="0 0 0"/>
+  </joint>
+
+  <link name="sensor_camera_link">
+    <inertial>
+      <mass value="0.05"/>
+      <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
+    </inertial>
+  </link>
+  <joint name="sensor_camera_joint" type="fixed">
+    <parent link="$(arg robot_ns)/base_link"/>
+    <child link="sensor_camera_link"/>
+    <origin xyz="0.25 0 0.2" rpy="0 0 0"/>
+  </joint>
+
+  <link name="sensor_imu_link">
+    <inertial>
+      <mass value="0.01"/>
+      <inertia ixx="0.00001" ixy="0" ixz="0" iyy="0.00001" iyz="0" izz="0.00001"/>
+    </inertial>
+  </link>
+  <joint name="sensor_imu_joint" type="fixed">
+    <parent link="$(arg robot_ns)/base_link"/>
+    <child link="sensor_imu_link"/>
+    <origin xyz="0 0 0.1" rpy="0 0 0"/>
+  </joint>
+
+  <!-- ================= GAZEBO SENSOR CONFIGURATIONS ================= -->
+
+  <!-- 3D LiDAR -->
+  <gazebo reference="sensor_lidar_link">
+    <sensor name="gpu_lidar" type="gpu_lidar">
+      <always_on>true</always_on>
+      <visualize>true</visualize>
       <update_rate>10</update_rate>
+      <!-- Namespaced Topic -->
       <topic>/$(arg robot_ns)/scan</topic>
-      <gz>
-        <frame_id>$(arg robot_ns)/base_link</frame_id>
-      </gz>
-      <ray>
+      <!-- Namespaced TF Frame -->
+      <gz_frame_id>$(arg robot_ns)/sensor_lidar_link</gz_frame_id>
+      <lidar>
         <scan>
           <horizontal>
             <samples>720</samples>
+            <resolution>1</resolution>
             <min_angle>-3.14159</min_angle>
             <max_angle>3.14159</max_angle>
           </horizontal>
+          <vertical>
+            <samples>16</samples>
+            <resolution>1</resolution>
+            <min_angle>-0.26</min_angle>
+            <max_angle>0.26</max_angle>
+          </vertical>
         </scan>
         <range>
-          <min>0.05</min>
-          <max>12.0</max>
+          <min>0.1</min>
+          <max>20.0</max>
+          <resolution>0.01</resolution>
         </range>
-      </ray>
-      <always_on>1</always_on>
-      <visualize>true</visualize>
+      </lidar>
+      <point_cloud>true</point_cloud>
     </sensor>
   </gazebo>
 
-  <!-- Camera -->
-  <gazebo reference="camera_frame">
+  <!-- RGBD Camera -->
+  <gazebo reference="sensor_camera_link">
     <sensor name="rgbd_camera" type="rgbd_camera">
+      <always_on>true</always_on>
       <update_rate>30</update_rate>
+      <!-- Namespaced Topic -->
       <topic>/$(arg robot_ns)/camera</topic>
-      <gz>
-        <frame_id>$(arg robot_ns)/camera_frame</frame_id>
-      </gz>
+      <!-- Namespaced TF Frame -->
+      <gz_frame_id>$(arg robot_ns)/sensor_camera_link</gz_frame_id>
       <camera>
         <horizontal_fov>1.047</horizontal_fov>
         <image>
           <width>640</width>
           <height>480</height>
+          <format>R8G8B8</format>
         </image>
-        <depth_camera>
-          <clip>
-            <near>0.1</near>
-            <far>10.0</far>
-          </clip>
-        </depth_camera>
+        <clip>
+          <near>0.1</near>
+          <far>10.0</far>
+        </clip>
       </camera>
-      <always_on>1</always_on>
     </sensor>
   </gazebo>
 
   <!-- IMU -->
-  <gazebo reference="base_link">
-    <sensor name="leo_imu_sensor" type="imu">
-      <always_on>1</always_on>
+  <gazebo reference="sensor_imu_link">
+    <sensor name="imu_sensor" type="imu">
+      <always_on>true</always_on>
       <update_rate>100</update_rate>
-      <topic>/$(arg robot_ns)/imu</topic>
-      <gz>
-        <frame_id>$(arg robot_ns)/base_link</frame_id>
-      </gz>
+      <!-- Namespaced Topic -->
+      <topic>/$(arg robot_ns)/imu/data</topic>
+      <!-- Namespaced TF Frame -->
+      <gz_frame_id>$(arg robot_ns)/sensor_imu_link</gz_frame_id>
+      <imu/>
     </sensor>
   </gazebo>
 
