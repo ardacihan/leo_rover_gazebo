@@ -164,7 +164,7 @@
         <sensor name='gpu_lidar' type='gpu_lidar'>
           <pose>0 0 0 0 0 0</pose>
           <topic>scan</topic>
-           <gz_frame_id>diff_drive/lidar_link</gz_frame_id>
+          <gz_frame_id>diff_drive/lidar_link</gz_frame_id>
           <update_rate>10</update_rate>
           <lidar>
             <scan>
@@ -226,8 +226,8 @@
       </joint>
 
       <plugin
-        filename="ignition-gazebo-diff-drive-system"
-        name="ignition::gazebo::systems::DiffDrive">
+        filename="gz-sim-diff-drive-system"
+        name="gz::sim::systems::DiffDrive">
         <left_joint>left_wheel_joint</left_joint>
         <right_joint>right_wheel_joint</right_joint>
         <wheel_separation>1.25</wheel_separation>

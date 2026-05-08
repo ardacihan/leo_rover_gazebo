@@ -15,7 +15,6 @@ install(
   DESTINATION share/${PROJECT_NAME}/models
 )
 
-# ✅ INSTALL URDF / XACRO (THIS WAS MISSING)
 install(
   DIRECTORY urdf/
   DESTINATION share/${PROJECT_NAME}/urdf

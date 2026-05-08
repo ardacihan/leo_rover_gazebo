@@ -6,7 +6,6 @@ from launch.substitutions import Command
 from launch_ros.parameter_descriptions import ParameterValue
 from ament_index_python.packages import get_package_share_directory
 
-
 def generate_launch_description():
     num_robots = 3
 
@@ -19,12 +18,14 @@ def generate_launch_description():
         'worlds', 'leo_world.sdf'
     )
 
-    gz_sim = ExecuteProcess(cmd=['gz', 'sim', '-r', world_path], output='screen')
+    # Humble uses 'ign gazebo' instead of 'gz sim'
+    gz_sim = ExecuteProcess(cmd=['ign', 'gazebo', '-r', world_path], output='screen')
 
+    # Change gz.msgs.Clock to ignition.msgs.Clock
     clock_bridge = Node(
         package='ros_gz_bridge', executable='parameter_bridge',
         name='clock_bridge',
-        arguments=['/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock'],
+        arguments=['/clock@rosgraph_msgs/msg/Clock[ignition.msgs.Clock'],
         parameters=[{'use_sim_time': True}],
         output='screen'
     )
@@ -45,24 +46,27 @@ def generate_launch_description():
             output='screen'
         )
 
+        # Humble uses ros_ign_sim instead of ros_gz_sim
         spawn = Node(
-            package='ros_gz_sim', executable='create',
+            package='ros_gz_sim',
+            executable='create',
             arguments=['-name', robot_ns, '-topic', f'/{robot_ns}/robot_description',
                        '-x', str(i * 2.0), '-y', '0.0', '-z', '0.2'],
             output='screen'
         )
 
+        # Change gz.msgs to ignition.msgs for all bridge arguments
         bridge = Node(
             package='ros_gz_bridge', executable='parameter_bridge',
             namespace=robot_ns,
             arguments=[
-                f'/{robot_ns}/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan',
-                f'/{robot_ns}/scan/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked',
-                f'/{robot_ns}/imu/data@sensor_msgs/msg/Imu[gz.msgs.IMU',
-                f'/{robot_ns}/camera/image@sensor_msgs/msg/Image[gz.msgs.Image',
-                f'/{robot_ns}/camera/depth_image@sensor_msgs/msg/Image[gz.msgs.Image',
-                f'/{robot_ns}/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo',
-                f'/{robot_ns}/camera/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked',
+                f'/{robot_ns}/scan@sensor_msgs/msg/LaserScan[ignition.msgs.LaserScan',
+                f'/{robot_ns}/scan/points@sensor_msgs/msg/PointCloud2[ignition.msgs.PointCloudPacked',
+                f'/{robot_ns}/imu/data@sensor_msgs/msg/Imu[ignition.msgs.IMU',
+                f'/{robot_ns}/camera/image@sensor_msgs/msg/Image[ignition.msgs.Image',
+                f'/{robot_ns}/camera/depth_image@sensor_msgs/msg/Image[ignition.msgs.Image',
+                f'/{robot_ns}/camera/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo',
+                f'/{robot_ns}/camera/points@sensor_msgs/msg/PointCloud2[ignition.msgs.PointCloudPacked',
             ],
             parameters=[{'use_sim_time': True}],
             output='screen'
