@@ -6,8 +6,9 @@ from launch.substitutions import Command
 from launch_ros.parameter_descriptions import ParameterValue
 from ament_index_python.packages import get_package_share_directory
 
+
 def generate_launch_description():
-    num_robots = 2
+    num_robots = 3
 
     xacro_file = os.path.join(
         get_package_share_directory('leo_rover_description'),
@@ -19,6 +20,7 @@ def generate_launch_description():
     )
 
     gz_sim = ExecuteProcess(cmd=['gz', 'sim', '-r', world_path], output='screen')
+
     clock_bridge = Node(
         package='ros_gz_bridge', executable='parameter_bridge',
         name='clock_bridge',
@@ -30,15 +32,14 @@ def generate_launch_description():
     launch_entities = [gz_sim, clock_bridge]
 
     for i in range(num_robots):
-        robot_ns = f"leo{i+1}"
-        robot_desc = Command(['xacro ', xacro_file, ' robot_ns:=', robot_ns])
+        robot_ns = f"leo{i + 1}"
+        robot_desc = Command(['xacro', ' ', xacro_file, ' ', 'robot_ns:=', robot_ns])
 
         rsp = Node(
             package='robot_state_publisher', executable='robot_state_publisher',
             namespace=robot_ns,
             parameters=[{
                 'robot_description': ParameterValue(robot_desc, value_type=str),
-                'frame_prefix': f"{robot_ns}/",
                 'use_sim_time': True
             }],
             output='screen'
@@ -47,7 +48,7 @@ def generate_launch_description():
         spawn = Node(
             package='ros_gz_sim', executable='create',
             arguments=['-name', robot_ns, '-topic', f'/{robot_ns}/robot_description',
-                       '-x', str(i*2.0), '-y', '0.0', '-z', '0.2'],
+                       '-x', str(i * 2.0), '-y', '0.0', '-z', '0.2'],
             output='screen'
         )
 
@@ -63,7 +64,7 @@ def generate_launch_description():
                 f'/{robot_ns}/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo',
                 f'/{robot_ns}/camera/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked',
             ],
-            parameters=[{'use_sim_time': True}],   # ← THIS IS THE KEY
+            parameters=[{'use_sim_time': True}],
             output='screen'
         )
 
