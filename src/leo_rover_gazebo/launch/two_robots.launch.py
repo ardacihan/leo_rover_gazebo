@@ -18,10 +18,8 @@ def generate_launch_description():
         'worlds', 'leo_world.sdf'
     )
 
-    # Humble uses 'ign gazebo' instead of 'gz sim'
     gz_sim = ExecuteProcess(cmd=['ign', 'gazebo', '-r', world_path], output='screen')
 
-    # Change gz.msgs.Clock to ignition.msgs.Clock
     clock_bridge = Node(
         package='ros_gz_bridge', executable='parameter_bridge',
         name='clock_bridge',
@@ -46,7 +44,6 @@ def generate_launch_description():
             output='screen'
         )
 
-        # Humble uses ros_ign_sim instead of ros_gz_sim
         spawn = Node(
             package='ros_gz_sim',
             executable='create',
@@ -55,7 +52,6 @@ def generate_launch_description():
             output='screen'
         )
 
-        # Change gz.msgs to ignition.msgs for all bridge arguments
         bridge = Node(
             package='ros_gz_bridge', executable='parameter_bridge',
             namespace=robot_ns,
@@ -67,6 +63,7 @@ def generate_launch_description():
                 f'/{robot_ns}/camera/depth_image@sensor_msgs/msg/Image[ignition.msgs.Image',
                 f'/{robot_ns}/camera/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo',
                 f'/{robot_ns}/camera/points@sensor_msgs/msg/PointCloud2[ignition.msgs.PointCloudPacked',
+                f'/{robot_ns}/cmd_vel@geometry_msgs/msg/Twist]ignition.msgs.Twist',
             ],
             parameters=[{'use_sim_time': True}],
             output='screen'

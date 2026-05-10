@@ -1,3 +1,4 @@
+```markdown
 # Leo Rover Gazebo Simulation
 
 ## Requirements
@@ -57,7 +58,7 @@ rm -rf build/ install/ log/
 source /opt/ros/humble/setup.bash
 # If you installed leo_description from source, source that workspace first:
 # source ~/leo_ws/install/setup.bash
-colcon build --symlink-install
+colcon build --symlink-install --packages-skip leo_rover_slam
 source install/setup.bash
 ```
 
@@ -81,6 +82,9 @@ ros2 launch leo_rover_gazebo two_robots.launch.py
 # Build the image
 docker build -t leo_rover_humble .
 
+# Enable X11 forwarding for Docker
+xhost +local:docker
+
 # Run with display forwarding (Linux host)
 docker run -it --rm \
   --network host \
@@ -92,11 +96,30 @@ docker run -it --rm \
 
 # Inside the container – build and launch:
 cd /ros2_ws
-colcon build --symlink-install
+colcon build --symlink-install --packages-skip leo_rover_slam
 source install/setup.bash
 ros2 launch leo_rover_gazebo two_robots.launch.py
 ```
 
+**Note:** If you encounter permission errors, build on your host instead:
+```bash
+# On host machine
+colcon build --symlink-install --packages-skip leo_rover_slam
+
+# Then run Docker (without building inside)
+docker run -it --rm \
+  --network host \
+  --env DISPLAY=$DISPLAY \
+  --env ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0} \
+  --volume /tmp/.X11-unix:/tmp/.X11-unix \
+  --volume $(pwd):/ros2_ws \
+  --workdir /ros2_ws \
+  leo_rover_humble \
+  bash -c "source install/setup.bash && ros2 launch leo_rover_gazebo two_robots.launch.py"
+```
+
 ## Notes
 
-When in container use ```bash ros2 topic echo </leoX/topic/name> --qos-reliability best_effort```
+- When in container use `ros2 topic echo </leoX/topic/name> --qos-reliability best_effort`
+- Skip `leo_rover_slam` package if not needed (adds `--packages-skip leo_rover_slam` to colcon build)
+```
