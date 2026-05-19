@@ -7,7 +7,7 @@ from launch_ros.parameter_descriptions import ParameterValue
 from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
-    num_robots = 3
+    num_robots = 1
 
     xacro_file = os.path.join(
         get_package_share_directory('leo_rover_description'),
@@ -64,6 +64,8 @@ def generate_launch_description():
                 f'/{robot_ns}/camera/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo',
                 f'/{robot_ns}/camera/points@sensor_msgs/msg/PointCloud2[ignition.msgs.PointCloudPacked',
                 f'/{robot_ns}/cmd_vel@geometry_msgs/msg/Twist]ignition.msgs.Twist',
+                f'/{robot_ns}/odom@nav_msgs/msg/Odometry[ignition.msgs.Odometry',
+                f'/{robot_ns}/tf@tf2_msgs/msg/TFMessage[ignition.msgs.Pose_V',
             ],
             parameters=[{'use_sim_time': True}],
             output='screen'
