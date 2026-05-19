@@ -1,3 +1,4 @@
+```markdown
 # Leo Rover Gazebo Simulation
 
 ## Requirements
@@ -79,7 +80,7 @@ ros2 launch leo_rover_gazebo two_robots.launch.py
 
 ```bash
 # Build the image
-docker build -t leo-rover-sim .
+docker build -t leo_rover_humble .
 
 # Enable X11 forwarding for Docker
 xhost +local:docker
@@ -90,20 +91,20 @@ docker run -it --rm \
   --env DISPLAY=$DISPLAY \
   --env ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0} \
   --volume /tmp/.X11-unix:/tmp/.X11-unix \
-  --volume $(pwd):/ros2_ws/src/leo_rover_gazebo \
-  leo-rover-sim
+  --volume $(pwd):/ros2_ws \
+  leo_rover_humble
 
 # Inside the container – build and launch:
 cd /ros2_ws
-colcon build --symlink-install
+colcon build --symlink-install --packages-skip leo_rover_slam
 source install/setup.bash
-ros2 launch leo_rover_gazebo sim.launch.py
+ros2 launch leo_rover_gazebo two_robots.launch.py
 ```
 
 **Note:** If you encounter permission errors, build on your host instead:
 ```bash
 # On host machine
-colcon build --symlink-install
+colcon build --symlink-install --packages-skip leo_rover_slam
 
 # Then run Docker (without building inside)
 docker run -it --rm \
@@ -113,19 +114,9 @@ docker run -it --rm \
   --volume /tmp/.X11-unix:/tmp/.X11-unix \
   --volume $(pwd):/ros2_ws \
   --workdir /ros2_ws \
-  leo-rover-sim \
-  bash -c "source install/setup.bash && ros2 launch leo_rover_gazebo sim.launch.py"
+  leo_rover_humble \
+  bash -c "source install/setup.bash && ros2 launch leo_rover_gazebo two_robots.launch.py"
 ```
-Now you're ready to launch navigation from a second terminal inside the container:
-
-```bash
-ros2 launch leo_nav navigation.launch.xml \
-    scan_topic:=/leo1/scan \
-    use_stereo_camera:=false
-```    
-  
-
----
 
 ## Notes
 

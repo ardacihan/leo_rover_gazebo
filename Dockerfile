@@ -54,19 +54,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         ros-humble-rqt-image-view \
     && rm -rf /var/lib/apt/lists/*
 
-# ── Navigation packages ───────────────────────────────────────────────────────
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        ros-humble-robot-localization \
-        ros-humble-slam-toolbox \
-        ros-humble-navigation2 \
-        ros-humble-nav2-bringup \
-        ros-humble-pcl-ros \
-        ros-humble-tf2-sensor-msgs \
-        ros-humble-tf2-geometry-msgs \
-        ros-humble-tf2-eigen \
-    && rm -rf /var/lib/apt/lists/*
-
 # ── The "TypeHash" & Linker Fix ───────────────────────────────────────────────
+# This ensures Python and C++ libraries are properly indexed by the OS.
 RUN echo "/opt/ros/humble/lib" > /etc/ld.so.conf.d/ros-humble.conf && ldconfig
 
 # ── Gazebo Harmonic dev headers ───────────────────────────────────────────────
@@ -88,22 +77,6 @@ RUN apt-get update \
 # ── Workspace ─────────────────────────────────────────────────────────────────
 RUN mkdir -p /ros2_ws/src
 WORKDIR /ros2_ws
-
-# ── Leo Nav package ───────────────────────────────────────────────────────────
-RUN cd /ros2_ws/src \
-    && git clone -b ros2 https://github.com/LeoRover/leo_navigation_tutorial.git leo_nav
-
-# ── rosdep install for remaining dependencies ────────────────────────────────
-RUN /bin/bash -c "source /opt/ros/humble/setup.bash \
-    && apt-get update \
-    && rosdep update \
-    && rosdep install --from-paths /ros2_ws/src --ignore-src -r -y \
-        --skip-keys='ros-humble-pcl-ros ros-humble-tf2-sensor-msgs ros-humble-tf2-geometry-msgs ros-humble-tf2-eigen'"
-
-# ── Build workspace (user packages will be added later via volume mount) ──────
-RUN /bin/bash -c "source /opt/ros/humble/setup.bash \
-    && cd /ros2_ws \
-    && colcon build --symlink-install"
 
 # ── Shell environment (bashrc) ────────────────────────────────────────────────
 RUN echo "source /opt/ros/humble/setup.bash"                               >> /root/.bashrc \
