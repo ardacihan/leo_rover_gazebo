@@ -1,91 +1,27 @@
-```markdown
 # Leo Rover Gazebo Simulation
 
 ## Requirements
-*   **OS:** Ubuntu 22.04 (Jammy)
-*   **ROS 2:** Humble
-*   **Gazebo:** Harmonic (gz-sim8)
+* **OS:** Ubuntu 22.04 (Jammy)
+* **ROS 2:** Humble
+* **Gazebo:** Harmonic (gz-sim8)
 
-### 1. Add the Gazebo Harmonic apt repository
-```bash
-sudo curl https://packages.osrfoundation.org/gazebo.gpg \
-  --output /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] \
-  http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" \
-  | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null
-sudo apt-get update
+
+## Docker Setup (Recommended)
+
+1. **Build the Docker Image:**
+```bash 
+2. docker build -t leo_rover_humble .
 ```
 
-### 2. Install dependencies
-```bash
-sudo apt install \
-  gz-harmonic \
-  ros-humble-ros-gz \
-  ros-humble-ros-gz-sim \
-  ros-humble-ros-gz-bridge \
-  ros-humble-ros-gz-interfaces \
-  ros-humble-xacro \
-  ros-humble-robot-state-publisher \
-  ros-humble-joint-state-publisher-gui \
-  ros-humble-sdformat-urdf \
-  libgz-cmake3-dev \
-  libgz-plugin2-dev \
-  libgz-common5-dev \
-  libgz-sim8-dev
-```
 
-### 3. Install Leo Rover description package
-```bash
-# Option A – via apt (if available in your mirror):
-sudo apt install ros-humble-leo-description
-
-# Option B – from source:
-mkdir -p ~/leo_ws/src
-git clone -b humble https://github.com/LeoRover/leo_common-ros2.git ~/leo_ws/src/leo_common
-cd ~/leo_ws
-source /opt/ros/humble/setup.bash
-colcon build --symlink-install --packages-select leo_description
-source install/setup.bash
-```
-
----
-
-## Build
+2. **Allow X11 Forwarding (Run on your host machine):**
 
 ```bash
-# Remove stale artifacts
-rm -rf build/ install/ log/
-source /opt/ros/humble/setup.bash
-# If you installed leo_description from source, source that workspace first:
-# source ~/leo_ws/install/setup.bash
-colcon build --symlink-install --packages-skip leo_rover_slam
-source install/setup.bash
-```
-
----
-
-## Run Simulation
-
-Spawns multiple rovers, each isolated in its own namespace (e.g., `/leo1`, `/leo2`, `/leo3`).
-
-```bash
-ros2 launch leo_rover_gazebo two_robots.launch.py
-```
-
-**Default:** `num_robots = 3` (set at the top of `two_robots.launch.py`).
-
----
-
-## Docker (recommended for development)
-
-```bash
-# Build the image
-docker build -t leo_rover_humble .
-
-# Enable X11 forwarding for Docker
 xhost +local:docker
+```
 
-# Run with display forwarding (Linux host)
+3. **Run the Container:**
+```bash
 docker run -it --rm \
   --network host \
   --env DISPLAY=$DISPLAY \
@@ -94,32 +30,80 @@ docker run -it --rm \
   --volume $(pwd):/ros2_ws \
   leo_rover_humble
 
-# Inside the container – build and launch:
+```
+
+
+4. **Build the Workspace (Inside the container):**
+```bash
 cd /ros2_ws
 colcon build --symlink-install --packages-skip leo_rover_slam
 source install/setup.bash
-ros2 launch leo_rover_gazebo two_robots.launch.py
+
 ```
 
-**Note:** If you encounter permission errors, build on your host instead:
+
+
+---
+
+## Running the Project
+
+### 1. Launch the Gazebo Simulation
+
+Spawns 3 rovers isolated by namespace (`/leo1`, `/leo2`, `/leo3`).
+
 ```bash
-# On host machine
-colcon build --symlink-install --packages-skip leo_rover_slam
+ros2 launch leo_rover_gazebo two_robots.launch.py
 
-# Then run Docker (without building inside)
-docker run -it --rm \
-  --network host \
-  --env DISPLAY=$DISPLAY \
-  --env ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0} \
-  --volume /tmp/.X11-unix:/tmp/.X11-unix \
-  --volume $(pwd):/ros2_ws \
-  --workdir /ros2_ws \
-  leo_rover_humble \
-  bash -c "source install/setup.bash && ros2 launch leo_rover_gazebo two_robots.launch.py"
 ```
 
-## Notes
+### 2. Control a Rover via Teleop
 
-- When in container use `ros2 topic echo </leoX/topic/name> --qos-reliability best_effort`
-- Skip `leo_rover_slam` package if not needed (adds `--packages-skip leo_rover_slam` to colcon build)
+Open a new terminal session in the container and drive a specific rover (e.g., `leo1`):
+
+```bash
+ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r __ns:=/leo1
+
+```
+
+---
+
+## Mapping & Navigation (Nav2 Stack)
+
+### 1. Run SLAM Toolbox
+
+Directly bind the SLAM mapping node to a targeted rover's transform frames and sensor topics:
+
+```bash
+ros2 run slam_toolbox async_slam_toolbox_node --ros-args \
+  -p use_sim_time:=true \
+  -p odom_frame:=leo1/odom \
+  -p base_frame:=leo1/base_link \
+  -p map_frame:=map \
+  -r /scan:=/leo1/scan
+
+```
+
+*Drive the rover around using the teleop terminal to populate map grid data.*
+
+### 2. Save the Generated Map
+
+Once the map looks complete in RViz, save it to your workspace:
+
+```bash
+ros2 run nav2_map_server map_saver_cli -f /ros2_ws/my_gazebo_map --ros-args -p use_sim_time:=True
+
+```
+
+### 3. Run Autonomous Navigation (Nav2)
+
+Launch the localization, costmap calculation, and path planning stack within the target rover's namespace:
+
+```bash
+ros2 launch nav2_bringup bringup_launch.py \
+  use_sim_time:=True \
+  namespace:=leo1 \
+  use_namespace:=True \
+  map:=/ros2_ws/my_gazebo_map.yaml \
+  params_file:=/opt/ros/humble/share/nav2_bringup/params/nav2_params.yaml
+
 ```

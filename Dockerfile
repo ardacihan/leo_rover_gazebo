@@ -52,6 +52,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         ros-humble-rmw-cyclonedds-cpp \
         ros-humble-teleop-twist-keyboard \
         ros-humble-rqt-image-view \
+        ros-humble-navigation2 \
+        ros-humble-nav2-bringup \
+        ros-humble-slam-toolbox \
     && rm -rf /var/lib/apt/lists/*
 
 # ── The "TypeHash" & Linker Fix ───────────────────────────────────────────────

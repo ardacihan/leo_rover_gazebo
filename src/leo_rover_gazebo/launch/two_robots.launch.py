@@ -7,7 +7,7 @@ from launch_ros.parameter_descriptions import ParameterValue
 from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
-    num_robots = 3
+    num_robots = 2
 
     xacro_file = os.path.join(
         get_package_share_directory('leo_rover_description'),
@@ -39,8 +39,14 @@ def generate_launch_description():
             namespace=robot_ns,
             parameters=[{
                 'robot_description': ParameterValue(robot_desc, value_type=str),
-                'use_sim_time': True
+                'use_sim_time': True,
+                'frame_prefix': f"{robot_ns}/"
             }],
+            # Force static transforms (lidar, camera, wheels) to the global TF topics
+            remappings=[
+                ('/tf', '/tf'),
+                ('/tf_static', '/tf_static')
+            ],
             output='screen'
         )
 
@@ -56,14 +62,24 @@ def generate_launch_description():
             package='ros_gz_bridge', executable='parameter_bridge',
             namespace=robot_ns,
             arguments=[
-                f'/{robot_ns}/scan@sensor_msgs/msg/LaserScan[ignition.msgs.LaserScan',
-                f'/{robot_ns}/scan/points@sensor_msgs/msg/PointCloud2[ignition.msgs.PointCloudPacked',
-                f'/{robot_ns}/imu/data@sensor_msgs/msg/Imu[ignition.msgs.IMU',
-                f'/{robot_ns}/camera/image@sensor_msgs/msg/Image[ignition.msgs.Image',
-                f'/{robot_ns}/camera/depth_image@sensor_msgs/msg/Image[ignition.msgs.Image',
-                f'/{robot_ns}/camera/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo',
-                f'/{robot_ns}/camera/points@sensor_msgs/msg/PointCloud2[ignition.msgs.PointCloudPacked',
-                f'/{robot_ns}/cmd_vel@geometry_msgs/msg/Twist]ignition.msgs.Twist',
+                f'/{robot_ns}/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan',
+                f'/{robot_ns}/scan/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked',
+                f'/{robot_ns}/imu/data@sensor_msgs/msg/Imu[gz.msgs.IMU',
+                f'/{robot_ns}/camera/image@sensor_msgs/msg/Image[gz.msgs.Image',
+                f'/{robot_ns}/camera/depth_image@sensor_msgs/msg/Image[gz.msgs.Image',
+                f'/{robot_ns}/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo',
+                f'/{robot_ns}/camera/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked',
+
+                # Odometry and Velocity
+                f'/{robot_ns}/odom@nav_msgs/msg/Odometry[gz.msgs.Odometry',
+                f'/{robot_ns}/cmd_vel@geometry_msgs/msg/Twist]gz.msgs.Twist',
+
+                # TF
+                f'/{robot_ns}/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V',
+            ],
+            # Force Gazebo's odometry transforms to the global TF topic
+            remappings=[
+                (f'/{robot_ns}/tf', '/tf')
             ],
             parameters=[{'use_sim_time': True}],
             output='screen'
