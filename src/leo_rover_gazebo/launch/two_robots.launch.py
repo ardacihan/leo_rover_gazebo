@@ -14,7 +14,7 @@ from launch_ros.parameter_descriptions import ParameterValue
 
 
 def generate_launch_description():
-    num_robots = 2
+    num_robots = 1
 
     pkg_ros_gz_sim   = get_package_share_directory('ros_gz_sim')
     pkg_description  = get_package_share_directory('leo_rover_description')
