@@ -3,7 +3,6 @@
 
   <xacro:arg name="robot_ns" default="leo"/>
   <xacro:include filename="$(find leo_description)/urdf/leo.urdf.xacro"/>
-
   <link name="$(arg robot_ns)/sensor_lidar_link">
     <inertial>
       <mass value="0.1"/>
@@ -46,8 +45,11 @@
     <origin xyz="0 0 0.1" rpy="0 0 0"/>
   </joint>
 
+  <!-- ══ Gazebo plugins ════════════════════════════════════════════════════ -->
+
   <gazebo>
-    <plugin filename="gz-sim-diff-drive-system" name="gz::sim::systems::DiffDrive">
+    <plugin filename="gz-sim-diff-drive-system"
+            name="gz::sim::systems::DiffDrive">
       <left_joint>wheel_FL_joint</left_joint>
       <left_joint>wheel_RL_joint</left_joint>
       <right_joint>wheel_FR_joint</right_joint>
@@ -56,14 +58,16 @@
       <wheel_radius>0.0625</wheel_radius>
       <topic>/$(arg robot_ns)/cmd_vel</topic>
       <odom_topic>/$(arg robot_ns)/odom</odom_topic>
-      <frame_id>odom</frame_id>
-      <child_frame_id>base_link</child_frame_id>
+      <!-- These frame IDs must match the TF frames published by RSP -->
+      <frame_id>$(arg robot_ns)/odom</frame_id>
+      <child_frame_id>$(arg robot_ns)/base_footprint</child_frame_id>
       <odom_publish_frequency>50</odom_publish_frequency>
     </plugin>
   </gazebo>
 
   <gazebo>
-    <plugin filename="gz-sim-joint-state-publisher-system" name="gz::sim::systems::JointStatePublisher">
+    <plugin filename="gz-sim-joint-state-publisher-system"
+            name="gz::sim::systems::JointStatePublisher">
       <topic>/$(arg robot_ns)/joint_states</topic>
     </plugin>
   </gazebo>
