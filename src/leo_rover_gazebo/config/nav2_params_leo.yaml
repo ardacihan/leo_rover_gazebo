@@ -8,6 +8,7 @@ bt_navigator:
 controller_server:
   ros__parameters:
     use_sim_time: True
+    cmd_vel_topic: /leo1/cmd_vel
     controller_frequency: 20.0
     transform_tolerance: 0.5
     progress_checker_plugin: "progress_checker"
@@ -36,8 +37,7 @@ local_costmap:
       robot_base_frame: "leo1/base_link"
       width: 10
       height: 10
-      origin_x: -5.0
-      origin_y: -5.0
+      resolution: 0.05
       rolling_window: True
       plugins: ["obstacle_layer", "inflation_layer"]
       obstacle_layer:
@@ -50,8 +50,12 @@ local_costmap:
           marking: True
           clearing: True
           sensor_frame: "leo1/sensor_lidar_link"
+          obstacle_max_range: 5.0
+          obstacle_min_range: 0.0
+          raytrace_max_range: 6.0
+          raytrace_min_range: 0.0
           qos_overrides:
-            scan:
+            /leo1/scan:
               subscription:
                 reliability: "best_effort"
       inflation_layer:
@@ -68,9 +72,16 @@ global_costmap:
       robot_base_frame: "leo1/base_link"
       width: 20
       height: 20
+      resolution: 0.05
       origin_x: -10.0
       origin_y: -10.0
-      plugins: ["obstacle_layer", "inflation_layer"]
+      track_unknown_space: True
+      plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
+      static_layer:
+        plugin: "nav2_costmap_2d::StaticLayer"
+        enabled: True
+        map_subscribe_transient_local: True
+        subscribe_to_updates: True
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
         enabled: True
@@ -81,15 +92,19 @@ global_costmap:
           marking: True
           clearing: True
           sensor_frame: "leo1/sensor_lidar_link"
+          obstacle_max_range: 5.0
+          obstacle_min_range: 0.0
+          raytrace_max_range: 6.0
+          raytrace_min_range: 0.0
           qos_overrides:
-            scan:
+            /leo1/scan:
               subscription:
                 reliability: "best_effort"
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         enabled: True
         cost_scaling_factor: 3.0
-        inflation_radius: 0.35
+        inflation_radius: 0.55
 
 planner_server:
   ros__parameters:
@@ -97,6 +112,9 @@ planner_server:
     planner_plugins: ["GridBased"]
     GridBased:
       plugin: "nav2_navfn_planner/NavfnPlanner"
+      tolerance: 0.5
+      use_astar: True
+      allow_unknown: True
 
 behavior_server:
   ros__parameters:
@@ -104,6 +122,7 @@ behavior_server:
     local_frame: "leo1/odom"
     global_frame: map
     robot_base_frame: "leo1/base_link"
+    transform_tolerance: 0.5
 
 smoother_server:
   ros__parameters:
@@ -121,21 +140,12 @@ lifecycle_manager:
   ros__parameters:
     use_sim_time: True
     autostart: True
-    bond_timeout: 4.0
-    node_names: ["map_server", "controller_server", "smoother_server", "planner_server", "behavior_server", "bt_navigator", "waypoint_follower", "velocity_smoother"]
-
-slam_toolbox:
-  ros__parameters:
-    use_sim_time: True
-    odom_frame: "leo1/odom"
-    base_frame: "leo1/base_link"
-    map_frame: "map"
-    scan_topic: "/leo1/scan"
-    mode: "mapping"
-    resolution: 0.05
-    max_laser_range: 20.0
-    transform_timeout: 0.5
-    tf_buffer_duration: 30.0
-    minimum_travel_distance: 0.1
-    minimum_travel_heading: 0.1
-    map_update_interval: 1.0
+    bond_timeout: 10.0
+    node_names:
+      - controller_server
+      - smoother_server
+      - planner_server
+      - behavior_server
+      - bt_navigator
+      - waypoint_follower
+      - velocity_smoother
