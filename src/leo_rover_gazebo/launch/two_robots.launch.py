@@ -62,7 +62,7 @@ def generate_launch_description():
                 'use_sim_time': True,
                 'publish_frequency': 50.0,
             }],
-            remappings=[('/tf', '/tf'), ('/tf_static', '/tf_static')],
+            remappings=[('/tf', '/tf'), ('tf_static', '/tf_static')],
             output='screen'
         )
 
@@ -114,6 +114,8 @@ def generate_launch_description():
                 f'/{robot_ns}/camera/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked',
                 f'/model/leo1/pose@geometry_msgs/msg/Pose[gz.msgs.Pose',
                 f'/model/{robot_ns}/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V',
+                f'/{robot_ns}/joint_states@sensor_msgs/msg/JointState[gz.msgs.Model',
+                '/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V',
             ],
             remappings=[
                 (f'/model/{robot_ns}/tf', '/tf')

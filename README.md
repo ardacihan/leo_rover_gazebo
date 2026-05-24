@@ -42,11 +42,8 @@ Inside the container:
 
 ```bash
 cd /ros2_ws
-
 colcon build --symlink-install --packages-skip leo_rover_slam
-
 source install/setup.bash
-
 clear
 ```
 
@@ -58,65 +55,22 @@ clear
 ros2 launch leo_rover_gazebo two_robots.launch.py
 ```
 
-This spawns:
-
-* `/leo1`
-
----
-
-# Teleoperate a Rover
+# Keyboard Controls
 
 Open a new terminal inside the container:
 
 ```bash
 cd /ros2_ws
 source install/setup.bash
-```
-
-Control `leo1`:
-
-```bash
 ros2 run teleop_twist_keyboard teleop_twist_keyboard \
   --ros-args -r cmd_vel:=/leo1/cmd_vel
 ```
-
----
 
 # Launch RViz2
 
 ```bash
 rviz2 --ros-args -p use_sim_time:=true
 ```
-
-In RViz:
-
-## Global Options
-
-Set:
-
-```text 
-Fixed Frame = map
-```
-
-## Add Displays
-
-### LaserScan
-
-Topic:
-
-```text
-/leo1/scan
-```
-
-### Map
-
-Topic:
-
-```text
-/map
-```
-
----
 
 # Run SLAM Toolbox
 
@@ -130,21 +84,12 @@ source install/setup.bash
 Run:
 
 ```bash
-ros2 run slam_toolbox async_slam_toolbox_node --ros-args \
-  -p use_sim_time:=true \
-  -p odom_frame:=leo1/odom \
-  -p base_frame:=leo1/base_footprint \
-  -p map_frame:=map \
-  -p provide_odom_frame:=false \
-  -p transform_timeout:=1.0 \
-  -r /scan:=/leo1/scan
+ros2 launch leo_rover_gazebo slam.launch.py
 ```
----
+
 
 # Launch Nav2
 
-```bash id="yvlc2x"
-ros2 launch nav2_bringup navigation_launch.py \
-  use_sim_time:=true \
-  params_file:=/ros2_ws/src/leo_rover_gazebo/config/nav2_params_leo.yaml 
+```bash
+ ros2 launch leo_rover_gazebo nav2.launch.py
 ```
