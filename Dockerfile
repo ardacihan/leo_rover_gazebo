@@ -55,6 +55,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         ros-humble-navigation2 \
         ros-humble-nav2-bringup \
         ros-humble-slam-toolbox \
+        ros-humble-topic-tools \
+        ros-humble-robot-localization \
     && rm -rf /var/lib/apt/lists/*
 
 # ── The "TypeHash" & Linker Fix ───────────────────────────────────────────────

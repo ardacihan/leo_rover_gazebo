@@ -2,18 +2,26 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="leo_rover">
 
   <xacro:arg name="robot_ns" default="leo"/>
+
   <xacro:include filename="$(find leo_description)/urdf/leo.urdf.xacro"/>
+
+  <!-- ========================================================= -->
+  <!-- SENSOR LINKS -->
+  <!-- ========================================================= -->
+
   <link name="$(arg robot_ns)/sensor_lidar_link">
     <inertial>
       <mass value="0.1"/>
       <origin xyz="0 0 0"/>
-      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+      <inertia ixx="0.001" ixy="0" ixz="0"
+               iyy="0.001" iyz="0"
+               izz="0.001"/>
     </inertial>
   </link>
 
   <joint name="sensor_lidar_joint" type="fixed">
     <parent link="$(arg robot_ns)/base_link"/>
-    <child  link="$(arg robot_ns)/sensor_lidar_link"/>
+    <child link="$(arg robot_ns)/sensor_lidar_link"/>
     <origin xyz="0.2 0 0.4" rpy="0 0 0"/>
   </joint>
 
@@ -21,13 +29,15 @@
     <inertial>
       <mass value="0.05"/>
       <origin xyz="0 0 0"/>
-      <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
+      <inertia ixx="0.0001" ixy="0" ixz="0"
+               iyy="0.0001" iyz="0"
+               izz="0.0001"/>
     </inertial>
   </link>
 
   <joint name="sensor_camera_joint" type="fixed">
     <parent link="$(arg robot_ns)/base_link"/>
-    <child  link="$(arg robot_ns)/sensor_camera_link"/>
+    <child link="$(arg robot_ns)/sensor_camera_link"/>
     <origin xyz="0.25 0 0.2" rpy="0 0 0"/>
   </joint>
 
@@ -35,93 +45,169 @@
     <inertial>
       <mass value="0.01"/>
       <origin xyz="0 0 0"/>
-      <inertia ixx="0.00001" ixy="0" ixz="0" iyy="0.00001" iyz="0" izz="0.00001"/>
+      <inertia ixx="0.00001" ixy="0" ixz="0"
+               iyy="0.00001" iyz="0"
+               izz="0.00001"/>
     </inertial>
   </link>
 
   <joint name="sensor_imu_joint" type="fixed">
     <parent link="$(arg robot_ns)/base_link"/>
-    <child  link="$(arg robot_ns)/sensor_imu_link"/>
+    <child link="$(arg robot_ns)/sensor_imu_link"/>
     <origin xyz="0 0 0.1" rpy="0 0 0"/>
   </joint>
 
-  <!-- ══ Gazebo plugins ════════════════════════════════════════════════════ -->
+  <!-- ========================================================= -->
+  <!-- DIFF DRIVE -->
+  <!-- ========================================================= -->
 
   <gazebo>
     <plugin filename="gz-sim-diff-drive-system"
             name="gz::sim::systems::DiffDrive">
+
       <left_joint>wheel_FL_joint</left_joint>
       <left_joint>wheel_RL_joint</left_joint>
+
       <right_joint>wheel_FR_joint</right_joint>
       <right_joint>wheel_RR_joint</right_joint>
+
       <wheel_separation>0.358</wheel_separation>
       <wheel_radius>0.0625</wheel_radius>
+
       <topic>/$(arg robot_ns)/cmd_vel</topic>
+
       <odom_topic>/$(arg robot_ns)/odom</odom_topic>
-      <!-- These frame IDs must match the TF frames published by RSP -->
+
       <frame_id>$(arg robot_ns)/odom</frame_id>
-      <child_frame_id>$(arg robot_ns)/base_footprint</child_frame_id>
+
+      <child_frame_id>$(arg robot_ns)/base_link</child_frame_id>
+
       <odom_publish_frequency>50</odom_publish_frequency>
+
+      <publish_odom_tf>true</publish_odom_tf>
+
     </plugin>
   </gazebo>
+
+  <!-- ========================================================= -->
+  <!-- JOINT STATES -->
+  <!-- ========================================================= -->
 
   <gazebo>
     <plugin filename="gz-sim-joint-state-publisher-system"
             name="gz::sim::systems::JointStatePublisher">
+
       <topic>/$(arg robot_ns)/joint_states</topic>
+
     </plugin>
   </gazebo>
 
+  <!-- ========================================================= -->
+  <!-- LIDAR -->
+  <!-- ========================================================= -->
+
   <gazebo reference="$(arg robot_ns)/sensor_lidar_link">
-    <sensor name="gpu_lidar" type="gpu_lidar">
+
+    <sensor name="lidar" type="gpu_lidar">
+
       <always_on>true</always_on>
+
       <visualize>true</visualize>
-      <update_rate>10</update_rate>
+
+      <update_rate>20</update_rate>
+
       <topic>/$(arg robot_ns)/scan</topic>
+
       <gz_frame_id>$(arg robot_ns)/sensor_lidar_link</gz_frame_id>
-      <lidar>
+
+      <ray>
+
         <scan>
           <horizontal>
-            <samples>720</samples>
+
+            <samples>360</samples>
+
             <resolution>1</resolution>
+
             <min_angle>-3.14159</min_angle>
+
             <max_angle>3.14159</max_angle>
+
           </horizontal>
         </scan>
+
         <range>
+
           <min>0.1</min>
+
           <max>20.0</max>
+
           <resolution>0.01</resolution>
+
         </range>
-      </lidar>
+
+      </ray>
+
     </sensor>
+
   </gazebo>
+
+  <!-- ========================================================= -->
+  <!-- CAMERA -->
+  <!-- ========================================================= -->
 
   <gazebo reference="$(arg robot_ns)/sensor_camera_link">
+
     <sensor name="rgbd_camera" type="rgbd_camera">
+
       <always_on>true</always_on>
-      <update_rate>30</update_rate>
+
+      <update_rate>20</update_rate>
+
       <topic>/$(arg robot_ns)/camera</topic>
+
       <gz_frame_id>$(arg robot_ns)/sensor_camera_link</gz_frame_id>
+
       <camera>
+
         <horizontal_fov>1.047</horizontal_fov>
+
         <image>
+
           <width>640</width>
+
           <height>480</height>
+
           <format>R8G8B8</format>
+
         </image>
+
       </camera>
+
     </sensor>
+
   </gazebo>
 
+  <!-- ========================================================= -->
+  <!-- IMU -->
+  <!-- ========================================================= -->
+
   <gazebo reference="$(arg robot_ns)/sensor_imu_link">
+
     <sensor name="imu_sensor" type="imu">
+
       <always_on>true</always_on>
-      <update_rate>100</update_rate>
+
+      <update_rate>20</update_rate>
+
       <topic>/$(arg robot_ns)/imu/data</topic>
+
       <gz_frame_id>$(arg robot_ns)/sensor_imu_link</gz_frame_id>
+
       <imu/>
+
     </sensor>
+
   </gazebo>
 
 </robot>

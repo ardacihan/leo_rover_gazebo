@@ -1,16 +1,3 @@
-amcl:
-  ros__parameters:
-    use_sim_time: True
-    base_frame_id: "leo1/base_link"
-    odom_frame_id: "leo1/odom"
-    global_frame_id: "map"
-    scan_topic: /leo1/scan
-
-map_server:
-  ros__parameters:
-    use_sim_time: True
-    yaml_filename: "/ros2_ws/src/leo_rover_gazebo/maps/my_map.yaml"
-
 bt_navigator:
   ros__parameters:
     use_sim_time: True
@@ -135,4 +122,20 @@ lifecycle_manager:
     use_sim_time: True
     autostart: True
     bond_timeout: 4.0
-    node_names: ["map_server", "amcl", "controller_server", "smoother_server", "planner_server", "behavior_server", "bt_navigator", "waypoint_follower", "velocity_smoother"]
+    node_names: ["map_server", "controller_server", "smoother_server", "planner_server", "behavior_server", "bt_navigator", "waypoint_follower", "velocity_smoother"]
+
+slam_toolbox:
+  ros__parameters:
+    use_sim_time: True
+    odom_frame: "leo1/odom"
+    base_frame: "leo1/base_link"
+    map_frame: "map"
+    scan_topic: "/leo1/scan"
+    mode: "mapping"
+    resolution: 0.05
+    max_laser_range: 20.0
+    transform_timeout: 0.5
+    tf_buffer_duration: 30.0
+    minimum_travel_distance: 0.1
+    minimum_travel_heading: 0.1
+    map_update_interval: 1.0

@@ -66,6 +66,20 @@ def generate_launch_description():
             output='screen'
         )
 
+        gpu_lidar_tf = Node(
+            package='tf2_ros',
+            executable='static_transform_publisher',
+            name=f'gpu_lidar_tf_{robot_ns}',
+            arguments=[
+                '0', '0', '0',
+                '0', '0', '0',
+                f'{robot_ns}/sensor_lidar_link',
+                f'{robot_ns}/{robot_ns}/base_footprint/gpu_lidar'
+            ],
+            parameters=[{'use_sim_time': True}],
+            output='screen'
+        )
+
         # ── Spawn: triggered 5 s after gz_sim starts to ensure world is ready.
         # ros_gz_sim's gz_sim.launch.py names its Gazebo process 'gzserver'
         # on some versions; a fixed delay is the most reliable approach here.
@@ -98,15 +112,16 @@ def generate_launch_description():
                 f'/{robot_ns}/camera/image@sensor_msgs/msg/Image[gz.msgs.Image',
                 f'/{robot_ns}/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo',
                 f'/{robot_ns}/camera/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked',
+                f'/model/leo1/pose@geometry_msgs/msg/Pose[gz.msgs.Pose',
                 f'/model/{robot_ns}/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V',
             ],
             remappings=[
-                (f'/model/{robot_ns}/tf', '/tf'),
+                (f'/model/{robot_ns}/tf', '/tf')
             ],
             parameters=[{'use_sim_time': True}],
             output='screen'
         )
 
-        entities += [rsp, spawn, bridge]
+        entities += [rsp, spawn, bridge,gpu_lidar_tf]
 
     return LaunchDescription(entities)
