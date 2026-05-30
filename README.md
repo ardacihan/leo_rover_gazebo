@@ -5,6 +5,7 @@
 * Ubuntu 22.04 (Jammy)
 * ROS 2 Humble
 * Gazebo Harmonic (`gz-sim8`)
+* Install leo_commos-ros2 and place it under src https://github.com/LeoRover/leo_common-ros2 
 
 ---
 
@@ -35,6 +36,28 @@ docker run -it --rm \
   --volume $(pwd):/ros2_ws \
   leo_rover_humble
 ```
+Make sure to enable docker to use gpu with nvidia drivers. To use nvidia GPU in container run:
+
+```bash
+xhost +local:docker
+
+docker run -it --rm \
+  --gpus all \
+  --network host \
+  -e DISPLAY=$DISPLAY \
+  -e ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0} \
+  -e NVIDIA_VISIBLE_DEVICES=all \
+  -e NVIDIA_DRIVER_CAPABILITIES=all \
+  -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
+  -v $(pwd):/ros2_ws \
+  leo_rover_humble
+```
+
+then in container 
+```bash
+apt update && apt install -y mesa-utils
+```
+
 
 ## 4. Build the Workspace
 
@@ -77,13 +100,6 @@ rviz2 --ros-args -p use_sim_time:=true
 Open another terminal:
 
 ```bash 
-cd /ros2_ws
-source install/setup.bash
-```
-
-Run:
-
-```bash
 ros2 launch leo_rover_gazebo slam.launch.py
 ```
 
