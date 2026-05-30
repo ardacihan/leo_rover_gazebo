@@ -20,14 +20,53 @@ controller_server:
       plugin: "nav2_controller::SimpleGoalChecker"
     FollowPath:
       plugin: "dwb_core::DWBLocalPlanner"
+      debug_trajectory_details: True
+      min_vel_x: 0.0
+      max_vel_x: 0.26
+      min_vel_y: 0.0
+      max_vel_y: 0.0
+      max_vel_theta: 1.0
+      min_speed_xy: 0.0
+      max_speed_xy: 0.26
+      min_speed_theta: 0.0
+      acc_lim_x: 2.5
+      acc_lim_y: 0.0
+      acc_lim_theta: 3.2
+      decel_lim_x: -2.5
+      decel_lim_y: 0.0
+      decel_lim_theta: -3.2
+      # Trajectory generation
+      vx_samples: 20
+      vy_samples: 0
+      vtheta_samples: 20
+      sim_time: 1.7
+      linear_granularity: 0.05
+      angular_granularity: 0.025
+      transform_tolerance: 0.2
+      xy_goal_tolerance: 0.25
+      yaw_goal_tolerance: 0.25
       critics: ["RotateToGoal", "Oscillation", "BaseObstacle", "GoalAlign", "PathAlign", "PathDist", "GoalDist"]
-      RotateToGoal: {plugin: "dwb_critics::RotateToGoal", scale: 32.0}
-      Oscillation: {plugin: "dwb_critics::Oscillation", scale: 1.0}
-      BaseObstacle: {plugin: "dwb_critics::BaseObstacle", scale: 5.0}
-      GoalAlign: {plugin: "dwb_critics::GoalAlign", scale: 24.0}
-      PathAlign: {plugin: "dwb_critics::PathAlign", scale: 32.0}
-      PathDist: {plugin: "dwb_critics::PathDist", scale: 32.0}
-      GoalDist: {plugin: "dwb_critics::GoalDist", scale: 24.0}
+      RotateToGoal:
+        plugin: "dwb_critics::RotateToGoalCritic"
+        scale: 32.0
+      Oscillation:
+        plugin: "dwb_critics::OscillationCritic"
+        scale: 1.0
+      BaseObstacle:
+        plugin: "dwb_critics::BaseObstacleCritic"
+        scale: 5.0
+      GoalAlign:
+        plugin: "dwb_critics::GoalAlignCritic"
+        scale: 24.0
+      PathAlign:
+        plugin: "dwb_critics::PathAlignCritic"
+        scale: 32.0
+      PathDist:
+        plugin: "dwb_critics::PathDistCritic"
+        scale: 32.0
+      GoalDist:
+        plugin: "dwb_critics::GoalDistCritic"
+        scale: 24.0
 
 local_costmap:
   local_costmap:
@@ -148,4 +187,3 @@ lifecycle_manager:
       - behavior_server
       - bt_navigator
       - waypoint_follower
-      - velocity_smoother
