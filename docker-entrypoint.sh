@@ -22,4 +22,7 @@ export GZ_SIM_RESOURCE_PATH="${GZ_SIM_RESOURCE_PATH}:/ros2_ws/install/leo_rover_
 # Default ROS Domain ID
 export ROS_DOMAIN_ID="${ROS_DOMAIN_ID:-0}"
 
+# Export gz resources for office map
+export GZ_SIM_RESOURCE_PATH=$GZ_SIM_RESOURCE_PATH:/ros2_ws/src/husarion_gz_worlds/models
+
 exec "$@"

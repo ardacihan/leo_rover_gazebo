@@ -21,8 +21,9 @@ def generate_launch_description():
     pkg_gazebo       = get_package_share_directory('leo_rover_gazebo')
 
     xacro_file  = os.path.join(pkg_description, 'urdf', 'leo_rover_with_sensors.urdf.xacro')
-    world_path  = os.path.join(pkg_gazebo,      'worlds', 'leo_world.sdf')
-
+    #world_path  = os.path.join(pkg_gazebo,      'worlds', 'leo_world.sdf')
+    world_path = '/ros2_ws/src/husarion_gz_worlds/worlds/husarion_office.sdf'
+    
     # ── 1. Gazebo — use ros_gz_sim's launcher so GZ_SIM_* env is set correctly
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -74,7 +75,7 @@ def generate_launch_description():
                 '0', '0', '0',
                 '0', '0', '0',
                 f'{robot_ns}/sensor_lidar_link',
-                f'{robot_ns}/{robot_ns}/base_footprint/gpu_lidar'
+                f'{robot_ns}/base_footprint/gpu_lidar'
             ],
             parameters=[{'use_sim_time': True}],
             output='screen'

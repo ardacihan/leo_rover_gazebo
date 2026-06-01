@@ -5,7 +5,8 @@
 * Ubuntu 22.04 (Jammy)
 * ROS 2 Humble
 * Gazebo Harmonic (`gz-sim8`)
-* Install leo_commos-ros2 and place it under src https://github.com/LeoRover/leo_common-ros2 
+* Leo rover model https://github.com/LeoRover/leo_common-ros2 
+* Custom office map https://github.com/husarion/husarion_gz_worlds.git" 
 
 ---
 
@@ -58,18 +59,26 @@ then in container
 apt update && apt install -y mesa-utils
 ```
 
+Get in existing container from other terminals
+
+```bash
+docker exec -t -i magical_cerf /bin/bash
+```
 
 ## 4. Build the Workspace
 
 Inside the container:
 
 ```bash
+cd /ros2_ws/src
+git clone https://github.com/husarion/husarion_gz_worlds.git
+```
+```bash
 cd /ros2_ws
 colcon build --symlink-install --packages-skip leo_rover_slam
 source install/setup.bash
 clear
 ```
-
 ---
 
 # Launch Gazebo
