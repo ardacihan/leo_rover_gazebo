@@ -13,22 +13,20 @@ slam_toolbox:
     # --- Scan Matching ---
     use_scan_matching: true
     use_scan_barycenter: true
-    minimum_time_interval: 0.05
+    minimum_time_interval: 0.5
 
     # --- Map Parameters ---
-    resolution: 0.03
+    resolution: 0.05
     max_laser_range: 20.0
-    map_update_interval: 0.1
-    transform_publish_period: 0.02
+    map_update_interval: 1.0
+    transform_publish_period: 0.05
 
     # --- Performance & Optimization ---
-    # Solver settings (Standard for most 2D Lidar)
     solver_plugin: "solver_plugins::CeresSolver"
     ceres_linear_solver: "SPARSE_NORMAL_CHOLESKY"
     ceres_preconditioner: "SCHUR_JACOBI"
     ceres_trust_strategy: "LEVENBERG_MARQUARDT"
 
-    # Optimization/Loop Closure
     do_loop_closing: true
     loop_search_maximum_distance: 5.0
     loop_match_minimum_chain_size: 3
@@ -36,14 +34,13 @@ slam_toolbox:
     loop_match_minimum_response_coarse: 0.35
     loop_match_minimum_response_fine: 0.45
 
-    # Thresholds for when to add a new scan to the pose graph
-    minimum_travel_distance: 0.001
-    minimum_travel_heading: 0.05
+    minimum_travel_distance: 0.2
+    minimum_travel_heading: 0.2
 
     # --- Buffers and Limits ---
     tf_buffer_duration: 30.0
     transform_timeout: 0.5
-    stack_size_to_use: 40000000 # Required for larger map serialization
+    stack_size_to_use: 40000000
 
     # --- Interactive Mode ---
     enable_interactive_mode: true
