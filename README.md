@@ -62,7 +62,7 @@ apt update && apt install -y mesa-utils
 Get in existing container from other terminals
 
 ```bash
-docker exec -t -i magical_cerf /bin/bash
+docker exec -t -i <container name> /bin/bash
 ```
 
 ## 4. Build the Workspace
@@ -75,9 +75,11 @@ git clone https://github.com/husarion/husarion_gz_worlds.git
 ```
 ```bash
 cd /ros2_ws
-colcon build --symlink-install --packages-skip leo_rover_slam
+colcon build --symlink-install 
 source install/setup.bash
 clear
+ros2 launch leo_rover_gazebo two_robots.launch.py
+
 ```
 ---
 

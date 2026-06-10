@@ -18,11 +18,12 @@ fi
 export GZ_VERSION=harmonic
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 export GZ_SIM_RESOURCE_PATH="${GZ_SIM_RESOURCE_PATH}:/ros2_ws/install/leo_rover_description/share"
-
 # Default ROS Domain ID
 export ROS_DOMAIN_ID="${ROS_DOMAIN_ID:-0}"
 
 # Export gz resources for office map
 export GZ_SIM_RESOURCE_PATH=$GZ_SIM_RESOURCE_PATH:/ros2_ws/src/husarion_gz_worlds/models
+export GZ_SIM_RESOURCE_PATH=$GZ_SIM_RESOURCE_PATH:/ros2_ws/install/leo_rover_gazebo/share/leo_rover_gazebo/ar_tags/model
+
 
 exec "$@"
