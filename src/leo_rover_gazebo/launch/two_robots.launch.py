@@ -18,10 +18,8 @@ def generate_launch_description():
 
     pkg_ros_gz_sim   = get_package_share_directory('ros_gz_sim')
     pkg_description  = get_package_share_directory('leo_rover_description')
-    pkg_gazebo       = get_package_share_directory('leo_rover_gazebo')
 
     xacro_file  = os.path.join(pkg_description, 'urdf', 'leo_rover_with_sensors.urdf.xacro')
-    #world_path  = os.path.join(pkg_gazebo,      'worlds', 'leo_world.sdf')
     world_path = '/ros2_ws/src/husarion_gz_worlds/worlds/husarion_office_aruco.sdf'
     
     # ── 1. Gazebo — use ros_gz_sim's launcher so GZ_SIM_* env is set correctly
@@ -125,6 +123,20 @@ def generate_launch_description():
             output='screen'
         )
 
-        entities += [rsp, spawn, bridge,gpu_lidar_tf]
+        # ── Per-robot aurco detector with correct namesapce
+
+        aruco_detector = Node(
+            package='leo_rover_semantic_vision',
+            executable='aruco_detection_node',
+            namespace='',
+            name='aruco_detector',
+            output='screen',
+            parameters=[{
+                'use_sim_time': True,
+                'robot_ns': robot_ns
+            }],
+        )
+
+        entities += [rsp, spawn, bridge,gpu_lidar_tf,aruco_detector]
 
     return LaunchDescription(entities)

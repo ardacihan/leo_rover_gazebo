@@ -59,6 +59,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         ros-humble-robot-localization \
     && rm -rf /var/lib/apt/lists/*
 
+# ── OpenCV ─────────────────────────────────────────────
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3-opencv \
+    ros-humble-cv-bridge \
+    && rm -rf /var/lib/apt/lists/*
+
 # ── The "TypeHash" & Linker Fix ───────────────────────────────────────────────
 # This ensures Python and C++ libraries are properly indexed by the OS.
 RUN echo "/opt/ros/humble/lib" > /etc/ld.so.conf.d/ros-humble.conf && ldconfig

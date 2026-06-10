@@ -15,15 +15,9 @@ setup(
     zip_safe=True,
     maintainer='arda',
     maintainer_email='ardacihan7452@gmail.com',
-    description='TODO: Package description',
-    license='TODO: License declaration',
-    extras_require={
-        'test': [
-            'pytest',
-        ],
-    },
     entry_points={
         'console_scripts': [
+            'aruco_detection_node = leo_rover_semantic_vision.aruco_detection_node:main',
         ],
     },
 )
