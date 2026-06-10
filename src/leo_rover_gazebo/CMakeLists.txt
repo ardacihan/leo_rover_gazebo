@@ -56,14 +56,6 @@ install(
   DESTINATION share/${PROJECT_NAME}/maps
 )
 
-
-install(
-  DIRECTORY ar_tags/
-  DESTINATION share/${PROJECT_NAME}/ar_tags
-)
-
-
-
 # -----------------------
 # Env hooks
 # -----------------------

@@ -78,8 +78,6 @@ cd /ros2_ws
 colcon build --symlink-install 
 source install/setup.bash
 clear
-ros2 launch leo_rover_gazebo two_robots.launch.py
-
 ```
 ---
 
@@ -119,4 +117,20 @@ ros2 launch leo_rover_gazebo slam.launch.py
 
 ```bash
  ros2 launch leo_rover_gazebo nav2.launch.py
+``` 
+---
+
+## Add ArUco Markers to Husarion Office World
+
+First, copy the original world file and create a modified version:
+
+Then open `husarion_office_aruco.sdf` and insert the following model block inside the `<world>` section:
+
+```xml
+<include>
+  <uri>model://aruco_0</uri>
+  <name>aruco_0</name>
+  <pose>1 0 0 0 0 0</pose>
+</include>
 ```
+
