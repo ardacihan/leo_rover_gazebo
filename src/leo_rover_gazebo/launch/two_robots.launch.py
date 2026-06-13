@@ -20,9 +20,9 @@ def generate_launch_description():
     pkg_description  = get_package_share_directory('leo_rover_description')
 
     xacro_file  = os.path.join(pkg_description, 'urdf', 'leo_rover_with_sensors.urdf.xacro')
-    world_path = '/ros2_ws/src/husarion_gz_worlds/worlds/husarion_office_aruco.sdf'
-    
-    # ── 1. Gazebo — use ros_gz_sim's launcher so GZ_SIM_* env is set correctly
+    world_path = '/ros2_ws/src/husarion_gz_worlds/worlds/husarion_office.sdf'
+
+    # ── 1. Gazebo
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')
@@ -42,6 +42,7 @@ def generate_launch_description():
 
     entities = [gz_sim, clock_bridge]
 
+    # ── 3. Robots
     for i in range(num_robots):
         robot_ns = f'leo{i + 1}'
         spawn_x  = str(float(i) * 2.5)
@@ -50,7 +51,6 @@ def generate_launch_description():
             'xacro', ' ', xacro_file, ' ', 'robot_ns:=', robot_ns
         ])
 
-        # ── robot_state_publisher (one per robot, in its namespace)
         rsp = Node(
             package='robot_state_publisher',
             executable='robot_state_publisher',
@@ -79,9 +79,6 @@ def generate_launch_description():
             output='screen'
         )
 
-        # ── Spawn: triggered 5 s after gz_sim starts to ensure world is ready.
-        # ros_gz_sim's gz_sim.launch.py names its Gazebo process 'gzserver'
-        # on some versions; a fixed delay is the most reliable approach here.
         spawn = TimerAction(
             period=5.0,
             actions=[Node(
@@ -97,7 +94,6 @@ def generate_launch_description():
             )]
         )
 
-        # ── Per-robot bridge
         bridge = Node(
             package='ros_gz_bridge',
             executable='parameter_bridge',
@@ -123,8 +119,6 @@ def generate_launch_description():
             output='screen'
         )
 
-        # ── Per-robot aurco detector with correct namesapce
-
         aruco_detector = Node(
             package='leo_rover_semantic_vision',
             executable='aruco_detection_node',
@@ -137,6 +131,38 @@ def generate_launch_description():
             }],
         )
 
-        entities += [rsp, spawn, bridge,gpu_lidar_tf,aruco_detector]
+        entities += [rsp, spawn, bridge, gpu_lidar_tf, aruco_detector]
+
+    # Spawn 6 markers
+    aruco_poses = [
+        ( 0,  '2.0',  '0.0'),
+        ( 1,  '2.0',  '1.0'),
+        ( 2,  '3.0',  '1.0'),
+        ( 3,  '4.0',  '1.0'),
+        ( 4,  '4.0',  '0.0'),
+        ( 5,  '4.0', '-1.0'),
+    ]
+
+    for marker_id, mx, my in aruco_poses:
+        spawn_aruco = TimerAction(
+            period=6.0,
+            actions=[Node(
+                package='ros_gz_sim',
+                executable='create',
+                name=f'spawn_aruco_{marker_id}',
+                arguments=[
+                    '-name', f'aruco_{marker_id}',
+                    '-x', mx, '-y', my, '-z', '1.0',
+                    '-string', f'''<?xml version="1.0"?>
+                    <sdf version="1.9">
+                      <include>
+                        <uri>model://aruco_{marker_id}</uri>
+                      </include>
+                    </sdf>'''
+                ],
+                output='screen'
+            )]
+        )
+        entities.append(spawn_aruco)
 
     return LaunchDescription(entities)
