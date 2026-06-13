@@ -14,7 +14,7 @@ from launch_ros.parameter_descriptions import ParameterValue
 
 
 def generate_launch_description():
-    num_robots = 1
+    num_robots = 2
 
     pkg_ros_gz_sim   = get_package_share_directory('ros_gz_sim')
     pkg_description  = get_package_share_directory('leo_rover_description')
@@ -43,9 +43,14 @@ def generate_launch_description():
     entities = [gz_sim, clock_bridge]
 
     # ── 3. Robots
+    spawn_poses = {
+        'leo1': ('0.0', '0.0', '0.2', '0.0', '0.0', '0.0'),
+        'leo2': ('2.36', '-11.27', '0.05', '0.0', '0.0', '0.0'),
+    }
+
     for i in range(num_robots):
         robot_ns = f'leo{i + 1}'
-        spawn_x  = str(float(i) * 2.5)
+        spawn_x, spawn_y, spawn_z, spawn_R, spawn_P, spawn_Y = spawn_poses[robot_ns]
 
         robot_desc = Command([
             'xacro', ' ', xacro_file, ' ', 'robot_ns:=', robot_ns
@@ -88,12 +93,14 @@ def generate_launch_description():
                 arguments=[
                     '-name',  robot_ns,
                     '-topic', f'/{robot_ns}/robot_description',
-                    '-x', spawn_x, '-y', '0.0', '-z', '0.2',
+                    '-x', spawn_x, '-y', spawn_y, '-z', spawn_z,
+                    '-R', spawn_R, '-P', spawn_P, '-Y', spawn_Y,
                 ],
                 output='screen'
             )]
         )
 
+        # ── Per-robot bridge
         bridge = Node(
             package='ros_gz_bridge',
             executable='parameter_bridge',
@@ -107,7 +114,7 @@ def generate_launch_description():
                 f'/{robot_ns}/camera/image@sensor_msgs/msg/Image[gz.msgs.Image',
                 f'/{robot_ns}/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo',
                 f'/{robot_ns}/camera/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked',
-                f'/model/leo1/pose@geometry_msgs/msg/Pose[gz.msgs.Pose',
+                f'/model/{robot_ns}/pose@geometry_msgs/msg/Pose[gz.msgs.Pose',
                 f'/model/{robot_ns}/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V',
                 f'/{robot_ns}/joint_states@sensor_msgs/msg/JointState[gz.msgs.Model',
                 '/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V',

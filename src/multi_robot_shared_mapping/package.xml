@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>multi_robot_shared_mapping</name>
+  <version>0.1.0</version>
+  <description>Multi-robot shared mapping scaffold for Leo Rover.</description>
+
+  <maintainer email="team@example.com">team</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>ament_python</buildtool_depend>
+
+  <depend>rclpy</depend>
+  <depend>nav_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>slam_toolbox</depend>
+  <depend>leo_rover_gazebo</depend>
+
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>
