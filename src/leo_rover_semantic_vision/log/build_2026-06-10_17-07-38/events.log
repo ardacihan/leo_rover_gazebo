@@ -1,0 +1,43 @@
+[0.000000] (-) TimerEvent: {}
+[0.000643] (leo_rover_semantic_vision) JobQueued: {'identifier': 'leo_rover_semantic_vision', 'dependencies': OrderedDict()}
+[0.000775] (leo_rover_semantic_vision) JobStarted: {'identifier': 'leo_rover_semantic_vision'}
+[0.099759] (-) TimerEvent: {}
+[0.200071] (-) TimerEvent: {}
+[0.300376] (-) TimerEvent: {}
+[0.400727] (-) TimerEvent: {}
+[0.501073] (-) TimerEvent: {}
+[0.514421] (leo_rover_semantic_vision) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', '-W', 'ignore:easy_install command is deprecated', 'setup.py', 'develop', '--editable', '--build-directory', '/ros2_ws/build/leo_rover_semantic_vision/build', '--no-deps', 'symlink_data'], 'cwd': '/ros2_ws/build/leo_rover_semantic_vision', 'env': {'GZ_SIM_RESOURCE_PATH': '/opt/ros/humble/share:/ros2_ws/src/leo_rover_gazebo/ar_tags:/ros2_ws/install/leo_rover_description/share:/ros2_ws/src/husarion_gz_worlds/models:/ros2_ws/install/leo_rover_gazebo/share/leo_rover_gazebo/ar_tags/model:/ros2_ws/install/leo_rover_description/share', 'HOSTNAME': 'arda-desktop', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib', 'HOME': '/root', 'OLDPWD': '/ros2_ws', 'ROS_PYTHON_VERSION': '3', 'ROS_DISTRO': 'humble', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'NVIDIA_DRIVER_CAPABILITIES': 'all', 'TERM': 'xterm', 'ROS_LOCALHOST_ONLY': '0', 'PATH': '/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin', 'DISPLAY': ':0', 'LANG': 'en_US.UTF-8', 'RMW_IMPLEMENTATION': 'rmw_cyclonedds_cpp', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:', 'ROS_DOMAIN_ID': '0', 'AMENT_PREFIX_PATH': '/opt/ros/humble', 'DEBIAN_FRONTEND': 'noninteractive', 'IGN_GAZEBO_RESOURCE_PATH': '/opt/ros/humble/share', 'GZ_VERSION': 'harmonic', 'PWD': '/ros2_ws/build/leo_rover_semantic_vision', 'LC_ALL': 'en_US.UTF-8', 'PYTHONPATH': '/ros2_ws/build/leo_rover_semantic_vision/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/ros2_ws/install/leo_rover_semantic_vision/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages', 'NVIDIA_VISIBLE_DEVICES': 'all', 'COLCON': '1', 'COLCON_HOME': '/ros2_ws/.colcon'}, 'shell': False}
+[0.601182] (-) TimerEvent: {}
+[0.701559] (-) TimerEvent: {}
+[0.729363] (leo_rover_semantic_vision) StdoutLine: {'line': b'running develop\n'}
+[0.801646] (-) TimerEvent: {}
+[0.857292] (leo_rover_semantic_vision) StdoutLine: {'line': b'running egg_info\n'}
+[0.857493] (leo_rover_semantic_vision) StdoutLine: {'line': b'creating leo_rover_semantic_vision.egg-info\n'}
+[0.857638] (leo_rover_semantic_vision) StdoutLine: {'line': b'writing leo_rover_semantic_vision.egg-info/PKG-INFO\n'}
+[0.857769] (leo_rover_semantic_vision) StdoutLine: {'line': b'writing dependency_links to leo_rover_semantic_vision.egg-info/dependency_links.txt\n'}
+[0.857885] (leo_rover_semantic_vision) StdoutLine: {'line': b'writing entry points to leo_rover_semantic_vision.egg-info/entry_points.txt\n'}
+[0.858023] (leo_rover_semantic_vision) StdoutLine: {'line': b'writing requirements to leo_rover_semantic_vision.egg-info/requires.txt\n'}
+[0.858120] (leo_rover_semantic_vision) StdoutLine: {'line': b'writing top-level names to leo_rover_semantic_vision.egg-info/top_level.txt\n'}
+[0.858244] (leo_rover_semantic_vision) StdoutLine: {'line': b"writing manifest file 'leo_rover_semantic_vision.egg-info/SOURCES.txt'\n"}
+[0.859386] (leo_rover_semantic_vision) StdoutLine: {'line': b"reading manifest file 'leo_rover_semantic_vision.egg-info/SOURCES.txt'\n"}
+[0.859913] (leo_rover_semantic_vision) StdoutLine: {'line': b"writing manifest file 'leo_rover_semantic_vision.egg-info/SOURCES.txt'\n"}
+[0.860988] (leo_rover_semantic_vision) StdoutLine: {'line': b'running build_ext\n'}
+[0.861145] (leo_rover_semantic_vision) StdoutLine: {'line': b'Creating /ros2_ws/install/leo_rover_semantic_vision/lib/python3.10/site-packages/leo-rover-semantic-vision.egg-link (link to .)\n'}
+[0.861743] (leo_rover_semantic_vision) StdoutLine: {'line': b'Installing aruco_detection_node script to /ros2_ws/install/leo_rover_semantic_vision/lib/leo_rover_semantic_vision\n'}
+[0.861880] (leo_rover_semantic_vision) StdoutLine: {'line': b'Installing semantic_vision_node script to /ros2_ws/install/leo_rover_semantic_vision/lib/leo_rover_semantic_vision\n'}
+[0.862039] (leo_rover_semantic_vision) StdoutLine: {'line': b'\n'}
+[0.862138] (leo_rover_semantic_vision) StdoutLine: {'line': b'Installed /ros2_ws/build/leo_rover_semantic_vision\n'}
+[0.862272] (leo_rover_semantic_vision) StdoutLine: {'line': b'running symlink_data\n'}
+[0.862368] (leo_rover_semantic_vision) StdoutLine: {'line': b'creating /ros2_ws/install/leo_rover_semantic_vision/share/ament_index\n'}
+[0.862465] (leo_rover_semantic_vision) StdoutLine: {'line': b'creating /ros2_ws/install/leo_rover_semantic_vision/share/ament_index/resource_index\n'}
+[0.862613] (leo_rover_semantic_vision) StdoutLine: {'line': b'creating /ros2_ws/install/leo_rover_semantic_vision/share/ament_index/resource_index/packages\n'}
+[0.862730] (leo_rover_semantic_vision) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/leo_rover_semantic_vision/resource/leo_rover_semantic_vision -> /ros2_ws/install/leo_rover_semantic_vision/share/ament_index/resource_index/packages\n'}
+[0.862820] (leo_rover_semantic_vision) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/leo_rover_semantic_vision/package.xml -> /ros2_ws/install/leo_rover_semantic_vision/share/leo_rover_semantic_vision\n'}
+[0.862910] (leo_rover_semantic_vision) StdoutLine: {'line': b'creating /ros2_ws/install/leo_rover_semantic_vision/share/leo_rover_semantic_vision/launch\n'}
+[0.862997] (leo_rover_semantic_vision) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/leo_rover_semantic_vision/launch/aruco_detection.launch.py -> /ros2_ws/install/leo_rover_semantic_vision/share/leo_rover_semantic_vision/launch\n'}
+[0.863086] (leo_rover_semantic_vision) StdoutLine: {'line': b'creating /ros2_ws/install/leo_rover_semantic_vision/share/leo_rover_semantic_vision/config\n'}
+[0.863174] (leo_rover_semantic_vision) StdoutLine: {'line': b'symbolically linking /ros2_ws/build/leo_rover_semantic_vision/config/aruco_params.yaml -> /ros2_ws/install/leo_rover_semantic_vision/share/leo_rover_semantic_vision/config\n'}
+[0.882238] (leo_rover_semantic_vision) CommandEnded: {'returncode': 0}
+[0.901724] (-) TimerEvent: {}
+[0.905409] (leo_rover_semantic_vision) JobEnded: {'identifier': 'leo_rover_semantic_vision', 'rc': 0}
+[0.906308] (-) EventReactorShutdown: {}

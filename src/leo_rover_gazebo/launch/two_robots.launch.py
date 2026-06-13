@@ -122,7 +122,7 @@ def generate_launch_description():
         aruco_detector = Node(
             package='leo_rover_semantic_vision',
             executable='aruco_detection_node',
-            namespace='',
+            namespace=robot_ns,
             name='aruco_detector',
             output='screen',
             parameters=[{

@@ -63,6 +63,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-opencv \
     ros-humble-cv-bridge \
+    ros-humble-tf-transformations \
     && rm -rf /var/lib/apt/lists/*
 
 # ── The "TypeHash" & Linker Fix ───────────────────────────────────────────────
