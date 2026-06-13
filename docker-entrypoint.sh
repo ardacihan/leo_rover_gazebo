@@ -24,5 +24,7 @@ export ROS_DOMAIN_ID="${ROS_DOMAIN_ID:-0}"
 # Export gz resources for office map
 export GZ_SIM_RESOURCE_PATH=$GZ_SIM_RESOURCE_PATH:/ros2_ws/src/husarion_gz_worlds/models
 export GZ_SIM_RESOURCE_PATH=$GZ_SIM_RESOURCE_PATH:/ros2_ws/src/leo_rover_gazebo/models
+export IGN_GAZEBO_RESOURCE_PATH=$IGN_GAZEBO_RESOURCE_PATH:/ros2_ws/src/leo_rover_gazebo/models
+export IGN_GAZEBO_RESOURCE_PATH=$IGN_GAZEBO_RESOURCE_PATH:/ros2_ws/src/husarion_gz_worlds/models
 
 exec "$@"

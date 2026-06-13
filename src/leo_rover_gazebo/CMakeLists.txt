@@ -56,6 +56,10 @@ install(
   DESTINATION share/${PROJECT_NAME}/maps
 )
 
+install(
+  DIRECTORY models/
+  DESTINATION share/${PROJECT_NAME}/models
+)
 # -----------------------
 # Env hooks
 # -----------------------
