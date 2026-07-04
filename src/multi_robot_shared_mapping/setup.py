@@ -4,6 +4,7 @@ from glob import glob
 
 package_name = "multi_robot_shared_mapping"
 
+
 setup(
     name=package_name,
     version="0.1.0",
@@ -12,7 +13,8 @@ setup(
         ("share/ament_index/resource_index/packages", ["resource/" + package_name]),
         ("share/" + package_name, ["package.xml"]),
         (os.path.join("share", package_name, "launch"), glob("launch/*.launch.py")),
-        (os.path.join("share", package_name, "config"), glob("config/*.yaml")),
+        (os.path.join("share", package_name, "config"), glob("config/*")),
+        (os.path.join("share", package_name, "assets", "apriltags"), glob("assets/apriltags/*")),
     ],
     install_requires=["setuptools"],
     zip_safe=True,
@@ -26,6 +28,10 @@ setup(
             "shared_map_merger = multi_robot_shared_mapping.shared_map_merger:main",
             "robot_state_registry = multi_robot_shared_mapping.robot_state_registry:main",
             "odom_tf_broadcaster = multi_robot_shared_mapping.odom_tf_broadcaster:main",
+            "apriltag_detection_node = multi_robot_shared_mapping.apriltag_detection_node:main",
+            "tag_based_map_aligner = multi_robot_shared_mapping.tag_based_map_aligner:main",
+            "map_based_aligner = multi_robot_shared_mapping.map_based_aligner:main",
+            "save_shared_outputs = multi_robot_shared_mapping.save_shared_outputs:main",
         ],
     },
 )

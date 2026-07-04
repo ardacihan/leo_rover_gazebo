@@ -51,9 +51,6 @@ class RobotStateRegistry(Node):
         msg.data = "\n".join(lines)
         self.pub.publish(msg)
 
-        if msg.data:
-            self.get_logger().info(msg.data)
-
 
 def main(args=None):
     rclpy.init(args=args)
