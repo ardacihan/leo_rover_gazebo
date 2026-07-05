@@ -81,10 +81,10 @@ clear
 ```
 ---
 
-# Launch Gazebo
+# Launch Gazebo (Select world; aws_room, warehouse or husarion_office)
 
 ```bash
-ros2 launch leo_rover_gazebo two_robots.launch.py
+ros2 launch leo_rover_gazebo two_robots.launch.py world:=husarion_office
 ```
 
 # Keyboard Controls

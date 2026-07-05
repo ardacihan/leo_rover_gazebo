@@ -3,26 +3,136 @@ from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
 from launch.actions import (
-    ExecuteProcess, IncludeLaunchDescription,
-    RegisterEventHandler, TimerAction
+    DeclareLaunchArgument, IncludeLaunchDescription,
+    OpaqueFunction, TimerAction, SetEnvironmentVariable
 )
-from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 from launch.substitutions import Command
 from launch_ros.parameter_descriptions import ParameterValue
 
+# ── Per-map spawn coordinates: (x, y, z, R, P, Y) ──
+SPAWN_POSES = {
+    'husarion_office': {
+        'leo1': ('0.0', '0.0', '0.2', '0.0', '0.0', '0.0'),
+        'leo2': ('2.36', '-11.27', '0.05', '0.0', '0.0', '0.0'),
+    },
+    'aws_room': {
+        'leo1': ('0.0', '0.0', '0.2', '0.0', '0.0', '0.0'),
+        'leo2': ('2.0', '2.0', '0.2', '0.0', '0.0', '0.0'),
+    },
+    'warehouse': {
+        'leo1': ('0.0', '0.0', '0.2', '0.0', '0.0', '0.0'),
+        'leo2': ('2.0', '2.0', '0.2', '0.0', '0.0', '0.0'),
+    },
+    'empty': {
+        'leo1': ('0.0', '0.0', '0.2', '0.0', '0.0', '0.0'),
+        'leo2': ('2.0', '0.0', '0.2', '0.0', '0.0', '0.0'),
+    },
+}
 
-def generate_launch_description():
+# ── Per-map ArUco marker coordinates: (id, x, y, z, yaw) ──
+MARKER_POSES = {
+    'husarion_office': [
+        (0, 6.51, -11.88, 0.72, 0.0),
+        (1, 10.48, -3.42, 0.36, 0.0),
+        (2, 3.89, -8.48, 0.49, 0.0),
+        (3, 1.80, 0.0, 0.3, 1.61),
+        (4, 2.06, -5.25, 1.0, 0.0),
+        (5, 9.31, -0.05, 0.45, -1.66),
+    ],
+    'aws_room': [
+        (0, 0.8, -1.1, 0.1, 0.0),
+        (1, 2.9, 3.4, 0.1, 0.0),
+        (2, 6.5, 0.9, 0.1, 0.0),
+        (3, 8.6, -1.0, 0.1, 0.0),
+        (4, -6.1, 2.0, 0.1, 0.0),
+        (5, -1.4, 4.1, 0.1, 0.0),
+        (6, -8.2, 1.9, 0.1, 0.0),
+        (7, 4.6, -5.1, 0.1, 0.0),
+    ],
+    'warehouse': [
+        (0, 2.0, 0.0, 0.1, 0.0),
+        (1, 4.0, 0.0, 0.1, 0.0),
+        (2, 6.0, 0.0, 0.1, 0.0),
+        (3, 8.0, 0.0, 0.1, 0.0),
+        (4, 2.0, 2.0, 0.1, 0.0),
+        (5, 4.0, 2.0, 0.1, 0.0),
+        (6, 6.0, 2.0, 0.1, 0.0),
+        (7, 8.0, 2.0, 0.1, 0.0),
+    ],
+}
+
+
+def launch_setup(context, *args, **kwargs):
     num_robots = 2
 
-    pkg_ros_gz_sim   = get_package_share_directory('ros_gz_sim')
-    pkg_description  = get_package_share_directory('leo_rover_description')
+    pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
+    pkg_description = get_package_share_directory('leo_rover_description')
+    pkg_husarion = get_package_share_directory('husarion_gz_worlds')
+    pkg_leo_gazebo = get_package_share_directory('leo_rover_gazebo')
 
-    xacro_file  = os.path.join(pkg_description, 'urdf', 'leo_rover_with_sensors.urdf.xacro')
-    world_path = '/ros2_ws/src/husarion_gz_worlds/worlds/husarion_office.sdf'
+    xacro_file = os.path.join(pkg_description, 'urdf', 'leo_rover_with_sensors.urdf.xacro')
 
-    # ── 1. Gazebo
+    # World paths
+    husarion_sdf = os.path.join(pkg_husarion, 'worlds', 'husarion_office.sdf')
+    husarion_aruco_sdf = os.path.join(pkg_husarion, 'worlds', 'husarion_office_aruco.sdf')
+
+    if os.path.exists(husarion_aruco_sdf):
+        husarion_world = husarion_aruco_sdf
+    else:
+        husarion_world = husarion_sdf
+
+    worlds = {
+        'husarion_office': husarion_world,
+        'empty': os.path.join(pkg_husarion, 'worlds', 'empty_with_plugins.sdf'),
+        'aws_room': os.path.join(pkg_leo_gazebo, 'maps', 'small_house.world'),
+        'warehouse': '/ros2_ws/src/aws-robomaker-small-warehouse-world/worlds/small_warehouse.world',
+    }
+
+    world_name = LaunchConfiguration('world').perform(context)
+    world_path = worlds.get(world_name, worlds['husarion_office'])
+
+    if not os.path.exists(world_path):
+        print(f"WARNING: World file {world_path} not found! Using husarion_office instead.")
+        world_path = worlds['husarion_office']
+        world_name = 'husarion_office'
+
+    # ── Set up resource paths for all models ──
+    aws_warehouse_path = '/ros2_ws/src/aws-robomaker-small-warehouse-world'
+
+    resource_paths = [
+        os.path.join(pkg_husarion, 'models'),
+        os.path.join(pkg_leo_gazebo, 'models'),
+        os.path.join(pkg_leo_gazebo, 'maps'),
+        '/ros2_ws/src/leo_rover_gazebo/models',  # Explicitly add the models path
+    ]
+
+    if os.path.exists(aws_warehouse_path):
+        resource_paths.append(os.path.join(aws_warehouse_path, 'models'))
+        resource_paths.append(aws_warehouse_path)
+
+    resource_path_str = ':'.join(filter(None, resource_paths))
+
+    # Set environment variables
+    gazebo_model_path = os.environ.get('GAZEBO_MODEL_PATH', '')
+    gazebo_model_path = f"{resource_path_str}:{gazebo_model_path}" if resource_path_str else gazebo_model_path
+
+    ign_resource_path = os.environ.get('IGN_GAZEBO_RESOURCE_PATH', '')
+    ign_resource_path = f"{resource_path_str}:{ign_resource_path}" if resource_path_str else ign_resource_path
+
+    gz_sim_resource_path = os.environ.get('GZ_SIM_RESOURCE_PATH', '')
+    gz_sim_resource_path = f"{resource_path_str}:{gz_sim_resource_path}" if resource_path_str else gz_sim_resource_path
+
+    set_gazebo_path = SetEnvironmentVariable('GAZEBO_MODEL_PATH', gazebo_model_path)
+    set_ign_path = SetEnvironmentVariable('IGN_GAZEBO_RESOURCE_PATH', ign_resource_path)
+    set_gz_sim_path = SetEnvironmentVariable('GZ_SIM_RESOURCE_PATH', gz_sim_resource_path)
+
+    print(f"Loading world: {world_name} from {world_path}")
+    print(f"Resource paths: {resource_path_str}")
+
+    # ── 1. Gazebo ──
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')
@@ -30,7 +140,7 @@ def generate_launch_description():
         launch_arguments={'gz_args': f'-r {world_path}'}.items(),
     )
 
-    # ── 2. Clock bridge
+    # ── 2. Clock bridge ──
     clock_bridge = Node(
         package='ros_gz_bridge',
         executable='parameter_bridge',
@@ -40,17 +150,22 @@ def generate_launch_description():
         output='screen'
     )
 
-    entities = [gz_sim, clock_bridge]
+    entities = [set_gazebo_path, set_ign_path, set_gz_sim_path, gz_sim, clock_bridge]
 
-    # ── 3. Robots
-    spawn_poses = {
-        'leo1': ('0.0', '0.0', '0.2', '0.0', '0.0', '0.0'),
-        'leo2': ('2.36', '-11.27', '0.05', '0.0', '0.0', '0.0'),
+    # ── 3. Robots ──
+    default_poses = SPAWN_POSES.get(world_name, SPAWN_POSES['husarion_office'])
+    override = {
+        'leo1': LaunchConfiguration('leo1_pose').perform(context),
+        'leo2': LaunchConfiguration('leo2_pose').perform(context),
     }
 
     for i in range(num_robots):
         robot_ns = f'leo{i + 1}'
-        spawn_x, spawn_y, spawn_z, spawn_R, spawn_P, spawn_Y = spawn_poses[robot_ns]
+
+        if override[robot_ns]:
+            spawn_x, spawn_y, spawn_z, spawn_R, spawn_P, spawn_Y = override[robot_ns].split(',')
+        else:
+            spawn_x, spawn_y, spawn_z, spawn_R, spawn_P, spawn_Y = default_poses[robot_ns]
 
         robot_desc = Command([
             'xacro', ' ', xacro_file, ' ', 'robot_ns:=', robot_ns
@@ -91,7 +206,7 @@ def generate_launch_description():
                 executable='create',
                 name=f'spawn_{robot_ns}',
                 arguments=[
-                    '-name',  robot_ns,
+                    '-name', robot_ns,
                     '-topic', f'/{robot_ns}/robot_description',
                     '-x', spawn_x, '-y', spawn_y, '-z', spawn_z,
                     '-R', spawn_R, '-P', spawn_P, '-Y', spawn_Y,
@@ -100,7 +215,6 @@ def generate_launch_description():
             )]
         )
 
-        # ── Per-robot bridge
         bridge = Node(
             package='ros_gz_bridge',
             executable='parameter_bridge',
@@ -140,17 +254,8 @@ def generate_launch_description():
 
         entities += [rsp, spawn, bridge, gpu_lidar_tf, aruco_detector]
 
-    # Spawn 6 markers
-    aruco_poses = [
-        ( 0,  '2.0',  '0.0'),
-        ( 1,  '2.0',  '1.0'),
-        ( 2,  '3.0',  '1.0'),
-        ( 3,  '4.0',  '1.0'),
-        ( 4,  '4.0',  '0.0'),
-        ( 5,  '4.0', '-1.0'),
-    ]
-
-    for marker_id, mx, my in aruco_poses:
+    # ── 4. Spawn ArUco markers ──
+    for marker_id, mx, my, mz, myaw in MARKER_POSES.get(world_name, []):
         spawn_aruco = TimerAction(
             period=6.0,
             actions=[Node(
@@ -159,7 +264,8 @@ def generate_launch_description():
                 name=f'spawn_aruco_{marker_id}',
                 arguments=[
                     '-name', f'aruco_{marker_id}',
-                    '-x', mx, '-y', my, '-z', '1.0',
+                    '-x', str(mx), '-y', str(my), '-z', str(mz),
+                    '-Y', str(myaw),
                     '-string', f'''<?xml version="1.0"?>
                     <sdf version="1.9">
                       <include>
@@ -172,4 +278,23 @@ def generate_launch_description():
         )
         entities.append(spawn_aruco)
 
-    return LaunchDescription(entities)
+    return entities
+
+
+def generate_launch_description():
+    world_arg = DeclareLaunchArgument(
+        'world', default_value='husarion_office',
+        description='World to launch: husarion_office, empty, aws_room, warehouse'
+    )
+    leo1_pose_arg = DeclareLaunchArgument(
+        'leo1_pose', default_value='',
+        description='Override leo1 spawn as "x,y,z,R,P,Y"'
+    )
+    leo2_pose_arg = DeclareLaunchArgument(
+        'leo2_pose', default_value='',
+        description='Override leo2 spawn as "x,y,z,R,P,Y"'
+    )
+    return LaunchDescription([
+        world_arg, leo1_pose_arg, leo2_pose_arg,
+        OpaqueFunction(function=launch_setup)
+    ])
