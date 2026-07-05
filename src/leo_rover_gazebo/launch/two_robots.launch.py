@@ -32,35 +32,65 @@ SPAWN_POSES = {
     },
 }
 
-# ── Per-map ArUco marker coordinates: (id, x, y, z, yaw) ──
+
 MARKER_POSES = {
     'husarion_office': [
-        (0, 6.51, -11.88, 0.72, 0.0),
-        (1, 10.48, -3.42, 0.36, 0.0),
-        (2, 3.89, -8.48, 0.49, 0.0),
-        (3, 1.80, 0.0, 0.3, 1.61),
-        (4, 2.06, -5.25, 1.0, 0.0),
-        (5, 9.31, -0.05, 0.45, -1.66),
+        (0, 6.51, -11.97, 0.3, 0.0, 0.0, -0.02),
+        (1, 9.39, -8.03, 0.3, 0.0, 0.0, 1.57),
+        (2, 1.79, 0.0, 0.3, 0.0, 0.0, -1.57),
+        (3, 9.31, 0.0, 0.3, 0.0, 0.0, -1.57),
+        (4, 12.5, -3.41, 0.3, 0.0, 0.0, 3.14),
+        (5, 13.33, -5.9, 0.3, 0.0, 0.0, 1.7),
+        (6, 1.47, -5.42, 0.3, 0.0, 0.0, 0.0),
+        (7, 4.01, -7.54, 0.3, 0.0, 0.0, 1.7),
+        (8, 6.28, -4.41 , 0.3, 0.0, 0.0, 0.0),
+        (9, 8.52, -7.48, 0.3, 0.0, 0.0, 1.57),
     ],
+
     'aws_room': [
-        (0, 0.8, -1.1, 0.1, 0.0),
-        (1, 2.9, 3.4, 0.1, 0.0),
-        (2, 6.5, 0.9, 0.1, 0.0),
-        (3, 8.6, -1.0, 0.1, 0.0),
-        (4, -6.1, 2.0, 0.1, 0.0),
-        (5, -1.4, 4.1, 0.1, 0.0),
-        (6, -8.2, 1.9, 0.1, 0.0),
-        (7, 4.6, -5.1, 0.1, 0.0),
+        # AWS Small House - wall-mounted markers at eye level (z=1.2)
+        # Front wall (facing north)
+        (0, 0.0, -5.0, 0.2, 0.0, 0.0, 1.57),  # Front wall
+        (1, 3.0, -5.0, 0.2, 0.0, 0.0, 1.57),  # Front wall
+
+        # Back wall (facing south)
+        (2, -3.0, 5.0, 0.2, 0.0, 0.0, -1.57),  # Back wall
+        (3, 0.0, 5.0, 0.2, 0.0, 0.0, -1.57),  # Back wall
+
+        # Left wall (facing east)
+        (4, -5.0, 0.0, 0.2, 0.0, 0.0, 0.0),  # Left wall
+        (5, -5.0, 2.0, 0.2, 0.0, 0.0, 0.0),  # Left wall
+
+        # Right wall (facing west)
+        (6, 5.0, -2.0, 0.2, 0.0, 0.0, 3.14),  # Right wall
+        (7, 5.0, 2.0, 0.2, 0.0, 0.0, 3.14),  # Right wall
+
+        # Interior walls
+        (8, 2.0, 0.0, 0.2, 0.0, 0.0, 1.57),  # Interior wall
+        (9, -2.0, 0.0, 0.2, 0.0, 0.0, -1.57),  # Interior wall
     ],
+
     'warehouse': [
-        (0, 2.0, 0.0, 0.1, 0.0),
-        (1, 4.0, 0.0, 0.1, 0.0),
-        (2, 6.0, 0.0, 0.1, 0.0),
-        (3, 8.0, 0.0, 0.1, 0.0),
-        (4, 2.0, 2.0, 0.1, 0.0),
-        (5, 4.0, 2.0, 0.1, 0.0),
-        (6, 6.0, 2.0, 0.1, 0.0),
-        (7, 8.0, 2.0, 0.1, 0.0),
+        # Warehouse - wall-mounted markers at eye level (z=1.2)
+        # North wall (facing south)
+        (0, -5.0, 10.0, 0.2, 0.0, 0.0, -1.57),  # North wall
+        (1, 0.0, 10.0, 0.2, 0.0, 0.0, -1.57),  # North wall
+        (2, 5.0, 10.0, 0.2, 0.0, 0.0, -1.57),  # North wall
+
+        # South wall (facing north)
+        (3, -5.0, -10.0, 0.2, 0.0, 0.0, 1.57),  # South wall
+        (4, 0.0, -10.0, 0.2, 0.0, 0.0, 1.57),  # South wall
+        (5, 5.0, -10.0, 0.2, 0.0, 0.0, 1.57),  # South wall
+
+        # East wall (facing west)
+        (6, 10.0, -5.0, 0.2, 0.0, 0.0, 3.14),  # East wall
+        (7, 10.0, 0.0, 0.2, 0.0, 0.0, 3.14),  # East wall
+        (8, 10.0, 5.0, 0.2, 0.0, 0.0, 3.14),  # East wall
+
+        # West wall (facing east)
+        (9, -10.0, -5.0, 0.2, 0.0, 0.0, 0.0),  # West wall
+        (10, -10.0, 0.0, 0.2, 0.0, 0.0, 0.0),  # West wall
+        (11, -10.0, 5.0, 0.2, 0.0, 0.0, 0.0),  # West wall
     ],
 }
 
@@ -106,7 +136,7 @@ def launch_setup(context, *args, **kwargs):
         os.path.join(pkg_husarion, 'models'),
         os.path.join(pkg_leo_gazebo, 'models'),
         os.path.join(pkg_leo_gazebo, 'maps'),
-        '/ros2_ws/src/leo_rover_gazebo/models',  # Explicitly add the models path
+        '/ros2_ws/src/leo_rover_gazebo/models',
     ]
 
     if os.path.exists(aws_warehouse_path):
@@ -254,8 +284,11 @@ def launch_setup(context, *args, **kwargs):
 
         entities += [rsp, spawn, bridge, gpu_lidar_tf, aruco_detector]
 
-    # ── 4. Spawn ArUco markers ──
-    for marker_id, mx, my, mz, myaw in MARKER_POSES.get(world_name, []):
+    # ── 4. Spawn ArUco markers on walls ──
+    for marker_data in MARKER_POSES.get(world_name, []):
+        marker_id = marker_data[0]
+        mx, my, mz, mroll, mpitch, myaw = marker_data[1:7]
+
         spawn_aruco = TimerAction(
             period=6.0,
             actions=[Node(
@@ -265,7 +298,7 @@ def launch_setup(context, *args, **kwargs):
                 arguments=[
                     '-name', f'aruco_{marker_id}',
                     '-x', str(mx), '-y', str(my), '-z', str(mz),
-                    '-Y', str(myaw),
+                    '-R', str(mroll), '-P', str(mpitch), '-Y', str(myaw),
                     '-string', f'''<?xml version="1.0"?>
                     <sdf version="1.9">
                       <include>
