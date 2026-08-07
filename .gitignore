@@ -7,6 +7,13 @@
 *.o
 *.obj
 
+# Generated ROS maps and media
+artifacts/
+*.pdf
+
+# ChatGPT / Repomix context exports (may contain lab details)
+chatgpt_context/
+
 # Precompiled Headers
 *.gch
 *.pch

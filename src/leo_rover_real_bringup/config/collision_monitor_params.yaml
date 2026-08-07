@@ -1,0 +1,34 @@
+collision_monitor:
+  ros__parameters:
+    use_sim_time: false
+    base_frame_id: base_footprint
+    odom_frame_id: odom
+    cmd_vel_in_topic: /cmd_vel_raw
+    cmd_vel_out_topic: /cmd_vel
+    transform_tolerance: 0.2
+    source_timeout: 0.4
+    base_shift_correction: true
+    stop_pub_timeout: 1.0
+
+    # Leo is approximately 0.44 x 0.44 m. The circumscribed approach circle
+    # represents the whole rover. Its time-to-collision model is directional:
+    # it constrains motion toward an obstacle without choking motion away.
+    polygons: [FootprintApproach]
+    # The approach model simulates the commanded velocity against the rover
+    # footprint.  Unlike a fixed stop rectangle, it permits a slow reverse
+    # away from a front wall and permits a turn that increases clearance.
+    FootprintApproach:
+      type: circle
+      radius: 0.31
+      action_type: approach
+      time_before_collision: 1.5
+      simulation_time_step: 0.1
+      max_points: 5
+      visualize: true
+      polygon_pub_topic: /collision_monitor/approach_footprint
+      enabled: true
+    observation_sources: [scan]
+    scan:
+      type: scan
+      topic: /scan
+      enabled: true
