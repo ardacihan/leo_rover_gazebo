@@ -48,6 +48,9 @@ class SyntheticSafetyChain(Node):
         self.scan_pub = self.create_publisher(
             LaserScan, "/codex_probe/scan", qos_profile_sensor_data
         )
+        self.camera_scan_pub = self.create_publisher(
+            LaserScan, "/codex_probe/camera_scan", qos_profile_sensor_data
+        )
         self.odom_pub = self.create_publisher(
             Odometry, "/codex_probe/odom", qos_profile_sensor_data
         )
@@ -113,6 +116,7 @@ class SyntheticSafetyChain(Node):
                 distance = 0.40
             scan.ranges.append(distance)
         self.scan_pub.publish(scan)
+        self.camera_scan_pub.publish(scan)
 
         odom = Odometry()
         odom.pose.pose.orientation.w = 1.0
@@ -141,6 +145,7 @@ def main():
         args=[
             "--ros-args",
             "-p", "scan_topic:=/codex_probe/scan",
+            "-p", "camera_scan_topic:=/codex_probe/camera_scan",
             "-p", "odom_topic:=/codex_probe/odom",
             "-p", "battery_topic:=/codex_probe/battery",
             "-p", "cmd_vel_request_topic:=/codex_probe/cmd_request",

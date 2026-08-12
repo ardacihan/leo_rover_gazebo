@@ -21,11 +21,21 @@ def generate_launch_description():
     lidar_yaw = LaunchConfiguration("lidar_yaw")
     start_explorer = LaunchConfiguration("start_explorer")
     run_duration = LaunchConfiguration("run_duration")
+    linear_speed = LaunchConfiguration("linear_speed")
     max_distance = LaunchConfiguration("max_distance")
     planned_turn_distance = LaunchConfiguration("planned_turn_distance")
     maximum_reverse_speed = LaunchConfiguration("maximum_reverse_speed")
     minimum_reverse_clearance = LaunchConfiguration("minimum_reverse_clearance")
     scan_topic = LaunchConfiguration("scan_topic")
+    filtered_scan_topic = LaunchConfiguration("filtered_scan_topic")
+    camera_scan_topic = LaunchConfiguration("camera_scan_topic")
+    camera_x = LaunchConfiguration("camera_x")
+    camera_y = LaunchConfiguration("camera_y")
+    camera_z = LaunchConfiguration("camera_z")
+    camera_roll = LaunchConfiguration("camera_roll")
+    camera_pitch = LaunchConfiguration("camera_pitch")
+    camera_yaw = LaunchConfiguration("camera_yaw")
+    battery_topic = LaunchConfiguration("battery_topic")
     cmd_vel_request_topic = LaunchConfiguration("cmd_vel_request_topic")
     cmd_vel_in_topic = LaunchConfiguration("cmd_vel_in_topic")
     cmd_vel_out_topic = LaunchConfiguration("cmd_vel_out_topic")
@@ -37,11 +47,25 @@ def generate_launch_description():
         DeclareLaunchArgument("lidar_yaw", default_value="0.0"),
         DeclareLaunchArgument("start_explorer", default_value="false"),
         DeclareLaunchArgument("run_duration", default_value="180.0"),
+        DeclareLaunchArgument("linear_speed", default_value="0.08"),
         DeclareLaunchArgument("max_distance", default_value="12.0"),
         DeclareLaunchArgument("planned_turn_distance", default_value="1.5"),
         DeclareLaunchArgument("maximum_reverse_speed", default_value="0.04"),
         DeclareLaunchArgument("minimum_reverse_clearance", default_value="0.75"),
         DeclareLaunchArgument("scan_topic", default_value="/scan"),
+        DeclareLaunchArgument(
+            "filtered_scan_topic", default_value="/scan_self_filtered"
+        ),
+        DeclareLaunchArgument("camera_scan_topic", default_value="/camera/scan"),
+        DeclareLaunchArgument("camera_x", default_value="0.065"),
+        DeclareLaunchArgument("camera_y", default_value="-0.020"),
+        DeclareLaunchArgument("camera_z", default_value="0.31"),
+        DeclareLaunchArgument("camera_roll", default_value="0.0"),
+        DeclareLaunchArgument("camera_pitch", default_value="0.0"),
+        DeclareLaunchArgument("camera_yaw", default_value="0.0"),
+        DeclareLaunchArgument(
+            "battery_topic", default_value="/rob_2/firmware/battery_averaged"
+        ),
         DeclareLaunchArgument(
             "cmd_vel_request_topic", default_value="/cmd_vel_request"
         ),
@@ -59,7 +83,38 @@ def generate_launch_description():
                 "--pitch", "0.0",
                 "--roll", "0.0",
                 "--frame-id", "base_footprint",
-                "--child-frame-id", "laser",
+                "--child-frame-id", "laser_frame",
+            ],
+            output="screen",
+        ),
+        Node(
+            package="tf2_ros",
+            executable="static_transform_publisher",
+            name="camera_mount_static_transform",
+            arguments=[
+                "--x", camera_x, "--y", camera_y, "--z", camera_z,
+                "--roll", camera_roll, "--pitch", camera_pitch,
+                "--yaw", camera_yaw,
+                "--frame-id", "base_footprint",
+                "--child-frame-id", "camera_link",
+            ],
+            output="screen",
+        ),
+        Node(
+            package="depthimage_to_laserscan",
+            executable="depthimage_to_laserscan_node",
+            name="depthimage_to_laserscan",
+            parameters=[{
+                "output_frame": "camera_color_frame",
+                "scan_height": 80,
+                "scan_time": 0.0667,
+                "range_min": 0.20,
+                "range_max": 3.0,
+            }],
+            remappings=[
+                ("depth", "/camera/camera/aligned_depth_to_color/image_raw"),
+                ("depth_camera_info", "/camera/camera/aligned_depth_to_color/camera_info"),
+                ("scan", camera_scan_topic),
             ],
             output="screen",
         ),
@@ -83,6 +138,10 @@ def generate_launch_description():
             name="safety_command_gate",
             parameters=[{
                 "scan_topic": scan_topic,
+                "battery_topic": battery_topic,
+                "filtered_scan_topic": filtered_scan_topic,
+                "camera_scan_topic": camera_scan_topic,
+                "require_camera_scan": True,
                 "cmd_vel_request_topic": cmd_vel_request_topic,
                 "cmd_vel_raw_topic": cmd_vel_in_topic,
                 "maximum_reverse_speed": maximum_reverse_speed,
@@ -98,7 +157,11 @@ def generate_launch_description():
             parameters=[
                 collision_params,
                 {
-                    "scan.topic": scan_topic,
+                    "observation_sources": ["scan", "camera_scan"],
+                    "scan.topic": filtered_scan_topic,
+                    "camera_scan.type": "scan",
+                    "camera_scan.topic": camera_scan_topic,
+                    "camera_scan.enabled": True,
                     "cmd_vel_in_topic": cmd_vel_in_topic,
                     "cmd_vel_out_topic": cmd_vel_out_topic,
                 },
@@ -124,10 +187,13 @@ def generate_launch_description():
             name="safe_room_explorer",
             parameters=[{
                 "run_duration": run_duration,
+                "linear_speed": linear_speed,
                 "max_distance": max_distance,
                 "planned_turn_distance": planned_turn_distance,
-                "scan_topic": scan_topic,
+                "scan_topic": filtered_scan_topic,
+                "camera_scan_topic": camera_scan_topic,
                 "odom_topic": "/wheel_odom_integrated",
+                "battery_topic": battery_topic,
                 "cmd_vel_request_topic": cmd_vel_request_topic,
                 "cmd_vel_output_topic": cmd_vel_out_topic,
                 "reverse_speed": maximum_reverse_speed,

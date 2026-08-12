@@ -32,6 +32,8 @@ class SafeRoomExplorer(Node):
         super().__init__("safe_room_explorer")
 
         self.declare_parameter("scan_topic", "/scan")
+        self.declare_parameter("camera_scan_topic", "/camera/scan")
+        self.declare_parameter("camera_scan_timeout", 0.5)
         self.declare_parameter("odom_topic", "/wheel_odom_integrated")
         self.declare_parameter("battery_topic", "/firmware/battery_averaged")
         self.declare_parameter("cmd_vel_request_topic", "/cmd_vel_request")
@@ -43,8 +45,8 @@ class SafeRoomExplorer(Node):
         self.declare_parameter("planned_turn_distance", 1.5)
         self.declare_parameter("planned_turn_angle", 1.05)
         self.declare_parameter("minimum_battery_voltage", 11.50)
-        self.declare_parameter("front_stop_distance", 0.90)
-        self.declare_parameter("front_clear_distance", 1.10)
+        self.declare_parameter("front_stop_distance", 0.55)
+        self.declare_parameter("front_clear_distance", 0.70)
         self.declare_parameter("self_filter_radius", 0.05)
         self.declare_parameter("minimum_turn_clearance", 0.45)
         self.declare_parameter("minimum_turn_progress", 0.15)
@@ -62,6 +64,8 @@ class SafeRoomExplorer(Node):
         self.declare_parameter("output_timeout", 1.0)
 
         self.scan_topic = self.get_parameter("scan_topic").value
+        self.camera_scan_topic = self.get_parameter("camera_scan_topic").value
+        self.camera_scan_timeout = float(self.get_parameter("camera_scan_timeout").value)
         self.odom_topic = self.get_parameter("odom_topic").value
         self.battery_topic = self.get_parameter("battery_topic").value
         self.cmd_request_topic = self.get_parameter("cmd_vel_request_topic").value
@@ -166,6 +170,10 @@ class SafeRoomExplorer(Node):
             LaserScan, self.scan_topic, self._scan_callback, qos_profile_sensor_data
         )
         self.create_subscription(
+            LaserScan, self.camera_scan_topic, self._camera_scan_callback,
+            qos_profile_sensor_data
+        )
+        self.create_subscription(
             Odometry, self.odom_topic, self._odom_callback, qos_profile_sensor_data
         )
         self.create_subscription(
@@ -181,10 +189,12 @@ class SafeRoomExplorer(Node):
         now = time.monotonic()
         self.start_time = now
         self.scan_time = None
+        self.camera_scan_time = None
         self.odom_time = None
         self.battery_time = None
         self.output_time = None
         self.scan = None
+        self.camera_scan = None
         self.battery = None
         self.last_output = Twist()
         self.first_position = None
@@ -228,6 +238,10 @@ class SafeRoomExplorer(Node):
         self.scan = msg
         self.scan_time = time.monotonic()
 
+    def _camera_scan_callback(self, msg):
+        self.camera_scan = msg
+        self.camera_scan_time = time.monotonic()
+
     def _odom_callback(self, msg):
         now = time.monotonic()
         position = (
@@ -267,27 +281,28 @@ class SafeRoomExplorer(Node):
     def _normalize_angle(angle):
         return math.atan2(math.sin(angle), math.cos(angle))
 
-    def _sector_clearance(self, lower_degrees, upper_degrees):
-        if self.scan is None:
+    def _sector_clearance(self, lower_degrees, upper_degrees, scan=None):
+        scan = self.scan if scan is None else scan
+        if scan is None:
             return 0.0
         lower = math.radians(lower_degrees)
         upper = math.radians(upper_degrees)
         values = []
-        angle = float(self.scan.angle_min)
-        for reading in self.scan.ranges:
+        angle = float(scan.angle_min)
+        for reading in scan.ranges:
             normalized = self._normalize_angle(angle)
             if lower <= normalized <= upper:
                 if math.isinf(reading) and reading > 0.0:
-                    values.append(float(self.scan.range_max))
+                    values.append(float(scan.range_max))
                 elif (
                     math.isfinite(reading)
                     and reading >= max(
-                        self.scan.range_min, self.self_filter_radius
+                        scan.range_min, self.self_filter_radius
                     )
-                    and reading <= self.scan.range_max
+                    and reading <= scan.range_max
                 ):
                     values.append(float(reading))
-            angle += float(self.scan.angle_increment)
+            angle += float(scan.angle_increment)
         if len(values) < 5:
             return 0.0
         values.sort()
@@ -320,6 +335,10 @@ class SafeRoomExplorer(Node):
             return "command chain discovery incomplete"
         if not self._fresh(self.scan_time, self.scan_timeout, now):
             return "stale lidar scan"
+        if not self._fresh(
+            self.camera_scan_time, self.camera_scan_timeout, now
+        ):
+            return "stale depth-camera scan"
         if not self._fresh(self.odom_time, self.odom_timeout, now):
             return "stale wheel odometry"
         if not self._fresh(self.battery_time, self.battery_timeout, now):
@@ -330,6 +349,9 @@ class SafeRoomExplorer(Node):
         if (
             self.motion_started
             and now - self.motion_start_time > max(2.0, self.output_timeout)
+            and self.mode in (
+                "forward", "turning", "planned_turning", "reversing"
+            )
             and not self._fresh(self.output_time, self.output_timeout, now)
         ):
             return "collision monitor output is not live"
@@ -413,7 +435,7 @@ class SafeRoomExplorer(Node):
         problem = self._readiness_problem(now)
         if problem is not None:
             self._publish()
-            if self.motion_started or now - self.start_time > 5.0:
+            if self.motion_started or now - self.start_time > 15.0:
                 self._finish(problem)
             return
 
@@ -425,6 +447,10 @@ class SafeRoomExplorer(Node):
             return
 
         front = self._sector_clearance(-32.0, 32.0)
+        camera_front = self._sector_clearance(
+            -32.0, 32.0, self.camera_scan
+        )
+        front = min(front, camera_front)
         left = self._sector_clearance(25.0, 105.0)
         right = self._sector_clearance(-105.0, -25.0)
         rear_left = self._sector_clearance(100.0, 170.0)

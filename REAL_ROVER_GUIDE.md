@@ -320,6 +320,34 @@ Ensure exactly one publisher owns the LIDAR transform. For planar SLAM, X/Y and
 yaw errors are especially damaging. Do not add a second static transform merely
 because `tf2_echo` was slow to respond.
 
+### Rover 4 LIDAR and camera mount geometry (2026-08-12)
+
+The physical LIDAR scan plane is approximately 0.04 m above the rover top
+plane. The rear-right mounted camera reaches approximately 0.20 m above the
+rover top plane, so its top is about 0.16 m above the LIDAR scan plane. The
+camera body may be above the beam, but its bracket, cable, base, or lower
+housing can still intersect the horizontal scan.
+
+A stationary live scan on Rover 4 measured the fixed self-return at about
+`+49 deg` through `+78 deg`, with ranges of approximately `0.06-0.17 m`. The
+real-rover safety path therefore masks only returns satisfying both conditions:
+
+```text
+angle:    +45 deg to +82 deg
+distance: <= 0.22 m
+```
+
+This is a bounded self-mask, not a blind sector: obstacles farther than 0.22 m
+in the same direction remain visible to the explorer and Nav2 Collision
+Monitor. The filtered scan topic is `/scan_self_filtered`; raw `/scan` remains
+available and is still used by SLAM.
+
+In the conventional ROS planar LIDAR convention, positive scan angles point
+toward the robot left. Because the known camera is physically rear-right but
+appears at positive angles, the LIDAR frame yaw or physical mounting orientation
+may not match `base_footprint`. Measure and calibrate the exact LIDAR `(x, y, z,
+yaw)` transform before treating the map as navigation-grade.
+
 ### Hardware SLAM package added to this repository
 
 This repository now contains `src/leo_rover_real_bringup`, a small package that

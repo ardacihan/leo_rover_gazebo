@@ -6,8 +6,8 @@ collision_monitor:
     cmd_vel_in_topic: /cmd_vel_raw
     cmd_vel_out_topic: /cmd_vel
     transform_tolerance: 0.2
-    source_timeout: 0.4
-    base_shift_correction: true
+    source_timeout: 0.5
+    base_shift_correction: false
     stop_pub_timeout: 1.0
 
     # Leo is approximately 0.44 x 0.44 m. The circumscribed approach circle

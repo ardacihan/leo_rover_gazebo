@@ -2,6 +2,7 @@
 
 """Fail-closed velocity gate for the physical Leo Rover."""
 
+import copy
 import math
 import time
 
@@ -10,7 +11,7 @@ from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
 from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
-from rclpy.qos import qos_profile_sensor_data
+from rclpy.qos import QoSProfile, ReliabilityPolicy, qos_profile_sensor_data
 from sensor_msgs.msg import LaserScan
 from std_msgs.msg import Float32
 
@@ -24,6 +25,13 @@ class SafetyCommandGate(Node):
         super().__init__("safety_command_gate")
 
         self.declare_parameter("scan_topic", "/scan")
+        self.declare_parameter("filtered_scan_topic", "/scan_self_filtered")
+        self.declare_parameter("camera_scan_topic", "/camera/scan")
+        self.declare_parameter("require_camera_scan", True)
+        self.declare_parameter("camera_scan_timeout", 0.5)
+        self.declare_parameter("self_mask_angle_min_degrees", 45.0)
+        self.declare_parameter("self_mask_angle_max_degrees", 82.0)
+        self.declare_parameter("self_mask_max_range", 0.22)
         self.declare_parameter("odom_topic", "/wheel_odom")
         self.declare_parameter("battery_topic", "/firmware/battery_averaged")
         self.declare_parameter("cmd_vel_request_topic", "/cmd_vel_request")
@@ -42,6 +50,13 @@ class SafetyCommandGate(Node):
         self.declare_parameter("command_timeout", 0.3)
 
         scan_topic = self.get_parameter("scan_topic").value
+        filtered_scan_topic = self.get_parameter("filtered_scan_topic").value
+        camera_scan_topic = self.get_parameter("camera_scan_topic").value
+        self.require_camera_scan = bool(self.get_parameter("require_camera_scan").value)
+        self.camera_scan_timeout = float(self.get_parameter("camera_scan_timeout").value)
+        self.self_mask_angle_min = math.radians(float(self.get_parameter("self_mask_angle_min_degrees").value))
+        self.self_mask_angle_max = math.radians(float(self.get_parameter("self_mask_angle_max_degrees").value))
+        self.self_mask_max_range = min(max(float(self.get_parameter("self_mask_max_range").value), 0.0), 0.25)
         odom_topic = self.get_parameter("odom_topic").value
         battery_topic = self.get_parameter("battery_topic").value
         request_topic = self.get_parameter("cmd_vel_request_topic").value
@@ -93,11 +108,21 @@ class SafetyCommandGate(Node):
         )
 
         self.publisher = self.create_publisher(Twist, raw_topic, 10)
+        filtered_scan_qos = QoSProfile(
+            depth=10, reliability=ReliabilityPolicy.RELIABLE
+        )
+        self.filtered_scan_publisher = self.create_publisher(
+            LaserScan, filtered_scan_topic, filtered_scan_qos
+        )
         self.create_subscription(
             Twist, request_topic, self._command_callback, 10
         )
         self.create_subscription(
             LaserScan, scan_topic, self._scan_callback, qos_profile_sensor_data
+        )
+        self.create_subscription(
+            LaserScan, camera_scan_topic, self._camera_scan_callback,
+            qos_profile_sensor_data
         )
         self.create_subscription(
             Odometry, odom_topic, self._odom_callback, qos_profile_sensor_data
@@ -109,6 +134,7 @@ class SafetyCommandGate(Node):
         self.command = Twist()
         self.command_time = None
         self.scan_time = None
+        self.camera_scan_time = None
         self.odom_time = None
         self.battery_time = None
         self.battery = None
@@ -132,6 +158,20 @@ class SafetyCommandGate(Node):
     def _scan_callback(self, msg):
         finite_points = 0
         rear_distances = []
+        filtered = copy.deepcopy(msg)
+        filtered_ranges = list(filtered.ranges)
+        mask_angle = float(filtered.angle_min)
+        for index, value in enumerate(filtered_ranges):
+            if (
+                self.self_mask_angle_min <= mask_angle <= self.self_mask_angle_max
+                and math.isfinite(value)
+                and value <= self.self_mask_max_range
+            ):
+                filtered_ranges[index] = float("inf")
+            mask_angle += float(filtered.angle_increment)
+        filtered.ranges = filtered_ranges
+        self.filtered_scan_publisher.publish(filtered)
+        msg = filtered
         angle = float(msg.angle_min)
         for value in msg.ranges:
             if math.isfinite(value) and msg.range_min <= value <= msg.range_max:
@@ -150,6 +190,9 @@ class SafetyCommandGate(Node):
         )
         self.scan_time = time.monotonic()
 
+    def _camera_scan_callback(self, _msg):
+        self.camera_scan_time = time.monotonic()
+
     def _odom_callback(self, _msg):
         self.odom_messages += 1
         self.odom_time = time.monotonic()
@@ -167,6 +210,10 @@ class SafetyCommandGate(Node):
             return "stale command"
         if not self._fresh(self.scan_time, self.scan_timeout, now):
             return "stale lidar scan"
+        if self.require_camera_scan and not self._fresh(
+            self.camera_scan_time, self.camera_scan_timeout, now
+        ):
+            return "stale depth-camera scan"
         if self.finite_scan_points < self.minimum_finite_points:
             return f"only {self.finite_scan_points} finite scan points"
         if not self._fresh(self.odom_time, self.odom_timeout, now):
