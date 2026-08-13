@@ -358,6 +358,13 @@ class FrontierExplorer(Node):
         right = self._sector(-100.0, -25.0)
         error = heading_error(self.target, xy, yaw)
 
+        # Rotating in place closes no distance, so the stall timer must not run
+        # while the rover is still lining up. A half turn at the angular cap
+        # takes over ten seconds, which is longer than the stall timeout: left
+        # running, it abandons every target before ever driving at one.
+        if abs(error) > self.heading_tolerance or front < self.front_stop:
+            self.stall_since = now
+
         # Obstacle handling wins over goal seeking. Turning toward the freer
         # side rather than the target keeps the rover from grinding along a
         # wall that happens to lie between it and the frontier.

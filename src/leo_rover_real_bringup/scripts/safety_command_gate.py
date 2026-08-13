@@ -51,6 +51,13 @@ class SafetyCommandGate(Node):
         self.declare_parameter(
             "allowed_cmd_vel_output_publishers", ["collision_monitor"]
         )
+        # Nodes permitted to subscribe to the gate output. Collision Monitor is
+        # the consumer; the incident recorder only observes, so that it can tell
+        # a gate refusal apart from a Collision Monitor veto when capturing.
+        self.declare_parameter(
+            "allowed_cmd_vel_raw_subscribers",
+            ["collision_monitor", "incident_recorder"],
+        )
         self.declare_parameter(
             "conditionally_disabled_output_publisher", "robot_supervisor_rgb"
         )
@@ -118,6 +125,13 @@ class SafetyCommandGate(Node):
         self.conditional_publisher_state_time = None
         self.conditional_publisher_request_time = None
         self.request_topic = request_topic
+        self.raw_topic = raw_topic
+        self.allowed_raw_subscribers = {
+            str(name).lstrip("/")
+            for name in self.get_parameter(
+                "allowed_cmd_vel_raw_subscribers"
+            ).value
+        }
 
         if request_topic.rstrip("/") in ("/cmd_vel", "/cmd_vel_raw"):
             raise RuntimeError("request topic would bypass part of the safety chain")
@@ -325,10 +339,20 @@ class SafetyCommandGate(Node):
     def _blocking_reason(self, now):
         if self.count_publishers(self.request_topic) > 1:
             return "multiple command-request publishers"
-        if self.publisher.get_subscription_count() != 1:
-            return (
-                "raw command path must have exactly one Collision Monitor "
-                f"subscriber (found {self.publisher.get_subscription_count()})"
+        # Check *which* node consumes the gate output, not merely how many do.
+        # A bare count of one passes even when the single subscriber is a rogue
+        # consumer and Collision Monitor is absent, and it fails on a passive
+        # observer such as the incident recorder, which never publishes.
+        raw_names = {
+            info.node_name.lstrip("/")
+            for info in self.get_subscriptions_info_by_topic(self.raw_topic)
+        }
+        if "collision_monitor" not in raw_names:
+            return "Collision Monitor is not subscribed to the gate output"
+        unexpected = raw_names - self.allowed_raw_subscribers
+        if unexpected:
+            return "unexpected raw command consumers: " + ", ".join(
+                sorted(unexpected)
             )
         output_infos = self.get_publishers_info_by_topic(
             self.cmd_vel_output_topic
