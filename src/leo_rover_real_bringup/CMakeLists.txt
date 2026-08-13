@@ -9,6 +9,7 @@ install(DIRECTORY config launch
 
 install(PROGRAMS
   scripts/depth_height_filter.py
+  scripts/map_coverage_reporter.py
   scripts/mapping_artifact_recorder.py
   scripts/scan_fusion.py
   scripts/safety_command_gate.py
@@ -19,6 +20,7 @@ install(PROGRAMS
 
 install(FILES
   scripts/exploration_policy.py
+  scripts/map_coverage.py
   scripts/mapping_artifacts.py
   scripts/sensor_geometry.py
   DESTINATION lib/${PROJECT_NAME}

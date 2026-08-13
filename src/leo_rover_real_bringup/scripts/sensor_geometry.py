@@ -114,8 +114,16 @@ def scan_to_base_points(
     self_mask_angle_min=None,
     self_mask_angle_max=None,
     self_mask_max_range=0.0,
+    self_mask_footprint_radius=0.0,
 ):
-    """Convert scan samples into base-frame XYZ points with an optional bounded self-mask."""
+    """Convert scan samples into base-frame XYZ points with an optional bounded self-mask.
+
+    The angular mask covers the known mast signature. `self_mask_footprint_radius`
+    is a backstop for structure outside that window: any return landing inside
+    the rover's own footprint cannot be an external obstacle, whatever its
+    bearing. Rover 4 needs it for a bracket return at raw-laser -142..-140 deg
+    that the mast window does not reach.
+    """
     values = np.asarray(ranges, dtype=np.float64)
     angles = float(angle_min) + np.arange(values.size, dtype=np.float64) * float(angle_increment)
     valid = (
@@ -140,7 +148,12 @@ def scan_to_base_points(
     ))
     matrix = np.asarray(rotation, dtype=np.float64).reshape(3, 3)
     offset = np.asarray(translation, dtype=np.float64).reshape(1, 3)
-    return sensor_points @ matrix.T + offset
+    base_points = sensor_points @ matrix.T + offset
+    radius = float(self_mask_footprint_radius)
+    if radius > 0.0:
+        outside = np.hypot(base_points[:, 0], base_points[:, 1]) > radius
+        base_points = base_points[outside]
+    return base_points
 
 
 def merge_planar_points(

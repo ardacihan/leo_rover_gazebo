@@ -42,6 +42,12 @@ class ScanFusion(Node):
         self.declare_parameter("self_mask_angle_min_degrees", 12.0)
         self.declare_parameter("self_mask_angle_max_degrees", 83.0)
         self.declare_parameter("self_mask_max_range", 0.22)
+        # Backstop for self-returns the mast window does not cover. Measured on
+        # Rover 4 over 300 scans: a bracket returns at raw-laser -142..-140 deg,
+        # 0.033 m, in 5-9% of scans, landing at base (0.104, 0.061) -- inside
+        # the footprint, and inside Collision Monitor's 0.31 m approach circle,
+        # so it would intermittently veto motion.
+        self.declare_parameter("self_mask_footprint_radius", 0.22)
 
         self.base_frame = str(self.get_parameter("base_frame").value)
         self.camera_timeout = float(self.get_parameter("camera_timeout").value)
@@ -59,6 +65,9 @@ class ScanFusion(Node):
             float(self.get_parameter("self_mask_angle_max_degrees").value)
         )
         self.self_mask_max_range = float(self.get_parameter("self_mask_max_range").value)
+        self.self_mask_footprint_radius = float(
+            self.get_parameter("self_mask_footprint_radius").value
+        )
 
         self.tf_buffer = tf2_ros.Buffer(cache_time=Duration(seconds=5.0))
         self.tf_listener = tf2_ros.TransformListener(self.tf_buffer, self)
@@ -142,6 +151,7 @@ class ScanFusion(Node):
                 "self_mask_angle_min": self.self_mask_angle_min,
                 "self_mask_angle_max": self.self_mask_angle_max,
                 "self_mask_max_range": self.self_mask_max_range,
+                "self_mask_footprint_radius": self.self_mask_footprint_radius,
             }
         return scan_to_base_points(
             msg.ranges,

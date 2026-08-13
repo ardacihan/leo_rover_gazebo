@@ -72,6 +72,54 @@ class SensorGeometryTests(unittest.TestCase):
         self.assertEqual(len(points), 1)
         self.assertAlmostEqual(math.hypot(points[0, 0], points[0, 1]), 1.0)
 
+    def test_footprint_backstop_drops_bracket_outside_mast_window(self):
+        """A real Rover 4 bracket return sits outside the mast angle window.
+
+        Raw-laser -141 deg at 0.032 m, with the lidar at (0.0775, 0.04) yawed
+        by pi, lands at base (0.102, 0.060): inside the footprint, so it must
+        not survive as an obstacle.
+        """
+        angle = math.radians(-141.0)
+        rotation = [
+            [math.cos(math.pi), -math.sin(math.pi), 0.0],
+            [math.sin(math.pi), math.cos(math.pi), 0.0],
+            [0.0, 0.0, 1.0],
+        ]
+        kwargs = dict(
+            ranges=[0.032],
+            angle_min=angle,
+            angle_increment=math.radians(1.0),
+            range_min=0.02,
+            range_max=12.0,
+            rotation=rotation,
+            translation=[0.0775, 0.04, 0.2458],
+            self_mask_angle_min=math.radians(12.0),
+            self_mask_angle_max=math.radians(83.0),
+            self_mask_max_range=0.22,
+        )
+        survives = scan_to_base_points(**kwargs)
+        self.assertEqual(len(survives), 1, "mast window alone should miss it")
+        self.assertLess(
+            math.hypot(survives[0, 0], survives[0, 1]), 0.22,
+            "and it lands inside the footprint",
+        )
+        dropped = scan_to_base_points(self_mask_footprint_radius=0.22, **kwargs)
+        self.assertEqual(len(dropped), 0)
+
+    def test_footprint_backstop_keeps_external_returns(self):
+        rotation = [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
+        points = scan_to_base_points(
+            ranges=[1.5],
+            angle_min=0.0,
+            angle_increment=math.radians(1.0),
+            range_min=0.02,
+            range_max=12.0,
+            rotation=rotation,
+            translation=[0.0, 0.0, 0.0],
+            self_mask_footprint_radius=0.22,
+        )
+        self.assertEqual(len(points), 1)
+
     def test_fusion_uses_nearest_return(self):
         ranges = merge_planar_points(
             [np.asarray([[2.0, 0.0, 0.2]]), np.asarray([[0.7, 0.0, 0.1]])],
