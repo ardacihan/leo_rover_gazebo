@@ -32,7 +32,14 @@ class DepthHeightFilter(Node):
         self.declare_parameter("collision_scan_topic", "/camera/scan_collision")
         self.declare_parameter("slam_scan_topic", "/camera/scan_slam")
         self.declare_parameter("base_frame", "base_footprint")
-        self.declare_parameter("pixel_stride", 2)
+        # Stride 2 keeps a quarter of a 640x480 frame, about 77k points, and
+        # reprojecting that at ~14 Hz in numpy measured 343% CPU on the Jetson's
+        # six cores. The resulting load average of 7.9 starved the DDS receive
+        # threads: firmware telemetry kept arriving but went unprocessed, which
+        # looked exactly like the rover's firmware dying. Stride 4 costs a
+        # quarter of the work and still yields far more points than the scan has
+        # bins, so no angular resolution is lost.
+        self.declare_parameter("pixel_stride", 4)
         self.declare_parameter("depth_scale", 0.001)
         self.declare_parameter("valid_depth_min", 0.10)
         self.declare_parameter("valid_depth_max", 10.0)

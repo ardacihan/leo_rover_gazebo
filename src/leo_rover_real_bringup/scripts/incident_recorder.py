@@ -67,7 +67,11 @@ class IncidentRecorder(Node):
         self.declare_parameter("heartbeat_period", 10.0)
         self.declare_parameter("maximum_captures", 400)
         self.declare_parameter("near_miss_distance", 0.50)
-        self.declare_parameter("video_fps", 4.0)
+        # Each frame composes three 640x480 panels and encodes them. The Jetson
+        # has no headroom to spare while SLAM and depth fusion run, and starving
+        # it stalls telemetry, so the video runs slow enough to stay cheap while
+        # still showing what led up to a capture.
+        self.declare_parameter("video_fps", 2.0)
         self.declare_parameter("record_video", True)
 
         get = self.get_parameter
