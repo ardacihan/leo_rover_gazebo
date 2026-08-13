@@ -9,6 +9,8 @@ install(DIRECTORY config launch
 
 install(PROGRAMS
   scripts/depth_height_filter.py
+  scripts/frontier_explorer.py
+  scripts/incident_recorder.py
   scripts/firmware_relay.py
   scripts/imu_bridge.py
   scripts/map_coverage_reporter.py
@@ -22,6 +24,8 @@ install(PROGRAMS
 
 install(FILES
   scripts/exploration_policy.py
+  scripts/frontier_policy.py
+  scripts/incident_triggers.py
   scripts/imu_calibration.py
   scripts/map_coverage.py
   scripts/mapping_artifacts.py
