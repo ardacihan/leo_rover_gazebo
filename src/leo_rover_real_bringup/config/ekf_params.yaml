@@ -1,0 +1,65 @@
+### Wheel odometry fused with a bias-corrected gyro.
+#
+# Yaw is taken from the gyro alone, not from the wheels. Rover 4 drives on
+# carpet, where wheel slip during a turn shows up directly as heading error,
+# and heading error is what warps a planar SLAM map. The gyro does not slip.
+#
+# Linear motion is taken from the wheels alone, since a 6-axis IMU cannot
+# observe translation without integrating acceleration twice.
+#
+# This depends on imu_bridge removing the gyro offset first: the EKF has no
+# bias state, so a raw -0.00715 rad/s offset would appear as real rotation and
+# drift the fused yaw by about -24.6 deg/min.
+ekf_filter_node:
+  ros__parameters:
+    frequency: 30.0
+    sensor_timeout: 0.2
+    two_d_mode: true
+    publish_tf: true
+    print_diagnostics: true
+
+    map_frame: map
+    odom_frame: odom
+    base_link_frame: base_footprint
+    world_frame: odom
+
+    # x, y, z, roll, pitch, yaw, vx, vy, vz, vroll, vpitch, vyaw, ax, ay, az
+    odom0: /wheel_odom
+    odom0_config: [false, false, false,
+                   false, false, false,
+                   true,  false, false,
+                   false, false, false,
+                   false, false, false]
+    odom0_differential: false
+    odom0_relative: false
+    odom0_queue_size: 10
+
+    imu0: /imu/data_raw
+    imu0_config: [false, false, false,
+                  false, false, false,
+                  false, false, false,
+                  false, false, true,
+                  false, false, false]
+    imu0_differential: false
+    imu0_relative: false
+    imu0_queue_size: 20
+    # The bridge publishes no orientation and flags it invalid, so only the
+    # angular rate above is consumed. Gravity removal is irrelevant here
+    # because no acceleration channel is fused.
+    imu0_remove_gravitational_acceleration: false
+
+    process_noise_covariance: [0.005, 0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
+                               0.0,   0.005, 0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
+                               0.0,   0.0,   0.006, 0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
+                               0.0,   0.0,   0.0,   0.003, 0.0,   0.0,   0.0,   0.0,   0.0,   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
+                               0.0,   0.0,   0.0,   0.0,   0.003, 0.0,   0.0,   0.0,   0.0,   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
+                               0.0,   0.0,   0.0,   0.0,   0.0,   0.006, 0.0,   0.0,   0.0,   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
+                               0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0025, 0.0,  0.0,   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
+                               0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0025, 0.0,  0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
+                               0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.004, 0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
+                               0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.001,  0.0,    0.0,    0.0,    0.0,    0.0,
+                               0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,    0.001,  0.0,    0.0,    0.0,    0.0,
+                               0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,    0.0,    0.002,  0.0,    0.0,    0.0,
+                               0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,    0.0,    0.0,    0.001,  0.0,    0.0,
+                               0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,    0.0,    0.0,    0.0,    0.001,  0.0,
+                               0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,   0.0,    0.0,    0.0,    0.0,    0.0,    0.0015]
