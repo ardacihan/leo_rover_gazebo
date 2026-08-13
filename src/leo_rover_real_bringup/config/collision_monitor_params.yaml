@@ -11,7 +11,8 @@ collision_monitor:
     stop_pub_timeout: 1.0
 
     # Leo is approximately 0.44 x 0.44 m. The circumscribed approach circle
-    # represents the whole rover. Its time-to-collision model is directional:
+    # plus calibration margin represents the whole rover. Its time-to-collision
+    # model is directional:
     # it constrains motion toward an obstacle without choking motion away.
     polygons: [FootprintApproach]
     # The approach model simulates the commanded velocity against the rover
@@ -19,7 +20,7 @@ collision_monitor:
     # away from a front wall and permits a turn that increases clearance.
     FootprintApproach:
       type: circle
-      radius: 0.31
+      radius: 0.35
       action_type: approach
       time_before_collision: 1.5
       simulation_time_step: 0.1
@@ -27,8 +28,10 @@ collision_monitor:
       visualize: true
       polygon_pub_topic: /collision_monitor/approach_footprint
       enabled: true
-    observation_sources: [scan]
-    scan:
+    # This scan is already transformed into base_footprint and contains the
+    # bounded-self-filtered LIDAR plus ground-filtered RealSense obstacles.
+    observation_sources: [fused_scan]
+    fused_scan:
       type: scan
-      topic: /scan
+      topic: /scan_collision_fused
       enabled: true

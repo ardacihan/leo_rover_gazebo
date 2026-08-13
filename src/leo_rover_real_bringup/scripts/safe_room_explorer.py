@@ -6,6 +6,7 @@ import math
 import time
 
 import rclpy
+import tf2_ros
 from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
 from rclpy.executors import ExternalShutdownException
@@ -17,6 +18,7 @@ from std_msgs.msg import Float32
 from exploration_policy import (
     choose_escape_action,
     choose_turn_direction,
+    scan_yaw_from_transform,
     turn_clearances,
 )
 
@@ -34,6 +36,11 @@ class SafeRoomExplorer(Node):
         self.declare_parameter("scan_topic", "/scan")
         self.declare_parameter("camera_scan_topic", "/camera/scan")
         self.declare_parameter("camera_scan_timeout", 0.5)
+        # Sectors are named in base-frame terms (front, left, rear).  Each scan
+        # source carries its own mounting yaw, resolved from TF when left NaN.
+        self.declare_parameter("base_frame", "base_footprint")
+        self.declare_parameter("scan_yaw_offset", float("nan"))
+        self.declare_parameter("camera_scan_yaw_offset", float("nan"))
         self.declare_parameter("odom_topic", "/wheel_odom_integrated")
         self.declare_parameter("battery_topic", "/firmware/battery_averaged")
         self.declare_parameter("cmd_vel_request_topic", "/cmd_vel_request")
@@ -44,7 +51,7 @@ class SafeRoomExplorer(Node):
         self.declare_parameter("max_distance", 12.0)
         self.declare_parameter("planned_turn_distance", 1.5)
         self.declare_parameter("planned_turn_angle", 1.05)
-        self.declare_parameter("minimum_battery_voltage", 11.50)
+        self.declare_parameter("minimum_battery_voltage", 10.20)
         self.declare_parameter("front_stop_distance", 0.55)
         self.declare_parameter("front_clear_distance", 0.70)
         self.declare_parameter("self_filter_radius", 0.05)
@@ -66,6 +73,13 @@ class SafeRoomExplorer(Node):
         self.scan_topic = self.get_parameter("scan_topic").value
         self.camera_scan_topic = self.get_parameter("camera_scan_topic").value
         self.camera_scan_timeout = float(self.get_parameter("camera_scan_timeout").value)
+        self.base_frame = self.get_parameter("base_frame").value
+        self.scan_yaw_offset = float(self.get_parameter("scan_yaw_offset").value)
+        self.camera_scan_yaw_offset = float(
+            self.get_parameter("camera_scan_yaw_offset").value
+        )
+        self.tf_buffer = tf2_ros.Buffer()
+        self.tf_listener = tf2_ros.TransformListener(self.tf_buffer, self)
         self.odom_topic = self.get_parameter("odom_topic").value
         self.battery_topic = self.get_parameter("battery_topic").value
         self.cmd_request_topic = self.get_parameter("cmd_vel_request_topic").value
@@ -95,9 +109,9 @@ class SafeRoomExplorer(Node):
             max(abs(float(self.get_parameter("planned_turn_angle").value)), 0.35),
             math.pi / 2.0,
         )
-        self.minimum_battery = max(
-            float(self.get_parameter("minimum_battery_voltage").value),
-            11.50,
+        # Operator-owned floor; see safety_command_gate.py.
+        self.minimum_battery = float(
+            self.get_parameter("minimum_battery_voltage").value
         )
         self.front_stop = float(
             self.get_parameter("front_stop_distance").value
@@ -194,7 +208,9 @@ class SafeRoomExplorer(Node):
         self.battery_time = None
         self.output_time = None
         self.scan = None
+        self.scan_yaw = None
         self.camera_scan = None
+        self.camera_scan_yaw = None
         self.battery = None
         self.last_output = Twist()
         self.first_position = None
@@ -236,10 +252,16 @@ class SafeRoomExplorer(Node):
 
     def _scan_callback(self, msg):
         self.scan = msg
+        self.scan_yaw = self._resolve_yaw(
+            msg.header.frame_id, self.scan_yaw_offset
+        )
         self.scan_time = time.monotonic()
 
     def _camera_scan_callback(self, msg):
         self.camera_scan = msg
+        self.camera_scan_yaw = self._resolve_yaw(
+            msg.header.frame_id, self.camera_scan_yaw_offset
+        )
         self.camera_scan_time = time.monotonic()
 
     def _odom_callback(self, msg):
@@ -281,16 +303,30 @@ class SafeRoomExplorer(Node):
     def _normalize_angle(angle):
         return math.atan2(math.sin(angle), math.cos(angle))
 
-    def _sector_clearance(self, lower_degrees, upper_degrees, scan=None):
-        scan = self.scan if scan is None else scan
+    def _resolve_yaw(self, frame_id, override):
+        """Return a scan source's mounting yaw, from the override or from TF."""
+        if not math.isnan(override):
+            return override
+        try:
+            transform = self.tf_buffer.lookup_transform(
+                self.base_frame, frame_id, rclpy.time.Time()
+            )
+        except tf2_ros.TransformException:
+            return None
+        return scan_yaw_from_transform(transform)
+
+    def _sector_clearance(self, lower_degrees, upper_degrees, scan=None,
+                          yaw=None):
         if scan is None:
+            scan, yaw = self.scan, self.scan_yaw
+        if scan is None or yaw is None:
             return 0.0
         lower = math.radians(lower_degrees)
         upper = math.radians(upper_degrees)
         values = []
         angle = float(scan.angle_min)
         for reading in scan.ranges:
-            normalized = self._normalize_angle(angle)
+            normalized = self._normalize_angle(angle + yaw)
             if lower <= normalized <= upper:
                 if math.isinf(reading) and reading > 0.0:
                     values.append(float(scan.range_max))
@@ -339,6 +375,12 @@ class SafeRoomExplorer(Node):
             self.camera_scan_time, self.camera_scan_timeout, now
         ):
             return "stale depth-camera scan"
+        # Without a mounting yaw every sector would be mislabelled, so treat an
+        # unresolved transform as a hard stop rather than assuming alignment.
+        if self.scan_yaw is None:
+            return f"lidar-to-{self.base_frame} transform unavailable"
+        if self.camera_scan_yaw is None:
+            return f"camera-to-{self.base_frame} transform unavailable"
         if not self._fresh(self.odom_time, self.odom_timeout, now):
             return "stale wheel odometry"
         if not self._fresh(self.battery_time, self.battery_timeout, now):
@@ -448,7 +490,7 @@ class SafeRoomExplorer(Node):
 
         front = self._sector_clearance(-32.0, 32.0)
         camera_front = self._sector_clearance(
-            -32.0, 32.0, self.camera_scan
+            -32.0, 32.0, self.camera_scan, self.camera_scan_yaw
         )
         front = min(front, camera_front)
         left = self._sector_clearance(25.0, 105.0)

@@ -328,25 +328,177 @@ rover top plane, so its top is about 0.16 m above the LIDAR scan plane. The
 camera body may be above the beam, but its bracket, cable, base, or lower
 housing can still intersect the horizontal scan.
 
-A stationary live scan on Rover 4 measured the fixed self-return at about
-`+49 deg` through `+78 deg`, with ranges of approximately `0.06-0.17 m`. The
-real-rover safety path therefore masks only returns satisfying both conditions:
+### Rover 4 mount calibration, corrected (2026-08-13)
+
+The 2026-08-12 entry above understated the self-return band and wrongly
+suspected the LIDAR yaw. Both were re-measured over 200 stationary scans.
+
+**The LIDAR yaw is correct.** The live transform is:
 
 ```text
-angle:    +45 deg to +82 deg
-distance: <= 0.22 m
+base_footprint <- laser_frame: x=0.0775  y=0.04  z=0.2458  yaw=3.14159
 ```
 
-This is a bounded self-mask, not a blind sector: obstacles farther than 0.22 m
-in the same direction remain visible to the explorer and Nav2 Collision
-Monitor. The filtered scan topic is `/scan_self_filtered`; raw `/scan` remains
-available and is still used by SLAM.
+The `y=0.04` is a correction applied later the same day; see "Rover 4 lidar
+lateral offset" below. Everything in this section was measured while `y` was
+still 0, which shifts the mast bearings quoted here but changes none of the
+conclusions.
 
-In the conventional ROS planar LIDAR convention, positive scan angles point
-toward the robot left. Because the known camera is physically rear-right but
-appears at positive angles, the LIDAR frame yaw or physical mounting orientation
-may not match `base_footprint`. Measure and calibrate the exact LIDAR `(x, y, z,
-yaw)` transform before treating the map as navigation-grade.
+The camera mast only *appears* on the robot's left in raw scan angles because
+the LIDAR is mounted yawed by pi. Rotating by that yaw puts the mast at
+`-130 deg to -102 deg` in `base_footprint`, which matches the physical mount.
+Never compare raw scan angles against robot-frame directions.
+
+**The self-return band is wider than recorded.** Every persistent close return
+fell between `+16 deg` and `+79 deg` in the laser frame at `0.023-0.174 m`,
+including grazing returns at `2-5 cm`, which is below the sensor's own
+`range_min` of 0.15 m. The old `+45..+82 deg` window left roughly half of them
+unmasked, and every unmasked point sat inside Collision Monitor's 0.31 m
+approach circle, which would have vetoed motion permanently.
+
+The production `scan_fusion.py` mask is deliberately bounded to the measured
+raw-laser interval `+12..+83 deg` and ranges at or below 0.22 m. A close point
+at the same range outside that interval is retained, and a farther point at the
+same bearing is also retained. The older gate's radial filter remains only as a
+legacy/raw-scan fallback; `safe_mapping.launch.py` disables it. Both collision
+avoidance and SLAM now consume base-frame fused topics rather than
+`/scan_self_filtered` or raw `/scan`.
+
+The mast fully occludes roughly `-130..-102 deg`, so that wedge is a permanent
+blind spot. It lies outside the gate's rear corridor (`|y| <= 0.30 m`), so it
+does not affect reverse checks.
+
+**Sector logic must be frame-corrected.** `safe_room_explorer.py` and
+`safety_command_gate.py` computed sectors directly from raw scan angles, so on
+this rover every sector was reflected: "front" measured the physical rear, and
+the gate's rear corridor measured the forward corridor. Both nodes now resolve
+the mounting yaw from TF at runtime (`scan_yaw_offset`, NaN means auto) and
+fail closed while the transform is unavailable.
+
+Ground-truth check with the rover parked beside a shelf, resolved into
+`base_footprint`: FRONT 3.5 m, LEFT 3.0-3.6 m, RIGHT 0.54-0.91 m (the shelf),
+REAR 1.5-1.6 m. The raw-angle numbers for the same instant claimed left 0.16 m
+and right 1.9 m, i.e. left and right swapped.
+
+### Rover 4 lidar lateral offset, and which unit owns the transform (2026-08-13)
+
+`base_link -> laser_frame` is **not** published by `lidar.service`. A separate
+unit, `lidar-tf.service`, owns it. Look there before concluding that a lidar
+transform is unowned or that a launch file must publish it.
+
+The stock unit hardcoded `--y 0`, but the lidar is physically **0.04 m to the
+rover's left**. Every map built before 2026-08-13 therefore carries a 4 cm
+lateral bias. Two independent measurements agree on the correction:
+
+- An operator tape measurement of the mount.
+- The lidar's own view of the camera mast. Under the `y=0` assumption the mast
+  resolved to `y=-0.074`; with `y=0.04` it resolves to `y=-0.038`, against a
+  tape measurement of the camera at `-0.040`.
+
+The fix is a systemd drop-in, so it survives reboot and applies to anyone who
+uses the boot stack without this repository's launch file:
+
+```text
+/etc/systemd/system/lidar-tf.service.d/override.conf
+```
+
+```ini
+[Service]
+ExecStart=
+ExecStart=/bin/bash -lc "source /opt/ros/humble/setup.bash && ros2 run tf2_ros static_transform_publisher --x 0.0775 --y 0.04 --z 0.048 --roll 0 --pitch 0 --yaw 3.14159 --frame-id base_link --child-frame-id laser_frame"
+```
+
+Then `sudo systemctl daemon-reload && sudo systemctl restart lidar-tf`. Verify
+with `systemctl show lidar-tf -p ExecStart` and `tf2_echo base_footprint
+laser_frame`, which must report `[0.077, 0.040, 0.246]`.
+
+Because the boot unit now publishes the correct transform, run
+`safe_mapping.launch.py` with `publish_lidar_tf:=false`. Setting it true while
+`lidar-tf.service` is active gives `laser_frame` two parents
+(`base_link` and `base_footprint`) and the TF tree becomes ambiguous.
+
+### Rover 4 lidar model: it is a C1, not an S3 (2026-08-13)
+
+`lidar-tf.service` was described as "Static TF for RPLIDAR S3". That name is
+wrong and misled model assumptions. The driver's own startup log settles it:
+
+```bash
+journalctl -u lidar.service | grep -E "scan mode|Firmware|Hardware"
+```
+
+```text
+current scan mode: DenseBoost, sample rate: 5 Khz, max_distance: 40.0 m,
+scan frequency: 10.0 Hz
+Firmware Ver: 1.02   Hardware Rev: 18
+```
+
+**Sample rate is the discriminator.** An S3 samples at 32 kHz; this reports
+5 kHz, which is C1-class, and 5 kHz at 10 Hz gives the ~510 points per scan
+actually observed on `/scan`. The unit connects through a CP210x bridge
+(`10c4:ea60`) symlinked to `/dev/lidar` by a udev rule, at 460800 baud.
+
+Do not trust the advertised `range_max` of 40.0 m. That figure comes from the
+scan-mode descriptor, not the optics; a C1 is a ~12 m sensor. Treat returns
+beyond about 12 m as unreliable and do not size costmaps or filters from
+`range_max`. The furthest genuine return measured in the lab was 7.46 m.
+
+### Rover 4 verified command path (2026-08-13)
+
+Rover 4 starts its stack from systemd at boot, so a fresh session already has
+SLAM and Nav2 running. `safe_mapping.launch.py` used to start a second
+slam_toolbox, a second `odom -> base_footprint` publisher and a conflicting
+LIDAR transform on top of it. The launch file now takes `publish_lidar_tf`,
+`publish_odom_tf`, `publish_camera_tf` and `start_slam` so it composes with
+whatever already owns each piece.
+
+To take ownership of `/cmd_vel` on Rover 4:
+
+```bash
+sudo systemctl stop leo-nav          # controller_server + coarse boot SLAM
+ros2 daemon stop && ros2 daemon start  # the CLI cache lies after this
+ros2 launch leo_rover_real_bringup safe_mapping.launch.py \
+  start_explorer:=false publish_lidar_tf:=false \
+  publish_odom_tf:=false publish_camera_tf:=true start_slam:=true
+```
+
+`lidar.service`, `leo-ros.service` (RealSense) and `leo-nav-bridge.service`
+must keep running: they own the LIDAR transform, the camera, and both the
+`odom` transform and the `/cmd_vel -> /rob_2/cmd_vel` firmware hop.
+
+Restore the boot configuration with `sudo systemctl start leo-nav` after
+killing the launch.
+
+Verified live on 2026-08-13: `/scan` 10.0 Hz,
+`/camera/scan_collision` and `/camera/scan_slam` about 13.0 Hz, both fused
+topics about 10.0 Hz, `/map` 1.0 Hz, and wheel odometry about 20 Hz. Collision
+Monitor activated without lifecycle errors and the gate correctly remained
+closed when no fresh command existed.
+
+Two traps cost real time here and will recur:
+
+- Killing the `ros2 launch` parent leaves its children running. They keep
+  their node names, so the next launch fails to activate Collision Monitor.
+  Kill the process group, then confirm with `pgrep -fa`, and remember that
+  orphans reparent to init and no longer share the launch's group id.
+- `pgrep -f <pattern>` matches the invoking shell's own command line. Use
+  `pgrep -fc "[c]ollision_monitor"` or every count is inflated by one.
+
+### Deploying from a Windows workstation
+
+The rover scripts start via `#!/usr/bin/env python3`. If the file reaches the
+Jetson with CRLF line endings the kernel looks for an interpreter literally
+named `python3\r` and the node dies at launch with:
+
+```text
+/usr/bin/env: 'python3\r': No such file or directory
+```
+
+The failure is easy to misread, because the rest of the launch comes up
+normally and only one node is missing. The repository now carries a
+`.gitattributes` pinning `*.py`, `*.sh`, `*.yaml` and `*.xml` to `eol=lf`. When
+copying files outside git (`pscp`, `scp` from a Windows checkout), run
+`sed -i 's/\r$//'` on the rover afterwards and confirm with
+`head -1 <file> | od -c`.
 
 ### Hardware SLAM package added to this repository
 
@@ -356,10 +508,15 @@ does not depend on Gazebo. It provides:
 - `config/slam_params.yaml`: wall time, real frames/topics, 5 cm resolution,
   and 5 cm/radian scan insertion thresholds.
 - `launch/slam.launch.py`: configurable static LIDAR transform plus asynchronous
-  SLAM Toolbox.
-- `launch/safe_mapping.launch.py`: wheel-only odometry TF, SLAM Toolbox, a
+  SLAM Toolbox. This is the LIDAR-only fallback.
+- `launch/safe_mapping.launch.py`: calibrated depth filtering, base-frame
+  LIDAR/depth fusion, optional wheel-only odometry TF, SLAM Toolbox, a
   fail-closed command gate, Nav2 Collision Monitor, and an optional bounded
   explorer.
+- `scripts/depth_height_filter.py`: transforms aligned depth into
+  `base_footprint` before applying ground/height filters.
+- `scripts/scan_fusion.py`: transforms and self-filters the LIDAR, then emits
+  separate collision and mapping scans.
 - `scripts/wheel_odom_tf.py`: integrates wheel twist without the stationary IMU
   yaw drift seen on Rover 1.
 - `scripts/safety_command_gate.py`: permits only fresh, capped commands when
@@ -420,6 +577,100 @@ ros2 run leo_rover_real_bringup safe_room_explorer.py --ros-args \
 The older repository file `src/leo_rover_gazebo/launch/slam.launch.py` is
 simulation-only: it uses `/leo1/scan`, simulation frames/time, and a hard-coded
 container path. Do not use it on a physical rover.
+
+### Rover 4 base-frame depth filtering and fusion (2026-08-13)
+
+The RealSense is pitched down, so filtering image rows would mix floor and
+obstacles. The implemented path first projects each aligned depth pixel using
+the camera intrinsics, transforms the resulting 3D points into
+`base_footprint`, and only then filters by base-frame Z height. Eight stationary
+depth frames gave a floor-plane fit with 89.5% inliers, 4.44 mm p95 residual,
+camera height 0.389 m, downward pitch 11.56 degrees, and roll about -0.25
+degrees. The launch defaults round this to `camera_z:=0.393`,
+`camera_pitch:=0.209`, and zero roll.
+
+The two camera products serve different purposes:
+
+- `/camera/scan_collision`: points 0.04-0.45 m above the floor, 0.20-3.0 m
+  range. This broad band retains low obstacles and furniture for safety.
+- `/camera/scan_slam`: points 0.18-0.31 m above the floor, 0.20-5.0 m range.
+  This narrow band approximates the LIDAR plane and avoids turning the floor or
+  table tops into false 2D walls.
+
+`scan_fusion.py` transforms the raw LIDAR into the base frame, applies only the
+measured bounded rover self-mask, and publishes:
+
+- `/scan_lidar_base`: corrected LIDAR only, useful as a diagnostic/baseline.
+- `/scan_collision_fused`: nearest LIDAR or broad-band camera return, capped at
+  3 m; used by both Collision Monitor and the explorer.
+- `/scan_slam_fused`: nearest LIDAR or narrow-band camera return; used by SLAM
+  Toolbox with a 12 m LIDAR ceiling.
+
+The collision model uses a 0.35 m approach circle: the 0.44 x 0.44 m chassis
+needs 0.311 m just to enclose its corners, with the remainder reserved for
+mount/extrinsic uncertainty. Its directional time-to-collision action still
+allows motion away from an obstacle.
+
+If valid depth falls below 5%, the depth node deliberately publishes nothing.
+The command gate requires a fresh raw camera-derived collision scan within 0.5
+s, so a covered, disconnected, invalid, or transform-less camera closes motion
+instead of allowing a LIDAR-only command. SLAM may continue LIDAR-only while
+the camera is stale; this does not weaken the motion gate.
+
+Rover 4's `robot_supervisor_rgb` keeps a `/cmd_vel` publisher endpoint even
+when disabled. The gate conditionally tolerates that endpoint only while it
+can freshly read the node's boolean `enabled` parameter as `false`. A missing
+parameter service, stale check, `enabled:=true`, or any other unexpected final
+publisher closes the gated command path. Keep the supervisor disabled for this
+mapping stack.
+
+Stationary live validation on Jetson-04 produced 83 finite collision-camera
+bins and 114 mapping-camera bins in a representative frame. The fused mapping
+scan had 416 finite bins versus 362 for corrected LIDAR alone. A matched
+stationary SLAM probe produced 1,943 known cells with fusion versus 1,646 with
+LIDAR alone (18.0% more known cells). All measurements were taken without
+sending a velocity command.
+
+Use `safe_mapping.launch.py` for this fused path. Keep the explorer disabled
+until a physical operator is beside the rover and the stationary checklist is
+green:
+
+```bash
+source /opt/ros/humble/setup.bash
+source <workspace>/install/setup.bash
+export ROS_DOMAIN_ID=<verified-domain>
+ros2 launch leo_rover_real_bringup safe_mapping.launch.py \
+  start_explorer:=false publish_lidar_tf:=false \
+  publish_odom_tf:=false publish_camera_tf:=true \
+  start_sensor_fusion:=true start_slam:=true start_safety:=true
+```
+
+Do not run a second `slam_toolbox`, odometry TF publisher, or LIDAR TF
+publisher alongside this command. On Rover 4, stop `leo-nav` first as described
+above, while leaving the sensor/firmware services running. Reverse remains
+disabled by default. The fusion is stationary-validated, but the first moving
+run must still be a supervised, short, low-speed test before a room exploration
+or final map save.
+
+`mapping_artifact_recorder.py` runs by default with this launch. It publishes
+the corrected map-frame route as `/exploration_path` and writes the following
+to `~/leo_maps` on graceful shutdown:
+
+- a standard `.pgm` plus `.yaml` occupancy map;
+- `_path.csv` with timestamp, map X/Y, and yaw for every retained pose;
+- `_path.png` with green start, red route, and blue final position;
+- `_summary.json` with known cells, route length, and endpoints.
+
+To checkpoint these files while SLAM is still running, call:
+
+```bash
+ros2 service call /save_mapping_artifacts std_srvs/srv/Trigger '{}'
+```
+
+Use `artifact_output_directory:=<directory>` and
+`artifact_prefix:=<name>` to choose another destination/name. This recorder is
+not a replacement for SLAM Toolbox pose-graph serialization when a resumable
+mapping session is required.
 
 ### Successful bounded SLAM test
 
@@ -681,10 +932,11 @@ Important caveats:
 - The local costmap consumed only `/scan`; RealSense depth was not fused into
   the costmap.
 
-For LIDAR plus RealSense operation, use a deliberate fusion architecture such
-as depth-image-to-laserscan/pointcloud in the costmap plus a single collision
-monitor output. This requires a verified base-to-camera extrinsic transform.
-Do not claim camera fusion merely because depth topics exist.
+For LIDAR plus RealSense operation, use the repository's
+`safe_mapping.launch.py` path described above. It performs the transform and
+base-height filtering before fusing the data and keeps a single Collision
+Monitor output. Raw depth topics alone are not evidence that fusion is active;
+verify the two camera scans and two fused scans are fresh.
 
 ### Failed readiness state and outage
 

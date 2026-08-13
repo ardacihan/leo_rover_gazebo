@@ -12,7 +12,9 @@ slam_toolbox:
     odom_frame: odom
     map_frame: map
     base_frame: base_footprint
-    scan_topic: /scan
+    # Full 360-degree LIDAR plus a narrow, base-height RealSense slice.  The
+    # camera contribution is ground-filtered and transformed before fusion.
+    scan_topic: /scan_slam_fused
     use_map_saver: true
     mode: mapping
 

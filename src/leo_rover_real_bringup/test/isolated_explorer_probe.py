@@ -145,7 +145,9 @@ def main():
         args=[
             "--ros-args",
             "-p", "scan_topic:=/codex_probe/scan",
+            "-p", "scan_yaw_offset:=0.0",
             "-p", "camera_scan_topic:=/codex_probe/camera_scan",
+            "-p", "camera_scan_yaw_offset:=0.0",
             "-p", "odom_topic:=/codex_probe/odom",
             "-p", "battery_topic:=/codex_probe/battery",
             "-p", "cmd_vel_request_topic:=/codex_probe/cmd_request",

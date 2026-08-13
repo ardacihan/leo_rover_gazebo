@@ -55,8 +55,10 @@ class CollisionProbe(Node):
         scan.range_min = 0.02
         scan.range_max = 10.0
         scan.ranges = [10.0] * 360
+        # Outside the 0.35 m protected body, but inside the forward 1.5 s
+        # approach envelope at 0.08 m/s. Reverse should remain unconstrained.
         for index in range(174, 187):
-            scan.ranges[index] = 0.35
+            scan.ranges[index] = 0.42
         self.scan_pub.publish(scan)
 
         cmd = Twist()
@@ -121,7 +123,7 @@ def main():
             "-p", "base_shift_correction:=false",
             "-p", f"cmd_vel_in_topic:={INPUT_TOPIC}",
             "-p", f"cmd_vel_out_topic:={OUTPUT_TOPIC}",
-            "-p", f"scan.topic:={SCAN_TOPIC}",
+            "-p", f"fused_scan.topic:={SCAN_TOPIC}",
         ],
         stdout=process_log,
         stderr=subprocess.STDOUT,
@@ -130,15 +132,21 @@ def main():
     node = None
     passed = False
     try:
-        time.sleep(1.5)
+        time.sleep(0.5)
         for transition in ("configure", "activate"):
-            result = subprocess.run(
-                ["ros2", "lifecycle", "set", "/collision_monitor", transition],
-                text=True,
-                capture_output=True,
-                timeout=10.0,
-            )
-            if result.returncode != 0 or "success" not in result.stdout.lower():
+            transition_deadline = time.monotonic() + 12.0
+            result = None
+            while time.monotonic() < transition_deadline:
+                result = subprocess.run(
+                    ["ros2", "lifecycle", "set", "/collision_monitor", transition],
+                    text=True,
+                    capture_output=True,
+                    timeout=5.0,
+                )
+                if result.returncode == 0 and "success" in result.stdout.lower():
+                    break
+                time.sleep(0.25)
+            else:
                 raise RuntimeError(
                     f"lifecycle {transition} failed: "
                     f"{result.stdout}{result.stderr}"
@@ -157,12 +165,20 @@ def main():
         else:
             raise RuntimeError("isolated Collision Monitor discovery timed out")
 
-        run_phase(node, "forward", 2.0)
-        run_phase(node, "reverse", 2.0)
+        # Discovery and lifecycle activation can be slow on the Jetson while
+        # RealSense/SLAM are active in another isolated DDS domain. Give each
+        # directional phase enough samples to avoid a scheduler-dependent test.
+        run_phase(node, "waiting", 0.5)
+        run_phase(node, "forward", 3.0)
+        run_phase(node, "reverse", 3.0)
         forward = node.forward_outputs[-10:]
         reverse = node.reverse_outputs[-10:]
         if not forward or not reverse:
-            raise RuntimeError("missing Collision Monitor output samples")
+            raise RuntimeError(
+                "missing Collision Monitor output samples: "
+                f"forward={len(node.forward_outputs)}, "
+                f"reverse={len(node.reverse_outputs)}"
+            )
         forward_median = statistics.median(forward)
         reverse_median = statistics.median(reverse)
         passed = 0.0 <= forward_median < 0.06 and reverse_median <= -0.035

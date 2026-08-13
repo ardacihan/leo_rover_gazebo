@@ -1,5 +1,22 @@
 """Pure decision helpers shared by the real-rover safety nodes."""
 
+import math
+
+
+def scan_yaw_from_transform(transform):
+    """Return the yaw of a geometry_msgs TransformStamped, in radians.
+
+    Sector logic operates on raw scan angles, which are only equal to base
+    angles when the lidar is mounted unrotated.  Rover 4 yaws its lidar by pi,
+    so every sector would otherwise be reflected: "front" would measure the
+    physical rear.
+    """
+    q = transform.transform.rotation
+    return math.atan2(
+        2.0 * (q.w * q.z + q.x * q.y),
+        1.0 - 2.0 * (q.y * q.y + q.z * q.z),
+    )
+
 
 def robust_clearance(values, outlier_points, default_clearance=0.0):
     """Return a low clearance percentile while ignoring a bounded outlier set."""

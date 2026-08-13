@@ -1,0 +1,88 @@
+#!/usr/bin/env python3
+
+import math
+import pathlib
+import sys
+import unittest
+
+import numpy as np
+
+
+SCRIPTS = pathlib.Path(__file__).parents[1] / "scripts"
+sys.path.insert(0, str(SCRIPTS))
+
+from sensor_geometry import (  # noqa: E402
+    merge_planar_points,
+    points_to_scan_ranges,
+    project_depth_to_base,
+    quaternion_rotation_matrix,
+    scan_to_base_points,
+)
+
+
+class SensorGeometryTests(unittest.TestCase):
+    def test_height_filter_removes_floor_and_keeps_obstacle(self):
+        points = np.asarray([
+            [0.50, 0.00, 0.01],
+            [0.80, 0.00, 0.10],
+            [1.20, 0.00, 0.60],
+        ])
+        ranges = points_to_scan_ranges(
+            points,
+            min_height=0.04,
+            max_height=0.45,
+            angle_min=-0.5,
+            angle_max=0.5,
+            angle_increment=0.1,
+            range_min=0.2,
+            range_max=3.0,
+        )
+        self.assertAlmostEqual(float(ranges[5]), 0.8, places=5)
+
+    def test_projection_uses_optical_axis_then_base_transform(self):
+        depth = np.asarray([[2.0]], dtype=np.float32)
+        # Optical Z-forward becomes base X-forward.
+        rotation = np.asarray([[0.0, 0.0, 1.0], [-1.0, 0.0, 0.0], [0.0, -1.0, 0.0]])
+        points, fraction = project_depth_to_base(
+            depth, 1.0, 1.0, 0.0, 0.0, rotation, [0.1, 0.0, 0.3], pixel_stride=1
+        )
+        self.assertEqual(fraction, 1.0)
+        np.testing.assert_allclose(points[0], [2.1, 0.0, 0.3])
+
+    def test_lidar_pi_yaw_maps_raw_rear_to_base_front(self):
+        rotation = quaternion_rotation_matrix((0.0, 0.0, 1.0, 0.0))
+        points = scan_to_base_points(
+            [1.0], math.pi, 1.0, 0.1, 5.0, rotation, [0.0, 0.0, 0.2]
+        )
+        np.testing.assert_allclose(points[0, :2], [1.0, 0.0], atol=1.0e-8)
+
+    def test_bounded_self_mask_keeps_same_bearing_far_obstacle(self):
+        points = scan_to_base_points(
+            [0.15, 1.0],
+            math.radians(50.0),
+            math.radians(1.0),
+            0.02,
+            5.0,
+            np.eye(3),
+            [0.0, 0.0, 0.0],
+            self_mask_angle_min=math.radians(45.0),
+            self_mask_angle_max=math.radians(82.0),
+            self_mask_max_range=0.22,
+        )
+        self.assertEqual(len(points), 1)
+        self.assertAlmostEqual(math.hypot(points[0, 0], points[0, 1]), 1.0)
+
+    def test_fusion_uses_nearest_return(self):
+        ranges = merge_planar_points(
+            [np.asarray([[2.0, 0.0, 0.2]]), np.asarray([[0.7, 0.0, 0.1]])],
+            -0.5,
+            0.5,
+            0.1,
+            0.2,
+            3.0,
+        )
+        self.assertAlmostEqual(float(ranges[5]), 0.7, places=5)
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -3,7 +3,7 @@
 <package format="3">
   <name>leo_rover_real_bringup</name>
   <version>0.1.0</version>
-  <description>SLAM bringup for a physical Leo Rover with a 2D lidar.</description>
+  <description>Collision-aware LIDAR and depth-camera SLAM bringup for a physical Leo Rover.</description>
 
   <maintainer email="ardacihan7452@gmail.com">Arda</maintainer>
   <license>Apache-2.0</license>
@@ -15,10 +15,13 @@
   <exec_depend>nav2_collision_monitor</exec_depend>
   <exec_depend>nav2_lifecycle_manager</exec_depend>
   <exec_depend>nav_msgs</exec_depend>
+  <exec_depend>python3-numpy</exec_depend>
+  <exec_depend>rcl_interfaces</exec_depend>
   <exec_depend>rclpy</exec_depend>
   <exec_depend>sensor_msgs</exec_depend>
   <exec_depend>slam_toolbox</exec_depend>
   <exec_depend>std_msgs</exec_depend>
+  <exec_depend>std_srvs</exec_depend>
   <exec_depend>tf2_ros</exec_depend>
 
   <export>
