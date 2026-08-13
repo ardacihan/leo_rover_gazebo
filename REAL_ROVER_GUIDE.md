@@ -356,12 +356,14 @@ including grazing returns at `2-5 cm`, which is below the sensor's own
 unmasked, and every unmasked point sat inside Collision Monitor's 0.31 m
 approach circle, which would have vetoed motion permanently.
 
-The production `scan_fusion.py` mask is deliberately bounded to the measured
-raw-laser interval `+12..+83 deg` and ranges at or below 0.22 m. A close point
-at the same range outside that interval is retained, and a farther point at the
-same bearing is also retained. The older gate's radial filter remains only as a
-legacy/raw-scan fallback; `safe_mapping.launch.py` disables it. Both collision
-avoidance and SLAM now consume base-frame fused topics rather than
+The production `scan_fusion.py` primary mask is deliberately bounded to the
+measured raw-laser interval `+12..+83 deg` and ranges at or below 0.22 m. A
+farther point at the same bearing is retained. A second base-frame backstop
+drops only points that land within 0.22 m of the base origin; it catches an
+intermittent bracket return measured at raw `-142..-140 deg`, about 0.033 m,
+without hiding external obstacles. The older gate's radial filter remains only
+as a legacy/raw-scan fallback; `safe_mapping.launch.py` disables it. Both
+collision avoidance and SLAM now consume base-frame fused topics rather than
 `/scan_self_filtered` or raw `/scan`.
 
 The mast fully occludes roughly `-130..-102 deg`, so that wedge is a permanent
@@ -461,9 +463,13 @@ ros2 launch leo_rover_real_bringup safe_mapping.launch.py \
   publish_odom_tf:=false publish_camera_tf:=true start_slam:=true
 ```
 
-`lidar.service`, `leo-ros.service` (RealSense) and `leo-nav-bridge.service`
-must keep running: they own the LIDAR transform, the camera, and both the
-`odom` transform and the `/cmd_vel -> /rob_2/cmd_vel` firmware hop.
+`lidar.service`, `lidar-tf.service`, `leo-ros.service` (RealSense) and
+`leo-nav-bridge.service` must keep running: they own the scan, corrected LIDAR
+transform, camera, odometry path, and the `/cmd_vel -> /rob_2/cmd_vel` firmware
+hop. The verified `lidar-tf.service` transform is based at `base_link` with
+`x=0.0775`, `y=0.04`, `z=0.048`, and yaw pi; through the URDF this resolves to
+the documented `base_footprint <- laser_frame` height. Keep
+`publish_lidar_tf:=false` while that service is active.
 
 Restore the boot configuration with `sudo systemctl start leo-nav` after
 killing the launch.
@@ -587,7 +593,9 @@ the camera intrinsics, transforms the resulting 3D points into
 depth frames gave a floor-plane fit with 89.5% inliers, 4.44 mm p95 residual,
 camera height 0.389 m, downward pitch 11.56 degrees, and roll about -0.25
 degrees. The launch defaults round this to `camera_z:=0.393`,
-`camera_pitch:=0.209`, and zero roll.
+`camera_pitch:=0.209`, and zero roll. Aligning the height-filtered camera scan
+against the LIDAR gave `camera_yaw:=-0.035` rad (about -2 degrees): its residual
+was 0.083 m versus 0.230 m at zero yaw.
 
 The two camera products serve different purposes:
 
@@ -671,6 +679,16 @@ Use `artifact_output_directory:=<directory>` and
 `artifact_prefix:=<name>` to choose another destination/name. This recorder is
 not a replacement for SLAM Toolbox pose-graph serialization when a resumable
 mapping session is required.
+
+`map_coverage_reporter.py` also runs by default. Every five seconds it reports
+the mapped free area, unknown/free/occupied fractions, and the largest
+reachable frontier clusters in map coordinates. A run should not be called
+complete while meaningful reachable frontiers remain. `no reachable
+frontiers` means the current occupancy grid is covered or the unknown space is
+blocked; inspect the final map before deciding which. The reporter is
+read-only and never publishes velocity—frontier-directed Nav2 driving remains
+outside this conservative stack until its controller output is routed through
+and motion-tested with the same gate and Collision Monitor.
 
 ### Successful bounded SLAM test
 

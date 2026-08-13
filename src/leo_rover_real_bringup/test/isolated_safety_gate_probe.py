@@ -184,6 +184,11 @@ def main():
             Parameter("enabled", Parameter.Type.BOOL, False)
         ])
         spin_for(executor, 1.0)
+        restored = monitor.outputs[-5:]
+        if not restored or statistics.median(restored) < 0.075:
+            raise RuntimeError(
+                f"gate did not reopen after supervisor disabled: {restored}"
+            )
         rogue = Node("rogue_driver")
         rogue.create_publisher(Twist, f"{PREFIX}/final", 10)
         executor.add_node(rogue)
@@ -199,6 +204,7 @@ def main():
             "enabled_supervisor_output": round(
                 max(abs(value) for value in enabled_supervisor), 3
             ),
+            "restored_output_median": round(statistics.median(restored), 3),
             "rogue_publisher_output": round(max(abs(value) for value in rogue_output), 3),
             "passed": True,
         }, flush=True)

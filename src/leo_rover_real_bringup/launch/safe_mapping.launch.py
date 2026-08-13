@@ -39,6 +39,7 @@ def generate_launch_description():
     start_slam = LaunchConfiguration("start_slam")
     start_safety = LaunchConfiguration("start_safety")
     record_mapping_artifacts = LaunchConfiguration("record_mapping_artifacts")
+    start_coverage_reporter = LaunchConfiguration("start_coverage_reporter")
     start_explorer = LaunchConfiguration("start_explorer")
 
     raw_scan_topic = LaunchConfiguration("raw_scan_topic")
@@ -77,6 +78,7 @@ def generate_launch_description():
         DeclareLaunchArgument("start_slam", default_value="true"),
         DeclareLaunchArgument("start_safety", default_value="true"),
         DeclareLaunchArgument("record_mapping_artifacts", default_value="true"),
+        DeclareLaunchArgument("start_coverage_reporter", default_value="true"),
         DeclareLaunchArgument("start_explorer", default_value="false"),
         DeclareLaunchArgument("base_frame", default_value="base_footprint"),
         DeclareLaunchArgument("odom_frame", default_value="odom"),
@@ -108,7 +110,9 @@ def generate_launch_description():
         DeclareLaunchArgument("camera_z", default_value="0.393"),
         DeclareLaunchArgument("camera_roll", default_value="0.0"),
         DeclareLaunchArgument("camera_pitch", default_value="0.209"),
-        DeclareLaunchArgument("camera_yaw", default_value="0.0"),
+        # -2 deg, recovered by aligning height-filtered depth against the lidar
+        # (residual 0.083 m, against 0.230 m at 0 deg and 0.652 m at +2 deg).
+        DeclareLaunchArgument("camera_yaw", default_value="-0.035"),
         DeclareLaunchArgument("raw_scan_topic", default_value="/scan"),
         DeclareLaunchArgument(
             "lidar_base_scan_topic", default_value="/scan_lidar_base"
@@ -256,6 +260,15 @@ def generate_launch_description():
                 "artifact_prefix": artifact_prefix,
             }],
             condition=IfCondition(record_mapping_artifacts),
+            output="screen",
+            emulate_tty=True,
+        ),
+        Node(
+            package="leo_rover_real_bringup",
+            executable="map_coverage_reporter.py",
+            name="map_coverage_reporter",
+            parameters=[{"map_topic": "/map"}],
+            condition=IfCondition(start_coverage_reporter),
             output="screen",
             emulate_tty=True,
         ),
