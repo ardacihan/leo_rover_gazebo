@@ -444,6 +444,77 @@ scan-mode descriptor, not the optics; a C1 is a ~12 m sensor. Treat returns
 beyond about 12 m as unreliable and do not size costmaps or filters from
 `range_max`. The furthest genuine return measured in the lab was 7.46 m.
 
+### Our own DDS traffic starves the rover's firmware (2026-08-13)
+
+**Symptom.** Firmware telemetry (`/rob_2/firmware/*`) stops dead a minute or so
+after the mapping stack starts. The `/rob_2/firmware` node stays on the graph,
+its message counters freeze at an exact value, and `/firmware/boot` stops
+answering. It looks exactly like dead hardware.
+
+**It is not hardware.** Hours were lost to that assumption. Three battery packs
+were swapped, and the rover's own computer was rebooted through
+`/system/reboot`, all with no effect. What actually settled it was a controlled
+experiment:
+
+| Condition | Result |
+|---|---|
+| Rover idle, no stack running | 510 s, zero dropouts |
+| Plus `imu_odometry.launch.py` (light) | still zero dropouts |
+| Plus `safe_mapping.launch.py` (heavy) | dead in about 60 s |
+| Stack stopped again | recovered on its own after 186 s, no power cycle |
+
+**Cause.** The rover's onboard computer shares `ROS_DOMAIN_ID=4` with the
+Jetson over the `enP8p1s0` Ethernet link, and the Jetson's DDS multicast route
+points at that link:
+
+```text
+multicast 239.255.0.1 dev enP8p1s0 src 10.0.0.76
+```
+
+Measured on that interface:
+
+```text
+stack down :  51 KB/s to the rover
+stack up   : 1396 KB/s to the rover      (27x)
+ping RTT   : 0.26-0.53 ms idle -> 0.35-19.9 ms under load
+```
+
+The rover is a small SBC whose real job is talking to the LeoCore over serial.
+Roughly 1.4 MB/s of camera, depth, scan, map and costmap traffic it never asked
+for saturates it, its firmware node stops being scheduled, and telemetry stops.
+Recovery does not need a power cycle, only silence.
+
+**Diagnosing it again.** Watch the interface counters rather than guessing:
+
+```bash
+read -r r1 t1 < <(awk '/enP8p1s0/{gsub(/:/," ");print $2, $10}' /proc/net/dev)
+sleep 10
+read -r r2 t2 < <(awk '/enP8p1s0/{gsub(/:/," ");print $2, $10}' /proc/net/dev)
+echo "to rover $(( (t2-t1)/10/1024 )) KB/s"
+```
+
+Anything far above the ~51 KB/s idle baseline is the fault reappearing. A ping
+to `10.0.0.1` climbing from sub-millisecond into double digits says the same
+thing.
+
+**Fixes, cheapest first.**
+
+1. Find what is actually pulling the bulk across. The rover serves a web UI
+   that subscribes to camera topics through its own rosbridge on
+   `10.0.0.1:9090`, so an open browser tab on that UI is enough to drag image
+   streams over the link. Close it and re-measure before changing anything.
+2. Keep the heavy topics off the wire. Everything except the firmware topics
+   and `/cmd_vel` is consumed entirely on the Jetson, so the traffic has no
+   reason to leave the machine.
+3. The robust fix is to separate the domains: put the mapping stack on its own
+   `ROS_DOMAIN_ID` and bridge only the handful of topics that must cross
+   (`/rob_2/firmware/wheel_odom`, `/rob_2/firmware/imu`,
+   `/rob_2/firmware/battery_averaged`, `/rob_2/cmd_vel`) with `domain_bridge`.
+   Bulk traffic then cannot reach the rover at all.
+
+Do not raise speeds, swap batteries or reflash anything in response to this
+symptom. Measure the link first.
+
 ### Rover 4 verified command path (2026-08-13)
 
 Rover 4 starts its stack from systemd at boot, so a fresh session already has
