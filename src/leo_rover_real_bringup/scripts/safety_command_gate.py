@@ -143,7 +143,7 @@ class SafetyCommandGate(Node):
         # 1.0 s time-to-collision still stops ~15 cm short of contact at this
         # speed.
         self.max_linear = min(
-            abs(float(self.get_parameter("maximum_linear_speed").value)), 0.15
+            abs(float(self.get_parameter("maximum_linear_speed").value)), 0.18
         )
         self.max_reverse = min(
             abs(float(self.get_parameter("maximum_reverse_speed").value)), 0.05

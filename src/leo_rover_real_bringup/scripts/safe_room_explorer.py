@@ -13,7 +13,7 @@ from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 from rclpy.qos import qos_profile_sensor_data
 from sensor_msgs.msg import LaserScan
-from std_msgs.msg import Float32
+from std_msgs.msg import Bool, Float32
 
 from exploration_policy import (
     choose_escape_action,
@@ -107,7 +107,7 @@ class SafeRoomExplorer(Node):
         # distance 12 -> 1000 m (coverage runs are ended by the coverage
         # watcher or the wall clock, not by path length).
         self.linear_speed = min(
-            abs(float(self.get_parameter("linear_speed").value)), 0.15
+            abs(float(self.get_parameter("linear_speed").value)), 0.18
         )
         self.angular_speed = min(
             abs(float(self.get_parameter("angular_speed").value)), 0.30
@@ -217,10 +217,12 @@ class SafeRoomExplorer(Node):
         )
         self.gap_steer_gain = float(self.get_parameter("gap_steer_gain").value)
         self.gap_steer_cap = min(
-            abs(float(self.get_parameter("gap_steer_cap").value)), 0.15
+            abs(float(self.get_parameter("gap_steer_cap").value)), 0.25
         )
 
         self.cmd_pub = self.create_publisher(Twist, self.cmd_request_topic, 10)
+        # Tells footprint_publisher to switch to the slim passage profile.
+        self.passage_pub = self.create_publisher(Bool, "/passage_active", 5)
         # Handles are kept so a starved subscription can be destroyed and
         # rebuilt: a per-endpoint DDS failure can stop delivery to one reader
         # while the topic still flows to every other consumer (observed three
@@ -780,6 +782,7 @@ class SafeRoomExplorer(Node):
                         f"passage mode: gap width={gap[1]:.2f} m at "
                         f"{math.degrees(gap[0]):.0f} deg, edge={gap[2]:.2f} m"
                     )
+        self.passage_pub.publish(Bool(data=passage_gap is not None))
         front_stop_eff = (
             self.passage_front_stop if passage_gap else self.front_stop
         )
@@ -997,6 +1000,10 @@ class SafeRoomExplorer(Node):
             "planned_turning",
             "reversing",
         )
+        # In a passage the slim footprint plus scan noise makes CM flicker;
+        # give it patience there so intermittent passes accumulate progress
+        # through the door instead of triggering a retreat off it.
+        hold_limit = 4.0 if passage_gap is not None else 1.2
         if output_is_zero and active_motion_mode:
             # A Collision Monitor flickering at a footprint boundary can pass
             # a single nonzero message every couple of seconds; that must not
@@ -1005,7 +1012,7 @@ class SafeRoomExplorer(Node):
             self.output_active_since = None
             if self.output_held_since is None:
                 self.output_held_since = now
-            elif now - self.output_held_since > 1.2:
+            elif now - self.output_held_since > hold_limit:
                 blocked_mode = self.mode
                 self.output_held_since = None
                 if blocked_mode == "forward":
