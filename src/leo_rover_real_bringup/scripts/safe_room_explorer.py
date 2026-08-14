@@ -454,7 +454,13 @@ class SafeRoomExplorer(Node):
                         0.0,
                     )
                 )
-                center = 0.5 * (a1 + a2)
+                # Aim at the CARTESIAN midpoint of the two edge posts, not
+                # the angular midpoint: with one post near and one far the
+                # angular centre still drives into the near post (pinned the
+                # robot at a door mouth for 120 s on 2026-08-14).
+                x_mid = 0.5 * (r1 * math.cos(a1) + r2 * math.cos(a2))
+                y_mid = 0.5 * (r1 * math.sin(a1) + r2 * math.sin(a2))
+                center = math.atan2(y_mid, x_mid)
                 edge = min(r1, r2)
                 # Doorway-band windows outrank open space, else a wide free
                 # area beside the door would mask it.
@@ -506,18 +512,11 @@ class SafeRoomExplorer(Node):
             return "stale wheel odometry"
         if not self._fresh(self.battery_time, self.battery_timeout, now):
             return "stale battery telemetry"
-        # Collision Monitor may stay silent while its input is zero.  Avoid a
-        # startup deadlock by requiring its output only after the first
-        # actionable request, with one output-timeout interval for handoff.
-        if (
-            self.motion_started
-            and now - self.motion_start_time > max(2.0, self.output_timeout)
-            and self.mode in (
-                "forward", "turning", "planned_turning", "reversing"
-            )
-            and not self._fresh(self.output_time, self.output_timeout, now)
-        ):
-            return "collision monitor output is not live"
+        # Collision Monitor silence is handled by the hold detector (silence
+        # while requesting motion == held at zero -> escape). Treating it as
+        # a recoverable data stall here fought the hold detector: the pause
+        # reset the hold timer every 2 s and the escape never fired, pinning
+        # the robot at a door post on 2026-08-14.
         if self.battery is None or self.battery < self.minimum_battery:
             voltage = "unknown" if self.battery is None else f"{self.battery:.2f} V"
             return f"battery below {self.minimum_battery:.2f} V ({voltage})"
@@ -531,7 +530,6 @@ class SafeRoomExplorer(Node):
         "stale depth-camera scan": "sub_camera",
         "stale wheel odometry": "sub_odom",
         "stale battery telemetry": "sub_battery",
-        "collision monitor output is not live": "sub_output",
     }
 
     def _resubscribe(self, attr):
@@ -920,9 +918,13 @@ class SafeRoomExplorer(Node):
                 ) > 0.04
             ):
                 progressed = True
-            if front >= self.front_clear or (
-                progressed and front >= self.front_stop
-            ):
+            # Exit without progress only when the SIDES opened too — the
+            # front wedge can read clear while a post still pins the flank
+            # (spurious instant exits observed at a door on 2026-08-14).
+            if (
+                front >= self.front_clear
+                and min(left, right) >= self.minimum_turn_clearance
+            ) or (progressed and front >= self.front_stop):
                 boxed_for = now - self.boxed_started if self.boxed_started else 0.0
                 self.get_logger().info(
                     f"boxed escape succeeded after {boxed_for:.1f} s; "
@@ -990,10 +992,11 @@ class SafeRoomExplorer(Node):
 
         if self.mode != mode_at_start:
             self.output_held_since = None
+        # A silent CM (vetoing) counts as zero output, not as missing data.
         output_is_zero = (
             abs(self.last_output.linear.x) < 0.005
             and abs(self.last_output.angular.z) < 0.01
-        )
+        ) or not self._fresh(self.output_time, self.output_timeout, now)
         active_motion_mode = self.mode in (
             "forward",
             "turning",
@@ -1004,7 +1007,11 @@ class SafeRoomExplorer(Node):
         # give it patience there so intermittent passes accumulate progress
         # through the door instead of triggering a retreat off it.
         hold_limit = 4.0 if passage_gap is not None else 1.2
-        if output_is_zero and active_motion_mode:
+        chain_warm = (
+            self.motion_started
+            and now - self.motion_start_time > max(2.0, self.output_timeout)
+        )
+        if output_is_zero and active_motion_mode and chain_warm:
             # A Collision Monitor flickering at a footprint boundary can pass
             # a single nonzero message every couple of seconds; that must not
             # reset the hold detector, or a blocked robot waits forever

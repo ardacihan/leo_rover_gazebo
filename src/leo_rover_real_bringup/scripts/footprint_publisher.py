@@ -30,7 +30,10 @@ class FootprintPublisher(Node):
         # passage: 2 cm side margin instead of 4, so a ~0.6 m doorway leaves
         # real clearance. Chassis is never exceeded.
         self.declare_parameter("passage_half_width", 0.24)
-        self.declare_parameter("passage_front", 0.26)
+        # 2 cm front margin in passage: a door post 0.29 m ahead-left sat
+        # 3 cm from the old 0.26 front edge and scan noise put it inside the
+        # footprint, freezing all motion (2026-08-14 evening).
+        self.declare_parameter("passage_front", 0.24)
         self.declare_parameter("passage_rear", 0.24)
         self.declare_parameter("passage_topic", "/passage_active")
         self.declare_parameter("passage_hold_seconds", 1.5)
