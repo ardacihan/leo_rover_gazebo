@@ -908,10 +908,17 @@ class SafeRoomExplorer(Node):
                 self.front_blocked_since = None
         elif self.mode == "boxed_probe":
             wider = 1.0 if left_turn_clearance >= right_turn_clearance else -1.0
+            # Pure spins fail whenever an obstacle sits inside the corner
+            # sweep circle; arcs translate the footprint away while turning
+            # and are often the only legal escape from a flank wedge.
             candidates = [(0.0, wider), (0.0, -wider)]
             if self.reverse_speed > 0.0:
                 candidates.append((-1.0, 0.0))
+                candidates.append((-1.0, wider))
+                candidates.append((-1.0, -wider))
             candidates.append((1.0, 0.0))
+            candidates.append((1.0, wider))
+            candidates.append((1.0, -wider))
             progressed = False
             if (
                 self.probe_start_yaw is not None
@@ -1068,14 +1075,23 @@ class SafeRoomExplorer(Node):
 
         if self.mode == "forward":
             if passage_gap is not None:
-                command_linear = min(self.passage_speed, self.linear_speed)
-                command_angular = max(
-                    -self.gap_steer_cap,
-                    min(
-                        self.gap_steer_cap,
-                        self.gap_steer_gain * passage_gap[0],
-                    ),
-                )
+                if abs(passage_gap[0]) > 0.40:
+                    # Face the passage head-on before entering: oblique
+                    # entries put a door post on the flank where nothing can
+                    # rotate. Align in place, then drive centered.
+                    command_linear = 0.0
+                    command_angular = math.copysign(
+                        0.6 * self.angular_speed, passage_gap[0]
+                    )
+                else:
+                    command_linear = min(self.passage_speed, self.linear_speed)
+                    command_angular = max(
+                        -self.gap_steer_cap,
+                        min(
+                            self.gap_steer_cap,
+                            self.gap_steer_gain * passage_gap[0],
+                        ),
+                    )
             else:
                 command_linear = self.linear_speed
                 # Side-corridor avoidance: veer gently away from a closing
