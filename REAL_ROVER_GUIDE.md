@@ -1114,6 +1114,32 @@ footprint is the chassis rectangle `[0.28/-0.26 x, +/-0.26 y]` published on
 nonzero CM output before clearing (a flickering CM previously reset the
 detector and the robot sat 40 s against a table leg).
 
+### Rover 4 doorway-transit findings (2026-08-14 evening)
+
+Two more full 5-minute runs completed (26.5 m and 23.8 m — both ended on the
+wall clock; boxed-probe freed a 0.32 m pocket in 21.8 s unassisted). Passage
+mode reliably NAVIGATES TO doorways but transit was not yet achieved; the
+final attempts ran out of battery (10.2 V floor). Fixes committed for the
+next session, all deployed to `~/leo_sensor_ws` (symlinked):
+
+- Gap aim = cartesian midpoint of the door posts (angular midpoint drives
+  into the near post when one edge is close).
+- CM silence while requesting motion is a HOLD (escape fires), not a data
+  stall: the old separate liveness-pause reset the hold timer every 2 s and
+  pinned the robot at the door indefinitely.
+- Passage footprint front margin trimmed to 2 cm; a post 3 cm from the old
+  edge flickered inside the polygon and froze all motion both directions.
+- Boxed-probe no-progress exit requires side clearance, not just a clear
+  front wedge.
+
+Operational notes: the coverage watcher must not be armed right after a
+stack restart (fresh SLAM + stationary robot reads "no reachable frontiers"
+and kills the run at min-runtime); the dynamic slim footprint is verified
+live (0.52 -> 0.48 m on `/passage_active`); speed ceilings are now 0.18
+(explorer and gate) with 0.163 m/s cruise validated. The 2026-08-14 full-run
+map artifacts and labeled videos are in
+`artifacts/jetson04_exploration_20260814/`.
+
 ### Jetson 4 ROS environment
 
 - `ROS_DOMAIN_ID=4` for the installed robot processes.
