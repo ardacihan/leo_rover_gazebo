@@ -36,6 +36,7 @@ class SafeRoomExplorer(Node):
         self.declare_parameter("scan_topic", "/scan")
         self.declare_parameter("camera_scan_topic", "/camera/scan")
         self.declare_parameter("camera_scan_timeout", 0.5)
+        self.declare_parameter("sensor_recovery_limit", 45.0)
         # Sectors are named in base-frame terms (front, left, rear).  Each scan
         # source carries its own mounting yaw, resolved from TF when left NaN.
         self.declare_parameter("base_frame", "base_footprint")
@@ -178,25 +179,33 @@ class SafeRoomExplorer(Node):
             self.get_parameter("battery_timeout").value
         )
         self.output_timeout = float(self.get_parameter("output_timeout").value)
+        self.sensor_recovery_limit = float(
+            self.get_parameter("sensor_recovery_limit").value
+        )
 
         self.cmd_pub = self.create_publisher(Twist, self.cmd_request_topic, 10)
-        self.create_subscription(
+        # Handles are kept so a starved subscription can be destroyed and
+        # rebuilt: a per-endpoint DDS failure can stop delivery to one reader
+        # while the topic still flows to every other consumer (observed three
+        # times on 2026-08-14; the bag and the gate received every message
+        # while this node's reader went silent).
+        self.sub_scan = self.create_subscription(
             LaserScan, self.scan_topic, self._scan_callback, qos_profile_sensor_data
         )
-        self.create_subscription(
+        self.sub_camera = self.create_subscription(
             LaserScan, self.camera_scan_topic, self._camera_scan_callback,
             qos_profile_sensor_data
         )
-        self.create_subscription(
+        self.sub_odom = self.create_subscription(
             Odometry, self.odom_topic, self._odom_callback, qos_profile_sensor_data
         )
-        self.create_subscription(
+        self.sub_battery = self.create_subscription(
             Float32,
             self.battery_topic,
             self._battery_callback,
             qos_profile_sensor_data,
         )
-        self.create_subscription(
+        self.sub_output = self.create_subscription(
             Twist, self.cmd_output_topic, self._output_callback, 10
         )
 
@@ -234,9 +243,14 @@ class SafeRoomExplorer(Node):
         self.motion_started = False
         self.motion_start_time = None
         self.output_held_since = None
+        self.output_active_since = None
         self.finish_time = None
         self.finish_reason = None
         self.last_log_time = 0.0
+        self.recovering_since = None
+        self.recovering_problem = None
+        self.last_resubscribe = 0.0
+        self.stall_total = 0.0
         self.timer = self.create_timer(0.1, self._timer_callback)
 
         self.get_logger().info(
@@ -402,6 +416,45 @@ class SafeRoomExplorer(Node):
             return f"battery below {self.minimum_battery:.2f} V ({voltage})"
         return None
 
+    # Data-flow stalls that a rebuilt subscription can cure. Structural
+    # problems (missing transforms, low battery, absent command chain) are
+    # deliberately NOT here and remain fatal.
+    RECOVERABLE_PROBLEMS = {
+        "stale lidar scan": "sub_scan",
+        "stale depth-camera scan": "sub_camera",
+        "stale wheel odometry": "sub_odom",
+        "stale battery telemetry": "sub_battery",
+        "collision monitor output is not live": "sub_output",
+    }
+
+    def _resubscribe(self, attr):
+        spec = {
+            "sub_scan": (
+                LaserScan, self.scan_topic, self._scan_callback,
+                qos_profile_sensor_data,
+            ),
+            "sub_camera": (
+                LaserScan, self.camera_scan_topic, self._camera_scan_callback,
+                qos_profile_sensor_data,
+            ),
+            "sub_odom": (
+                Odometry, self.odom_topic, self._odom_callback,
+                qos_profile_sensor_data,
+            ),
+            "sub_battery": (
+                Float32, self.battery_topic, self._battery_callback,
+                qos_profile_sensor_data,
+            ),
+            "sub_output": (
+                Twist, self.cmd_output_topic, self._output_callback, 10,
+            ),
+        }[attr]
+        try:
+            self.destroy_subscription(getattr(self, attr))
+        except Exception:  # noqa: BLE001 - a dead handle must not stop recovery
+            pass
+        setattr(self, attr, self.create_subscription(*spec))
+
     def _start_reverse(self, now, rear_clearance, reason):
         if self.reverse_speed <= 0.0:
             self._finish(f"{reason}; reverse disabled")
@@ -477,11 +530,60 @@ class SafeRoomExplorer(Node):
         problem = self._readiness_problem(now)
         if problem is not None:
             self._publish()
-            if self.motion_started or now - self.start_time > 15.0:
-                self._finish(problem)
+            recover_attr = self.RECOVERABLE_PROBLEMS.get(problem)
+            if recover_attr is None or (
+                not self.motion_started and now - self.start_time <= 15.0
+            ):
+                if self.motion_started or now - self.start_time > 15.0:
+                    self._finish(problem)
+                return
+            # Hold position and rebuild the starved reader instead of
+            # aborting the mission; only an unrecovered stall is fatal.
+            if self.recovering_since is None:
+                self.recovering_since = now
+                self.recovering_problem = problem
+                self.last_resubscribe = 0.0
+                # While paused only zeros are requested, so Collision Monitor
+                # goes legitimately silent. Re-arm the output-liveness
+                # requirement the same way startup does, or the pause would
+                # cascade into a bogus "output is not live" recovery.
+                self.motion_started = False
+                self.motion_start_time = None
+                self.get_logger().warning(
+                    f"pausing: {problem}; rebuilding subscription and waiting "
+                    f"up to {self.sensor_recovery_limit:.0f} s"
+                )
+            if now - self.last_resubscribe >= 3.0:
+                self.last_resubscribe = now
+                self._resubscribe(recover_attr)
+            if now - self.recovering_since > self.sensor_recovery_limit:
+                self._finish(
+                    f"{self.recovering_problem}; not recovered within "
+                    f"{self.sensor_recovery_limit:.0f} s"
+                )
             return
+        if self.recovering_since is not None:
+            stalled = now - self.recovering_since
+            self.stall_total += stalled
+            self.get_logger().warning(
+                f"recovered from '{self.recovering_problem}' after "
+                f"{stalled:.1f} s; resuming exploration"
+            )
+            self.recovering_since = None
+            self.recovering_problem = None
+            self.front_blocked_since = None
+            self.output_held_since = None
+            self.output_active_since = None
+            # Refresh maneuver clocks so a pause longer than turn/reverse
+            # timeouts is not mistaken for a stuck maneuver on resume.
+            if self.turn_started is not None:
+                self.turn_started = now
+            if self.reverse_started is not None:
+                self.reverse_started = now
 
-        if now - self.start_time >= self.run_duration:
+        # Stall time is excluded so a recovered pause does not eat the
+        # exploration budget.
+        if now - self.start_time - self.stall_total >= self.run_duration:
             self._finish("wall-clock duration reached")
             return
         if self.path_length >= self.max_distance:
@@ -501,9 +603,20 @@ class SafeRoomExplorer(Node):
             self._sector_clearance(145.0, 179.9),
             self._sector_clearance(-179.9, -145.0),
         )
+        # A sector with under five valid returns reads 0.0. That happens in
+        # normal operation when a sector faces geometry beyond the C1's ~12 m
+        # effective range (long corridor, open doorway), so it must NOT be
+        # fatal: 0.0 already means "treat as blocked" everywhere below, which
+        # steers the robot toward directions it can actually measure.
         if min(front, left, right, rear_left, rear_right, rear_center) <= 0.0:
-            self._finish("lidar sector has insufficient valid samples")
-            return
+            if now - self.last_log_time >= 2.0:
+                self.last_log_time = now
+                self.get_logger().warning(
+                    "sector(s) with insufficient lidar samples treated as "
+                    f"blocked: front={front:.2f} left={left:.2f} "
+                    f"right={right:.2f} rear_left={rear_left:.2f} "
+                    f"rear_right={rear_right:.2f} rear={rear_center:.2f}"
+                )
 
         # A turn sweeps the rear corner opposite the turn direction.  Choose
         # using both the forward-side and swept-rear clearances so a nominally
@@ -591,9 +704,22 @@ class SafeRoomExplorer(Node):
         elif self.mode == "reversing":
             reverse_travel = self._reverse_travel()
             if rear_center < self.minimum_reverse_clearance:
-                self._finish(
-                    f"reverse corridor closed at {rear_center:.2f} m"
+                # Abort the maneuver, not the mission: stop reversing at once
+                # and re-evaluate with a turn. A sparse rear sector reads 0.0
+                # and must not end the run; genuinely boxed robots still stop
+                # through the reverse-attempt limit and escape logic.
+                self.get_logger().warning(
+                    f"reverse corridor closed at {rear_center:.2f} m; "
+                    "switching to turning"
                 )
+                self.mode = "turning"
+                self.turn_direction = choose_turn_direction(
+                    left_turn_clearance, right_turn_clearance
+                )
+                self.turn_started = now
+                self.turn_start_yaw = self.yaw
+                self.front_blocked_since = None
+                self._publish()
                 return
             if (
                 reverse_travel >= self.reverse_distance
@@ -659,6 +785,11 @@ class SafeRoomExplorer(Node):
             "reversing",
         )
         if output_is_zero and active_motion_mode:
+            # A Collision Monitor flickering at a footprint boundary can pass
+            # a single nonzero message every couple of seconds; that must not
+            # reset the hold detector, or a blocked robot waits forever
+            # (observed for 40 s against a table leg on 2026-08-14).
+            self.output_active_since = None
             if self.output_held_since is None:
                 self.output_held_since = now
             elif now - self.output_held_since > 1.2:
@@ -683,7 +814,15 @@ class SafeRoomExplorer(Node):
                 else:
                     self._finish("collision monitor blocked reverse motion")
                     return
+        elif active_motion_mode:
+            # Clear the hold only after the output has stayed nonzero for a
+            # sustained interval; isolated passed messages keep the timer.
+            if self.output_active_since is None:
+                self.output_active_since = now
+            if now - self.output_active_since >= 0.5:
+                self.output_held_since = None
         else:
+            self.output_active_since = None
             self.output_held_since = None
 
         if self.mode == "forward":

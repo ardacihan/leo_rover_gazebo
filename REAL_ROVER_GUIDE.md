@@ -930,6 +930,190 @@ stop layer with zero/very-low-speed commands before room exploration.
 
 ## Jetson 4 (`192.168.178.104`)
 
+### Rover 4 readiness session, no firmware dropout under full stack (2026-08-14)
+
+State found on connection (fresh boot, battery 12.00 V):
+
+- `leo_real` no longer exists anywhere on the machine. `~/ros_ws/install` was
+  rebuilt down to only `leo_nav_bridge`, so `leo-ros.service` (which launched
+  `leo_real leo_real.launch.py`) was crash-looping every 10 s with "Package
+  'leo_real' not found" (restart counter 33+), and `leo-nav.service` was dead
+  for the same reason. `leo-ros` was stopped for the session; both units need a
+  maintenance decision (rebuild `leo_real` or rewrite the units).
+- With `leo-ros` gone, nothing starts the RealSense. The stock driver works as
+  a replacement and matches the topics `safe_mapping.launch.py` expects:
+  `ros2 launch realsense2_camera rs_launch.py align_depth.enable:=true
+  rgb_camera.color_profile:=640x480x15 depth_module.depth_profile:=640x480x15`
+  (installed version 4.58.3; older `rgb_camera.profile` names are not
+  declared). Aligned depth then runs at 15 Hz, and the depth filter reported
+  87.5% depth health.
+- The active workspace for `leo_rover_real_bringup` is `~/leo_sensor_ws`
+  (symlink-install, byte-identical to this repository on 2026-08-14).
+  `~/ros2_ws/src/leo_rover_real_bringup` is a stale variant missing
+  `scan_fusion.py` and `depth_height_filter.py` even though its install dir
+  was rebuilt on 2026-08-14 — do not launch from it. `~/codex_ws` is older
+  still.
+- Since `leo-nav` no longer starts, there is nothing to stop before taking
+  `/cmd_vel`; the daemon restart plus `safe_mapping.launch.py` sequence below
+  otherwise still applies.
+
+Verified running configuration (all stationary, no motion commanded):
+boot services `lidar`, `lidar-tf` (corrected `y=0.04` override active,
+`[0.077, 0.040, 0.246]` confirmed live), `leo-nav-bridge`, `rosbridge`, plus
+the RealSense launch above, plus `safe_mapping.launch.py start_explorer:=false
+publish_lidar_tf:=false publish_odom_tf:=false publish_camera_tf:=true
+start_slam:=true start_safety:=true` from `~/leo_sensor_ws`. Rates: `/scan`
+10.0 Hz, camera scans ~13 Hz, fused scans ~10 Hz, `/map` 1.0 Hz, firmware
+wheel odom 20.0 Hz, firmware IMU 100.6 Hz, battery telemetry 10.0 Hz.
+Collision Monitor activated cleanly; command chain had a single owner at every
+hop and zero foreign `/cmd_vel` publishers; the gate heartbeated zeros and
+Collision Monitor stayed silent on zero input as documented.
+
+Firmware starvation did NOT recur: a 5-minute monitor under the full stack
+showed battery telemetry at exactly 10.0 Hz in every 30 s bin and
+`enP8p1s0` traffic steady at ~73 KB/s to the rover (~5% of the 1396 KB/s
+failure level; idle baseline that day was 24 KB/s). Rosbridge client count was
+0 — keep the rover web UI closed. Total stack uptime exceeded 12 minutes with
+zero dropouts, versus death in ~60 s during the 2026-08-13 incident. The
+lighter camera profile (640x480x15 instead of 1280x720x30) is part of keeping
+local load down; keep it.
+
+Monitoring trap: firmware topics are best-effort, and
+`/rob_2/firmware/wheel_odom` is `leo_msgs/WheelOdom`, not `nav_msgs/Odometry`.
+A subscriber with default QoS or the wrong type silently counts zero and looks
+exactly like a dropout. `ros2 topic hz` is type-agnostic and the safer probe.
+
+A stationary map checkpoint (176x107 cells, 2,374 known) was saved via
+`/save_mapping_artifacts` to `~/leo_maps/leo_room_20260814_122401.*`; local
+copies are under `artifacts/jetson04_readiness_20260814/`. Key-based SSH for
+the operator workstation was installed in `~/.ssh/authorized_keys`.
+
+### Rover 4 first autonomous room exploration (2026-08-14)
+
+A supervised 180 s bounded exploration ran the same day on the stack described
+above. Result: 7.29 m traveled, 75.2% of the room mapped (15,842 known cells,
+180x117 @ 5 cm), obstacle avoidance exercised live, zero firmware dropouts,
+zero collisions. Artifacts, labeled debug video, and the full rosbag are in
+`artifacts/jetson04_exploration_20260814/`; rover-side copies in `~/leo_maps`
+and `~/leo_bags/explore_20260814_run3`. The SLAM pose graph was serialized to
+`~/leo_maps/leo_room_explored_20260814_posegraph.*`, so the session is
+resumable.
+
+Three false starts preceded the successful run; each is a production lesson:
+
+1. **Standalone explorer defaults do not match the fused stack.** `ros2 run
+   ... safe_room_explorer.py` with only `run_duration`/`max_distance` (the
+   guide's old example) dies with "stale depth-camera scan": its defaults are
+   `camera_scan_topic=/camera/scan`, `scan_topic=/scan`,
+   `odom_topic=/wheel_odom_integrated`, `battery_topic=/firmware/...` — all
+   wrong here. Pass the same parameters `safe_mapping.launch.py` gives it
+   (`scan_topic:=/scan_collision_fused`, `scan_yaw_offset:=0.0`,
+   `camera_scan_topic:=/camera/scan_collision`, `camera_scan_yaw_offset:=0.0`,
+   `odom_topic:=/wheel_odom`,
+   `battery_topic:=/rob_2/firmware/battery_averaged`), or use
+   `start_explorer:=true` on the launch instead.
+2. **rosbag on `/cmd_vel_raw` closes the gate.** The gate audits subscribers
+   of its raw output and fails closed on unknown consumers
+   (`unexpected raw command consumers: rosbag2_recorder`); a `ros2 topic echo`
+   does the same. Either record everything except `/cmd_vel_raw` (gate
+   decisions are still recoverable from `/cmd_vel_request`, `/cmd_vel`, and
+   `/rosout`), or extend the gate's `allowed_cmd_vel_raw_subscribers`
+   parameter at launch time.
+3. **Bagging raw images starves the control nodes.** Recording 640x480 raw
+   color+depth pushed load average to 9.3 on 6 cores and produced 0.4-0.5 s
+   arrival gaps on the fused scan — tripping the explorer's 0.4 s
+   `scan_timeout`. Bag a throttled color stream (a 5 Hz relay ~4 MB/s) and
+   skip raw depth: the camera's obstacle decisions are already in
+   `/camera/scan_collision`. Explorer margins `scan_timeout:=0.8`,
+   `camera_scan_timeout:=0.8`, `output_timeout:=1.5` are safe because the
+   gate's stricter 0.4/0.5 s arrival checks still govern actual motion.
+
+Findings from the successful run, established from the bag (ground truth):
+
+- **The run's end was a safety stop, not a fault.** At t≈130 s an obstacle sat
+  at 0.35 m on the left flank — exactly on Collision Monitor's 0.35 m approach
+  circle — and CM held output near zero for 40 s. The explorer's own sector
+  view said front was clear (1.27 m > its 0.55 m stop distance), so it kept
+  requesting forward instead of triggering its CM-held-turn recovery. That
+  hold-detection gap is the top explorer bug to fix for production: it
+  compares output freshness, not output magnitude vs request.
+- **Firmware never faltered under the running stack plus motion**: wheel odom
+  20 Hz, IMU 100 Hz, battery 10 Hz continuous across the whole bag; link
+  steady at ~85-90 KB/s. The 2026-08-13 starvation did not recur.
+- **Per-endpoint DDS subscription failures are real and misleading.** The
+  explorer's `/wheel_odom` subscription stopped receiving for 13 s (its abort
+  reason "stale wheel odometry") while the bag and the gate on the same topic
+  received every message; after the run, fresh `ros2 topic hz` probes of
+  `/rob_2/firmware/wheel_odom` reported nothing while established
+  subscriptions flowed at 20 Hz. A "dead" topic probed by a single new
+  subscriber is not proof the publisher is down — cross-check with an
+  already-attached consumer (the bag, the bridge) before blaming firmware.
+- Battery sagged 12.00 → ~11.5 V averaged over the ~75 min session; recharge
+  before the next motion session.
+
+### Rover 4 exploration runbook (validated 2026-08-14)
+
+The complete procedure for an autonomous mapping run with debug recording.
+Every step was executed and validated live; deviations that looked harmless
+cost real time (see the false-start list in the previous section).
+
+1. **Preflight** (see "First connection checklist"): battery comfortably above
+   11 V, `lidar`/`lidar-tf`/`leo-nav-bridge` services running, `leo-nav` NOT
+   running, exactly one `/cmd_vel` publisher after the stack is up.
+2. **Camera** (leo_real is gone from the machine):
+   `ros2 launch realsense2_camera rs_launch.py align_depth.enable:=true
+   rgb_camera.color_profile:=640x480x15 depth_module.depth_profile:=640x480x15`
+3. **Stack** from `~/leo_sensor_ws` (managed process, own PGID):
+   `ros2 launch leo_rover_real_bringup safe_mapping.launch.py
+   start_explorer:=false publish_lidar_tf:=false publish_odom_tf:=false
+   publish_camera_tf:=true start_sensor_fusion:=true start_slam:=true
+   start_safety:=true`
+   Then verify: Collision Monitor activated in the log, AND
+   `/collision_monitor/footprint` has 1 publisher + 1 subscription — the
+   approach polygon is fed by `footprint_publisher.py`; if that node is
+   missing the polygon is EMPTY and collision avoidance silently checks
+   nothing (Humble approach polygons have no static points parameter).
+4. **Debug recording**: start `tools/debug_color_throttle.py`, then the
+   standard bag topic set from `tools/README.md`. Never bag `/cmd_vel_raw`
+   (gate closes) or raw images (CPU starvation). Optionally start
+   `tools/firmware_stability_monitor.py`.
+5. **Explorer** — always pass the full wiring (standalone defaults are wrong
+   for this stack):
+   `ros2 run leo_rover_real_bringup safe_room_explorer.py --ros-args
+   -p run_duration:=120.0 -p max_distance:=12.0
+   -p linear_speed:=0.092 -p angular_speed:=0.276
+   -p front_stop_distance:=0.45 -p front_clear_distance:=0.60
+   -p minimum_turn_clearance:=0.40
+   -p scan_topic:=/scan_collision_fused -p scan_yaw_offset:=0.0
+   -p camera_scan_topic:=/camera/scan_collision -p camera_scan_yaw_offset:=0.0
+   -p odom_topic:=/wheel_odom
+   -p battery_topic:=/rob_2/firmware/battery_averaged
+   -p scan_timeout:=1.5 -p camera_scan_timeout:=1.5 -p output_timeout:=2.0`
+   The relaxed explorer watchdogs are safe: the gate still enforces 0.4/0.5 s
+   arrival freshness on every command it forwards. Re-running the explorer
+   continues the SAME map while the stack stays up — multi-leg runs are the
+   normal way to reach full coverage.
+6. **Known stop conditions**: driving nose-first into a pocket blinds the
+   RealSense (<5% valid depth → depth node publishes nothing → gate closes →
+   next explorer start refuses with "stale depth-camera scan"). Reposition
+   the robot to face open space (operator) and relaunch; depth health
+   recovers immediately. Watch `depth_height_filter` log lines.
+7. **Artifacts** (while SLAM is still alive): checkpoint any time with
+   `ros2 service call /save_mapping_artifacts std_srvs/srv/Trigger '{}'` →
+   `~/leo_maps/`; final map with `nav2_map_server map_saver_cli`; resumable
+   pose graph with
+   `ros2 service call /slam_toolbox/serialize_map
+   slam_toolbox/srv/SerializePoseGraph '{filename: <path>}'`.
+   Render the labeled analysis video from the bag with
+   `tools/render_labeled_debug_video.py`.
+
+Tuning state as of 2026-08-14 (after the table-leg deadlock): CM approach
+footprint is the chassis rectangle `[0.28/-0.26 x, +/-0.26 y]` published on
+`/collision_monitor/footprint`, `time_before_collision` 1.2 s; explorer speeds
+0.092/0.276 (+15%); explorer hold-detection requires 0.5 s of sustained
+nonzero CM output before clearing (a flickering CM previously reset the
+detector and the robot sat 40 s against a table leg).
+
 ### Jetson 4 ROS environment
 
 - `ROS_DOMAIN_ID=4` for the installed robot processes.

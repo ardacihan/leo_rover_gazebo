@@ -302,6 +302,18 @@ def generate_launch_description():
             emulate_tty=True,
         ),
         Node(
+            # The Humble Collision Monitor approach polygon has no static
+            # points parameter; it consumes a footprint topic. Without this
+            # publisher the approach polygon is empty and checks nothing.
+            package="leo_rover_real_bringup",
+            executable="footprint_publisher.py",
+            name="footprint_publisher",
+            parameters=[{"frame_id": base_frame}],
+            condition=IfCondition(start_safety),
+            output="screen",
+            emulate_tty=True,
+        ),
+        Node(
             package="nav2_collision_monitor",
             executable="collision_monitor",
             name="collision_monitor",

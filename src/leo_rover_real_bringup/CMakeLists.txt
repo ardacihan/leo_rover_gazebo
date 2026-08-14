@@ -9,6 +9,7 @@ install(DIRECTORY config launch
 
 install(PROGRAMS
   scripts/depth_height_filter.py
+  scripts/footprint_publisher.py
   scripts/frontier_explorer.py
   scripts/incident_recorder.py
   scripts/firmware_relay.py

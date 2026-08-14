@@ -10,19 +10,32 @@ collision_monitor:
     base_shift_correction: false
     stop_pub_timeout: 1.0
 
-    # Leo is approximately 0.44 x 0.44 m. The circumscribed approach circle
-    # plus calibration margin represents the whole rover. Its time-to-collision
-    # model is directional:
-    # it constrains motion toward an obstacle without choking motion away.
+    # Leo is approximately 0.44 x 0.44 m. The approach footprint is the true
+    # chassis rectangle plus margin (front +0.06, sides/rear +0.04), not the
+    # old 0.35 m circumscribed circle: on 2026-08-14 that circle permanently
+    # vetoed forward motion past a table leg sitting 0.30 m from center
+    # (8 cm from the wheel) even though the straight path was clear. The
+    # time-to-collision simulation still rotates this polygon, so a turn that
+    # would sweep a corner into the same leg remains blocked.
     polygons: [FootprintApproach]
     # The approach model simulates the commanded velocity against the rover
     # footprint.  Unlike a fixed stop rectangle, it permits a slow reverse
     # away from a front wall and permits a turn that increases clearance.
     FootprintApproach:
-      type: circle
-      radius: 0.35
+      type: polygon
+      # In this nav2 Humble build (1.1.20) an APPROACH polygon takes no
+      # static `points` parameter at all (neither array nor string form is
+      # declared — both are silently ignored and the polygon waits on a
+      # footprint topic instead). The rectangle is therefore published by
+      # scripts/footprint_publisher.py; if that publisher is absent the
+      # polygon stays empty and the approach check passes everything, so
+      # verify /collision_monitor/footprint has one publisher before motion.
+      footprint_topic: /collision_monitor/footprint
       action_type: approach
-      time_before_collision: 1.5
+      # 1.0 s at 0.092 m/s stops ~9 cm from footprint contact; reduced from
+      # 1.5 after operator feedback that the rover kept too much standoff in
+      # an easy environment.
+      time_before_collision: 1.0
       simulation_time_step: 0.1
       max_points: 5
       visualize: true
