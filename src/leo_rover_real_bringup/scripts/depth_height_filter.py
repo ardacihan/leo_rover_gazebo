@@ -44,7 +44,11 @@ class DepthHeightFilter(Node):
         self.declare_parameter("valid_depth_min", 0.10)
         self.declare_parameter("valid_depth_max", 10.0)
         self.declare_parameter("minimum_valid_depth_fraction", 0.05)
-        self.declare_parameter("collision_min_height", 0.04)
+        # Raised 0.04 -> 0.10 (2026-08-14): the 4 cm floor made door sills
+        # and white-panel stereo noise near the floor read as walls across
+        # otherwise-clear passages, pinching doorway gaps shut. Obstacles
+        # 10 cm and taller still register.
+        self.declare_parameter("collision_min_height", 0.10)
         self.declare_parameter("collision_max_height", 0.45)
         self.declare_parameter("slam_min_height", 0.18)
         self.declare_parameter("slam_max_height", 0.31)

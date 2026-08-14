@@ -296,6 +296,8 @@ class SafeRoomExplorer(Node):
         self.probe_start_yaw = None
         self.probe_start_position = None
         self.probe_command = (0.0, 0.0)
+        self.passage_seen_time = None
+        self.last_passage_gap = None
         self.timer = self.create_timer(0.1, self._timer_callback)
 
         self.get_logger().info(
@@ -775,11 +777,21 @@ class SafeRoomExplorer(Node):
                 and gap[2] <= self.gap_max_edge_range
             ):
                 passage_gap = gap
+                self.passage_seen_time = now
+                self.last_passage_gap = gap
                 if now - self.last_log_time >= 2.0:
                     self.get_logger().info(
                         f"passage mode: gap width={gap[1]:.2f} m at "
                         f"{math.degrees(gap[0]):.0f} deg, edge={gap[2]:.2f} m"
                     )
+            elif (
+                self.last_passage_gap is not None
+                and self.passage_seen_time is not None
+                and now - self.passage_seen_time < 3.0
+            ):
+                # Hysteresis: a gap that flickers out for a moment must not
+                # snap thresholds back mid-approach and trigger a retreat.
+                passage_gap = self.last_passage_gap
         self.passage_pub.publish(Bool(data=passage_gap is not None))
         front_stop_eff = (
             self.passage_front_stop if passage_gap else self.front_stop
@@ -1066,7 +1078,16 @@ class SafeRoomExplorer(Node):
                 )
             else:
                 command_linear = self.linear_speed
+                # Side-corridor avoidance: veer gently away from a closing
+                # flank so oblique approaches to walls/panels never become
+                # wedges the escape logic cannot rotate out of (two runs on
+                # 2026-08-14 ended pinned with a panel 0.32 m off the left
+                # flank and every rotation vetoed).
                 command_angular = 0.0
+                if left < 0.40 and right > left + 0.05:
+                    command_angular = -min(0.15, 0.5 * (0.40 - left) + 0.05)
+                elif right < 0.40 and left > right + 0.05:
+                    command_angular = min(0.15, 0.5 * (0.40 - right) + 0.05)
         elif self.mode == "front_waiting":
             command_linear = 0.0
             command_angular = 0.0
