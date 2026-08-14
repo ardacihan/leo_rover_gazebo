@@ -37,6 +37,18 @@ class SafeRoomExplorer(Node):
         self.declare_parameter("camera_scan_topic", "/camera/scan")
         self.declare_parameter("camera_scan_timeout", 0.5)
         self.declare_parameter("sensor_recovery_limit", 45.0)
+        # Narrow-passage (doorway) traversal: when the fused scan shows a
+        # robot-wide free gap ahead, steer into it at reduced speed with a
+        # tighter stop threshold. Collision Monitor's true-footprint check
+        # remains the hard guard throughout.
+        self.declare_parameter("passage_enable", True)
+        self.declare_parameter("passage_speed", 0.08)
+        self.declare_parameter("passage_front_stop", 0.35)
+        self.declare_parameter("gap_range", 1.4)
+        self.declare_parameter("gap_min_width", 0.55)
+        self.declare_parameter("gap_max_edge_range", 2.0)
+        self.declare_parameter("gap_steer_gain", 0.6)
+        self.declare_parameter("gap_steer_cap", 0.12)
         # Sectors are named in base-frame terms (front, left, rear).  Each scan
         # source carries its own mounting yaw, resolved from TF when left NaN.
         self.declare_parameter("base_frame", "base_footprint")
@@ -90,17 +102,21 @@ class SafeRoomExplorer(Node):
             raise RuntimeError("refusing to bypass the physical-rover safety chain")
 
         # Hard ceilings stay in force even if launch arguments are mistyped.
+        # Raised 2026-08-14 on operator request after validated runs: speed
+        # 0.10 -> 0.15 (gate clamps to 0.15 too), duration 180 -> 600 s,
+        # distance 12 -> 1000 m (coverage runs are ended by the coverage
+        # watcher or the wall clock, not by path length).
         self.linear_speed = min(
-            abs(float(self.get_parameter("linear_speed").value)), 0.10
+            abs(float(self.get_parameter("linear_speed").value)), 0.15
         )
         self.angular_speed = min(
             abs(float(self.get_parameter("angular_speed").value)), 0.30
         )
         self.run_duration = min(
-            max(float(self.get_parameter("run_duration").value), 1.0), 180.0
+            max(float(self.get_parameter("run_duration").value), 1.0), 600.0
         )
         self.max_distance = min(
-            max(float(self.get_parameter("max_distance").value), 0.10), 12.0
+            max(float(self.get_parameter("max_distance").value), 0.10), 1000.0
         )
         self.planned_turn_distance = min(
             max(float(self.get_parameter("planned_turn_distance").value), 0.0),
@@ -125,10 +141,13 @@ class SafeRoomExplorer(Node):
             max(float(self.get_parameter("self_filter_radius").value), 0.0),
             0.15,
         )
+        # Floor lowered 0.35 -> 0.32 (2026-08-14): the in-place corner sweep
+        # is 0.311 m, and a 0.34 m pocket blocked every escape and ended a
+        # run that a legal turn would have continued.
         self.minimum_turn_clearance = min(
             max(
                 float(self.get_parameter("minimum_turn_clearance").value),
-                0.35,
+                0.32,
             ),
             0.75,
         )
@@ -181,6 +200,24 @@ class SafeRoomExplorer(Node):
         self.output_timeout = float(self.get_parameter("output_timeout").value)
         self.sensor_recovery_limit = float(
             self.get_parameter("sensor_recovery_limit").value
+        )
+        self.passage_enable = bool(self.get_parameter("passage_enable").value)
+        self.passage_speed = min(
+            abs(float(self.get_parameter("passage_speed").value)), 0.10
+        )
+        self.passage_front_stop = max(
+            float(self.get_parameter("passage_front_stop").value), 0.30
+        )
+        self.gap_range = float(self.get_parameter("gap_range").value)
+        self.gap_min_width = max(
+            float(self.get_parameter("gap_min_width").value), 0.52
+        )
+        self.gap_max_edge_range = float(
+            self.get_parameter("gap_max_edge_range").value
+        )
+        self.gap_steer_gain = float(self.get_parameter("gap_steer_gain").value)
+        self.gap_steer_cap = min(
+            abs(float(self.get_parameter("gap_steer_cap").value)), 0.15
         )
 
         self.cmd_pub = self.create_publisher(Twist, self.cmd_request_topic, 10)
@@ -251,6 +288,12 @@ class SafeRoomExplorer(Node):
         self.recovering_problem = None
         self.last_resubscribe = 0.0
         self.stall_total = 0.0
+        self.boxed_started = None
+        self.probe_index = 0
+        self.probe_started = None
+        self.probe_start_yaw = None
+        self.probe_start_position = None
+        self.probe_command = (0.0, 0.0)
         self.timer = self.create_timer(0.1, self._timer_callback)
 
         self.get_logger().info(
@@ -358,6 +401,68 @@ class SafeRoomExplorer(Node):
         values.sort()
         return values[min(self.sector_outlier_points, len(values) - 1)]
 
+    def _best_front_gap(self):
+        """Find the widest free gap ahead in the fused scan (base frame).
+
+        Returns (center_angle, passable_width, edge_range) or None. A ray is
+        free when it reads beyond gap_range or has no return. The passable
+        width is the chord between the two blocked edge points bounding the
+        window — physically, the doorway posts.
+        """
+        scan = self.scan
+        if scan is None or self.scan_yaw is None:
+            return None
+        half_fov = 0.84  # +/- 48 degrees in the base frame
+        rays = []  # (base_angle, range, is_free)
+        angle = float(scan.angle_min)
+        for reading in scan.ranges:
+            base = self._normalize_angle(angle + self.scan_yaw)
+            angle += float(scan.angle_increment)
+            if abs(base) > half_fov:
+                continue
+            r = float(reading)
+            valid = math.isfinite(r) and r >= max(
+                scan.range_min, self.self_filter_radius
+            )
+            free = (not valid) or r >= self.gap_range
+            rays.append((base, r if valid else math.inf, free))
+        if len(rays) < 8:
+            return None
+        rays.sort(key=lambda x: x[0])
+        best = None
+        i = 0
+        n = len(rays)
+        while i < n:
+            if not rays[i][2]:
+                i += 1
+                continue
+            j = i
+            while j + 1 < n and rays[j + 1][2]:
+                j += 1
+            # blocked neighbours bound the gap; skip windows at the FOV edge
+            if i > 0 and j < n - 1:
+                a1, r1, _ = rays[i - 1]
+                a2, r2, _ = rays[j + 1]
+                r1 = min(r1, self.gap_range)
+                r2 = min(r2, self.gap_range)
+                width = math.sqrt(
+                    max(
+                        r1 * r1 + r2 * r2
+                        - 2.0 * r1 * r2 * math.cos(a2 - a1),
+                        0.0,
+                    )
+                )
+                center = 0.5 * (a1 + a2)
+                edge = min(r1, r2)
+                # Doorway-band windows outrank open space, else a wide free
+                # area beside the door would mask it.
+                in_band = self.gap_min_width <= width <= 1.30
+                score = width + (10.0 if in_band else 0.0)
+                if best is None or score > best[3]:
+                    best = (center, width, edge, score)
+            i = j + 1
+        return best[:3] if best is not None else None
+
     def _publish(self, linear=0.0, angular=0.0):
         msg = Twist()
         msg.linear.x = float(linear)
@@ -455,15 +560,39 @@ class SafeRoomExplorer(Node):
             pass
         setattr(self, attr, self.create_subscription(*spec))
 
+    def _enter_boxed(self, now, reason):
+        """Probe low-speed escapes forever instead of ending the mission.
+
+        Collision Monitor simulates the true chassis polygon against the
+        fused scan and vetoes any colliding command, so cycling slow probe
+        motions through it is safe even when the explorer's coarse sector
+        floors see no legal escape. Added 2026-08-14 after two runs ended
+        with 'no safe turn or reverse corridor' in survivable pockets.
+        """
+        if self.mode != "boxed_probe":
+            self.get_logger().warning(
+                f"boxed in ({reason}); probing low-speed escapes under "
+                "Collision Monitor guard instead of stopping"
+            )
+            self.boxed_started = now
+            self.probe_index = 0
+            self.probe_started = now
+            self.probe_start_yaw = self.yaw
+            self.probe_start_position = self.last_position
+            self.probe_command = (0.0, 0.0)
+            self.mode = "boxed_probe"
+
     def _start_reverse(self, now, rear_clearance, reason):
         if self.reverse_speed <= 0.0:
-            self._finish(f"{reason}; reverse disabled")
+            self.get_logger().warning(f"{reason}; reverse disabled")
             return False
         if self.reverse_attempts >= self.maximum_reverse_attempts:
-            self._finish(f"{reason}; reverse-attempt limit reached")
+            self.get_logger().warning(
+                f"{reason}; reverse-attempt limit reached"
+            )
             return False
         if rear_clearance < self.minimum_reverse_clearance:
-            self._finish(
+            self.get_logger().warning(
                 f"{reason}; rear clearance {rear_clearance:.2f} m is below "
                 f"{self.minimum_reverse_clearance:.2f} m"
             )
@@ -512,9 +641,12 @@ class SafeRoomExplorer(Node):
             self.turn_start_yaw = self.yaw
             return True
         if action == "reverse":
-            return self._start_reverse(now, rear_clearance, reason)
-        self._finish(f"{reason}; no safe turn or reverse corridor")
-        return False
+            if self._start_reverse(now, rear_clearance, reason):
+                return True
+            self._enter_boxed(now, reason)
+            return True
+        self._enter_boxed(now, f"{reason}; no safe turn or reverse corridor")
+        return True
 
     def _timer_callback(self):
         now = time.monotonic()
@@ -625,8 +757,35 @@ class SafeRoomExplorer(Node):
             left, right, rear_left, rear_right
         )
 
+        # Doorway handling: a qualifying free gap ahead switches to passage
+        # mode — steer toward the gap centre, slow down, and tolerate a
+        # closer front reading (the door frame enters the front wedge before
+        # the robot is through). Collision Monitor still vetoes real contact.
+        passage_gap = None
+        if (
+            self.passage_enable
+            and self.mode in ("waiting", "forward", "front_waiting")
+        ):
+            gap = self._best_front_gap()
+            # Only a NARROW free window is a doorway; a wide one is open
+            # space and must not slow the robot down.
+            if (
+                gap is not None
+                and self.gap_min_width <= gap[1] <= 1.30
+                and gap[2] <= self.gap_max_edge_range
+            ):
+                passage_gap = gap
+                if now - self.last_log_time >= 2.0:
+                    self.get_logger().info(
+                        f"passage mode: gap width={gap[1]:.2f} m at "
+                        f"{math.degrees(gap[0]):.0f} deg, edge={gap[2]:.2f} m"
+                    )
+        front_stop_eff = (
+            self.passage_front_stop if passage_gap else self.front_stop
+        )
+
         if self.mode in ("waiting", "forward", "front_waiting"):
-            if front < self.front_stop:
+            if front < front_stop_eff:
                 if self.front_blocked_since is None:
                     self.front_blocked_since = now
                 if now - self.front_blocked_since >= self.front_block_duration:
@@ -640,7 +799,7 @@ class SafeRoomExplorer(Node):
                         return
                 else:
                     self.mode = "front_waiting"
-            elif self.path_length >= self.next_planned_turn_distance:
+            elif passage_gap is None and self.path_length >= self.next_planned_turn_distance:
                 self.front_blocked_since = None
                 self.mode = "planned_turning"
                 self.turn_direction = choose_turn_direction(
@@ -678,7 +837,7 @@ class SafeRoomExplorer(Node):
                 if not self._start_reverse(
                     now, rear_center, "obstacle turn timed out"
                 ):
-                    return
+                    self._enter_boxed(now, "obstacle turn timed out")
         elif self.mode == "planned_turning":
             if self.yaw is None or self.turn_start_yaw is None:
                 self._finish("turn heading unavailable")
@@ -700,7 +859,9 @@ class SafeRoomExplorer(Node):
                 elif not self._start_reverse(
                     now, rear_center, "planned turn timed out near obstacle"
                 ):
-                    return
+                    self._enter_boxed(
+                        now, "planned turn timed out near obstacle"
+                    )
         elif self.mode == "reversing":
             reverse_travel = self._reverse_travel()
             if rear_center < self.minimum_reverse_clearance:
@@ -732,6 +893,56 @@ class SafeRoomExplorer(Node):
                 self.turn_started = now
                 self.turn_start_yaw = self.yaw
                 self.front_blocked_since = None
+        elif self.mode == "boxed_probe":
+            wider = 1.0 if left_turn_clearance >= right_turn_clearance else -1.0
+            candidates = [(0.0, wider), (0.0, -wider)]
+            if self.reverse_speed > 0.0:
+                candidates.append((-1.0, 0.0))
+            candidates.append((1.0, 0.0))
+            progressed = False
+            if (
+                self.probe_start_yaw is not None
+                and self.yaw is not None
+                and abs(
+                    self._normalize_angle(self.yaw - self.probe_start_yaw)
+                ) > 0.12
+            ):
+                progressed = True
+            if (
+                self.probe_start_position is not None
+                and self.last_position is not None
+                and math.hypot(
+                    self.last_position[0] - self.probe_start_position[0],
+                    self.last_position[1] - self.probe_start_position[1],
+                ) > 0.04
+            ):
+                progressed = True
+            if front >= self.front_clear or (
+                progressed and front >= self.front_stop
+            ):
+                boxed_for = now - self.boxed_started if self.boxed_started else 0.0
+                self.get_logger().info(
+                    f"boxed escape succeeded after {boxed_for:.1f} s; "
+                    "resuming forward"
+                )
+                self.mode = "forward"
+                self.front_blocked_since = None
+                self.reverse_attempts = 0
+                self.next_planned_turn_distance = (
+                    self.path_length + self.planned_turn_distance
+                )
+            elif now - self.probe_started > 4.0:
+                if not progressed:
+                    self.probe_index += 1
+                self.probe_started = now
+                self.probe_start_yaw = self.yaw
+                self.probe_start_position = self.last_position
+            idx = self.probe_index % len(candidates)
+            lin_sign, ang_sign = candidates[idx]
+            self.probe_command = (
+                lin_sign * (self.reverse_speed if lin_sign < 0.0 else 0.05),
+                ang_sign * 0.6 * self.angular_speed,
+            )
 
         if (
             self.mode == "forward"
@@ -770,7 +981,9 @@ class SafeRoomExplorer(Node):
                         rear_center,
                         "insufficient swept-corner turn clearance",
                     ):
-                        return
+                        self._enter_boxed(
+                            now, "insufficient swept-corner turn clearance"
+                        )
 
         if self.mode != mode_at_start:
             self.output_held_since = None
@@ -796,24 +1009,26 @@ class SafeRoomExplorer(Node):
                 blocked_mode = self.mode
                 self.output_held_since = None
                 if blocked_mode == "forward":
-                    if not self._begin_escape(
+                    self._begin_escape(
                         now,
                         left_turn_clearance,
                         right_turn_clearance,
                         rear_center,
                         "collision monitor blocked forward motion",
-                    ):
-                        return
+                    )
                 elif blocked_mode in ("turning", "planned_turning"):
                     if not self._start_reverse(
                         now,
                         rear_center,
                         "collision monitor blocked turning motion",
                     ):
-                        return
+                        self._enter_boxed(
+                            now, "collision monitor blocked turning motion"
+                        )
                 else:
-                    self._finish("collision monitor blocked reverse motion")
-                    return
+                    self._enter_boxed(
+                        now, "collision monitor blocked reverse motion"
+                    )
         elif active_motion_mode:
             # Clear the hold only after the output has stayed nonzero for a
             # sustained interval; isolated passed messages keep the timer.
@@ -826,14 +1041,26 @@ class SafeRoomExplorer(Node):
             self.output_held_since = None
 
         if self.mode == "forward":
-            command_linear = self.linear_speed
-            command_angular = 0.0
+            if passage_gap is not None:
+                command_linear = min(self.passage_speed, self.linear_speed)
+                command_angular = max(
+                    -self.gap_steer_cap,
+                    min(
+                        self.gap_steer_cap,
+                        self.gap_steer_gain * passage_gap[0],
+                    ),
+                )
+            else:
+                command_linear = self.linear_speed
+                command_angular = 0.0
         elif self.mode == "front_waiting":
             command_linear = 0.0
             command_angular = 0.0
         elif self.mode == "reversing":
             command_linear = -self.reverse_speed
             command_angular = 0.0
+        elif self.mode == "boxed_probe":
+            command_linear, command_angular = self.probe_command
         else:
             command_linear = 0.0
             command_angular = self.turn_direction * self.angular_speed

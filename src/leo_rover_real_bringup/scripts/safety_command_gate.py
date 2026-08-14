@@ -138,8 +138,12 @@ class SafetyCommandGate(Node):
         if raw_topic.rstrip("/") == "/cmd_vel":
             raise RuntimeError("gate output must pass through Collision Monitor")
 
+        # Hard ceiling raised 0.10 -> 0.12 -> 0.15 on operator request
+        # 2026-08-14 after validated exploration runs; Collision Monitor's
+        # 1.0 s time-to-collision still stops ~15 cm short of contact at this
+        # speed.
         self.max_linear = min(
-            abs(float(self.get_parameter("maximum_linear_speed").value)), 0.10
+            abs(float(self.get_parameter("maximum_linear_speed").value)), 0.15
         )
         self.max_reverse = min(
             abs(float(self.get_parameter("maximum_reverse_speed").value)), 0.05

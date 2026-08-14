@@ -60,6 +60,7 @@ def generate_launch_description():
     max_distance = LaunchConfiguration("max_distance")
     planned_turn_distance = LaunchConfiguration("planned_turn_distance")
     maximum_reverse_speed = LaunchConfiguration("maximum_reverse_speed")
+    maximum_linear_speed = LaunchConfiguration("maximum_linear_speed")
     minimum_reverse_clearance = LaunchConfiguration("minimum_reverse_clearance")
     battery_topic = LaunchConfiguration("battery_topic")
     cmd_vel_request_topic = LaunchConfiguration("cmd_vel_request_topic")
@@ -144,6 +145,7 @@ def generate_launch_description():
         DeclareLaunchArgument("max_distance", default_value="12.0"),
         DeclareLaunchArgument("planned_turn_distance", default_value="1.5"),
         DeclareLaunchArgument("maximum_reverse_speed", default_value="0.0"),
+        DeclareLaunchArgument("maximum_linear_speed", default_value="0.10"),
         DeclareLaunchArgument("minimum_reverse_clearance", default_value="0.75"),
         DeclareLaunchArgument(
             "battery_topic", default_value="/rob_2/firmware/battery_averaged"
@@ -295,6 +297,7 @@ def generate_launch_description():
                     "collision_monitor", "robot_supervisor_rgb"
                 ],
                 "maximum_reverse_speed": maximum_reverse_speed,
+                "maximum_linear_speed": maximum_linear_speed,
                 "minimum_reverse_clearance": minimum_reverse_clearance,
             }],
             condition=IfCondition(start_safety),
