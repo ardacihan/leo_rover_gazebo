@@ -1140,6 +1140,53 @@ live (0.52 -> 0.48 m on `/passage_active`); speed ceilings are now 0.18
 map artifacts and labeled videos are in
 `artifacts/jetson04_exploration_20260814/`.
 
+### Rover 4 FIRST NARROW-PASSAGE TRANSIT and session wrap (2026-08-14 late)
+
+**The rover autonomously drove through the narrow doorway and mapped the
+second room** (operator-confirmed; the two-room map with the transit path is
+`artifacts/jetson04_exploration_20260814/leo_room_20260814_154151_path.png`,
+rosbag `explore_20260814_door5`). What made transit work, in order of
+importance:
+
+1. Camera obstacle band floor raised 0.04 -> 0.10 m
+   (`depth_height_filter collision_min_height`): the 4 cm floor turned door
+   sills and white-panel stereo noise into ghost walls across clear
+   passages. This was the dominant blocker.
+2. Dynamic slim CM footprint (0.48 m wide, 2 cm front margin) published on
+   `/passage_active` during passage mode; static 0.52 m footprint left only
+   ~4 cm/side in the door and noise flicker-vetoed everything.
+3. Cartesian gap aim (midpoint of the door posts, not the angular window
+   centre) plus align-in-place when the gap is >23 deg off-axis; oblique
+   entries put a post on the flank where no rotation is legal.
+4. Passage hysteresis (3 s) and passage hold patience (4 s vs 1.2) so
+   flickering detections do not abort an approach.
+
+Remaining known weakness for the next session: **flank wedges**. The gap
+detector can qualify a dead-end pocket between panels as a passage
+(mitigation deployed: `gap_range` free-depth raised to 2.0 m at run time),
+the robot enters, and an obstacle inside the corner-sweep circle (~0.35 m)
+makes every pure rotation illegal; one wedge took 165.7 s of boxed-probe
+cycling to escape and another consumed a whole run. Arc escape candidates
+(forward/reverse combined with turn) are committed and deployed but NOT yet
+field-tested — they should cut wedge escapes to seconds. Side-corridor
+avoidance (veer away when a flank closes under 0.40 m) is active in plain
+forward motion but intentionally not during passage approach.
+
+Watchdog architecture lesson that cost hours: never give two watchdogs
+overlapping authority. The CM-output-liveness pause reset the hold-escape
+timer every 2 s and the robot sat pinned at the door indefinitely; CM
+silence while requesting motion is a HOLD (hold detector's job), not a data
+stall. Similarly, the coverage watcher must not be armed right after a SLAM
+restart with a stationary robot.
+
+End-of-session state: mapping stack and camera STOPPED on the Jetson (boot
+services lidar/lidar-tf/leo-nav-bridge/rosbridge left running as found);
+battery 11.96 V; all four modified scripts byte-identical between the local
+repo and `~/leo_sensor_ws`; all maps, pose graphs, logs, labeled videos and
+the transit bag copied to `artifacts/jetson04_exploration_20260814/`. The
+day's full history is in this guide's dated 2026-08-14 sections; the
+exploration runbook above remains the canonical procedure.
+
 ### Jetson 4 ROS environment
 
 - `ROS_DOMAIN_ID=4` for the installed robot processes.
