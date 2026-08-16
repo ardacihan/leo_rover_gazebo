@@ -1,0 +1,657 @@
+[INFO] [launch]: All log files can be found below /root/.ros/log/2026-07-06-16-13-14-757441-0186986e6756-224
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [controller_server-1]: process started with pid [402]
+[INFO] [planner_server-2]: process started with pid [404]
+[INFO] [behavior_server-3]: process started with pid [406]
+[INFO] [bt_navigator-4]: process started with pid [408]
+[INFO] [waypoint_follower-5]: process started with pid [410]
+[INFO] [lifecycle_manager-6]: process started with pid [412]
+[planner_server-2] [INFO] [1783354395.522019182] [planner_server]: 
+[planner_server-2] 	planner_server lifecycle node launched. 
+[planner_server-2] 	Waiting on external lifecycle transitions to activate
+[planner_server-2] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[waypoint_follower-5] [INFO] [1783354395.522770798] [waypoint_follower]: 
+[waypoint_follower-5] 	waypoint_follower lifecycle node launched. 
+[waypoint_follower-5] 	Waiting on external lifecycle transitions to activate
+[waypoint_follower-5] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-1] [INFO] [1783354395.539232163] [controller_server]: 
+[controller_server-1] 	controller_server lifecycle node launched. 
+[controller_server-1] 	Waiting on external lifecycle transitions to activate
+[controller_server-1] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[lifecycle_manager-6] [INFO] [1783354395.550518328] [lifecycle_manager_navigation]: Creating
+[lifecycle_manager-6] [INFO] [1783354395.577579107] [lifecycle_manager_navigation]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[bt_navigator-4] [INFO] [1783354395.598151938] [bt_navigator]: 
+[bt_navigator-4] 	bt_navigator lifecycle node launched. 
+[bt_navigator-4] 	Waiting on external lifecycle transitions to activate
+[bt_navigator-4] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[bt_navigator-4] [INFO] [1783354395.598240863] [bt_navigator]: Creating
+[behavior_server-3] [INFO] [1783354395.620951383] [behavior_server]: 
+[behavior_server-3] 	behavior_server lifecycle node launched. 
+[behavior_server-3] 	Waiting on external lifecycle transitions to activate
+[behavior_server-3] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[lifecycle_manager-6] [INFO] [1783354395.622297194] [lifecycle_manager_navigation]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-6] [INFO] [1783354395.622329761] [lifecycle_manager_navigation]: [34m[1mConfiguring controller_server[0m[0m
+[waypoint_follower-5] [INFO] [1783354395.651301233] [waypoint_follower]: Creating
+[planner_server-2] [INFO] [1783354396.073064914] [planner_server]: Creating
+[planner_server-2] [INFO] [1783354396.081396428] [global_costmap.global_costmap]: 
+[planner_server-2] 	global_costmap lifecycle node launched. 
+[planner_server-2] 	Waiting on external lifecycle transitions to activate
+[planner_server-2] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-2] [INFO] [1783354396.194312733] [global_costmap.global_costmap]: Creating Costmap
+[controller_server-1] [INFO] [1783354397.280535846] [controller_server]: Creating controller server
+[controller_server-1] [INFO] [1783354397.290321488] [local_costmap.local_costmap]: 
+[controller_server-1] 	local_costmap lifecycle node launched. 
+[controller_server-1] 	Waiting on external lifecycle transitions to activate
+[controller_server-1] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-1] [INFO] [1783354397.436205337] [local_costmap.local_costmap]: Creating Costmap
+[controller_server-1] [INFO] [1783354397.439665014] [controller_server]: Configuring controller interface
+[controller_server-1] [INFO] [1783354397.439819749] [controller_server]: getting goal checker plugins..
+[controller_server-1] [INFO] [1783354397.439976388] [controller_server]: Controller frequency set to 20.0000Hz
+[controller_server-1] [INFO] [1783354397.439995148] [local_costmap.local_costmap]: Configuring
+[controller_server-1] [INFO] [1783354397.461140242] [local_costmap.local_costmap]: Using plugin "obstacle_layer"
+[controller_server-1] [INFO] [1783354397.543009489] [local_costmap.local_costmap]: Subscribed to Topics: scan camera
+[controller_server-1] [INFO] [1783354397.555890841] [local_costmap.local_costmap]: Initialized plugin "obstacle_layer"
+[controller_server-1] [INFO] [1783354397.555929896] [local_costmap.local_costmap]: Using plugin "inflation_layer"
+[controller_server-1] [INFO] [1783354397.556884457] [local_costmap.local_costmap]: Initialized plugin "inflation_layer"
+[controller_server-1] [INFO] [1783354397.643157246] [controller_server]: Created progress_checker : progress_checker of type nav2_controller::PoseProgressChecker
+[controller_server-1] [INFO] [1783354397.702750948] [controller_server]: Created goal checker : general_goal_checker of type nav2_controller::SimpleGoalChecker
+[controller_server-1] [INFO] [1783354397.703358916] [controller_server]: Controller Server has general_goal_checker  goal checkers available.
+[controller_server-1] [INFO] [1783354398.378363025] [controller_server]: Created controller : FollowPath of type nav2_rotation_shim_controller::RotationShimController
+[controller_server-1] [INFO] [1783354398.433867153] [controller_server]: Created internal controller for rotation shimming: FollowPath of type nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-1] [INFO] [1783354398.438750804] [controller_server]: Controller Server has FollowPath  controllers available.
+[lifecycle_manager-6] [INFO] [1783354398.447317186] [lifecycle_manager_navigation]: [34m[1mConfiguring planner_server[0m[0m
+[planner_server-2] [INFO] [1783354398.447547446] [planner_server]: Configuring
+[planner_server-2] [INFO] [1783354398.447574797] [global_costmap.global_costmap]: Configuring
+[planner_server-2] [INFO] [1783354398.470643529] [global_costmap.global_costmap]: Using plugin "static_layer"
+[planner_server-2] [INFO] [1783354398.547477019] [global_costmap.global_costmap]: Subscribing to the map topic (/map) with transient local durability
+[planner_server-2] [INFO] [1783354398.552754777] [global_costmap.global_costmap]: Subscribing to updates
+[planner_server-2] [INFO] [1783354398.562674664] [global_costmap.global_costmap]: Initialized plugin "static_layer"
+[planner_server-2] [INFO] [1783354398.562714917] [global_costmap.global_costmap]: Using plugin "obstacle_layer"
+[planner_server-2] [INFO] [1783354398.563707903] [global_costmap.global_costmap]: Subscribed to Topics: scan camera
+[planner_server-2] [INFO] [1783354398.569511037] [global_costmap.global_costmap]: Initialized plugin "obstacle_layer"
+[planner_server-2] [INFO] [1783354398.569547193] [global_costmap.global_costmap]: Using plugin "inflation_layer"
+[planner_server-2] [INFO] [1783354398.570424457] [global_costmap.global_costmap]: Initialized plugin "inflation_layer"
+[planner_server-2] [INFO] [1783354398.579352957] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 597 X 477 at 0.050000 m/pix
+[planner_server-2] [INFO] [1783354398.631015546] [planner_server]: Created global planner plugin GridBased of type nav2_navfn_planner/NavfnPlanner
+[planner_server-2] [INFO] [1783354398.631063812] [planner_server]: Configuring plugin GridBased of type NavfnPlanner
+[planner_server-2] [INFO] [1783354398.631936553] [planner_server]: Planner Server has GridBased  planners available.
+[lifecycle_manager-6] [INFO] [1783354398.641363210] [lifecycle_manager_navigation]: [34m[1mConfiguring behavior_server[0m[0m
+[behavior_server-3] [INFO] [1783354398.641565500] [behavior_server]: Configuring
+[behavior_server-3] [INFO] [1783354398.674420976] [behavior_server]: Creating behavior plugin spin of type nav2_behaviors/Spin
+[behavior_server-3] [INFO] [1783354398.726810921] [behavior_server]: Configuring spin
+[behavior_server-3] [INFO] [1783354398.734452936] [behavior_server]: Creating behavior plugin backup of type nav2_behaviors/BackUp
+[behavior_server-3] [INFO] [1783354398.785076192] [behavior_server]: Configuring backup
+[behavior_server-3] [INFO] [1783354398.787369412] [behavior_server]: Creating behavior plugin drive_on_heading of type nav2_behaviors/DriveOnHeading
+[behavior_server-3] [INFO] [1783354398.839346323] [behavior_server]: Configuring drive_on_heading
+[behavior_server-3] [INFO] [1783354398.841845377] [behavior_server]: Creating behavior plugin wait of type nav2_behaviors/Wait
+[behavior_server-3] [INFO] [1783354398.898733973] [behavior_server]: Configuring wait
+[lifecycle_manager-6] [INFO] [1783354398.901272856] [lifecycle_manager_navigation]: [34m[1mConfiguring bt_navigator[0m[0m
+[bt_navigator-4] [INFO] [1783354398.901524665] [bt_navigator]: Configuring
+[lifecycle_manager-6] [INFO] [1783354399.335505391] [lifecycle_manager_navigation]: [34m[1mConfiguring waypoint_follower[0m[0m
+[waypoint_follower-5] [INFO] [1783354399.335780938] [waypoint_follower]: Configuring
+[waypoint_follower-5] [INFO] [1783354399.420844190] [waypoint_follower]: Created waypoint_task_executor : wait_at_waypoint of type nav2_waypoint_follower::WaitAtWaypoint
+[waypoint_follower-5] [INFO] [1783354399.421269084] [waypoint_follower]: Waypoint pause duration is set to zero, disabling task executor plugin.
+[lifecycle_manager-6] [INFO] [1783354399.421771495] [lifecycle_manager_navigation]: [34m[1mActivating controller_server[0m[0m
+[controller_server-1] [INFO] [1783354399.421941365] [controller_server]: Activating
+[controller_server-1] [INFO] [1783354399.421982505] [local_costmap.local_costmap]: Activating
+[controller_server-1] [INFO] [1783354399.421993582] [local_costmap.local_costmap]: Checking transform
+[controller_server-1] [INFO] [1783354399.422091369] [local_costmap.local_costmap]: start
+[controller_server-1] [INFO] [1783354399.623279185] [controller_server]: Activating controller: FollowPath of type nav2_rotation_shim_controller::RotationShimController
+[controller_server-1] [INFO] [1783354399.623314865] [controller_server]: Activating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-1] [INFO] [1783354399.623331131] [controller_server]: Creating bond (controller_server) to lifecycle manager.
+[lifecycle_manager-6] [INFO] [1783354399.735066644] [lifecycle_manager_navigation]: Server controller_server connected with bond.
+[lifecycle_manager-6] [INFO] [1783354399.735107832] [lifecycle_manager_navigation]: [34m[1mActivating planner_server[0m[0m
+[planner_server-2] [INFO] [1783354399.735288614] [planner_server]: Activating
+[planner_server-2] [INFO] [1783354399.735319995] [global_costmap.global_costmap]: Activating
+[planner_server-2] [INFO] [1783354399.735327578] [global_costmap.global_costmap]: Checking transform
+[planner_server-2] [INFO] [1783354399.735420643] [global_costmap.global_costmap]: start
+[planner_server-2] [INFO] [1783354399.986281160] [planner_server]: Activating plugin GridBased of type NavfnPlanner
+[planner_server-2] [INFO] [1783354399.986727957] [planner_server]: Creating bond (planner_server) to lifecycle manager.
+[lifecycle_manager-6] [INFO] [1783354400.095247297] [lifecycle_manager_navigation]: Server planner_server connected with bond.
+[lifecycle_manager-6] [INFO] [1783354400.095320586] [lifecycle_manager_navigation]: [34m[1mActivating behavior_server[0m[0m
+[behavior_server-3] [INFO] [1783354400.095630072] [behavior_server]: Activating
+[behavior_server-3] [INFO] [1783354400.095665636] [behavior_server]: Activating spin
+[behavior_server-3] [INFO] [1783354400.095682399] [behavior_server]: Activating backup
+[behavior_server-3] [INFO] [1783354400.095695559] [behavior_server]: Activating drive_on_heading
+[behavior_server-3] [INFO] [1783354400.095707446] [behavior_server]: Activating wait
+[behavior_server-3] [INFO] [1783354400.095722506] [behavior_server]: Creating bond (behavior_server) to lifecycle manager.
+[lifecycle_manager-6] [INFO] [1783354400.203265460] [lifecycle_manager_navigation]: Server behavior_server connected with bond.
+[lifecycle_manager-6] [INFO] [1783354400.203307028] [lifecycle_manager_navigation]: [34m[1mActivating bt_navigator[0m[0m
+[bt_navigator-4] [INFO] [1783354400.203504179] [bt_navigator]: Activating
+[bt_navigator-4] [INFO] [1783354400.231629701] [bt_navigator]: Creating bond (bt_navigator) to lifecycle manager.
+[lifecycle_manager-6] [INFO] [1783354400.338999404] [lifecycle_manager_navigation]: Server bt_navigator connected with bond.
+[lifecycle_manager-6] [INFO] [1783354400.339075273] [lifecycle_manager_navigation]: [34m[1mActivating waypoint_follower[0m[0m
+[waypoint_follower-5] [INFO] [1783354400.339338254] [waypoint_follower]: Activating
+[waypoint_follower-5] [INFO] [1783354400.339368148] [waypoint_follower]: Creating bond (waypoint_follower) to lifecycle manager.
+[lifecycle_manager-6] [INFO] [1783354400.446678053] [lifecycle_manager_navigation]: Server waypoint_follower connected with bond.
+[lifecycle_manager-6] [INFO] [1783354400.446745436] [lifecycle_manager_navigation]: [34m[1mManaged nodes are active[0m[0m
+[lifecycle_manager-6] [INFO] [1783354400.446761122] [lifecycle_manager_navigation]: [34m[1mCreating bond timer...[0m[0m
+[planner_server-2] [INFO] [1783354419.935546518] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 597 X 477 at 0.050000 m/pix
+[planner_server-2] [INFO] [1783354420.935537172] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 597 X 477 at 0.050000 m/pix
+[planner_server-2] [INFO] [1783354421.935530931] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 597 X 477 at 0.050000 m/pix
+[planner_server-2] [INFO] [1783354422.935536704] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 597 X 477 at 0.050000 m/pix
+[planner_server-2] [INFO] [1783354423.939118566] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 597 X 477 at 0.050000 m/pix
+[planner_server-2] [INFO] [1783354424.939118742] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 597 X 477 at 0.050000 m/pix
+[planner_server-2] [INFO] [1783354425.939115668] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 597 X 477 at 0.050000 m/pix
+[planner_server-2] [INFO] [1783354426.939121250] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 598 X 477 at 0.050000 m/pix
+[planner_server-2] [INFO] [1783354427.939128412] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 598 X 478 at 0.050000 m/pix
+[planner_server-2] [INFO] [1783354428.939123911] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 598 X 478 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354441.013055264] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[planner_server-2] [INFO] [1783354441.013156870] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-2] [WARN] [1783354442.595204133] [planner_server]: No planners specified in action call. Server will use only plugin GridBased  in server. This warning will appear once.
+[bt_navigator-4] [INFO] [1783354442.652005192] [bt_navigator]: Begin navigating from current location (2.45, 0.01) to (11.96, -0.24)
+[controller_server-1] [INFO] [1783354442.672968601] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-1] [WARN] [1783354442.673047050] [controller_server]: No goal checker was specified in parameter 'current_goal_checker'. Server will use only plugin loaded general_goal_checker . This warning will appear once.
+[controller_server-1] [INFO] [1783354443.723231448] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354444.773188761] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354444.939149631] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 598 X 479 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354445.773187976] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354445.939122498] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 598 X 479 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354446.823179647] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354447.823172357] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354447.939128903] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 599 X 479 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354448.873187598] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354448.939111266] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 599 X 479 at 0.050000 m/pix
+[bt_navigator-4] [INFO] [1783354449.362242613] [bt_navigator]: Received goal preemption request
+[bt_navigator-4] [INFO] [1783354449.362782834] [bt_navigator]: Begin navigating from current location (5.50, -0.03) to (-1.79, -9.91)
+[controller_server-1] [INFO] [1783354449.923173584] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354450.923175610] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354451.973178281] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354452.973183828] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354454.027018708] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354455.027022880] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354456.077004984] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354457.127005108] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354458.127019026] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354459.177012680] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354460.177012185] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354461.227014941] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354462.277016461] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354463.277033128] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354464.327011798] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354465.327010504] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354466.377003450] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354466.942947414] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 599 X 480 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354467.427011790] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354467.942953027] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 599 X 480 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354468.427011842] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354468.942952874] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 599 X 480 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354469.477035580] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354470.477011126] [controller_server]: Passing new path to controller.
+[planner_server-2] [ERROR] [1783354471.488332284] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-2] [WARN] [1783354471.488407150] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783354471.488417886] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-1.79, -9.91)
+[planner_server-2] [WARN] [1783354471.488426982] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [INFO] [1783354471.506123352] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[controller_server-1] [INFO] [1783354471.577025183] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354472.627011847] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354472.942949283] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 599 X 480 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354473.627038215] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354473.942965504] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 599 X 480 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354474.677006916] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354475.727051988] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354476.727019592] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354476.942994079] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 600 X 480 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354477.777016615] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354478.777023236] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354478.943004230] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 600 X 480 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354479.827000228] [controller_server]: Passing new path to controller.
+[bt_navigator-4] [INFO] [1783354480.136029022] [bt_navigator]: Received goal preemption request
+[bt_navigator-4] [INFO] [1783354480.136511291] [bt_navigator]: Begin navigating from current location (1.25, -3.09) to (-1.04, -9.60)
+[controller_server-1] [INFO] [1783354480.827020305] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354481.877008413] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354481.943005356] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 601 X 480 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354482.927027429] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354483.929779198] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354483.945767461] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 601 X 480 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354484.979776635] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354485.945736180] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 601 X 480 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354485.979769819] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354487.029774626] [controller_server]: Passing new path to controller.
+[planner_server-2] [ERROR] [1783354487.477706882] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-2] [WARN] [1783354487.477782239] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783354487.477791766] [planner_server]: Planning algorithm  failed to generate a valid path to (8.92, -10.40)
+[planner_server-2] [WARN] [1783354487.477800187] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[controller_server-1] [INFO] [1783354488.029765812] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354489.079774303] [controller_server]: Passing new path to controller.
+[bt_navigator-4] [INFO] [1783354489.938756490] [bt_navigator]: Received goal preemption request
+[bt_navigator-4] [INFO] [1783354489.939487559] [bt_navigator]: Begin navigating from current location (-0.01, -6.63) to (11.67, -9.50)
+[controller_server-1] [INFO] [1783354490.129769096] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354491.129772411] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354492.179792791] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354493.179762006] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354494.229762088] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354495.279769100] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354496.279764228] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354497.329780895] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354498.329781637] [controller_server]: Passing new path to controller.
+[bt_navigator-4] [INFO] [1783354499.078921633] [bt_navigator]: Received goal preemption request
+[bt_navigator-4] [INFO] [1783354499.079534425] [bt_navigator]: Begin navigating from current location (0.59, -6.84) to (11.82, -8.75)
+[controller_server-1] [INFO] [1783354499.379762715] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354500.429774923] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354501.429782708] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354502.479773949] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354503.479760771] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354504.529817779] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354505.579780094] [controller_server]: Passing new path to controller.
+[planner_server-2] [ERROR] [1783354506.052634828] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-2] [WARN] [1783354506.052711574] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783354506.052721406] [planner_server]: Planning algorithm  failed to generate a valid path to (-11.53, 5.25)
+[planner_server-2] [WARN] [1783354506.052730139] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[controller_server-1] [INFO] [1783354506.579787197] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354507.629781598] [controller_server]: Passing new path to controller.
+[bt_navigator-4] [INFO] [1783354508.488755830] [bt_navigator]: Received goal preemption request
+[bt_navigator-4] [INFO] [1783354508.489174951] [bt_navigator]: Begin navigating from current location (4.68, -7.58) to (9.32, -6.05)
+[controller_server-1] [INFO] [1783354508.629808157] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354509.679763759] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354510.729776593] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354511.729775507] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354512.779766979] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354513.784100095] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354514.834070787] [controller_server]: Passing new path to controller.
+[bt_navigator-4] [INFO] [1783354515.723146928] [bt_navigator]: Received goal preemption request
+[bt_navigator-4] [INFO] [1783354515.723805857] [bt_navigator]: Begin navigating from current location (7.67, -6.93) to (-6.33, 8.95)
+[controller_server-1] [INFO] [1783354515.884072286] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354516.884050405] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354517.934072836] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354518.934075510] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354519.984110051] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354520.984068664] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354522.034111976] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354523.084077106] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354524.084067361] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354525.134085134] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354526.184077503] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354527.184072107] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354528.234104823] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354529.234074398] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354530.284074914] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354530.950021297] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 601 X 481 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354531.334091182] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354531.950032461] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 602 X 481 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354532.334084317] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354533.384082444] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354534.384064895] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354534.950030277] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 602 X 482 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354535.434074085] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354536.484069938] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354537.484066986] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354538.534067518] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354538.950019050] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 602 X 483 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354539.534072271] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354540.584067362] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354541.584060806] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354541.950017391] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 602 X 484 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354542.634065132] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354542.950011082] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 602 X 484 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354543.639002464] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354544.689015466] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354545.739001731] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354546.739000416] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354547.789011231] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354548.789009152] [controller_server]: Passing new path to controller.
+[bt_navigator-4] [INFO] [1783354549.257987532] [bt_navigator]: Received goal preemption request
+[bt_navigator-4] [INFO] [1783354549.258474118] [bt_navigator]: Begin navigating from current location (3.24, 1.29) to (-11.89, 5.21)
+[controller_server-1] [INFO] [1783354549.839028555] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354550.889022624] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354551.889073434] [controller_server]: Passing new path to controller.
+[planner_server-2] [ERROR] [1783354552.891664745] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-2] [WARN] [1783354552.891760777] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783354552.891776286] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-11.89, 5.21)
+[planner_server-2] [WARN] [1783354552.891786161] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [INFO] [1783354552.908090149] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[controller_server-1] [INFO] [1783354552.989026025] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354554.038999205] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354555.089015012] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354556.089015483] [controller_server]: Passing new path to controller.
+[planner_server-2] [ERROR] [1783354557.080842584] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-2] [WARN] [1783354557.080916698] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783354557.080926005] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-11.89, 5.21)
+[planner_server-2] [WARN] [1783354557.080933565] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [INFO] [1783354557.098136262] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[controller_server-1] [INFO] [1783354557.189013251] [controller_server]: Passing new path to controller.
+[planner_server-2] [ERROR] [1783354558.190574892] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-2] [WARN] [1783354558.190648187] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783354558.190657694] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-11.89, 5.21)
+[planner_server-2] [WARN] [1783354558.190665523] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [INFO] [1783354558.208094905] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[controller_server-1] [INFO] [1783354558.389038782] [controller_server]: Passing new path to controller.
+[planner_server-2] [ERROR] [1783354559.391020316] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-2] [WARN] [1783354559.391129339] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783354559.391142542] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-11.89, 5.21)
+[planner_server-2] [WARN] [1783354559.391151149] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [INFO] [1783354559.408083703] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-2] [ERROR] [1783354559.561060809] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-2] [WARN] [1783354559.561137644] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783354559.561147830] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-11.89, 5.21)
+[planner_server-2] [WARN] [1783354559.561157109] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[controller_server-1] [INFO] [1783354559.589000546] [controller_server]: Goal was canceled. Stopping the robot.
+[controller_server-1] [INFO] [1783354559.589044832] [controller_server]: [follow_path] [ActionServer] Client requested to cancel the goal. Cancelling.
+[controller_server-1] [INFO] [1783354559.589317983] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[planner_server-2] [INFO] [1783354559.592387191] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[bt_navigator-4] [WARN] [1783354559.593373580] [BehaviorTreeEngine]: Behavior Tree tick rate 100.00 was exceeded!
+[controller_server-1] [INFO] [1783354559.778804608] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-1] [INFO] [1783354560.829008180] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354561.878989510] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354562.878997304] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354563.929002262] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354564.978995549] [controller_server]: Passing new path to controller.
+[planner_server-2] [ERROR] [1783354565.940445606] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-2] [WARN] [1783354565.940520112] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783354565.940529505] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-11.89, 5.21)
+[planner_server-2] [WARN] [1783354565.940537557] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [INFO] [1783354565.958120956] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-2] [ERROR] [1783354566.160604027] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-2] [WARN] [1783354566.160715833] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783354566.160728961] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-11.89, 5.21)
+[planner_server-2] [WARN] [1783354566.160738558] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[controller_server-1] [INFO] [1783354566.178992360] [controller_server]: Goal was canceled. Stopping the robot.
+[controller_server-1] [INFO] [1783354566.179037885] [controller_server]: [follow_path] [ActionServer] Client requested to cancel the goal. Cancelling.
+[behavior_server-3] [INFO] [1783354566.179463834] [behavior_server]: Running spin
+[behavior_server-3] [INFO] [1783354566.179611752] [behavior_server]: Turning 1.57 for spin behavior.
+[behavior_server-3] [INFO] [1783354567.179832962] [behavior_server]: spin completed successfully
+[controller_server-1] [INFO] [1783354567.228740773] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-1] [INFO] [1783354568.278954344] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354569.328923257] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354570.328907040] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354571.378929295] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354572.378924559] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354573.432959962] [controller_server]: Passing new path to controller.
+[planner_server-2] [ERROR] [1783354574.424057140] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-2] [WARN] [1783354574.424170049] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783354574.424182837] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-11.89, 5.21)
+[planner_server-2] [WARN] [1783354574.424190925] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [INFO] [1783354574.442132419] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-2] [ERROR] [1783354574.564866882] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-2] [WARN] [1783354574.564949947] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783354574.564960703] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-11.89, 5.21)
+[planner_server-2] [WARN] [1783354574.564970176] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[controller_server-1] [INFO] [1783354574.582956997] [controller_server]: Goal was canceled. Stopping the robot.
+[controller_server-1] [INFO] [1783354574.583000441] [controller_server]: [follow_path] [ActionServer] Client requested to cancel the goal. Cancelling.
+[behavior_server-3] [INFO] [1783354574.583438654] [behavior_server]: Running wait
+[behavior_server-3] [INFO] [1783354577.483754650] [behavior_server]: wait completed successfully
+[controller_server-1] [INFO] [1783354577.532758584] [controller_server]: Received a goal, begin computing control effort.
+[planner_server-2] [ERROR] [1783354578.543920273] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-2] [WARN] [1783354578.543991729] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783354578.544000867] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-11.89, 5.21)
+[planner_server-2] [WARN] [1783354578.544009113] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [INFO] [1783354578.562159867] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-2] [ERROR] [1783354578.764570338] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-2] [WARN] [1783354578.764683725] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783354578.764697535] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-11.89, 5.21)
+[planner_server-2] [WARN] [1783354578.764707117] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[controller_server-1] [INFO] [1783354578.782981933] [controller_server]: Goal was canceled. Stopping the robot.
+[controller_server-1] [INFO] [1783354578.783025654] [controller_server]: [follow_path] [ActionServer] Client requested to cancel the goal. Cancelling.
+[behavior_server-3] [INFO] [1783354578.783693128] [behavior_server]: Running backup
+[behavior_server-3] [INFO] [1783354578.783805659] [behavior_server]: DriveOnHeading: no acceleration or deceleration limits set
+[behavior_server-3] [INFO] [1783354582.384101561] [behavior_server]: backup completed successfully
+[controller_server-1] [INFO] [1783354582.432949176] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-1] [INFO] [1783354583.483114540] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354584.533119816] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354585.533111088] [controller_server]: Passing new path to controller.
+[bt_navigator-4] [INFO] [1783354586.182092424] [bt_navigator]: Received goal preemption request
+[bt_navigator-4] [INFO] [1783354586.182649676] [bt_navigator]: Begin navigating from current location (-5.82, 0.66) to (6.16, 8.26)
+[controller_server-1] [INFO] [1783354586.583138289] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354587.583130558] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354588.633118776] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354589.683117047] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354590.683113132] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354591.733126084] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354592.733142072] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354593.783130175] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354594.833116696] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354595.833118207] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354596.883112797] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354597.883127284] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354598.933120266] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354599.983117721] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354600.983123960] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354602.033119381] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354603.033122674] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354604.087108728] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354605.087098506] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354606.137117412] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354607.187127252] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354608.187109778] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354609.237093726] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354610.237109919] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354611.287104338] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354612.337089091] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354613.337123946] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354614.387110419] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354615.387099389] [controller_server]: Passing new path to controller.
+[bt_navigator-4] [INFO] [1783354615.786074364] [bt_navigator]: Received goal preemption request
+[bt_navigator-4] [INFO] [1783354615.786592004] [bt_navigator]: Begin navigating from current location (-2.82, 1.60) to (-8.74, 9.81)
+[controller_server-1] [INFO] [1783354616.437090644] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354617.487100781] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354618.487102831] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354619.537101647] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354620.537093279] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354621.587103950] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354622.637106002] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354623.637099519] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354624.687241037] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354625.687127297] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354626.737090983] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354627.787095813] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354628.787104121] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354629.837120871] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354630.837090738] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354631.887120239] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354632.937130154] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354633.941168723] [controller_server]: Passing new path to controller.
+[bt_navigator-4] [INFO] [1783354634.310135859] [bt_navigator]: Received goal preemption request
+[bt_navigator-4] [INFO] [1783354634.311000797] [bt_navigator]: Begin navigating from current location (-1.50, 5.24) to (-9.99, 10.41)
+[controller_server-1] [INFO] [1783354634.991170852] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354635.991159302] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354637.041166596] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354638.041156996] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354639.091198294] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354640.141167018] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354641.141183363] [controller_server]: Passing new path to controller.
+[planner_server-2] [ERROR] [1783354641.728727541] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-2] [WARN] [1783354641.728809209] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783354641.728821808] [planner_server]: Planning algorithm  failed to generate a valid path to (-12.14, 9.06)
+[planner_server-2] [WARN] [1783354641.728832381] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[controller_server-1] [INFO] [1783354642.191190158] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354643.191184135] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354644.241185162] [controller_server]: Passing new path to controller.
+[bt_navigator-4] [INFO] [1783354644.480189251] [bt_navigator]: Received goal preemption request
+[bt_navigator-4] [INFO] [1783354644.480759073] [bt_navigator]: Begin navigating from current location (-4.90, 7.66) to (-8.74, 5.66)
+[controller_server-1] [INFO] [1783354645.291186835] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354646.291147736] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354647.341161479] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354648.341181365] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354649.391159545] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354649.967059398] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 602 X 484 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354650.441166513] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354651.441179775] [controller_server]: Passing new path to controller.
+[bt_navigator-4] [INFO] [1783354652.290133635] [bt_navigator]: Received goal preemption request
+[bt_navigator-4] [INFO] [1783354652.290703158] [bt_navigator]: Begin navigating from current location (-7.21, 6.77) to (-9.39, -6.94)
+[controller_server-1] [INFO] [1783354652.491188156] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354653.491185000] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354654.541199530] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354655.591217170] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354656.591195372] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354657.641168829] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354658.691168577] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354659.691167359] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354660.741161357] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354661.741175904] [controller_server]: Passing new path to controller.
+[bt_navigator-4] [INFO] [1783354662.720186313] [bt_navigator]: Received goal preemption request
+[bt_navigator-4] [INFO] [1783354662.720833075] [bt_navigator]: Begin navigating from current location (-9.69, 3.97) to (-9.34, -5.99)
+[controller_server-1] [INFO] [1783354662.791165342] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354663.795893861] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354663.971774759] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 602 X 483 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354664.845868520] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354665.845889172] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354666.895869307] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354667.945909943] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354668.945893432] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354669.995889117] [controller_server]: Passing new path to controller.
+[bt_navigator-4] [INFO] [1783354670.874882105] [bt_navigator]: Received goal preemption request
+[bt_navigator-4] [INFO] [1783354670.875599933] [bt_navigator]: Begin navigating from current location (-9.71, 0.87) to (-8.04, -6.97)
+[controller_server-1] [INFO] [1783354670.995875413] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354672.045873900] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354673.095886274] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354674.095853677] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354675.145868308] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354676.145876643] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354677.195877842] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354678.195877822] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354678.971749832] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 602 X 483 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354679.245867402] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354680.295870899] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354680.971736742] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 602 X 483 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354681.295902863] [controller_server]: Passing new path to controller.
+[bt_navigator-4] [INFO] [1783354681.724889439] [bt_navigator]: Received goal preemption request
+[bt_navigator-4] [INFO] [1783354681.725351085] [bt_navigator]: Begin navigating from current location (-9.72, -3.30) to (-8.06, -6.17)
+[controller_server-1] [INFO] [1783354682.345888139] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354683.345889338] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354684.395871621] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354685.395864160] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354686.445917835] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354687.495878850] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354688.495878581] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354689.545894864] [controller_server]: Passing new path to controller.
+[bt_navigator-4] [INFO] [1783354690.194909926] [bt_navigator]: Received goal preemption request
+[bt_navigator-4] [INFO] [1783354690.195539960] [bt_navigator]: Begin navigating from current location (-8.31, -5.87) to (7.74, 7.08)
+[controller_server-1] [INFO] [1783354690.595871823] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354691.595914427] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354692.645887977] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354693.650739202] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354694.700793143] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354695.700769698] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354696.750749371] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354697.800762124] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354698.800736291] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354699.850739065] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354700.850755336] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354701.900732560] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354702.950748484] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354703.950736257] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354705.000731542] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354706.000763411] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354707.050737121] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354708.050732322] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354709.100712019] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354710.150761219] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354711.150733276] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354712.200725091] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354713.200748389] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354714.250731778] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354714.976600535] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 603 X 483 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354715.300727713] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354715.976609951] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 603 X 483 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354716.300745472] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354716.976638780] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 603 X 483 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354717.350752839] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354717.976621855] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 602 X 483 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354718.350741223] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354718.976589016] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 602 X 483 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354719.400759732] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354719.976595952] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 602 X 483 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354720.450744258] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354720.976601579] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 602 X 483 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354721.450732215] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354722.500724148] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354723.505031629] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354724.555070953] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354725.555074091] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354726.605034523] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354727.655062113] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354728.655041907] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354728.980900557] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 602 X 483 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354729.705039019] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354730.755064438] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354731.755030787] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354732.805070260] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354733.805071691] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354734.855029330] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354735.855062884] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354736.905041117] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354737.905024346] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354738.955154866] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354740.005028398] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354741.005028193] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354742.055061567] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354743.055048974] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354744.105025916] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354745.155057550] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354746.155035157] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354747.205039203] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354748.205036492] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354749.255011343] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354750.305040286] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354751.305026592] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354752.355026423] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354753.355040398] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354754.409235144] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354755.409231390] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354756.459238855] [controller_server]: Passing new path to controller.
+[bt_navigator-4] [INFO] [1783354757.068134742] [bt_navigator]: Received goal preemption request
+[bt_navigator-4] [INFO] [1783354757.068626901] [bt_navigator]: Begin navigating from current location (5.06, 7.69) to (7.47, 5.29)
+[controller_server-1] [INFO] [1783354757.509258464] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354758.509251279] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354759.559235077] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354760.559227051] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354761.609231266] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354762.659226158] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354763.659234275] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354764.709223587] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354764.759359988] [controller_server]: Reached the goal!
+[bt_navigator-4] [INFO] [1783354764.798497467] [bt_navigator]: Goal succeeded
+[bt_navigator-4] [INFO] [1783354770.202758593] [bt_navigator]: Begin navigating from current location (7.33, 5.49) to (2.45, 0.01)
+[controller_server-1] [INFO] [1783354770.224008119] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-1] [INFO] [1783354771.274195949] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354772.324187122] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354773.324164553] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354774.374175852] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354775.374176705] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354776.424173382] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354777.474177113] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354778.474167180] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354779.524176707] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354779.985116222] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 602 X 484 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354780.524170962] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354781.574175423] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354782.574170611] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354783.628866159] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354784.678857273] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354785.678857826] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354786.728833895] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354786.989746980] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 602 X 484 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354787.728831441] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354788.778831104] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783354788.989763755] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 603 X 484 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783354789.778839022] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354790.828858684] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354791.878828320] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354792.878849716] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354793.928864564] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354794.928846782] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354795.978811326] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354797.028833016] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354798.028888366] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354799.078836732] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354800.078835055] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354801.128827853] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354802.178835192] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354803.178830616] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783354803.878977498] [controller_server]: Reached the goal!
+[bt_navigator-4] [INFO] [1783354803.917957755] [bt_navigator]: Goal succeeded
+[planner_server-2] [INFO] [1783354804.343863940] [global_costmap.global_costmap]: Message Filter dropping message: frame 'leo1/sensor_lidar_link' at time 698.300 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[planner_server-2] [INFO] [1783354805.750500551] [global_costmap.global_costmap]: Message Filter dropping message: frame 'leo1/sensor_lidar_link' at time 700.800 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[planner_server-2] [INFO] [1783354807.234735573] [global_costmap.global_costmap]: Message Filter dropping message: frame 'leo1/sensor_lidar_link' at time 703.400 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[planner_server-2] [INFO] [1783354808.699598784] [global_costmap.global_costmap]: Message Filter dropping message: frame 'leo1/sensor_lidar_link' at time 706.000 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[planner_server-2] [INFO] [1783354810.125244279] [global_costmap.global_costmap]: Message Filter dropping message: frame 'leo1/sensor_lidar_link' at time 708.500 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[planner_server-2] [ERROR] [1783354810.151384825] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the past.  Requested time 698.300000 but the earliest data is at time 698.853000, when looking up transform from frame [leo1/base_link] to frame [map]
+[planner_server-2] 
+[planner_server-2] [ERROR] [1783354810.351321325] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the past.  Requested time 698.300000 but the earliest data is at time 699.233000, when looking up transform from frame [leo1/base_link] to frame [map]
+[planner_server-2] 
+[planner_server-2] [ERROR] [1783354810.561581102] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the past.  Requested time 698.300000 but the earliest data is at time 699.613000, when looking up transform from frame [leo1/base_link] to frame [map]
+[planner_server-2] 
+[planner_server-2] [ERROR] [1783354810.751459535] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the past.  Requested time 698.300000 but the earliest data is at time 699.953000, when looking up transform from frame [leo1/base_link] to frame [map]
+[planner_server-2] 
+[planner_server-2] [ERROR] [1783354810.951436871] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the past.  Requested time 698.300000 but the earliest data is at time 700.333000, when looking up transform from frame [leo1/base_link] to frame [map]
+[planner_server-2] 

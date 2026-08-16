@@ -1,43 +1,66 @@
-# Prerequisites
+# Build artifacts
 *.d
-
-# Compiled Object files
-*.slo
-*.lo
 *.o
 *.obj
-
-# Precompiled Headers
+*.slo
+*.lo
 *.gch
 *.pch
-
-# Compiled Dynamic libraries
 *.so
 *.dylib
 *.dll
-
-# Fortran module files
 *.mod
 *.smod
-
-# Compiled Static libraries
 *.lai
 *.la
 *.a
 *.lib
-
-# Executables
 *.exe
 *.out
 *.app
 
-#ros2
-build/*
-install/*
-log/*
+# ROS 2 workspace
+build/
+install/
+log/
+src/build/
+src/install/
+src/log/
 
-src/build/*
-src/install/*
-src/log/*
-
+# Third-party world assets (clone locally, see README)
 src/husarion_gz_worlds/*
+!src/husarion_gz_worlds/.gitkeep
+
+# WSL GPU Ogre binaries (build: ./scripts/build_ogre_wsl_gpu.sh)
+docker/patched/*
+!docker/patched/.gitkeep
+
+# Abandoned native-WSL extraction tarballs
+*.tar
+.ros-runtime/
+.ros-runtime.tar
+.syslibs.tar
+.gz-runtime.tar
+.ruby.tar
+.rubylibs.tar
+.ruby-stdlib.tar
+.spdlog.tar
+install/setup_wsl.bash
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*~
+
+# Python
+**/__pycache__/
+*.pyc
+
+# Large local run artifacts (keep on disk; too big for git)
+*.mp4
+*.mkv
+*.posegraph
+maps/*.data
+reports/**/*.data
+report_package/**/*.data

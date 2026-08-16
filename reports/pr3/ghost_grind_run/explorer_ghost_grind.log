@@ -1,0 +1,96 @@
+[INFO] [launch]: All log files can be found below /root/.ros/log/2026-06-12-16-28-25-985390-f647514d8901-705
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [frontier_explorer-1]: process started with pid [706]
+[INFO] [mock_aruco_detector-2]: process started with pid [708]
+[mock_aruco_detector-2] [INFO] [1781281708.992422651] [mock_aruco_detector]: Mock detector: 0 ground-truth markers
+[frontier_explorer-1] [INFO] [1781281709.376221069] [frontier_explorer]: Frontier explorer up for "leo1" (base_frame=leo1/base_link)
+[frontier_explorer-1] [WARN] [1781281709.853878169] [frontier_explorer]: Watchdog: work exists but no goal active and robot stationary - clearing costmaps
+[frontier_explorer-1] [INFO] [1781281713.019598856] [frontier_explorer]: Initial pose recorded: (-0.00, 0.00)
+[frontier_explorer-1] [INFO] [1781281713.097331421] [frontier_explorer]: New frontier goal: (0.66, -0.38)
+[frontier_explorer-1] [INFO] [1781281720.824376071] [frontier_explorer]: New frontier goal: (0.75, -1.77)
+[frontier_explorer-1] [INFO] [1781281734.553366444] [frontier_explorer]: New frontier goal: (2.00, -5.28)
+[frontier_explorer-1] [INFO] [1781281753.925310973] [frontier_explorer]: New frontier goal: (3.34, -6.49)
+[frontier_explorer-1] [INFO] [1781281773.615484961] [frontier_explorer]: New frontier goal: (1.74, -8.17)
+[frontier_explorer-1] [WARN] [1781281854.958814536] [frontier_explorer]: frontier goal failed (status 6), blacklisted (1.74, -8.17)
+[frontier_explorer-1] [INFO] [1781281858.269355991] [frontier_explorer]: New frontier goal: (6.04, -7.42)
+[frontier_explorer-1] [INFO] [1781281882.847062055] [frontier_explorer]: New frontier goal: (6.57, -6.27)
+[frontier_explorer-1] [INFO] [1781281910.741532353] [frontier_explorer]: New frontier goal: (4.82, -9.63)
+[frontier_explorer-1] [INFO] [1781281936.931865593] [frontier_explorer]: New frontier goal: (8.12, -9.93)
+[frontier_explorer-1] [INFO] [1781281961.022404882] [frontier_explorer]: New frontier goal: (6.07, -9.09)
+[frontier_explorer-1] [INFO] [1781281987.030471615] [frontier_explorer]: New frontier goal: (11.77, -8.54)
+[frontier_explorer-1] [INFO] [1781282016.837846344] [frontier_explorer]: New frontier goal: (10.57, -10.59)
+[frontier_explorer-1] [INFO] [1781282053.340883371] [frontier_explorer]: New frontier goal: (10.32, -9.84)
+[frontier_explorer-1] [INFO] [1781282070.552608597] [frontier_explorer]: New frontier goal: (10.72, -10.49)
+[frontier_explorer-1] [WARN] [1781282087.772366303] [frontier_explorer]: Frontier goal done but frontier survived at (10.72, -10.49) - striking it
+[frontier_explorer-1] [WARN] [1781282087.841709092] [frontier_explorer]: Frontier goal done but frontier survived at (10.92, -10.54) - striking it
+[frontier_explorer-1] [INFO] [1781282087.925172042] [frontier_explorer]: No path to frontier goal (12.12, -9.89), skipping
+[frontier_explorer-1] [INFO] [1781282105.618789988] [frontier_explorer]: New frontier goal: (8.37, -11.39)
+[frontier_explorer-1] [INFO] [1781282141.536386778] [frontier_explorer]: No path to frontier goal (12.12, -9.89), skipping
+[frontier_explorer-1] [INFO] [1781282173.092426287] [frontier_explorer]: No path to frontier goal (6.62, -8.54), skipping
+[frontier_explorer-1] [INFO] [1781282199.404909530] [frontier_explorer]: New frontier goal: (4.87, -11.45)
+[frontier_explorer-1] [INFO] [1781282242.728173882] [frontier_explorer]: New frontier goal: (4.37, -10.90)
+[frontier_explorer-1] [WARN] [1781282251.666732829] [frontier_explorer]: Frontier goal done but frontier survived at (4.42, -10.70) - striking it
+[frontier_explorer-1] [INFO] [1781282251.774234799] [frontier_explorer]: New frontier goal: (1.22, -10.35)
+[frontier_explorer-1] [WARN] [1781282349.154020122] [frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (1.22, -10.35)
+[frontier_explorer-1] [INFO] [1781282409.850537417] [frontier_explorer]: New frontier goal: (1.87, -11.76)
+[frontier_explorer-1] [INFO] [1781282437.021608792] [frontier_explorer]: New frontier goal: (0.57, -9.23)
+[frontier_explorer-1] [INFO] [1781282467.272018325] [frontier_explorer]: No path to frontier goal (1.97, -9.43), skipping
+[frontier_explorer-1] [WARN] [1781282527.826573099] [frontier_explorer]: frontier goal failed (status 6), blacklisted (0.57, -9.23)
+[frontier_explorer-1] [INFO] [1781282533.289647311] [frontier_explorer]: New frontier goal: (-0.08, -9.02)
+[frontier_explorer-1] [WARN] [1781282652.569206502] [frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (-0.08, -9.02)
+[frontier_explorer-1] [WARN] [1781282741.163932975] [frontier_explorer]: Still no progress after costmap clear, blacklisting goal (-0.08, -9.02)
+[frontier_explorer-1] [WARN] [1781282741.220149486] [frontier_explorer]: Watchdog: work exists but no goal active and robot stationary - clearing costmaps
+[frontier_explorer-1] [INFO] [1781282751.170447092] [frontier_explorer]: No path to frontier goal (-0.18, -8.07), skipping
+[frontier_explorer-1] [WARN] [1781282766.860197726] [frontier_explorer]: Watchdog: work exists but no goal active and robot stationary - clearing costmaps
+[frontier_explorer-1] [WARN] [1781282766.908452006] [frontier_explorer]: Watchdog: resetting blacklist
+[frontier_explorer-1] [INFO] [1781282771.685439043] [frontier_explorer]: No path to frontier goal (-0.03, -9.07), skipping
+[frontier_explorer-1] [INFO] [1781282802.482600128] [frontier_explorer]: No path to frontier goal (1.17, -7.67), skipping
+[frontier_explorer-1] [WARN] [1781282817.885365429] [frontier_explorer]: Watchdog: all goals planner-rejected (7 skips) - blind reverse escape
+[frontier_explorer-1] [INFO] [1781282824.360395162] [frontier_explorer]: New frontier goal: (-0.38, -4.77)
+[frontier_explorer-1] [INFO] [1781282860.795000040] [frontier_explorer]: New frontier goal: (-0.03, -9.07)
+[frontier_explorer-1] [WARN] [1781282999.565681494] [frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (-0.03, -9.07)
+[frontier_explorer-1] [WARN] [1781283099.765898509] [frontier_explorer]: Still no progress after costmap clear, blacklisting goal (-0.03, -9.07)
+[frontier_explorer-1] [WARN] [1781283105.301080343] [frontier_explorer]: Watchdog: work exists but no goal active and robot stationary - clearing costmaps
+[frontier_explorer-1] [INFO] [1781283111.030139498] [frontier_explorer]: New frontier goal: (-0.18, -8.07)
+[frontier_explorer-1] [WARN] [1781283204.868107428] [frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (-0.18, -8.07)
+[frontier_explorer-1] [INFO] [1781283221.125846533] [frontier_explorer]: New frontier goal: (10.72, -10.47)
+[frontier_explorer-1] [INFO] [1781283261.920122659] [frontier_explorer]: No path to frontier goal (11.77, -10.32), skipping
+[frontier_explorer-1] [WARN] [1781283277.751089809] [frontier_explorer]: Frontier goal done but frontier survived at (11.02, -10.32) - striking it
+[frontier_explorer-1] [INFO] [1781283286.623693150] [frontier_explorer]: New frontier goal: (12.17, -8.17)
+[frontier_explorer-1] [INFO] [1781283312.794989891] [frontier_explorer]: No path to frontier goal (11.77, -10.32), skipping
+[frontier_explorer-1] [INFO] [1781283355.099395626] [frontier_explorer]: New frontier goal: (11.27, -4.92)
+[frontier_explorer-1] [INFO] [1781283392.865359718] [frontier_explorer]: New frontier goal: (12.32, -5.37)
+[frontier_explorer-1] [INFO] [1781283458.484404303] [frontier_explorer]: New frontier goal: (12.12, -6.47)
+[frontier_explorer-1] [INFO] [1781283487.698941978] [frontier_explorer]: New frontier goal: (11.02, -7.07)
+[frontier_explorer-1] [INFO] [1781283511.846605377] [frontier_explorer]: New frontier goal: (11.92, -10.32)
+[frontier_explorer-1] [WARN] [1781283512.301818539] [frontier_explorer]: frontier goal failed (status 6), blacklisted (11.92, -10.32)
+[frontier_explorer-1] [INFO] [1781283519.400206604] [frontier_explorer]: New frontier goal: (12.17, -8.17)
+[frontier_explorer-1] [INFO] [1781283540.310990001] [frontier_explorer]: New frontier goal: (9.12, -3.22)
+[frontier_explorer-1] [INFO] [1781283563.910258785] [frontier_explorer]: New frontier goal: (6.62, -3.27)
+[frontier_explorer-1] [INFO] [1781283583.059245681] [frontier_explorer]: No path to frontier goal (13.58, -10.15), skipping
+[frontier_explorer-1] [INFO] [1781283595.457099568] [frontier_explorer]: New frontier goal: (12.13, -2.50)
+[frontier_explorer-1] [INFO] [1781283620.253231828] [frontier_explorer]: No path to frontier goal (13.73, -10.10), skipping
+[frontier_explorer-1] [WARN] [1781283648.423944403] [frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (12.13, -2.50)
+[frontier_explorer-1] [INFO] [1781283655.110424980] [frontier_explorer]: No path to frontier goal (13.73, -10.10), skipping
+[frontier_explorer-1] [INFO] [1781283661.756993537] [frontier_explorer]: New frontier goal: (8.98, -7.45)
+[frontier_explorer-1] [WARN] [1781283713.331826905] [frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (8.98, -7.45)
+[frontier_explorer-1] [WARN] [1781283808.367736255] [frontier_explorer]: Still no progress after costmap clear, blacklisting goal (8.98, -7.45)
+[frontier_explorer-1] [INFO] [1781283813.893273131] [frontier_explorer]: New frontier goal: (10.48, -3.75)
+[frontier_explorer-1] [WARN] [1781283875.406476141] [frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (10.48, -3.75)
+[frontier_explorer-1] [WARN] [1781283925.688197402] [frontier_explorer]: Still no progress after costmap clear, blacklisting goal (10.48, -3.75)
+[frontier_explorer-1] [INFO] [1781283931.365462850] [frontier_explorer]: New frontier goal: (12.13, -2.60)
+[frontier_explorer-1] [INFO] [1781283947.496931818] [frontier_explorer]: New frontier goal: (8.98, -7.45)
+[frontier_explorer-1] [WARN] [1781283994.674749983] [frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (8.98, -7.45)
+[frontier_explorer-1] [WARN] [1781284042.523800554] [frontier_explorer]: Still no progress after costmap clear, blacklisting goal (8.98, -7.45)
+[frontier_explorer-1] [INFO] [1781284047.498785568] [frontier_explorer]: New frontier goal: (10.48, -3.75)
+[frontier_explorer-1] [WARN] [1781284094.997206682] [frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (10.48, -3.75)
+[frontier_explorer-1] [WARN] [1781284142.120965262] [frontier_explorer]: Still no progress after costmap clear, blacklisting goal (10.48, -3.75)
+[frontier_explorer-1] [INFO] [1781284147.704925742] [frontier_explorer]: New frontier goal: (12.13, -2.60)
+[frontier_explorer-1] [WARN] [1781284203.659289578] [frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (12.13, -2.60)
+[frontier_explorer-1] [WARN] [1781284255.149751245] [frontier_explorer]: Still no progress after costmap clear, blacklisting goal (12.13, -2.60)
+[frontier_explorer-1] [WARN] [1781284257.617505058] [frontier_explorer]: Watchdog: work exists but no goal active and robot stationary - clearing costmaps
+[frontier_explorer-1] [WARN] [1781284257.671960949] [frontier_explorer]: Watchdog: resetting blacklist
+[frontier_explorer-1] [INFO] [1781284260.446294551] [frontier_explorer]: New frontier goal: (8.98, -7.45)
+[frontier_explorer-1] [WARN] [1781284310.331244843] [frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (8.98, -7.45)
+[frontier_explorer-1] [WARN] [1781284360.042507023] [frontier_explorer]: Still no progress after costmap clear, blacklisting goal (8.98, -7.45)
+[frontier_explorer-1] [INFO] [1781284365.403123289] [frontier_explorer]: New frontier goal: (10.48, -3.75)

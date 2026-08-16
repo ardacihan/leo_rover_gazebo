@@ -1,0 +1,5 @@
+# Shell scripts run inside WSL/Linux containers - must stay LF
+*.sh text eol=lf
+docker-entrypoint.sh text eol=lf
+# PowerShell scripts are fine either way; keep platform default
+*.ps1 text

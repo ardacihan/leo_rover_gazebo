@@ -1,0 +1,53 @@
+# Multi-robot collaborative explorer params for leo2.
+# Frontiers are detected on the MERGED /map; peer poses come from the shared
+# TF tree; coordination_mode is overridden per benchmark condition by the
+# launch file. Camera sweep is disabled (target 0.0) so runs measure pure
+# collaborative lidar mapping. `/**` so the keys bind under /leo2/... .
+/**:
+  ros__parameters:
+    use_sim_time: true
+    robot_name: leo2
+    robot_base_frame: leo2/base_link
+    camera_frame: leo2/sensor_camera_link
+    map_topic: /leo2/map
+    map_frame: leo2/map
+    cmd_vel_topic: /leo2/cmd_vel
+    detections_topic: /leo2/aruco_detections
+    # --- multi-robot coordination ---
+    coordination_mode: coordinated       # coordinated | independent
+    peer_names: leo1
+    discount_radius: 3.0
+    discount_strength: 1.0
+    # --- exploration ---
+    planner_frequency: 0.25
+    min_frontier_size: 0.5
+    potential_scale: 3.0
+    gain_scale: 1.0
+    progress_timeout: 30.0
+    blacklist_radius: 0.6
+    blacklist_ttl: 90.0
+    blacklist_long_ttl: 900.0
+    blacklist_max_strikes: 3
+    replan_distance: 0.7
+    goal_commit_time: 10.0
+    switch_margin: 1.25
+    validate_goals: true
+    planner_action_name: compute_path_to_pose
+    skip_ttl: 20.0
+    claim_radius: 1.5
+    idle_cycles_to_finish: 3
+    watchdog_period: 10.0
+    return_to_init: false
+    map_save_path: /ros2_ws/maps/leo2_map
+    camera_fov: 1.047
+    detection_range: 3.0
+    camera_coverage_target: 0.0
+    sweep_min_cluster: 5
+    sweep_max_cluster: 60
+    sweep_heading_weight: 0.75
+    coverage_update_period: 0.5
+    verify_min_views: 2
+    verify_max_attempts: 2
+    verify_min_view_distance: 0.5
+    verify_min_view_interval: 5.0
+    verify_min_yaw_delta: 0.35

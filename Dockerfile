@@ -68,6 +68,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libgz-cmake3-dev libgz-plugin2-dev libgz-common5-dev libgz-sim8-dev \
     && rm -rf /var/lib/apt/lists/*
 
+# WSLg GPU: build patched Ogre separately (see scripts/build_ogre_wsl_gpu.sh).
+
 # ── Leo Rover description package ─────────────────────────────────────────────
 RUN apt-get update \
     && ( apt-get install -y --no-install-recommends ros-humble-leo-description \

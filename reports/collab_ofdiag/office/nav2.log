@@ -1,0 +1,672 @@
+[INFO] [launch]: All log files can be found below /root/.ros/log/2026-07-06-10-58-49-294258-9bcb300e2a90-600
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [controller_server-1]: process started with pid [668]
+[INFO] [planner_server-2]: process started with pid [670]
+[INFO] [behavior_server-3]: process started with pid [672]
+[INFO] [bt_navigator-4]: process started with pid [674]
+[INFO] [waypoint_follower-5]: process started with pid [676]
+[INFO] [lifecycle_manager-6]: process started with pid [678]
+[INFO] [controller_server-7]: process started with pid [680]
+[INFO] [planner_server-8]: process started with pid [682]
+[INFO] [behavior_server-9]: process started with pid [684]
+[INFO] [bt_navigator-10]: process started with pid [686]
+[INFO] [waypoint_follower-11]: process started with pid [688]
+[INFO] [lifecycle_manager-12]: process started with pid [690]
+[lifecycle_manager-6] [INFO] [1783335530.537663923] [leo1.lifecycle_manager_navigation]: Creating
+[lifecycle_manager-12] [INFO] [1783335530.541937361] [leo2.lifecycle_manager_navigation]: Creating
+[waypoint_follower-5] [INFO] [1783335530.542779172] [leo1.waypoint_follower]: 
+[waypoint_follower-5] 	waypoint_follower lifecycle node launched. 
+[waypoint_follower-5] 	Waiting on external lifecycle transitions to activate
+[waypoint_follower-5] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[lifecycle_manager-12] [INFO] [1783335530.564753533] [leo2.lifecycle_manager_navigation]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[lifecycle_manager-6] [INFO] [1783335530.565111229] [leo1.lifecycle_manager_navigation]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[planner_server-8] [INFO] [1783335530.568763832] [leo2.planner_server]: 
+[planner_server-8] 	planner_server lifecycle node launched. 
+[planner_server-8] 	Waiting on external lifecycle transitions to activate
+[planner_server-8] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-2] [INFO] [1783335530.573287328] [leo1.planner_server]: 
+[planner_server-2] 	planner_server lifecycle node launched. 
+[planner_server-2] 	Waiting on external lifecycle transitions to activate
+[planner_server-2] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-7] [INFO] [1783335530.580929970] [leo2.controller_server]: 
+[controller_server-7] 	controller_server lifecycle node launched. 
+[controller_server-7] 	Waiting on external lifecycle transitions to activate
+[controller_server-7] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-1] [INFO] [1783335530.586258157] [leo1.controller_server]: 
+[controller_server-1] 	controller_server lifecycle node launched. 
+[controller_server-1] 	Waiting on external lifecycle transitions to activate
+[controller_server-1] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[waypoint_follower-11] [INFO] [1783335530.597607949] [leo2.waypoint_follower]: 
+[waypoint_follower-11] 	waypoint_follower lifecycle node launched. 
+[waypoint_follower-11] 	Waiting on external lifecycle transitions to activate
+[waypoint_follower-11] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[behavior_server-3] [INFO] [1783335530.663923963] [leo1.behavior_server]: 
+[behavior_server-3] 	behavior_server lifecycle node launched. 
+[behavior_server-3] 	Waiting on external lifecycle transitions to activate
+[behavior_server-3] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[bt_navigator-4] [INFO] [1783335530.666849750] [leo1.bt_navigator]: 
+[bt_navigator-4] 	bt_navigator lifecycle node launched. 
+[bt_navigator-4] 	Waiting on external lifecycle transitions to activate
+[bt_navigator-4] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[bt_navigator-4] [INFO] [1783335530.666944164] [leo1.bt_navigator]: Creating
+[behavior_server-9] [INFO] [1783335530.687974395] [leo2.behavior_server]: 
+[behavior_server-9] 	behavior_server lifecycle node launched. 
+[behavior_server-9] 	Waiting on external lifecycle transitions to activate
+[behavior_server-9] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[lifecycle_manager-6] [INFO] [1783335530.689779483] [leo1.lifecycle_manager_navigation]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-6] [INFO] [1783335530.689821737] [leo1.lifecycle_manager_navigation]: [34m[1mConfiguring controller_server[0m[0m
+[bt_navigator-10] [INFO] [1783335530.697000387] [leo2.bt_navigator]: 
+[bt_navigator-10] 	bt_navigator lifecycle node launched. 
+[bt_navigator-10] 	Waiting on external lifecycle transitions to activate
+[bt_navigator-10] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[bt_navigator-10] [INFO] [1783335530.697130511] [leo2.bt_navigator]: Creating
+[waypoint_follower-5] [INFO] [1783335530.734462648] [leo1.waypoint_follower]: Creating
+[waypoint_follower-11] [INFO] [1783335530.770859637] [leo2.waypoint_follower]: Creating
+[lifecycle_manager-12] [INFO] [1783335530.784932287] [leo2.lifecycle_manager_navigation]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-12] [INFO] [1783335530.785042985] [leo2.lifecycle_manager_navigation]: [34m[1mConfiguring controller_server[0m[0m
+[planner_server-2] [INFO] [1783335531.077206374] [leo1.planner_server]: Creating
+[planner_server-2] [INFO] [1783335531.089612758] [leo1.global_costmap.global_costmap]: 
+[planner_server-2] 	global_costmap lifecycle node launched. 
+[planner_server-2] 	Waiting on external lifecycle transitions to activate
+[planner_server-2] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-8] [INFO] [1783335531.092439838] [leo2.planner_server]: Creating
+[planner_server-8] [INFO] [1783335531.106078638] [leo2.global_costmap.global_costmap]: 
+[planner_server-8] 	global_costmap lifecycle node launched. 
+[planner_server-8] 	Waiting on external lifecycle transitions to activate
+[planner_server-8] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-2] [INFO] [1783335531.194622307] [leo1.global_costmap.global_costmap]: Creating Costmap
+[planner_server-8] [INFO] [1783335531.219482395] [leo2.global_costmap.global_costmap]: Creating Costmap
+[controller_server-7] [INFO] [1783335531.871528010] [leo2.controller_server]: Creating controller server
+[controller_server-1] [INFO] [1783335531.871701599] [leo1.controller_server]: Creating controller server
+[controller_server-1] [INFO] [1783335531.884126067] [leo1.local_costmap.local_costmap]: 
+[controller_server-1] 	local_costmap lifecycle node launched. 
+[controller_server-1] 	Waiting on external lifecycle transitions to activate
+[controller_server-1] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-7] [INFO] [1783335531.886532050] [leo2.local_costmap.local_costmap]: 
+[controller_server-7] 	local_costmap lifecycle node launched. 
+[controller_server-7] 	Waiting on external lifecycle transitions to activate
+[controller_server-7] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-1] [INFO] [1783335531.978485183] [leo1.local_costmap.local_costmap]: Creating Costmap
+[controller_server-7] [INFO] [1783335531.979224219] [leo2.local_costmap.local_costmap]: Creating Costmap
+[controller_server-7] [INFO] [1783335531.986207294] [leo2.controller_server]: Configuring controller interface
+[controller_server-7] [INFO] [1783335531.986400029] [leo2.controller_server]: getting goal checker plugins..
+[controller_server-7] [INFO] [1783335531.986622167] [leo2.controller_server]: Controller frequency set to 20.0000Hz
+[controller_server-7] [INFO] [1783335531.986655165] [leo2.local_costmap.local_costmap]: Configuring
+[controller_server-1] [INFO] [1783335531.986731665] [leo1.controller_server]: Configuring controller interface
+[controller_server-1] [INFO] [1783335531.986890910] [leo1.controller_server]: getting goal checker plugins..
+[controller_server-1] [INFO] [1783335531.987067075] [leo1.controller_server]: Controller frequency set to 20.0000Hz
+[controller_server-1] [INFO] [1783335531.987087962] [leo1.local_costmap.local_costmap]: Configuring
+[controller_server-7] [INFO] [1783335532.003927162] [leo2.local_costmap.local_costmap]: Using plugin "obstacle_layer"
+[controller_server-1] [INFO] [1783335532.003945050] [leo1.local_costmap.local_costmap]: Using plugin "obstacle_layer"
+[controller_server-7] [INFO] [1783335532.058351399] [leo2.local_costmap.local_costmap]: Subscribed to Topics: scan camera
+[controller_server-1] [INFO] [1783335532.058634995] [leo1.local_costmap.local_costmap]: Subscribed to Topics: scan camera
+[controller_server-7] [INFO] [1783335532.071601485] [leo2.local_costmap.local_costmap]: Initialized plugin "obstacle_layer"
+[controller_server-7] [INFO] [1783335532.072153254] [leo2.local_costmap.local_costmap]: Using plugin "inflation_layer"
+[controller_server-7] [INFO] [1783335532.073831425] [leo2.local_costmap.local_costmap]: Initialized plugin "inflation_layer"
+[controller_server-1] [INFO] [1783335532.073327016] [leo1.local_costmap.local_costmap]: Initialized plugin "obstacle_layer"
+[controller_server-1] [INFO] [1783335532.073365190] [leo1.local_costmap.local_costmap]: Using plugin "inflation_layer"
+[controller_server-1] [INFO] [1783335532.074523340] [leo1.local_costmap.local_costmap]: Initialized plugin "inflation_layer"
+[controller_server-7] [INFO] [1783335532.128896979] [leo2.controller_server]: Created progress_checker : progress_checker of type nav2_controller::PoseProgressChecker
+[controller_server-1] [INFO] [1783335532.129131859] [leo1.controller_server]: Created progress_checker : progress_checker of type nav2_controller::PoseProgressChecker
+[controller_server-7] [INFO] [1783335532.161350352] [leo2.controller_server]: Created goal checker : general_goal_checker of type nav2_controller::SimpleGoalChecker
+[controller_server-1] [INFO] [1783335532.162114484] [leo1.controller_server]: Created goal checker : general_goal_checker of type nav2_controller::SimpleGoalChecker
+[controller_server-7] [INFO] [1783335532.162315235] [leo2.controller_server]: Controller Server has general_goal_checker  goal checkers available.
+[controller_server-1] [INFO] [1783335532.163185336] [leo1.controller_server]: Controller Server has general_goal_checker  goal checkers available.
+[controller_server-1] [INFO] [1783335532.587067599] [leo1.controller_server]: Created controller : FollowPath of type nav2_rotation_shim_controller::RotationShimController
+[controller_server-7] [INFO] [1783335532.587607748] [leo2.controller_server]: Created controller : FollowPath of type nav2_rotation_shim_controller::RotationShimController
+[controller_server-1] [INFO] [1783335532.631194890] [leo1.controller_server]: Created internal controller for rotation shimming: FollowPath of type nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-7] [INFO] [1783335532.631705181] [leo2.controller_server]: Created internal controller for rotation shimming: FollowPath of type nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-1] [INFO] [1783335532.638884128] [leo1.controller_server]: Controller Server has FollowPath  controllers available.
+[controller_server-7] [INFO] [1783335532.640213370] [leo2.controller_server]: Controller Server has FollowPath  controllers available.
+[lifecycle_manager-6] [INFO] [1783335532.647921341] [leo1.lifecycle_manager_navigation]: [34m[1mConfiguring planner_server[0m[0m
+[planner_server-2] [INFO] [1783335532.648190018] [leo1.planner_server]: Configuring
+[planner_server-2] [INFO] [1783335532.648227875] [leo1.global_costmap.global_costmap]: Configuring
+[lifecycle_manager-12] [INFO] [1783335532.648370322] [leo2.lifecycle_manager_navigation]: [34m[1mConfiguring planner_server[0m[0m
+[planner_server-8] [INFO] [1783335532.648662676] [leo2.planner_server]: Configuring
+[planner_server-8] [INFO] [1783335532.648694934] [leo2.global_costmap.global_costmap]: Configuring
+[planner_server-2] [INFO] [1783335532.664362656] [leo1.global_costmap.global_costmap]: Using plugin "static_layer"
+[planner_server-8] [INFO] [1783335532.664793921] [leo2.global_costmap.global_costmap]: Using plugin "static_layer"
+[planner_server-2] [INFO] [1783335532.714592230] [leo1.global_costmap.global_costmap]: Subscribing to the map topic (/leo1/map) with transient local durability
+[planner_server-8] [INFO] [1783335532.714853061] [leo2.global_costmap.global_costmap]: Subscribing to the map topic (/leo2/map) with transient local durability
+[planner_server-2] [INFO] [1783335532.718708331] [leo1.global_costmap.global_costmap]: Subscribing to updates
+[planner_server-8] [INFO] [1783335532.719058811] [leo2.global_costmap.global_costmap]: Subscribing to updates
+[planner_server-2] [INFO] [1783335532.726240748] [leo1.global_costmap.global_costmap]: Initialized plugin "static_layer"
+[planner_server-2] [INFO] [1783335532.726287360] [leo1.global_costmap.global_costmap]: Using plugin "obstacle_layer"
+[planner_server-8] [INFO] [1783335532.726757300] [leo2.global_costmap.global_costmap]: Initialized plugin "static_layer"
+[planner_server-8] [INFO] [1783335532.726783171] [leo2.global_costmap.global_costmap]: Using plugin "obstacle_layer"
+[planner_server-2] [INFO] [1783335532.727586698] [leo1.global_costmap.global_costmap]: Subscribed to Topics: scan camera
+[planner_server-8] [INFO] [1783335532.728540819] [leo2.global_costmap.global_costmap]: Subscribed to Topics: scan camera
+[planner_server-8] [INFO] [1783335532.737809794] [leo2.global_costmap.global_costmap]: Initialized plugin "obstacle_layer"
+[planner_server-8] [INFO] [1783335532.737849748] [leo2.global_costmap.global_costmap]: Using plugin "inflation_layer"
+[planner_server-2] [INFO] [1783335532.738275962] [leo1.global_costmap.global_costmap]: Initialized plugin "obstacle_layer"
+[planner_server-2] [INFO] [1783335532.738303709] [leo1.global_costmap.global_costmap]: Using plugin "inflation_layer"
+[planner_server-8] [INFO] [1783335532.738989313] [leo2.global_costmap.global_costmap]: Initialized plugin "inflation_layer"
+[planner_server-2] [INFO] [1783335532.739524091] [leo1.global_costmap.global_costmap]: Initialized plugin "inflation_layer"
+[planner_server-2] [INFO] [1783335532.787868616] [leo1.planner_server]: Created global planner plugin GridBased of type nav2_navfn_planner/NavfnPlanner
+[planner_server-2] [INFO] [1783335532.787915784] [leo1.planner_server]: Configuring plugin GridBased of type NavfnPlanner
+[planner_server-8] [INFO] [1783335532.788693126] [leo2.planner_server]: Created global planner plugin GridBased of type nav2_navfn_planner/NavfnPlanner
+[planner_server-8] [INFO] [1783335532.788729060] [leo2.planner_server]: Configuring plugin GridBased of type NavfnPlanner
+[planner_server-8] [INFO] [1783335532.789728219] [leo2.planner_server]: Planner Server has GridBased  planners available.
+[planner_server-2] [INFO] [1783335532.789037436] [leo1.planner_server]: Planner Server has GridBased  planners available.
+[lifecycle_manager-6] [INFO] [1783335532.800584560] [leo1.lifecycle_manager_navigation]: [34m[1mConfiguring behavior_server[0m[0m
+[behavior_server-3] [INFO] [1783335532.800871550] [leo1.behavior_server]: Configuring
+[lifecycle_manager-12] [INFO] [1783335532.801307851] [leo2.lifecycle_manager_navigation]: [34m[1mConfiguring behavior_server[0m[0m
+[behavior_server-9] [INFO] [1783335532.801535023] [leo2.behavior_server]: Configuring
+[behavior_server-9] [INFO] [1783335532.827416909] [leo2.behavior_server]: Creating behavior plugin spin of type nav2_behaviors/Spin
+[behavior_server-3] [INFO] [1783335532.827450510] [leo1.behavior_server]: Creating behavior plugin spin of type nav2_behaviors/Spin
+[behavior_server-9] [INFO] [1783335532.875435510] [leo2.behavior_server]: Configuring spin
+[behavior_server-3] [INFO] [1783335532.878815908] [leo1.behavior_server]: Configuring spin
+[behavior_server-9] [INFO] [1783335532.883089987] [leo2.behavior_server]: Creating behavior plugin backup of type nav2_behaviors/BackUp
+[behavior_server-3] [INFO] [1783335532.887197086] [leo1.behavior_server]: Creating behavior plugin backup of type nav2_behaviors/BackUp
+[behavior_server-9] [INFO] [1783335532.920938657] [leo2.behavior_server]: Configuring backup
+[behavior_server-3] [INFO] [1783335532.921456433] [leo1.behavior_server]: Configuring backup
+[behavior_server-9] [INFO] [1783335532.924462682] [leo2.behavior_server]: Creating behavior plugin drive_on_heading of type nav2_behaviors/DriveOnHeading
+[behavior_server-3] [INFO] [1783335532.925535237] [leo1.behavior_server]: Creating behavior plugin drive_on_heading of type nav2_behaviors/DriveOnHeading
+[behavior_server-9] [INFO] [1783335532.954881926] [leo2.behavior_server]: Configuring drive_on_heading
+[behavior_server-3] [INFO] [1783335532.955545967] [leo1.behavior_server]: Configuring drive_on_heading
+[behavior_server-9] [INFO] [1783335532.957683888] [leo2.behavior_server]: Creating behavior plugin wait of type nav2_behaviors/Wait
+[behavior_server-3] [INFO] [1783335532.959160937] [leo1.behavior_server]: Creating behavior plugin wait of type nav2_behaviors/Wait
+[behavior_server-3] [INFO] [1783335532.994034712] [leo1.behavior_server]: Configuring wait
+[behavior_server-9] [INFO] [1783335532.994949405] [leo2.behavior_server]: Configuring wait
+[lifecycle_manager-6] [INFO] [1783335532.997485224] [leo1.lifecycle_manager_navigation]: [34m[1mConfiguring bt_navigator[0m[0m
+[bt_navigator-4] [INFO] [1783335532.997779548] [leo1.bt_navigator]: Configuring
+[lifecycle_manager-12] [INFO] [1783335532.998534617] [leo2.lifecycle_manager_navigation]: [34m[1mConfiguring bt_navigator[0m[0m
+[bt_navigator-10] [INFO] [1783335532.998761288] [leo2.bt_navigator]: Configuring
+[lifecycle_manager-12] [INFO] [1783335533.353397809] [leo2.lifecycle_manager_navigation]: [34m[1mConfiguring waypoint_follower[0m[0m
+[waypoint_follower-11] [INFO] [1783335533.353743918] [leo2.waypoint_follower]: Configuring
+[lifecycle_manager-6] [INFO] [1783335533.355715123] [leo1.lifecycle_manager_navigation]: [34m[1mConfiguring waypoint_follower[0m[0m
+[waypoint_follower-5] [INFO] [1783335533.356015835] [leo1.waypoint_follower]: Configuring
+[waypoint_follower-11] [INFO] [1783335533.434732557] [leo2.waypoint_follower]: Created waypoint_task_executor : wait_at_waypoint of type nav2_waypoint_follower::WaitAtWaypoint
+[waypoint_follower-5] [INFO] [1783335533.435153890] [leo1.waypoint_follower]: Created waypoint_task_executor : wait_at_waypoint of type nav2_waypoint_follower::WaitAtWaypoint
+[waypoint_follower-11] [INFO] [1783335533.435528563] [leo2.waypoint_follower]: Waypoint pause duration is set to zero, disabling task executor plugin.
+[waypoint_follower-5] [INFO] [1783335533.435830855] [leo1.waypoint_follower]: Waypoint pause duration is set to zero, disabling task executor plugin.
+[lifecycle_manager-12] [INFO] [1783335533.435993570] [leo2.lifecycle_manager_navigation]: [34m[1mActivating controller_server[0m[0m
+[controller_server-7] [INFO] [1783335533.436227008] [leo2.controller_server]: Activating
+[controller_server-7] [INFO] [1783335533.436256488] [leo2.local_costmap.local_costmap]: Activating
+[controller_server-7] [INFO] [1783335533.436265588] [leo2.local_costmap.local_costmap]: Checking transform
+[controller_server-7] [INFO] [1783335533.436374950] [leo2.local_costmap.local_costmap]: start
+[lifecycle_manager-6] [INFO] [1783335533.436235764] [leo1.lifecycle_manager_navigation]: [34m[1mActivating controller_server[0m[0m
+[controller_server-1] [INFO] [1783335533.436442149] [leo1.controller_server]: Activating
+[controller_server-1] [INFO] [1783335533.436487942] [leo1.local_costmap.local_costmap]: Activating
+[controller_server-1] [INFO] [1783335533.436505192] [leo1.local_costmap.local_costmap]: Checking transform
+[controller_server-1] [INFO] [1783335533.436653913] [leo1.local_costmap.local_costmap]: start
+[controller_server-7] [INFO] [1783335533.637229199] [leo2.controller_server]: Activating controller: FollowPath of type nav2_rotation_shim_controller::RotationShimController
+[controller_server-7] [INFO] [1783335533.637279429] [leo2.controller_server]: Activating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-7] [INFO] [1783335533.637299478] [leo2.controller_server]: Creating bond (controller_server) to lifecycle manager.
+[controller_server-1] [INFO] [1783335533.687776644] [leo1.controller_server]: Activating controller: FollowPath of type nav2_rotation_shim_controller::RotationShimController
+[controller_server-1] [INFO] [1783335533.687825914] [leo1.controller_server]: Activating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-1] [INFO] [1783335533.687844663] [leo1.controller_server]: Creating bond (controller_server) to lifecycle manager.
+[lifecycle_manager-12] [INFO] [1783335533.753348256] [leo2.lifecycle_manager_navigation]: Server controller_server connected with bond.
+[lifecycle_manager-12] [INFO] [1783335533.753389560] [leo2.lifecycle_manager_navigation]: [34m[1mActivating planner_server[0m[0m
+[planner_server-8] [INFO] [1783335533.753564211] [leo2.planner_server]: Activating
+[planner_server-8] [INFO] [1783335533.753592822] [leo2.global_costmap.global_costmap]: Activating
+[planner_server-8] [INFO] [1783335533.753601158] [leo2.global_costmap.global_costmap]: Checking transform
+[planner_server-8] [INFO] [1783335533.753697754] [leo2.global_costmap.global_costmap]: start
+[lifecycle_manager-6] [INFO] [1783335533.803094826] [leo1.lifecycle_manager_navigation]: Server controller_server connected with bond.
+[lifecycle_manager-6] [INFO] [1783335533.803135978] [leo1.lifecycle_manager_navigation]: [34m[1mActivating planner_server[0m[0m
+[planner_server-2] [INFO] [1783335533.803319966] [leo1.planner_server]: Activating
+[planner_server-2] [INFO] [1783335533.803347497] [leo1.global_costmap.global_costmap]: Activating
+[planner_server-2] [INFO] [1783335533.803355182] [leo1.global_costmap.global_costmap]: Checking transform
+[planner_server-2] [INFO] [1783335533.803450253] [leo1.global_costmap.global_costmap]: start
+[planner_server-8] [INFO] [1783335533.954500588] [leo2.planner_server]: Activating plugin GridBased of type NavfnPlanner
+[planner_server-8] [INFO] [1783335533.954969655] [leo2.planner_server]: Creating bond (planner_server) to lifecycle manager.
+[planner_server-2] [INFO] [1783335534.004506419] [leo1.planner_server]: Activating plugin GridBased of type NavfnPlanner
+[planner_server-2] [INFO] [1783335534.005025615] [leo1.planner_server]: Creating bond (planner_server) to lifecycle manager.
+[lifecycle_manager-12] [INFO] [1783335534.066004915] [leo2.lifecycle_manager_navigation]: Server planner_server connected with bond.
+[lifecycle_manager-12] [INFO] [1783335534.066079811] [leo2.lifecycle_manager_navigation]: [34m[1mActivating behavior_server[0m[0m
+[behavior_server-9] [INFO] [1783335534.066412705] [leo2.behavior_server]: Activating
+[behavior_server-9] [INFO] [1783335534.066436016] [leo2.behavior_server]: Activating spin
+[behavior_server-9] [INFO] [1783335534.066444414] [leo2.behavior_server]: Activating backup
+[behavior_server-9] [INFO] [1783335534.066451012] [leo2.behavior_server]: Activating drive_on_heading
+[behavior_server-9] [INFO] [1783335534.066456697] [leo2.behavior_server]: Activating wait
+[behavior_server-9] [INFO] [1783335534.066465172] [leo2.behavior_server]: Creating bond (behavior_server) to lifecycle manager.
+[lifecycle_manager-6] [INFO] [1783335534.116070374] [leo1.lifecycle_manager_navigation]: Server planner_server connected with bond.
+[lifecycle_manager-6] [INFO] [1783335534.116148153] [leo1.lifecycle_manager_navigation]: [34m[1mActivating behavior_server[0m[0m
+[behavior_server-3] [INFO] [1783335534.116549789] [leo1.behavior_server]: Activating
+[behavior_server-3] [INFO] [1783335534.116582489] [leo1.behavior_server]: Activating spin
+[behavior_server-3] [INFO] [1783335534.116598656] [leo1.behavior_server]: Activating backup
+[behavior_server-3] [INFO] [1783335534.116611268] [leo1.behavior_server]: Activating drive_on_heading
+[behavior_server-3] [INFO] [1783335534.116623558] [leo1.behavior_server]: Activating wait
+[behavior_server-3] [INFO] [1783335534.116654262] [leo1.behavior_server]: Creating bond (behavior_server) to lifecycle manager.
+[lifecycle_manager-12] [INFO] [1783335534.177858419] [leo2.lifecycle_manager_navigation]: Server behavior_server connected with bond.
+[lifecycle_manager-12] [INFO] [1783335534.177902614] [leo2.lifecycle_manager_navigation]: [34m[1mActivating bt_navigator[0m[0m
+[bt_navigator-10] [INFO] [1783335534.178138711] [leo2.bt_navigator]: Activating
+[bt_navigator-10] [INFO] [1783335534.216181472] [leo2.bt_navigator]: Creating bond (bt_navigator) to lifecycle manager.
+[lifecycle_manager-6] [INFO] [1783335534.224732884] [leo1.lifecycle_manager_navigation]: Server behavior_server connected with bond.
+[lifecycle_manager-6] [INFO] [1783335534.224811961] [leo1.lifecycle_manager_navigation]: [34m[1mActivating bt_navigator[0m[0m
+[bt_navigator-4] [INFO] [1783335534.225126877] [leo1.bt_navigator]: Activating
+[bt_navigator-4] [INFO] [1783335534.262811148] [leo1.bt_navigator]: Creating bond (bt_navigator) to lifecycle manager.
+[lifecycle_manager-12] [INFO] [1783335534.326656616] [leo2.lifecycle_manager_navigation]: Server bt_navigator connected with bond.
+[lifecycle_manager-12] [INFO] [1783335534.326702592] [leo2.lifecycle_manager_navigation]: [34m[1mActivating waypoint_follower[0m[0m
+[waypoint_follower-11] [INFO] [1783335534.326907160] [leo2.waypoint_follower]: Activating
+[waypoint_follower-11] [INFO] [1783335534.326935955] [leo2.waypoint_follower]: Creating bond (waypoint_follower) to lifecycle manager.
+[lifecycle_manager-6] [INFO] [1783335534.372960721] [leo1.lifecycle_manager_navigation]: Server bt_navigator connected with bond.
+[lifecycle_manager-6] [INFO] [1783335534.373020467] [leo1.lifecycle_manager_navigation]: [34m[1mActivating waypoint_follower[0m[0m
+[waypoint_follower-5] [INFO] [1783335534.373293936] [leo1.waypoint_follower]: Activating
+[waypoint_follower-5] [INFO] [1783335534.373324863] [leo1.waypoint_follower]: Creating bond (waypoint_follower) to lifecycle manager.
+[lifecycle_manager-12] [INFO] [1783335534.434521941] [leo2.lifecycle_manager_navigation]: Server waypoint_follower connected with bond.
+[lifecycle_manager-12] [INFO] [1783335534.434603398] [leo2.lifecycle_manager_navigation]: [34m[1mManaged nodes are active[0m[0m
+[lifecycle_manager-12] [INFO] [1783335534.434621277] [leo2.lifecycle_manager_navigation]: [34m[1mCreating bond timer...[0m[0m
+[lifecycle_manager-6] [INFO] [1783335534.483244206] [leo1.lifecycle_manager_navigation]: Server waypoint_follower connected with bond.
+[lifecycle_manager-6] [INFO] [1783335534.483277373] [leo1.lifecycle_manager_navigation]: [34m[1mManaged nodes are active[0m[0m
+[lifecycle_manager-6] [INFO] [1783335534.483284734] [leo1.lifecycle_manager_navigation]: [34m[1mCreating bond timer...[0m[0m
+[planner_server-8] [WARN] [1783335535.755520958] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335535.805759726] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335537.756195785] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335537.805471412] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335539.755553741] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335539.805501520] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335541.755484886] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335541.805398269] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335543.755637346] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335543.805434147] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335545.755542171] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335545.805098549] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335547.755391578] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335547.805238234] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335549.755483310] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335549.805523871] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335551.755721071] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335551.805126681] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335553.756045506] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335553.805658925] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335555.756097364] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335555.805236552] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335557.755353733] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335557.805270611] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335559.755302111] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335559.805475103] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335561.755339586] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335561.805884199] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335563.755775795] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335563.805434488] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335565.755555899] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335565.805282725] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335567.755314054] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335567.805153268] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335569.755229033] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335569.805065186] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335571.755399331] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335571.805446843] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335573.755296407] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335573.805379562] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335575.755326289] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335575.805648687] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335577.755891584] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335577.805317172] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335579.755289204] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335579.805400860] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335581.755231419] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335581.805130959] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335583.755626033] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335583.805889091] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335585.755883257] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335585.805411352] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335587.755840835] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335587.805350384] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335589.755551839] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335589.805568552] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335591.755281661] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335591.805874719] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335593.755337824] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335593.805415615] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335595.755306346] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335595.805412850] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335597.755315798] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335597.805525466] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335599.755209608] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335599.805482050] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335601.755260932] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335601.805104796] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335603.755579265] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335603.805219731] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335605.754629721] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335605.804674336] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335607.754727058] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335607.804687886] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335609.755099920] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335609.804794007] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335611.754571110] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335611.804844630] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335613.754477846] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335613.804635224] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335615.754589411] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335615.804585179] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335617.754722612] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335617.804645705] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335619.754514682] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335619.804614445] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335621.754724422] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335621.804438389] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335623.754816284] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335623.804595132] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335625.754595947] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335625.804777950] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335627.755091207] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335627.804702632] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335629.754411876] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335629.804767165] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335631.754602452] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335631.804435275] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335633.754626277] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335633.804584122] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335635.755394949] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335635.805141323] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335637.755214836] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335637.804919788] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335639.755121232] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335639.805156617] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335641.754826480] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335641.804737658] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335643.755166472] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335643.805000468] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335645.754884443] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335645.805467905] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335647.755043057] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335647.804871193] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335649.755591165] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335649.805148379] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335651.754878687] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335651.804873358] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335653.754775847] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335653.804803771] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335655.754933738] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335655.804875790] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335657.755038375] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335657.804720137] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335659.755482011] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335659.805402171] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335661.755593527] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335661.805218830] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335663.754811060] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335663.805426258] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335665.755107294] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335665.805414371] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335667.755135399] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335667.805225581] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335669.755282303] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335669.805231129] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335671.757653063] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335671.805199182] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335673.755253629] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335673.805340103] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335675.755407338] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335675.805425757] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335677.755806537] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335677.805073365] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335679.755895950] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335679.806045090] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335681.756007846] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335681.805573725] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335683.755004247] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335683.805210760] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335685.755680001] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335685.805743046] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335687.755441994] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335687.805060122] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335689.755144957] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335689.805275061] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335691.755235792] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335691.805317554] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335693.755226877] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335693.805771167] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335695.754460370] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335695.805081522] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335697.754375400] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335697.804913616] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335699.754574580] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335699.804484560] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335701.754692028] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335701.804558617] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335703.754892042] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335703.804642010] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335705.754509367] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335705.804847716] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335707.754750429] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335707.808047241] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335709.754513062] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335709.805034620] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335711.755218614] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335711.804547411] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335713.755092059] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335713.804603614] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335715.754865411] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335715.804568715] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335717.754593385] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335717.804583257] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335719.754634516] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335719.804909355] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335721.754600722] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335721.804917461] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335723.754407502] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335723.804818947] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335725.755360464] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335725.805510587] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335727.756062024] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335727.805496241] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335729.755417806] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335729.805956613] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335731.755703212] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335731.805462568] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335733.755556830] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335733.805854823] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335735.755855150] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335735.805245124] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335737.755761461] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335737.805650160] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335739.755407580] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335739.805967052] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335741.756148570] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335741.805491632] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335743.755823050] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335743.805605343] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335745.755402592] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335745.805596514] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335747.755448267] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335747.805777952] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335749.755546412] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335749.805381928] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335751.755323195] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335751.805400392] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335753.755357300] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335753.805179115] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335755.755076355] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335755.805412798] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335757.755142652] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335757.805284603] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335759.755133738] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335759.805347578] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335761.755121945] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335761.805410504] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335763.755035578] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335763.805313604] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335765.755068809] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335765.805303666] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335767.755258175] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335767.805486336] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335769.755322893] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335769.805054024] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335771.755174870] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335771.805729107] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335773.755291569] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335773.805086320] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335775.754932188] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335775.805377619] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335777.755364929] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335777.805028739] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335779.755090563] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335779.805419510] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335781.755051888] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335781.804981526] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335783.755776755] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335783.805223913] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335785.755414370] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335785.805212194] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335787.755655234] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335787.805572629] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335789.755270708] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335789.805310116] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335791.755957274] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335791.805539691] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335793.755372587] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335793.805307627] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335795.759527706] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335795.805755014] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335797.755505607] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335797.805836830] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335799.755978098] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335799.805822347] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335801.755344555] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335801.805854815] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335803.755337766] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335803.805355062] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335805.755445138] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335805.805728529] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335807.755689657] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335807.805449195] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335809.756069096] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335809.805491124] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335811.755806259] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335811.806027680] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335813.755366815] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335813.805142747] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335815.755726087] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335815.805845777] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335817.756080310] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335817.805900994] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335819.756094893] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335819.805650076] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335821.756354214] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335821.805883601] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335823.756071037] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335823.805956926] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335825.755586400] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335825.806267055] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335827.755695793] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335827.805936037] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335829.756367296] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335829.805943138] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335831.755616128] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335831.806254276] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335833.755707205] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335833.806400368] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335835.756337593] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335835.805859360] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335837.755819281] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335837.805603946] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335839.756437511] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335839.805712249] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335841.755608390] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335841.805880636] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335843.756152143] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335843.806002553] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335845.755653336] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335845.805696170] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335847.756349962] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335847.805499443] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335849.756634769] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335849.805777419] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335851.756634303] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335851.806098886] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335853.755891640] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335853.805675391] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335855.755551934] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335855.805946323] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335857.755786705] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335857.805857354] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335859.756124235] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335859.805617370] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335861.755642059] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335861.806300411] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335863.755751582] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335863.805656401] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335865.755689988] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335865.805688245] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335867.755656422] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335867.805749686] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335869.756243966] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335869.805631991] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335871.755604284] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335871.805912361] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335873.756033952] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335873.806551964] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335875.754765420] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335875.805049754] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335877.754985323] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335877.804852121] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335879.755349691] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335879.805510282] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335881.754745716] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335881.805593737] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335883.755029495] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335883.805259608] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335885.755279153] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335885.805239113] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335887.754891875] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335887.805166992] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335889.755565314] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335889.805098982] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335891.757515355] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335891.805007586] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335893.754897423] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335893.805070419] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335895.755416903] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335895.805261711] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335897.754887478] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335897.805356743] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335899.755020425] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335899.804781485] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335901.755023055] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335901.805285029] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335903.754857973] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335903.805040394] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335905.754290350] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335905.804231034] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335907.755010224] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335907.804325180] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335909.754705628] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335909.804860944] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335911.754546012] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335911.804899007] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335913.754808886] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335913.804546903] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335915.754584083] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335915.804809883] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335917.754445878] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335917.804558061] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335919.754403221] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335919.804315173] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335921.754932654] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335921.804444036] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335923.754123800] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335923.804439979] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335925.755089770] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335925.804317639] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335927.755091898] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335927.804265416] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335929.754382046] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335929.804674950] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335931.754341715] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335931.804144419] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335933.754293183] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335933.804448243] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335935.754584277] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335935.805934583] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335937.755036313] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335937.804978930] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335939.754981000] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335939.804997632] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335941.755117909] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335941.805335267] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335943.755085195] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335943.805339767] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335945.755578184] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335945.805080725] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335947.754826488] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335947.805427620] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335949.755041450] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335949.804889580] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335951.755578925] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335951.804876922] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-8] [WARN] [1783335953.755082118] [leo2.global_costmap.global_costmap]: Can't update static costmap layer, no map received
+[planner_server-2] [WARN] [1783335953.805096777] [leo1.global_costmap.global_costmap]: Can't update static costmap layer, no map received

@@ -1,0 +1,130 @@
+[INFO] [launch]: All log files can be found below /root/.ros/log/2026-07-13-21-51-41-160770-18f95b0ea3a3-988
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [frontier_explorer-1]: process started with pid [1092]
+[INFO] [mock_aruco_detector-2]: process started with pid [1094]
+[INFO] [frontier_explorer-3]: process started with pid [1096]
+[INFO] [mock_aruco_detector-4]: process started with pid [1098]
+[mock_aruco_detector-2] [INFO] [1783979504.157642466] [leo1.mock_aruco_detector]: Mock detector: 8 ground-truth markers
+[mock_aruco_detector-4] [INFO] [1783979504.194699784] [leo2.mock_aruco_detector]: Mock detector: 8 ground-truth markers
+[mock_aruco_detector-2] [INFO] [1783979504.310102084] [leo1.mock_aruco_detector]: Markers shifted into leo1/map (common->own offset (0.00, 0.00))
+[frontier_explorer-1] [INFO] [1783979504.482086951] [leo1.frontier_explorer]: Frontier explorer up for "leo1" (base_frame=leo1/base_link); coordination=independent, peers=['leo2']
+[frontier_explorer-3] [INFO] [1783979504.483026165] [leo2.frontier_explorer]: Frontier explorer up for "leo2" (base_frame=leo2/base_link); coordination=independent, peers=['leo1']
+[frontier_explorer-3] [WARN] [1783979504.700070990] [leo2.frontier_explorer]: Watchdog: work exists but no goal active and robot stationary - clearing costmaps
+[frontier_explorer-1] [WARN] [1783979504.700953829] [leo1.frontier_explorer]: Watchdog: work exists but no goal active and robot stationary - clearing costmaps
+[mock_aruco_detector-4] [INFO] [1783979504.823306325] [leo2.mock_aruco_detector]: Markers shifted into leo2/map (common->own offset (0.00, 0.00))
+[frontier_explorer-1] [INFO] [1783979509.963787438] [leo1.frontier_explorer]: Initial pose recorded: (1.10, -0.00)
+[frontier_explorer-3] [INFO] [1783979509.965052167] [leo2.frontier_explorer]: Initial pose recorded: (3.06, -0.00)
+[frontier_explorer-3] [INFO] [1783979510.099821988] [leo2.frontier_explorer]: New frontier goal: (-1.73, 0.00)
+[frontier_explorer-1] [INFO] [1783979510.135169500] [leo1.frontier_explorer]: New frontier goal: (-1.74, 0.03)
+[frontier_explorer-1] [INFO] [1783979527.869683010] [leo1.frontier_explorer]: New frontier goal: (-4.14, 0.03)
+[frontier_explorer-3] [INFO] [1783979536.341588733] [leo2.frontier_explorer]: New frontier goal: (-6.03, 0.00)
+[frontier_explorer-1] [INFO] [1783979542.417173827] [leo1.frontier_explorer]: New frontier goal: (-7.09, 0.39)
+[frontier_explorer-3] [INFO] [1783979550.840001425] [leo2.frontier_explorer]: New frontier goal: (-8.19, 0.25)
+[frontier_explorer-1] [INFO] [1783979559.783668720] [leo1.frontier_explorer]: New frontier goal: (8.43, 0.04)
+[frontier_explorer-3] [INFO] [1783979564.107343604] [leo2.frontier_explorer]: New frontier goal: (9.60, 0.11)
+[frontier_explorer-3] [INFO] [1783979630.059509111] [leo2.frontier_explorer]: New frontier goal: (-0.27, 3.36)
+[frontier_explorer-1] [INFO] [1783979630.112013967] [leo1.frontier_explorer]: New frontier goal: (0.03, 4.43)
+[frontier_explorer-3] [INFO] [1783979668.318580668] [leo2.frontier_explorer]: New frontier goal: (-0.17, 4.96)
+[frontier_explorer-3] [WARN] [1783979685.846740404] [leo2.frontier_explorer]: Frontier goal done but frontier survived at (0.13, 5.41) - striking it
+[frontier_explorer-3] [INFO] [1783979685.915568189] [leo2.frontier_explorer]: New frontier goal: (0.43, 6.31)
+[frontier_explorer-1] [INFO] [1783979690.700805058] [leo1.frontier_explorer]: New frontier goal: (-2.77, 6.13)
+[frontier_explorer-3] [INFO] [1783979696.506251627] [leo2.frontier_explorer]: New frontier goal: (-6.47, -3.24)
+[frontier_explorer-1] [WARN] [1783979696.789730561] [leo1.frontier_explorer]: Frontier goal done but frontier survived at (-2.77, 6.13) - striking it
+[frontier_explorer-1] [INFO] [1783979696.878642843] [leo1.frontier_explorer]: New frontier goal: (2.53, 6.33)
+[frontier_explorer-1] [INFO] [1783979718.746182510] [leo1.frontier_explorer]: New frontier goal: (-6.72, -3.17)
+[frontier_explorer-3] [INFO] [1783979770.305655819] [leo2.frontier_explorer]: New frontier goal: (-3.60, -5.37)
+[frontier_explorer-1] [INFO] [1783979788.005288127] [leo1.frontier_explorer]: New frontier goal: (-10.02, -4.32)
+[frontier_explorer-3] [WARN] [1783979793.601666338] [leo2.frontier_explorer]: Frontier goal done but frontier survived at (-3.10, -5.67) - striking it
+[frontier_explorer-3] [INFO] [1783979793.669980244] [leo2.frontier_explorer]: New frontier goal: (-1.05, -4.82)
+[frontier_explorer-1] [INFO] [1783979804.331032362] [leo1.frontier_explorer]: Item candidate id=6 at (-11.87, -5.00) - queued for verification
+[frontier_explorer-3] [INFO] [1783979806.824073058] [leo2.frontier_explorer]: New frontier goal: (-9.38, -6.49)
+[frontier_explorer-1] [INFO] [1783979807.105979139] [leo1.frontier_explorer]: New frontier goal: (-3.07, -4.67)
+[frontier_explorer-1] [INFO] [1783979807.709711280] [leo1.frontier_explorer]: Item id=6 CONFIRMED at (-11.87, -5.00) after 2 views
+[frontier_explorer-3] [WARN] [1783979811.025004021] [leo2.frontier_explorer]: Frontier goal done but frontier survived at (-9.38, -6.49) - striking it
+[frontier_explorer-3] [INFO] [1783979811.093932585] [leo2.frontier_explorer]: New frontier goal: (-9.63, 2.91)
+[frontier_explorer-1] [INFO] [1783979839.418948512] [leo1.frontier_explorer]: No path to frontier goal (-1.62, -6.82), skipping
+[frontier_explorer-1] [INFO] [1783979843.869534063] [leo1.frontier_explorer]: New frontier goal: (6.93, -3.22)
+[frontier_explorer-3] [INFO] [1783979847.981635778] [leo2.frontier_explorer]: New frontier goal: (-10.33, 3.81)
+[frontier_explorer-1] [INFO] [1783979848.383208456] [leo1.frontier_explorer]: Item candidate id=8 at (-3.01, -1.29) - queued for verification
+[frontier_explorer-1] [INFO] [1783979849.526752997] [leo1.frontier_explorer]: Item id=8 CONFIRMED at (-3.01, -1.30) after 2 views
+[frontier_explorer-3] [WARN] [1783979876.132347568] [leo2.frontier_explorer]: Frontier goal done but frontier survived at (-10.68, 4.16) - striking it
+[frontier_explorer-3] [WARN] [1783979876.182952871] [leo2.frontier_explorer]: Frontier goal done but frontier survived at (-10.53, 3.96) - striking it
+[frontier_explorer-3] [INFO] [1783979876.283266542] [leo2.frontier_explorer]: New frontier goal: (-11.13, 5.71)
+[frontier_explorer-1] [WARN] [1783979886.533258507] [leo1.frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (6.93, -3.22)
+[frontier_explorer-3] [INFO] [1783979890.881547210] [leo2.frontier_explorer]: New frontier goal: (-5.98, 4.56)
+[frontier_explorer-3] [INFO] [1783979918.709411422] [leo2.frontier_explorer]: New frontier goal: (-6.53, 5.06)
+[frontier_explorer-3] [INFO] [1783979931.736259710] [leo2.frontier_explorer]: New frontier goal: (-6.18, 5.81)
+[frontier_explorer-1] [INFO] [1783979936.302889160] [leo1.frontier_explorer]: New frontier goal: (9.73, -4.28)
+[frontier_explorer-3] [INFO] [1783979944.896141853] [leo2.frontier_explorer]: New frontier goal: (-9.38, -6.74)
+[frontier_explorer-1] [INFO] [1783979959.887172187] [leo1.frontier_explorer]: New frontier goal: (2.43, -4.84)
+[frontier_explorer-1] [WARN] [1783979995.204423356] [leo1.frontier_explorer]: frontier goal failed (status 6), blacklisted (2.43, -4.84)
+[frontier_explorer-3] [INFO] [1783979996.529979040] [leo2.frontier_explorer]: No path to frontier goal (-7.97, -6.84), skipping
+[frontier_explorer-1] [INFO] [1783979996.566238123] [leo1.frontier_explorer]: New frontier goal: (1.63, -5.64)
+[frontier_explorer-3] [INFO] [1783980005.296139352] [leo2.frontier_explorer]: New frontier goal: (-11.12, -7.34)
+[frontier_explorer-1] [INFO] [1783980009.816314401] [leo1.frontier_explorer]: New frontier goal: (1.38, -6.69)
+[frontier_explorer-3] [INFO] [1783980020.264770791] [leo2.frontier_explorer]: New frontier goal: (-6.92, -5.59)
+[frontier_explorer-1] [INFO] [1783980028.956346200] [leo1.frontier_explorer]: New frontier goal: (-10.32, 3.66)
+[frontier_explorer-3] [INFO] [1783980037.691346277] [leo2.frontier_explorer]: New frontier goal: (8.13, -1.99)
+[frontier_explorer-3] [WARN] [1783980046.219780972] [leo2.frontier_explorer]: frontier goal failed (status 6), blacklisted (8.13, -1.99)
+[frontier_explorer-3] [INFO] [1783980047.967864734] [leo2.frontier_explorer]: New frontier goal: (-3.72, 1.41)
+[frontier_explorer-1] [WARN] [1783980072.009022901] [leo1.frontier_explorer]: frontier goal failed (status 6), blacklisted (-10.32, 3.66)
+[frontier_explorer-1] [INFO] [1783980076.058851317] [leo1.frontier_explorer]: No path to frontier goal (9.88, 3.00), skipping
+[frontier_explorer-1] [INFO] [1783980080.414822977] [leo1.frontier_explorer]: New frontier goal: (-7.52, -6.50)
+[frontier_explorer-3] [INFO] [1783980089.179948807] [leo2.frontier_explorer]: New frontier goal: (-4.41, 6.96)
+[frontier_explorer-1] [WARN] [1783980121.698822236] [leo1.frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (-7.52, -6.50)
+[frontier_explorer-3] [INFO] [1783980130.525094352] [leo2.frontier_explorer]: New frontier goal: (-9.01, 5.81)
+[frontier_explorer-3] [INFO] [1783980142.430862167] [leo2.frontier_explorer]: Item candidate id=3 at (-8.03, 7.88) - queued for verification
+[frontier_explorer-3] [INFO] [1783980144.742298335] [leo2.frontier_explorer]: Item id=3 CONFIRMED at (-8.01, 7.89) after 2 views
+[frontier_explorer-3] [INFO] [1783980158.314929649] [leo2.frontier_explorer]: New frontier goal: (8.24, -2.09)
+[frontier_explorer-1] [INFO] [1783980199.329836233] [leo1.frontier_explorer]: New frontier goal: (-10.48, 3.75)
+[frontier_explorer-3] [WARN] [1783980214.644280471] [leo2.frontier_explorer]: frontier goal failed (status 6), blacklisted (8.24, -2.09)
+[frontier_explorer-3] [INFO] [1783980218.606191986] [leo2.frontier_explorer]: New frontier goal: (7.94, 1.21)
+[frontier_explorer-1] [INFO] [1783980275.167465518] [leo1.frontier_explorer]: New frontier goal: (-6.49, 3.65)
+[frontier_explorer-1] [INFO] [1783980288.132050725] [leo1.frontier_explorer]: New frontier goal: (-5.34, 5.15)
+[frontier_explorer-3] [INFO] [1783980298.617489863] [leo2.frontier_explorer]: New frontier goal: (8.69, -2.89)
+[frontier_explorer-1] [INFO] [1783980307.299932674] [leo1.frontier_explorer]: New frontier goal: (10.56, 4.00)
+[frontier_explorer-3] [WARN] [1783980324.910826370] [leo2.frontier_explorer]: Frontier goal done but frontier survived at (8.24, -3.19) - striking it
+[frontier_explorer-3] [WARN] [1783980324.959588880] [leo2.frontier_explorer]: Frontier goal done but frontier survived at (8.69, -2.69) - striking it
+[frontier_explorer-3] [INFO] [1783980325.032523259] [leo2.frontier_explorer]: New frontier goal: (9.89, -4.54)
+[frontier_explorer-3] [INFO] [1783980340.054472124] [leo2.frontier_explorer]: New frontier goal: (4.34, -4.89)
+[frontier_explorer-1] [WARN] [1783980348.647555838] [leo1.frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (10.56, 4.00)
+[frontier_explorer-3] [INFO] [1783980357.714031383] [leo2.frontier_explorer]: New frontier goal: (3.34, -4.59)
+[frontier_explorer-3] [INFO] [1783980376.943859892] [leo2.frontier_explorer]: No path to frontier goal (0.99, -6.94), skipping
+[frontier_explorer-1] [WARN] [1783980377.950603282] [leo1.frontier_explorer]: frontier goal failed (status 6), blacklisted (10.56, 4.00)
+[frontier_explorer-1] [INFO] [1783980381.301886312] [leo1.frontier_explorer]: New frontier goal: (-9.90, 7.00)
+[frontier_explorer-3] [INFO] [1783980381.317554983] [leo2.frontier_explorer]: New frontier goal: (0.69, -5.14)
+[frontier_explorer-3] [INFO] [1783980396.260629638] [leo2.frontier_explorer]: New frontier goal: (0.49, -6.09)
+[frontier_explorer-3] [INFO] [1783980405.018303679] [leo2.frontier_explorer]: New frontier goal: (8.99, 1.76)
+[frontier_explorer-3] [INFO] [1783980437.480767761] [leo2.frontier_explorer]: New frontier goal: (9.44, 2.41)
+[frontier_explorer-1] [INFO] [1783980444.570879732] [leo1.frontier_explorer]: Item candidate id=3 at (-8.00, 7.88) - queued for verification
+[frontier_explorer-1] [INFO] [1783980446.337037538] [leo1.frontier_explorer]: New frontier goal: (-8.80, 5.95)
+[frontier_explorer-1] [INFO] [1783980446.843540490] [leo1.frontier_explorer]: Item id=3 CONFIRMED at (-8.01, 7.90) after 2 views
+[frontier_explorer-3] [INFO] [1783980450.742472373] [leo2.frontier_explorer]: New frontier goal: (10.09, 3.36)
+[frontier_explorer-1] [INFO] [1783980461.395219587] [leo1.frontier_explorer]: New frontier goal: (9.05, 2.80)
+[frontier_explorer-3] [INFO] [1783980465.788838481] [leo2.frontier_explorer]: New frontier goal: (10.54, 4.01)
+[frontier_explorer-3] [INFO] [1783980469.438384595] [leo2.frontier_explorer]: Item candidate id=5 at (11.89, 5.02) - queued for verification
+[frontier_explorer-3] [INFO] [1783980471.600745287] [leo2.frontier_explorer]: Item id=5 CONFIRMED at (11.88, 5.02) after 2 views
+[frontier_explorer-3] [INFO] [1783980479.061713090] [leo2.frontier_explorer]: New frontier goal: (5.54, 3.36)
+[frontier_explorer-3] [INFO] [1783980507.189598789] [leo2.frontier_explorer]: New frontier goal: (7.09, 6.31)
+[frontier_explorer-3] [INFO] [1783980530.722056277] [leo2.frontier_explorer]: New frontier goal: (8.44, 5.61)
+[frontier_explorer-3] [INFO] [1783980549.907361501] [leo2.frontier_explorer]: Frontiers done - SWEEPING for camera coverage (45% of walls observed)
+[frontier_explorer-3] [INFO] [1783980554.575300001] [leo2.frontier_explorer]: Sweep selection: gain=54 distance=1.9m turn=1.10rad utility=14.50
+[frontier_explorer-3] [INFO] [1783980554.713003111] [leo2.frontier_explorer]: New sweep goal: (10.24, 6.06)
+[frontier_explorer-1] [INFO] [1783980567.587695855] [leo1.frontier_explorer]: New frontier goal: (9.95, 4.60)
+[frontier_explorer-3] [INFO] [1783980572.013883880] [leo2.frontier_explorer]: Sweep selection: gain=20 distance=0.2m turn=0.40rad utility=13.37
+[frontier_explorer-3] [INFO] [1783980572.123871936] [leo2.frontier_explorer]: New sweep goal: (10.14, 6.16)
+[frontier_explorer-1] [INFO] [1783980577.405452416] [leo1.frontier_explorer]: Item candidate id=5 at (11.86, 5.00) - queued for verification
+[frontier_explorer-3] [INFO] [1783980582.593925819] [leo2.frontier_explorer]: Sweep selection: gain=54 distance=3.9m turn=1.60rad utility=8.89
+[frontier_explorer-3] [INFO] [1783980582.709181179] [leo2.frontier_explorer]: New sweep goal: (6.29, 7.21)
+[frontier_explorer-1] [INFO] [1783980586.992292406] [leo1.frontier_explorer]: Verifying item id=5: viewpoint (10.04, 3.95)
+[frontier_explorer-1] [INFO] [1783980587.070889376] [leo1.frontier_explorer]: New verify goal: (10.04, 3.95)
+[frontier_explorer-1] [INFO] [1783980589.123351388] [leo1.frontier_explorer]: Item id=5 CONFIRMED at (11.87, 5.01) after 2 views
+[frontier_explorer-1] [INFO] [1783980591.557078004] [leo1.frontier_explorer]: New frontier goal: (5.85, 3.85)
+[frontier_explorer-3] [INFO] [1783980615.096200509] [leo2.frontier_explorer]: Sweep selection: gain=37 distance=1.6m turn=2.28rad utility=8.67
+[frontier_explorer-3] [INFO] [1783980615.196928711] [leo2.frontier_explorer]: New sweep goal: (6.54, 5.51)
+[frontier_explorer-1] [INFO] [1783980619.666322866] [leo1.frontier_explorer]: New frontier goal: (6.90, 6.50)
+[frontier_explorer-3] [INFO] [1783980632.664032619] [leo2.frontier_explorer]: Sweep selection: gain=48 distance=2.5m turn=1.20rad utility=10.89
+[frontier_explorer-3] [INFO] [1783980632.834552701] [leo2.frontier_explorer]: New sweep goal: (6.09, 3.27)
+[frontier_explorer-1] [WARN] [1783980687.022583350] [leo1.frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (6.90, 6.50)
+[frontier_explorer-3] [WARN] [1783980691.558792154] [leo2.frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (6.09, 3.27)
+[frontier_explorer-1] [INFO] [1783980696.518164487] [leo1.frontier_explorer]: New frontier goal: (8.35, 5.55)

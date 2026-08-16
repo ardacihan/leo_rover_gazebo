@@ -1,0 +1,195 @@
+[INFO] [launch]: All log files can be found below /root/.ros/log/2026-07-05-17-40-47-008365-7ce6a1a5116a-758
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [frontier_explorer-1]: process started with pid [864]
+[INFO] [mock_aruco_detector-2]: process started with pid [866]
+[mock_aruco_detector-2] [INFO] [1783273249.814204427] [mock_aruco_detector]: Mock detector: 4 ground-truth markers
+[frontier_explorer-1] [INFO] [1783273250.197472422] [frontier_explorer]: Frontier explorer up for "leo1" (base_frame=leo1/base_link)
+[frontier_explorer-1] [WARN] [1783273250.432865096] [frontier_explorer]: Watchdog: work exists but no goal active and robot stationary - clearing costmaps
+[frontier_explorer-1] [INFO] [1783273250.563461850] [frontier_explorer]: Item candidate id=3 at (1.87, -0.01) - queued for verification
+[frontier_explorer-1] [INFO] [1783273252.062246651] [frontier_explorer]: Initial pose recorded: (1.20, -0.00)
+[frontier_explorer-1] [INFO] [1783273252.103923616] [frontier_explorer]: Verifying item id=3: viewpoint (1.37, -0.01)
+[frontier_explorer-1] [INFO] [1783273252.148859936] [frontier_explorer]: New verify goal: (1.37, -0.01)
+[frontier_explorer-1] [INFO] [1783273256.120458459] [frontier_explorer]: Verifying item id=3: viewpoint (1.37, -0.01)
+[frontier_explorer-1] [INFO] [1783273256.161973644] [frontier_explorer]: Item id=3 CONFIRMED at (1.89, 0.01) after 2 views
+[frontier_explorer-1] [INFO] [1783273256.203680322] [frontier_explorer]: New verify goal: (1.37, -0.01)
+[frontier_explorer-1] [INFO] [1783273260.322452033] [frontier_explorer]: New frontier goal: (-2.55, -4.12)
+[frontier_explorer-1] [INFO] [1783273284.528907238] [frontier_explorer]: New frontier goal: (-5.50, -4.02)
+[frontier_explorer-1] [INFO] [1783273296.599292319] [frontier_explorer]: New frontier goal: (4.64, -5.88)
+[frontier_explorer-1] [INFO] [1783273308.670230669] [frontier_explorer]: New frontier goal: (-5.78, 1.22)
+[frontier_explorer-1] [INFO] [1783273328.845900306] [frontier_explorer]: New frontier goal: (-5.74, 2.32)
+[frontier_explorer-1] [INFO] [1783273340.973662838] [frontier_explorer]: New frontier goal: (4.75, 4.87)
+[frontier_explorer-1] [INFO] [1783273368.763032372] [frontier_explorer]: Item candidate id=1 at (0.01, 6.89) - queued for verification
+[frontier_explorer-1] [INFO] [1783273371.317567610] [frontier_explorer]: Item id=1 CONFIRMED at (0.01, 6.87) after 2 views
+[frontier_explorer-1] [INFO] [1783273373.350656332] [frontier_explorer]: New frontier goal: (5.39, 2.87)
+[frontier_explorer-1] [INFO] [1783273385.564549057] [frontier_explorer]: New frontier goal: (5.74, 6.23)
+[frontier_explorer-1] [INFO] [1783273397.805657831] [frontier_explorer]: New frontier goal: (6.29, -0.86)
+[frontier_explorer-1] [INFO] [1783273409.933306883] [frontier_explorer]: New frontier goal: (6.04, -1.66)
+[frontier_explorer-1] [INFO] [1783273422.061263968] [frontier_explorer]: New frontier goal: (6.09, -3.81)
+[frontier_explorer-1] [INFO] [1783273428.076017390] [frontier_explorer]: Item candidate id=4 at (6.85, 0.01) - queued for verification
+[frontier_explorer-1] [INFO] [1783273430.596630668] [frontier_explorer]: Item id=4 CONFIRMED at (6.88, 0.01) after 2 views
+[frontier_explorer-1] [INFO] [1783273434.136110698] [frontier_explorer]: New frontier goal: (2.84, -0.71)
+[frontier_explorer-1] [INFO] [1783273450.343297143] [frontier_explorer]: New frontier goal: (2.69, 1.29)
+[frontier_explorer-1] [WARN] [1783273486.783666961] [frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (2.69, 1.29)
+[frontier_explorer-1] [INFO] [1783273519.322906363] [frontier_explorer]: New frontier goal: (5.79, 4.59)
+[frontier_explorer-1] [INFO] [1783273568.136712370] [frontier_explorer]: New frontier goal: (4.64, -5.06)
+[frontier_explorer-1] [INFO] [1783273629.819956903] [frontier_explorer]: Item candidate id=2 at (2.98, -6.85) - queued for verification
+[frontier_explorer-1] [INFO] [1783273631.816586232] [frontier_explorer]: Item id=2 CONFIRMED at (3.01, -6.88) after 2 views
+[frontier_explorer-1] [INFO] [1783273632.846317628] [frontier_explorer]: New frontier goal: (-3.26, -5.85)
+[frontier_explorer-1] [INFO] [1783273661.411214942] [frontier_explorer]: New frontier goal: (-4.39, -5.69)
+[frontier_explorer-1] [INFO] [1783273689.737725991] [frontier_explorer]: New frontier goal: (-3.28, 5.47)
+[frontier_explorer-1] [WARN] [1783273806.969122481] [frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (-3.28, 5.47)
+[frontier_explorer-1] [WARN] [1783273843.420368315] [frontier_explorer]: Still no progress after costmap clear, blacklisting goal (-3.28, 5.47)
+[frontier_explorer-1] [INFO] [1783273847.480300368] [frontier_explorer]: Frontiers done - SWEEPING for camera coverage (37% of walls observed)
+[frontier_explorer-1] [INFO] [1783273850.011448452] [frontier_explorer]: Sweep selection: gain=50 distance=1.2m turn=3.13rad utility=10.96
+[frontier_explorer-1] [INFO] [1783273850.101145843] [frontier_explorer]: New sweep goal: (-4.68, 5.38)
+[frontier_explorer-1] [INFO] [1783273894.137199763] [frontier_explorer]: Sweep selection: gain=45 distance=3.6m turn=1.33rad utility=8.06
+[frontier_explorer-1] [INFO] [1783273894.199815881] [frontier_explorer]: New sweep goal: (-5.13, 2.03)
+[frontier_explorer-1] [INFO] [1783273922.496354223] [frontier_explorer]: Sweep selection: gain=43 distance=1.5m turn=1.94rad utility=10.84
+[frontier_explorer-1] [INFO] [1783273922.553800714] [frontier_explorer]: New sweep goal: (-3.63, 1.68)
+[frontier_explorer-1] [INFO] [1783273950.780194605] [frontier_explorer]: Sweep selection: gain=39 distance=3.6m turn=0.70rad utility=7.59
+[frontier_explorer-1] [INFO] [1783273950.869515894] [frontier_explorer]: New sweep goal: (-0.28, 1.13)
+[frontier_explorer-1] [WARN] [1783274017.465807785] [frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (-0.28, 1.13)
+[frontier_explorer-1] [WARN] [1783274053.774584428] [frontier_explorer]: Still no progress after costmap clear, blacklisting goal (-0.28, 1.13)
+[frontier_explorer-1] [INFO] [1783274060.216168225] [frontier_explorer]: Sweep selection: gain=38 distance=1.7m turn=1.62rad utility=9.80
+[frontier_explorer-1] [INFO] [1783274060.289144331] [frontier_explorer]: New sweep goal: (0.02, 2.58)
+[frontier_explorer-1] [INFO] [1783274088.422311135] [frontier_explorer]: Sweep selection: gain=29 distance=1.3m turn=1.13rad utility=9.28
+[frontier_explorer-1] [INFO] [1783274088.488196135] [frontier_explorer]: New sweep goal: (-0.78, 3.23)
+[frontier_explorer-1] [WARN] [1783274126.842312137] [frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (-0.78, 3.23)
+[frontier_explorer-1] [WARN] [1783274163.280684437] [frontier_explorer]: Still no progress after costmap clear, blacklisting goal (-0.78, 3.23)
+[frontier_explorer-1] [WARN] [1783274167.333009793] [frontier_explorer]: Sweep goal done but target (-0.78, 2.23) still unobserved - striking it
+[frontier_explorer-1] [INFO] [1783274169.389847209] [frontier_explorer]: Sweep selection: gain=36 distance=2.5m turn=1.92rad utility=7.32
+[frontier_explorer-1] [INFO] [1783274169.474930720] [frontier_explorer]: New sweep goal: (0.37, 5.37)
+[frontier_explorer-1] [INFO] [1783274193.577151126] [frontier_explorer]: Sweep selection: gain=22 distance=0.4m turn=1.41rad utility=9.14
+[frontier_explorer-1] [INFO] [1783274193.646218748] [frontier_explorer]: New sweep goal: (0.02, 5.43)
+[frontier_explorer-1] [INFO] [1783274209.718926266] [frontier_explorer]: Sweep selection: gain=49 distance=3.4m turn=3.30rad utility=7.13
+[frontier_explorer-1] [INFO] [1783274209.796027409] [frontier_explorer]: New sweep goal: (3.42, 4.33)
+[frontier_explorer-1] [WARN] [1783274280.586242253] [frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (3.42, 4.33)
+[frontier_explorer-1] [WARN] [1783274317.008049539] [frontier_explorer]: Still no progress after costmap clear, blacklisting goal (3.42, 4.33)
+[frontier_explorer-1] [WARN] [1783274321.041218433] [frontier_explorer]: Sweep goal done but target (3.42, 2.13) still unobserved - striking it
+[frontier_explorer-1] [INFO] [1783274322.854061852] [frontier_explorer]: Sweep selection: gain=26 distance=0.5m turn=2.18rad utility=8.25
+[frontier_explorer-1] [INFO] [1783274322.946603455] [frontier_explorer]: New sweep goal: (3.77, 4.03)
+[frontier_explorer-1] [WARN] [1783274365.480368345] [frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (3.77, 4.03)
+[frontier_explorer-1] [WARN] [1783274401.816915397] [frontier_explorer]: Still no progress after costmap clear, blacklisting goal (3.77, 4.03)
+[frontier_explorer-1] [WARN] [1783274403.834987562] [frontier_explorer]: Watchdog: work exists but no goal active and robot stationary - clearing costmaps
+[frontier_explorer-1] [WARN] [1783274405.856813176] [frontier_explorer]: Sweep goal done but target (2.67, 2.13) still unobserved - striking it
+[frontier_explorer-1] [INFO] [1783274407.554034443] [frontier_explorer]: Sweep selection: gain=51 distance=5.6m turn=0.40rad utility=7.40
+[frontier_explorer-1] [INFO] [1783274407.631227925] [frontier_explorer]: New sweep goal: (5.36, -1.17)
+[frontier_explorer-1] [WARN] [1783274466.601709611] [frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (5.36, -1.17)
+[frontier_explorer-1] [WARN] [1783274502.890490521] [frontier_explorer]: Still no progress after costmap clear, blacklisting goal (5.36, -1.17)
+[frontier_explorer-1] [WARN] [1783274504.899026915] [frontier_explorer]: Watchdog: work exists but no goal active and robot stationary - clearing costmaps
+[frontier_explorer-1] [INFO] [1783274508.448192874] [frontier_explorer]: Sweep selection: gain=50 distance=1.6m turn=1.45rad utility=13.54
+[frontier_explorer-1] [INFO] [1783274508.523932450] [frontier_explorer]: New sweep goal: (4.35, -2.09)
+[frontier_explorer-1] [INFO] [1783274532.855313834] [frontier_explorer]: Sweep selection: gain=46 distance=2.2m turn=1.98rad utility=9.83
+[frontier_explorer-1] [INFO] [1783274532.955080265] [frontier_explorer]: New sweep goal: (5.05, -3.99)
+[frontier_explorer-1] [INFO] [1783274565.528188702] [frontier_explorer]: Sweep selection: gain=39 distance=1.8m turn=1.61rad utility=9.63
+[frontier_explorer-1] [INFO] [1783274565.599192643] [frontier_explorer]: New sweep goal: (4.11, -5.31)
+[frontier_explorer-1] [WARN] [1783274611.930119796] [frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (4.11, -5.31)
+[frontier_explorer-1] [INFO] [1783274621.930171231] [frontier_explorer]: Sweep selection: gain=49 distance=3.0m turn=1.30rad utility=9.85
+[frontier_explorer-1] [INFO] [1783274622.023694322] [frontier_explorer]: New sweep goal: (1.20, -5.30)
+[frontier_explorer-1] [INFO] [1783274650.390189068] [frontier_explorer]: Sweep selection: gain=35 distance=0.7m turn=1.11rad utility=13.86
+[frontier_explorer-1] [INFO] [1783274650.456624912] [frontier_explorer]: New sweep goal: (0.95, -5.71)
+[frontier_explorer-1] [WARN] [1783274684.736190910] [frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (0.95, -5.71)
+[frontier_explorer-1] [WARN] [1783274721.118484346] [frontier_explorer]: Still no progress after costmap clear, blacklisting goal (0.95, -5.71)
+[frontier_explorer-1] [WARN] [1783274725.151211859] [frontier_explorer]: Sweep goal done but target (1.95, -5.71) still unobserved - striking it
+[frontier_explorer-1] [INFO] [1783274727.004026325] [frontier_explorer]: Sweep selection: gain=24 distance=1.7m turn=1.58rad utility=6.11
+[frontier_explorer-1] [INFO] [1783274727.065360315] [frontier_explorer]: New sweep goal: (-0.50, -5.99)
+[frontier_explorer-1] [INFO] [1783274751.295859281] [frontier_explorer]: Sweep selection: gain=47 distance=5.4m turn=1.26rad utility=6.40
+[frontier_explorer-1] [INFO] [1783274751.383390344] [frontier_explorer]: New sweep goal: (-5.29, -3.81)
+[frontier_explorer-1] [INFO] [1783274787.639764349] [frontier_explorer]: Sweep selection: gain=38 distance=1.8m turn=1.62rad utility=9.36
+[frontier_explorer-1] [INFO] [1783274787.732131171] [frontier_explorer]: New sweep goal: (-5.29, -2.01)
+[frontier_explorer-1] [INFO] [1783274815.774691268] [frontier_explorer]: Sweep selection: gain=28 distance=2.1m turn=2.48rad utility=5.68
+[frontier_explorer-1] [INFO] [1783274815.841829997] [frontier_explorer]: New sweep goal: (-3.25, -1.66)
+[frontier_explorer-1] [INFO] [1783274852.348088183] [frontier_explorer]: Sweep selection: gain=38 distance=4.5m turn=1.56rad utility=5.72
+[frontier_explorer-1] [INFO] [1783274852.416788910] [frontier_explorer]: New sweep goal: (0.05, -4.61)
+[frontier_explorer-1] [INFO] [1783274884.702490102] [frontier_explorer]: Sweep selection: gain=26 distance=1.7m turn=1.59rad utility=6.63
+[frontier_explorer-1] [INFO] [1783274884.774111619] [frontier_explorer]: New sweep goal: (1.09, -3.26)
+[frontier_explorer-1] [INFO] [1783274905.211706756] [frontier_explorer]: Sweep selection: gain=23 distance=2.1m turn=0.68rad utility=6.38
+[frontier_explorer-1] [INFO] [1783274905.276653599] [frontier_explorer]: New sweep goal: (2.65, -2.26)
+[frontier_explorer-1] [INFO] [1783274933.705337501] [frontier_explorer]: Sweep selection: gain=24 distance=2.6m turn=1.67rad utility=4.95
+[frontier_explorer-1] [INFO] [1783274933.801094694] [frontier_explorer]: New sweep goal: (0.68, -0.89)
+[frontier_explorer-1] [WARN] [1783274968.978201494] [frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (0.68, -0.89)
+[frontier_explorer-1] [WARN] [1783275026.755100789] [frontier_explorer]: Still no progress after costmap clear, blacklisting goal (0.68, -0.89)
+[frontier_explorer-1] [INFO] [1783275032.399543631] [frontier_explorer]: Sweep selection: gain=39 distance=4.6m turn=1.81rad utility=5.61
+[frontier_explorer-1] [INFO] [1783275032.508304980] [frontier_explorer]: New sweep goal: (-0.81, 3.21)
+[frontier_explorer-1] [WARN] [1783275083.954055128] [frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (-0.81, 3.21)
+[frontier_explorer-1] [INFO] [1783275089.343123084] [frontier_explorer]: Sweep selection: gain=33 distance=4.0m turn=1.43rad utility=5.40
+[frontier_explorer-1] [INFO] [1783275089.433516251] [frontier_explorer]: New sweep goal: (-4.71, 3.11)
+[frontier_explorer-1] [INFO] [1783275154.083090163] [frontier_explorer]: Sweep selection: gain=22 distance=1.4m turn=1.80rad utility=5.86
+[frontier_explorer-1] [INFO] [1783275154.150839598] [frontier_explorer]: New sweep goal: (-4.61, 4.71)
+[frontier_explorer-1] [INFO] [1783275178.218409612] [frontier_explorer]: Sweep selection: gain=19 distance=0.8m turn=0.79rad utility=7.86
+[frontier_explorer-1] [INFO] [1783275178.284447454] [frontier_explorer]: New sweep goal: (-5.00, 5.21)
+[frontier_explorer-1] [INFO] [1783275186.449201975] [frontier_explorer]: Sweep selection: gain=12 distance=0.4m turn=1.29rad utility=5.17
+[frontier_explorer-1] [INFO] [1783275186.550151285] [frontier_explorer]: New sweep goal: (-5.11, 5.26)
+[frontier_explorer-1] [WARN] [1783275221.709396259] [frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (-5.11, 5.26)
+[frontier_explorer-1] [WARN] [1783275258.039931440] [frontier_explorer]: Still no progress after costmap clear, blacklisting goal (-5.11, 5.26)
+[frontier_explorer-1] [WARN] [1783275262.069590651] [frontier_explorer]: Sweep goal done but target (-3.31, 5.26) still unobserved - striking it
+[frontier_explorer-1] [INFO] [1783275263.080836507] [frontier_explorer]: Sweep selection: gain=27 distance=7.1m turn=2.50rad utility=2.72
+[frontier_explorer-1] [INFO] [1783275263.160348592] [frontier_explorer]: New sweep goal: (1.94, 3.38)
+[frontier_explorer-1] [INFO] [1783275311.875114293] [frontier_explorer]: Sweep selection: gain=29 distance=5.1m turn=1.04rad utility=4.24
+[frontier_explorer-1] [INFO] [1783275311.958090723] [frontier_explorer]: New sweep goal: (5.99, 0.75)
+[frontier_explorer-1] [INFO] [1783275331.496953209] [frontier_explorer]: New frontiers - back to EXPLORING
+[frontier_explorer-1] [WARN] [1783275368.112292825] [frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (5.99, 0.75)
+[frontier_explorer-1] [WARN] [1783275404.623779754] [frontier_explorer]: Still no progress after costmap clear, blacklisting goal (5.99, 0.75)
+[frontier_explorer-1] [WARN] [1783275408.691595598] [frontier_explorer]: Sweep goal done but target (6.69, 1.96) still unobserved - striking it
+[frontier_explorer-1] [INFO] [1783275408.778329534] [frontier_explorer]: Frontiers done - SWEEPING for camera coverage (76% of walls observed)
+[frontier_explorer-1] [INFO] [1783275410.227805912] [frontier_explorer]: Sweep selection: gain=26 distance=1.1m turn=2.88rad utility=6.10
+[frontier_explorer-1] [INFO] [1783275410.347425167] [frontier_explorer]: New sweep goal: (5.29, 0.04)
+[frontier_explorer-1] [WARN] [1783275465.966932104] [frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (5.29, 0.04)
+[frontier_explorer-1] [WARN] [1783275503.139345359] [frontier_explorer]: Still no progress after costmap clear, blacklisting goal (5.29, 0.04)
+[frontier_explorer-1] [WARN] [1783275507.197076070] [frontier_explorer]: Sweep goal done but target (4.19, 1.94) still unobserved - striking it
+[frontier_explorer-1] [INFO] [1783275508.924951390] [frontier_explorer]: Sweep selection: gain=18 distance=0.3m turn=1.42rad utility=7.72
+[frontier_explorer-1] [INFO] [1783275509.019415458] [frontier_explorer]: New sweep goal: (5.59, 0.04)
+[frontier_explorer-1] [WARN] [1783275544.142389425] [frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (5.59, 0.04)
+[frontier_explorer-1] [WARN] [1783275552.360656604] [frontier_explorer]: Watchdog: <0.3 m movement in 120 s despite active work - blind reverse escape
+[frontier_explorer-1] [WARN] [1783275556.609488947] [frontier_explorer]: Sweep goal done but target (6.69, 1.94) still unobserved - striking it
+[frontier_explorer-1] [INFO] [1783275558.326374886] [frontier_explorer]: Sweep selection: gain=11 distance=0.4m turn=2.03rad utility=3.77
+[frontier_explorer-1] [INFO] [1783275558.421275929] [frontier_explorer]: New sweep goal: (5.00, 0.14)
+[frontier_explorer-1] [WARN] [1783275593.276362700] [frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (5.00, 0.14)
+[frontier_explorer-1] [WARN] [1783275629.769125812] [frontier_explorer]: Still no progress after costmap clear, blacklisting goal (5.00, 0.14)
+[frontier_explorer-1] [WARN] [1783275633.836721015] [frontier_explorer]: Sweep goal done but target (3.44, 1.04) still unobserved - striking it
+[frontier_explorer-1] [INFO] [1783275635.551435683] [frontier_explorer]: Sweep selection: gain=26 distance=0.5m turn=2.40rad utility=7.77
+[frontier_explorer-1] [INFO] [1783275635.648919688] [frontier_explorer]: New sweep goal: (5.29, 0.04)
+[frontier_explorer-1] [WARN] [1783275674.592243384] [frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (5.29, 0.04)
+[frontier_explorer-1] [WARN] [1783275711.402429964] [frontier_explorer]: Still no progress after costmap clear, blacklisting goal (5.29, 0.04)
+[frontier_explorer-1] [WARN] [1783275715.464609343] [frontier_explorer]: Sweep goal done but target (4.19, 1.94) still unobserved - striking it
+[frontier_explorer-1] [INFO] [1783275717.114978521] [frontier_explorer]: Sweep selection: gain=20 distance=0.7m turn=0.51rad utility=9.55
+[frontier_explorer-1] [INFO] [1783275717.198477483] [frontier_explorer]: New sweep goal: (5.79, 0.39)
+[frontier_explorer-1] [INFO] [1783275733.600973991] [frontier_explorer]: Sweep selection: gain=13 distance=0.7m turn=1.50rad utility=4.55
+[frontier_explorer-1] [INFO] [1783275733.700036270] [frontier_explorer]: New sweep goal: (5.64, 1.04)
+[frontier_explorer-1] [WARN] [1783275772.858075150] [frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (5.64, 1.04)
+[frontier_explorer-1] [INFO] [1783275811.362155719] [frontier_explorer]: Sweep selection: gain=24 distance=5.3m turn=1.02rad utility=3.41
+[frontier_explorer-1] [INFO] [1783275811.471399179] [frontier_explorer]: New sweep goal: (0.61, 2.60)
+[frontier_explorer-1] [INFO] [1783275856.836996873] [frontier_explorer]: Sweep selection: gain=18 distance=1.4m turn=3.74rad utility=3.46
+[frontier_explorer-1] [INFO] [1783275856.914263164] [frontier_explorer]: New sweep goal: (2.19, 3.01)
+[frontier_explorer-1] [WARN] [1783275928.931534381] [frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (2.19, 3.01)
+[frontier_explorer-1] [WARN] [1783275965.660096512] [frontier_explorer]: Still no progress after costmap clear, blacklisting goal (2.19, 3.01)
+[frontier_explorer-1] [WARN] [1783275969.726654978] [frontier_explorer]: Sweep goal done but target (2.69, 2.14) still unobserved - striking it
+[frontier_explorer-1] [INFO] [1783275971.140536697] [frontier_explorer]: Sweep selection: gain=18 distance=3.9m turn=2.45rad utility=2.68
+[frontier_explorer-1] [INFO] [1783275971.237598949] [frontier_explorer]: New sweep goal: (0.29, 6.39)
+[frontier_explorer-1] [WARN] [1783276031.278433091] [frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (0.29, 6.39)
+[frontier_explorer-1] [WARN] [1783276067.948981813] [frontier_explorer]: Still no progress after costmap clear, blacklisting goal (0.29, 6.39)
+[frontier_explorer-1] [INFO] [1783276073.475346514] [frontier_explorer]: Sweep selection: gain=18 distance=3.6m turn=2.48rad utility=2.77
+[frontier_explorer-1] [INFO] [1783276073.567358210] [frontier_explorer]: New sweep goal: (2.19, 3.01)
+[frontier_explorer-1] [INFO] [1783276114.288917924] [frontier_explorer]: Sweep selection: gain=16 distance=3.8m turn=1.57rad utility=2.66
+[frontier_explorer-1] [INFO] [1783276114.388606035] [frontier_explorer]: New sweep goal: (3.01, -0.51)
+[frontier_explorer-1] [INFO] [1783276156.066824604] [frontier_explorer]: Sweep selection: gain=35 distance=9.3m turn=1.40rad utility=3.09
+[frontier_explorer-1] [INFO] [1783276156.185692990] [frontier_explorer]: New sweep goal: (-5.11, -4.72)
+[frontier_explorer-1] [INFO] [1783276234.362334231] [frontier_explorer]: Sweep selection: gain=13 distance=0.7m turn=0.49rad utility=6.16
+[frontier_explorer-1] [INFO] [1783276234.448565035] [frontier_explorer]: New sweep goal: (-4.91, -5.35)
+[frontier_explorer-1] [INFO] [1783276242.510328680] [frontier_explorer]: Sweep selection: gain=15 distance=1.8m turn=1.67rad utility=3.74
+[frontier_explorer-1] [INFO] [1783276242.654789058] [frontier_explorer]: New sweep goal: (-3.71, -6.36)
+[frontier_explorer-1] [WARN] [1783276286.755204292] [frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (-3.71, -6.36)
+[frontier_explorer-1] [INFO] [1783276316.164997886] [frontier_explorer]: Sweep selection: gain=17 distance=4.5m turn=0.78rad utility=2.81
+[frontier_explorer-1] [INFO] [1783276316.254389269] [frontier_explorer]: New sweep goal: (-4.66, -1.86)
+[frontier_explorer-1] [WARN] [1783276385.453900095] [frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (-4.66, -1.86)
+[frontier_explorer-1] [WARN] [1783276422.535706677] [frontier_explorer]: Still no progress after costmap clear, blacklisting goal (-4.66, -1.86)
+[frontier_explorer-1] [WARN] [1783276426.599562701] [frontier_explorer]: Sweep goal done but target (-6.86, -1.86) still unobserved - striking it
+[frontier_explorer-1] [INFO] [1783276427.458864696] [frontier_explorer]: Sweep selection: gain=12 distance=0.9m turn=0.85rad utility=4.66
+[frontier_explorer-1] [INFO] [1783276427.577124149] [frontier_explorer]: New sweep goal: (-5.30, -1.36)
+[frontier_explorer-1] [INFO] [1783276439.701165740] [frontier_explorer]: Sweep selection: gain=22 distance=2.5m turn=1.85rad utility=4.48
+[frontier_explorer-1] [INFO] [1783276439.802912167] [frontier_explorer]: New sweep goal: (-4.71, 0.94)
+[frontier_explorer-1] [INFO] [1783276480.006887366] [frontier_explorer]: Exploration + sweep complete: camera coverage 90% (2170/2399 wall cells), items found: [1, 2, 3, 4] (4 confirmed, 4 seen)
+[frontier_explorer-1] [INFO] [1783276480.060464496] [frontier_explorer]: Returning to initial pose...
+[frontier_explorer-1] [INFO] [1783276534.737970596] [frontier_explorer]: Returned to initial pose.
+[frontier_explorer-1] [INFO] [1783276534.791013667] [frontier_explorer]: Exploration finished.
+[frontier_explorer-1] [INFO] [1783276540.710160276] [frontier_explorer]: Map saved to /ros2_ws/reports/final_runs/depot_world/map

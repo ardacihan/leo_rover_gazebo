@@ -1,0 +1,7 @@
+# Ground-truth ArUco marker poses for depot_world (mock detector input).
+# yaw = outward normal of the wall face the marker is mounted on.
+markers:
+  - {id: 1, x: 0.0, y: 6.88, z: 0.3, yaw: -1.5708}     # north outer wall, north zone
+  - {id: 2, x: 3.0, y: -6.88, z: 0.3, yaw: 1.5708}     # south outer wall, south zone
+  - {id: 3, x: 1.88, y: 0.0, z: 0.3, yaw: 3.1416}      # east partition west face, central zone
+  - {id: 4, x: 6.88, y: 0.0, z: 0.3, yaw: 3.1416}      # east outer wall, middle zone

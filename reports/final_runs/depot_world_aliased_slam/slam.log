@@ -1,0 +1,53 @@
+[INFO] [launch]: All log files can be found below /root/.ros/log/2026-07-05-13-35-55-804369-d6deb5280042-224
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [async_slam_toolbox_node-1]: process started with pid [474]
+[async_slam_toolbox_node-1] [INFO] [1783258556.193829858] [slam_toolbox]: Node using stack size 40000000
+[async_slam_toolbox_node-1] [INFO] [1783258556.713889479] [slam_toolbox]: Using solver plugin solver_plugins::CeresSolver
+[async_slam_toolbox_node-1] [INFO] [1783258556.714653068] [slam_toolbox]: CeresSolver: Using SCHUR_JACOBI preconditioner.
+[async_slam_toolbox_node-1] [WARN] [1783258556.722026168] [slam_toolbox]: minimum laser range setting (0.0 m) exceeds the capabilities of the used Lidar (0.1 m)
+[async_slam_toolbox_node-1] Registering sensor: [Custom Described Lidar]
+[async_slam_toolbox_node-1] WARNING: Logging before InitGoogleLogging() is written to STDERR
+[async_slam_toolbox_node-1] W0705 13:42:15.113348   474 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-1] W0705 14:00:00.992652   474 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-1] W0705 14:13:02.195415   474 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-1] W0705 14:13:02.243495   474 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-1] W0705 14:13:02.280408   474 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-1] W0705 14:13:02.312510   474 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-1] W0705 14:34:19.063019   474 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-1] W0705 14:34:23.101693   474 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-1] W0705 14:47:42.094646   474 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-1] W0705 14:50:36.962288   474 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-1] [INFO] [1783263905.905959283] [slam_toolbox]: SlamToolbox: Saving map as /ros2_ws/reports/final_runs/depot_world/map.
+[async_slam_toolbox_node-1] [INFO] [1783263909.492153055] [map_saver]: 
+[async_slam_toolbox_node-1] 	map_saver lifecycle node launched. 
+[async_slam_toolbox_node-1] 	Waiting on external lifecycle transitions to activate
+[async_slam_toolbox_node-1] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[async_slam_toolbox_node-1] [INFO] [1783263909.492250576] [map_saver]: Creating
+[async_slam_toolbox_node-1] [INFO] [1783263909.492967088] [map_saver]: Configuring
+[async_slam_toolbox_node-1] [INFO] [1783263909.524802573] [map_saver]: Saving map from 'map' topic to '/ros2_ws/reports/final_runs/depot_world/map' file
+[async_slam_toolbox_node-1] [WARN] [1783263909.524846123] [map_saver]: Free threshold unspecified. Setting it to default value: 0.250000
+[async_slam_toolbox_node-1] [WARN] [1783263909.524857819] [map_saver]: Occupied threshold unspecified. Setting it to default value: 0.650000
+[async_slam_toolbox_node-1] [WARN] [1783263909.528118818] [map_io]: Image format unspecified. Setting it to: pgm
+[async_slam_toolbox_node-1] [INFO] [1783263909.528173244] [map_io]: Received a 311 X 365 map @ 0.05 m/pix
+[async_slam_toolbox_node-1] [INFO] [1783263909.598790440] [map_io]: Writing map occupancy data to /ros2_ws/reports/final_runs/depot_world/map.pgm
+[async_slam_toolbox_node-1] [INFO] [1783263909.615498838] [map_io]: Writing map metadata to /ros2_ws/reports/final_runs/depot_world/map.yaml
+[async_slam_toolbox_node-1] [INFO] [1783263909.617361869] [map_io]: Map saved
+[async_slam_toolbox_node-1] [INFO] [1783263909.617387912] [map_saver]: Map saved successfully
+[async_slam_toolbox_node-1] [INFO] [1783263909.619060846] [map_saver]: Destroying
+[async_slam_toolbox_node-1] Save To File /ros2_ws/reports/final_runs/depot_world/map.posegraph 
+[async_slam_toolbox_node-1] Mapper <- Module
+[async_slam_toolbox_node-1] Mapper <- m_pSequentialScanMatcher
+[async_slam_toolbox_node-1] Mapper <- m_pGraph
+[async_slam_toolbox_node-1] MapperGraph <- Graph; Graph <- m_Edges; Graph <- m_Vertices
+[async_slam_toolbox_node-1] MapperGraph <- m_pMapper; MapperGraph <- m_pLoopScanMatcher; MapperGraph <- m_pTraversal
+[async_slam_toolbox_node-1] Mapper <- m_pMapperSensorManager
+[async_slam_toolbox_node-1] MapperSensorManager <- m_ScanManagers; MapperSensorManager <- m_Scans
+[async_slam_toolbox_node-1] Mapper <- m_Listeners
+[async_slam_toolbox_node-1] **Finished serializing Mapper**
+[async_slam_toolbox_node-1] Save To File
+[async_slam_toolbox_node-1] **Serializing Dataset**
+[async_slam_toolbox_node-1] Dataset <- m_SensorNameLookup
+[async_slam_toolbox_node-1] Dataset <- m_Data
+[async_slam_toolbox_node-1] Dataset <- m_Lasers
+[async_slam_toolbox_node-1] Dataset <- m_pDatasetInfo
+[async_slam_toolbox_node-1] **Finished serializing Dataset**

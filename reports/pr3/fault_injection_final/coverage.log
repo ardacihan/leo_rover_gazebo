@@ -1,0 +1,44 @@
+coverage: no map yet
+coverage: t=90s known=3.6m2 free=3.6m2 occ=0.0m2 (397x397)
+coverage: t=95s known=3.6m2 free=3.6m2 occ=0.0m2 (397x397)
+coverage: t=100s known=42.9m2 free=42.2m2 occ=0.7m2 (397x397)
+coverage: t=105s known=42.9m2 free=42.2m2 occ=0.7m2 (397x397)
+coverage: t=110s known=42.9m2 free=42.2m2 occ=0.7m2 (397x397)
+coverage: t=115s known=42.9m2 free=42.2m2 occ=0.7m2 (397x397)
+coverage: t=120s known=42.9m2 free=42.2m2 occ=0.7m2 (397x397)
+coverage: t=125s known=42.9m2 free=42.2m2 occ=0.7m2 (397x397)
+coverage: t=130s known=42.9m2 free=42.2m2 occ=0.7m2 (397x397)
+coverage: t=135s known=42.9m2 free=42.2m2 occ=0.7m2 (397x397)
+coverage: t=140s known=42.9m2 free=42.2m2 occ=0.7m2 (397x397)
+coverage: t=145s known=42.9m2 free=42.2m2 occ=0.7m2 (397x397)
+coverage: t=150s known=42.9m2 free=42.2m2 occ=0.7m2 (397x397)
+coverage: t=155s known=42.9m2 free=42.2m2 occ=0.7m2 (397x397)
+coverage: t=160s known=42.9m2 free=42.2m2 occ=0.7m2 (397x397)
+coverage: t=165s known=42.9m2 free=42.2m2 occ=0.7m2 (397x397)
+coverage: t=170s known=42.9m2 free=42.2m2 occ=0.7m2 (397x397)
+coverage: t=175s known=82.2m2 free=80.7m2 occ=1.5m2 (398x397)
+coverage: t=180s known=110.4m2 free=108.3m2 occ=2.1m2 (398x398)
+coverage: t=185s known=110.4m2 free=108.3m2 occ=2.1m2 (398x398)
+coverage: t=190s known=110.4m2 free=108.3m2 occ=2.1m2 (398x398)
+coverage: t=195s known=110.4m2 free=108.3m2 occ=2.1m2 (398x398)
+coverage: t=200s known=110.4m2 free=108.3m2 occ=2.1m2 (398x398)
+coverage: t=205s known=110.4m2 free=108.3m2 occ=2.1m2 (398x398)
+coverage: t=210s known=131.9m2 free=129.3m2 occ=2.6m2 (398x398)
+coverage: t=215s known=147.5m2 free=144.5m2 occ=3.0m2 (398x399)
+coverage: t=220s known=153.9m2 free=150.7m2 occ=3.2m2 (398x399)
+Traceback (most recent call last):
+  File "/ros2_ws/scripts/map_coverage.py", line 61, in <module>
+    main()
+  File "/ros2_ws/scripts/map_coverage.py", line 55, in main
+    rclpy.spin(node)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 229, in spin
+    executor.spin_once()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 808, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 797, in _spin_once_impl
+    handler, entity, node = self.wait_for_ready_callbacks(timeout_sec=timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 780, in wait_for_ready_callbacks
+    return next(self._cb_iter)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 681, in _wait_for_ready_callbacks
+    raise ExternalShutdownException()
+rclpy.executors.ExternalShutdownException

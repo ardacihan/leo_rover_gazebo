@@ -1,0 +1,54 @@
+[INFO] [launch]: All log files can be found below /root/.ros/log/2026-07-05-10-18-35-310187-2927a9b9cd95-206
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [async_slam_toolbox_node-1]: process started with pid [320]
+[async_slam_toolbox_node-1] [INFO] [1783246715.672171529] [slam_toolbox]: Node using stack size 40000000
+[async_slam_toolbox_node-1] [INFO] [1783246716.212945150] [slam_toolbox]: Using solver plugin solver_plugins::CeresSolver
+[async_slam_toolbox_node-1] [INFO] [1783246716.213744900] [slam_toolbox]: CeresSolver: Using SCHUR_JACOBI preconditioner.
+[async_slam_toolbox_node-1] [INFO] [1783246718.431890595] [slam_toolbox]: Message Filter dropping message: frame 'leo1/sensor_lidar_link' at time 6.009 for reason 'discarding message because the queue is full'
+[async_slam_toolbox_node-1] [WARN] [1783246718.432162969] [slam_toolbox]: minimum laser range setting (0.0 m) exceeds the capabilities of the used Lidar (0.1 m)
+[async_slam_toolbox_node-1] Registering sensor: [Custom Described Lidar]
+[async_slam_toolbox_node-1] WARNING: Logging before InitGoogleLogging() is written to STDERR
+[async_slam_toolbox_node-1] W0705 10:25:06.225262   320 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-1] W0705 10:25:06.245244   320 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-1] W0705 10:43:45.896934   320 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-1] W0705 10:51:18.387341   320 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-1] W0705 10:53:31.081727   320 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-1] W0705 11:03:39.839474   320 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-1] W0705 11:24:09.702450   320 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-1] W0705 11:45:46.456436   320 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-1] W0705 11:47:15.452950   320 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-1] W0705 11:47:15.545563   320 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-1] [INFO] [1783253993.616526375] [slam_toolbox]: SlamToolbox: Saving map as /ros2_ws/reports/final_runs/office_world/map.
+[async_slam_toolbox_node-1] [INFO] [1783253996.891791344] [map_saver]: 
+[async_slam_toolbox_node-1] 	map_saver lifecycle node launched. 
+[async_slam_toolbox_node-1] 	Waiting on external lifecycle transitions to activate
+[async_slam_toolbox_node-1] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[async_slam_toolbox_node-1] [INFO] [1783253996.891884423] [map_saver]: Creating
+[async_slam_toolbox_node-1] [INFO] [1783253996.892652419] [map_saver]: Configuring
+[async_slam_toolbox_node-1] [INFO] [1783253996.924439054] [map_saver]: Saving map from 'map' topic to '/ros2_ws/reports/final_runs/office_world/map' file
+[async_slam_toolbox_node-1] [WARN] [1783253996.924475707] [map_saver]: Free threshold unspecified. Setting it to default value: 0.250000
+[async_slam_toolbox_node-1] [WARN] [1783253996.924484702] [map_saver]: Occupied threshold unspecified. Setting it to default value: 0.650000
+[async_slam_toolbox_node-1] [WARN] [1783253996.934572262] [map_io]: Image format unspecified. Setting it to: pgm
+[async_slam_toolbox_node-1] [INFO] [1783253996.934666803] [map_io]: Received a 479 X 320 map @ 0.05 m/pix
+[async_slam_toolbox_node-1] [INFO] [1783253997.002859285] [map_io]: Writing map occupancy data to /ros2_ws/reports/final_runs/office_world/map.pgm
+[async_slam_toolbox_node-1] [INFO] [1783253997.028875192] [map_io]: Writing map metadata to /ros2_ws/reports/final_runs/office_world/map.yaml
+[async_slam_toolbox_node-1] [INFO] [1783253997.031344986] [map_io]: Map saved
+[async_slam_toolbox_node-1] [INFO] [1783253997.031378250] [map_saver]: Map saved successfully
+[async_slam_toolbox_node-1] [INFO] [1783253997.033073078] [map_saver]: Destroying
+[async_slam_toolbox_node-1] Save To File /ros2_ws/reports/final_runs/office_world/map.posegraph 
+[async_slam_toolbox_node-1] Mapper <- Module
+[async_slam_toolbox_node-1] Mapper <- m_pSequentialScanMatcher
+[async_slam_toolbox_node-1] Mapper <- m_pGraph
+[async_slam_toolbox_node-1] MapperGraph <- Graph; Graph <- m_Edges; Graph <- m_Vertices
+[async_slam_toolbox_node-1] MapperGraph <- m_pMapper; MapperGraph <- m_pLoopScanMatcher; MapperGraph <- m_pTraversal
+[async_slam_toolbox_node-1] Mapper <- m_pMapperSensorManager
+[async_slam_toolbox_node-1] MapperSensorManager <- m_ScanManagers; MapperSensorManager <- m_Scans
+[async_slam_toolbox_node-1] Mapper <- m_Listeners
+[async_slam_toolbox_node-1] **Finished serializing Mapper**
+[async_slam_toolbox_node-1] Save To File
+[async_slam_toolbox_node-1] **Serializing Dataset**
+[async_slam_toolbox_node-1] Dataset <- m_SensorNameLookup
+[async_slam_toolbox_node-1] Dataset <- m_Data
+[async_slam_toolbox_node-1] Dataset <- m_Lasers
+[async_slam_toolbox_node-1] Dataset <- m_pDatasetInfo
+[async_slam_toolbox_node-1] **Finished serializing Dataset**

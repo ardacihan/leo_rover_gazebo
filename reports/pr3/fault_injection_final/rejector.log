@@ -1,0 +1,79 @@
+[INFO] [1781282764.162921945] [pr3_planner_rejector]: Rejecting the first 999 path validations
+[WARN] [1781282779.791156866] [pr3_planner_rejector]: Injected planner rejection 1/999
+[WARN] [1781282784.244040459] [pr3_planner_rejector]: Injected planner rejection 2/999
+[WARN] [1781282788.401269385] [pr3_planner_rejector]: Injected planner rejection 3/999
+[WARN] [1781282792.893594331] [pr3_planner_rejector]: Injected planner rejection 4/999
+[WARN] [1781282797.468677754] [pr3_planner_rejector]: Injected planner rejection 5/999
+[WARN] [1781282802.236592946] [pr3_planner_rejector]: Injected planner rejection 6/999
+[WARN] [1781282806.240556637] [pr3_planner_rejector]: Injected planner rejection 7/999
+[WARN] [1781282810.532671492] [pr3_planner_rejector]: Injected planner rejection 8/999
+[WARN] [1781282815.092465276] [pr3_planner_rejector]: Injected planner rejection 9/999
+[WARN] [1781282819.961555781] [pr3_planner_rejector]: Injected planner rejection 10/999
+[WARN] [1781282825.355250700] [pr3_planner_rejector]: Injected planner rejection 11/999
+[WARN] [1781282830.955317606] [pr3_planner_rejector]: Injected planner rejection 12/999
+[WARN] [1781282835.919946904] [pr3_planner_rejector]: Injected planner rejection 13/999
+[WARN] [1781282841.312627325] [pr3_planner_rejector]: Injected planner rejection 14/999
+[WARN] [1781282845.935626934] [pr3_planner_rejector]: Injected planner rejection 15/999
+[WARN] [1781282851.233596555] [pr3_planner_rejector]: Injected planner rejection 16/999
+Traceback (most recent call last):
+  File "/ros2_ws/scripts/pr3_planner_rejector.py", line 57, in main
+    rclpy.spin(node)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 229, in spin
+    executor.spin_once()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 808, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 797, in _spin_once_impl
+    handler, entity, node = self.wait_for_ready_callbacks(timeout_sec=timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 780, in wait_for_ready_callbacks
+    return next(self._cb_iter)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 681, in _wait_for_ready_callbacks
+    raise ExternalShutdownException()
+rclpy.executors.ExternalShutdownException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/ros2_ws/scripts/pr3_planner_rejector.py", line 66, in <module>
+    main()
+  File "/ros2_ws/scripts/pr3_planner_rejector.py", line 62, in main
+    rclpy.shutdown()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 130, in shutdown
+    _shutdown(context=context)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/utilities.py", line 58, in shutdown
+    return context.shutdown()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/context.py", line 102, in shutdown
+    self.__context.shutdown()
+rclpy._rclpy_pybind11.RCLError: failed to shutdown: rcl_shutdown already called on the given context, at ./src/rcl/init.c:241
+[INFO] [1781282869.134568542] [pr3_planner_rejector]: Rejecting the first 0 path validations
+[INFO] [1781282871.487889566] [pr3_planner_rejector]: Validation 1 passed to real navigation
+[INFO] [1781282885.067119347] [pr3_planner_rejector]: Validation 2 passed to real navigation
+[INFO] [1781282914.807382253] [pr3_planner_rejector]: Validation 3 passed to real navigation
+Traceback (most recent call last):
+  File "/ros2_ws/scripts/pr3_planner_rejector.py", line 57, in main
+    rclpy.spin(node)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 229, in spin
+    executor.spin_once()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 808, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 797, in _spin_once_impl
+    handler, entity, node = self.wait_for_ready_callbacks(timeout_sec=timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 780, in wait_for_ready_callbacks
+    return next(self._cb_iter)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 681, in _wait_for_ready_callbacks
+    raise ExternalShutdownException()
+rclpy.executors.ExternalShutdownException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/ros2_ws/scripts/pr3_planner_rejector.py", line 66, in <module>
+    main()
+  File "/ros2_ws/scripts/pr3_planner_rejector.py", line 62, in main
+    rclpy.shutdown()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 130, in shutdown
+    _shutdown(context=context)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/utilities.py", line 58, in shutdown
+    return context.shutdown()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/context.py", line 102, in shutdown
+    self.__context.shutdown()
+rclpy._rclpy_pybind11.RCLError: failed to shutdown: rcl_shutdown already called on the given context, at ./src/rcl/init.c:241

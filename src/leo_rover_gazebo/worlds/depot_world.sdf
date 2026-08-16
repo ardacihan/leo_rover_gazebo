@@ -1,0 +1,280 @@
+<?xml version="1.0" ?>
+<sdf version="1.8">
+  <world name="depot_world">
+    <physics name="1ms" type="dart">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <plugin filename="gz-sim-physics-system"
+            name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system"
+            name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system"
+            name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-sensors-system"
+            name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+
+    <plugin filename="gz-sim-imu-system"
+            name="gz::sim::systems::Imu"/>
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry><plane><normal>0 0 1</normal></plane></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><plane><normal>0 0 1</normal><size>100 100</size></plane></geometry>
+          <material>
+            <ambient>0.8 0.8 0.8 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Outer shell: 14 x 14 m -->
+    <model name="wall_north">
+      <static>true</static>
+      <pose>0 7 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>14 0.2 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>14 0.2 2</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="wall_south">
+      <static>true</static>
+      <pose>0 -7 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>14 0.2 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>14 0.2 2</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="wall_east">
+      <static>true</static>
+      <pose>7 0 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.2 14 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.2 14 2</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="wall_west">
+      <static>true</static>
+      <pose>-7 0 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.2 14 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.2 14 2</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <!-- Irregular room partitions with 1.4 m doorways. (The original two
+         long serpentine aisles were perceptually aliased for 2D scan
+         matching and reliably broke SLAM during end-of-aisle U-turns;
+         room-and-doorway geometry is what the stack handles well.) -->
+    <model name="wall_h_w1">
+      <static>true</static>
+      <pose>-6.1 0 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>1.8 0.2 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>1.8 0.2 2</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="wall_h_w2">
+      <static>true</static>
+      <pose>-2.9 0 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>1.8 0.2 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>1.8 0.2 2</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="wall_v_w">
+      <static>true</static>
+      <pose>-2 2.25 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.2 4.5 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.2 4.5 2</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="wall_v_w2">
+      <static>true</static>
+      <pose>-2 6.45 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.2 1.1 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.2 1.1 2</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="wall_v_e">
+      <static>true</static>
+      <pose>2 -0.65 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.2 5.3 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.2 5.3 2</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="wall_v_e2">
+      <static>true</static>
+      <pose>2 -5.85 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.2 2.3 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.2 2.3 2</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="wall_h_e">
+      <static>true</static>
+      <pose>3.4 2 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>2.8 0.2 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>2.8 0.2 2</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="wall_h_e2">
+      <static>true</static>
+      <pose>6.6 2 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.8 0.2 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.8 0.2 2</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <!-- Obstacles -->
+    <model name="crate_mid">
+      <static>true</static>
+      <pose>3 0.5 0.5 0 0 0.5</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>1.2 1.2 1</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>1.2 1.2 1</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="pillar_north">
+      <static>true</static>
+      <pose>-3 5 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><cylinder><radius>0.4</radius><length>2</length></cylinder></geometry></collision>
+        <visual name="visual"><geometry><cylinder><radius>0.4</radius><length>2</length></cylinder></geometry></visual>
+      </link>
+    </model>
+
+    <!-- Asymmetric landmarks: the three long empty aisles are perceptually
+         aliased for 2D scan matching (identical parallel walls), which caused
+         a wrong loop closure in the first recorded run. Each zone gets
+         distinct, irregularly placed geometry so scans are unambiguous. -->
+    <model name="crate_south_a">
+      <static>true</static>
+      <pose>-3.5 -5.2 0.5 0 0 0.35</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>1.5 0.9 1</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>1.5 0.9 1</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="barrel_south">
+      <static>true</static>
+      <pose>4.5 -4.6 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><cylinder><radius>0.35</radius><length>2</length></cylinder></geometry></collision>
+        <visual name="visual"><geometry><cylinder><radius>0.35</radius><length>2</length></cylinder></geometry></visual>
+      </link>
+    </model>
+
+    <model name="barrel_mid_w">
+      <static>true</static>
+      <pose>-4.5 -0.8 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><cylinder><radius>0.3</radius><length>2</length></cylinder></geometry></collision>
+        <visual name="visual"><geometry><cylinder><radius>0.3</radius><length>2</length></cylinder></geometry></visual>
+      </link>
+    </model>
+
+    <model name="crate_mid_small">
+      <static>true</static>
+      <pose>-0.6 1.8 0.4 0 0 -0.7</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.8 0.8 0.8</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.8 0.8 0.8</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="crate_north">
+      <static>true</static>
+      <pose>2.5 5.5 0.5 0 0 -0.5</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>1.4 0.7 1</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>1.4 0.7 1</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="barrel_north_e">
+      <static>true</static>
+      <pose>5.5 4.2 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><cylinder><radius>0.3</radius><length>2</length></cylinder></geometry></collision>
+        <visual name="visual"><geometry><cylinder><radius>0.3</radius><length>2</length></cylinder></geometry></visual>
+      </link>
+    </model>
+
+    <!-- Visual "ArUco" markers (poses mirror
+         leo_rover_exploration/config/mock_markers_depot_world.yaml) -->
+    <model name="marker_1">
+      <static>true</static>
+      <pose>0.0 6.88 0.3 0 0 -1.5708</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>0.02 0.15 0.15</size></box></geometry>
+          <material><ambient>1 0 1 1</ambient><diffuse>1 0 1 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+    <model name="marker_2">
+      <static>true</static>
+      <pose>3.0 -6.88 0.3 0 0 1.5708</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>0.02 0.15 0.15</size></box></geometry>
+          <material><ambient>1 0 1 1</ambient><diffuse>1 0 1 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+    <model name="marker_3">
+      <static>true</static>
+      <pose>1.88 0.0 0.3 0 0 3.1416</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>0.02 0.15 0.15</size></box></geometry>
+          <material><ambient>1 0 1 1</ambient><diffuse>1 0 1 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+    <model name="marker_4">
+      <static>true</static>
+      <pose>6.88 0.0 0.3 0 0 3.1416</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>0.02 0.15 0.15</size></box></geometry>
+          <material><ambient>1 0 1 1</ambient><diffuse>1 0 1 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+  </world>
+</sdf>

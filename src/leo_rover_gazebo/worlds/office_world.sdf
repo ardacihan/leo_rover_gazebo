@@ -1,0 +1,298 @@
+<?xml version="1.0" ?>
+<sdf version="1.8">
+  <world name="office_world">
+    <physics name="1ms" type="dart">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <plugin filename="gz-sim-physics-system"
+            name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system"
+            name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system"
+            name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-sensors-system"
+            name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+
+    <plugin filename="gz-sim-imu-system"
+            name="gz::sim::systems::Imu"/>
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry><plane><normal>0 0 1</normal></plane></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><plane><normal>0 0 1</normal><size>100 100</size></plane></geometry>
+          <material>
+            <ambient>0.8 0.8 0.8 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Outer shell: 24 x 16 m -->
+    <model name="wall_north">
+      <static>true</static>
+      <pose>0 8 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>24 0.2 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>24 0.2 2</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="wall_south">
+      <static>true</static>
+      <pose>0 -8 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>24 0.2 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>24 0.2 2</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="wall_east">
+      <static>true</static>
+      <pose>12 0 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.2 16 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.2 16 2</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="wall_west">
+      <static>true</static>
+      <pose>-12 0 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.2 16 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.2 16 2</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <!-- Central corridor (y = -1.2 .. +1.2, robot spawns at the middle).
+         North side: three offices, doorways (1.4 m) at x = -8, 0, +8.
+         South side: two offices, doorways at x = -6, +6. -->
+    <model name="corridor_n_seg1">
+      <static>true</static>
+      <pose>-10.35 1.2 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>3.3 0.2 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>3.3 0.2 2</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="corridor_n_seg2">
+      <static>true</static>
+      <pose>-4 1.2 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>6.6 0.2 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>6.6 0.2 2</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="corridor_n_seg3">
+      <static>true</static>
+      <pose>4 1.2 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>6.6 0.2 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>6.6 0.2 2</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="corridor_n_seg4">
+      <static>true</static>
+      <pose>10.35 1.2 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>3.3 0.2 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>3.3 0.2 2</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="corridor_s_seg1">
+      <static>true</static>
+      <pose>-9.35 -1.2 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>5.3 0.2 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>5.3 0.2 2</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="corridor_s_seg2">
+      <static>true</static>
+      <pose>0 -1.2 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>10.6 0.2 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>10.6 0.2 2</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="corridor_s_seg3">
+      <static>true</static>
+      <pose>9.35 -1.2 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>5.3 0.2 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>5.3 0.2 2</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <!-- Office partitions -->
+    <model name="partition_north_w">
+      <static>true</static>
+      <pose>-4 4.6 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.2 6.8 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.2 6.8 2</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="partition_north_e">
+      <static>true</static>
+      <pose>4 4.6 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.2 6.8 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.2 6.8 2</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="partition_south">
+      <static>true</static>
+      <pose>0 -4.6 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.2 6.8 2</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.2 6.8 2</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <!-- Furniture -->
+    <model name="desk_n1">
+      <static>true</static>
+      <pose>-9 5 0.35 0 0 0.2</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>1.6 0.8 0.7</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>1.6 0.8 0.7</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="desk_n3">
+      <static>true</static>
+      <pose>8.5 4.5 0.35 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.8 1.6 0.7</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.8 1.6 0.7</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="desk_s1">
+      <static>true</static>
+      <pose>-7 -5 0.35 0 0 -0.3</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>1.6 0.8 0.7</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>1.6 0.8 0.7</size></box></geometry></visual>
+      </link>
+    </model>
+
+    <model name="pillar_s2">
+      <static>true</static>
+      <pose>7 -4.5 1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision"><geometry><cylinder><radius>0.4</radius><length>2</length></cylinder></geometry></collision>
+        <visual name="visual"><geometry><cylinder><radius>0.4</radius><length>2</length></cylinder></geometry></visual>
+      </link>
+    </model>
+
+    <!-- Visual "ArUco" markers (poses mirror
+         leo_rover_exploration/config/mock_markers_office_world.yaml) -->
+    <model name="marker_1">
+      <static>true</static>
+      <pose>-11.88 0.0 0.3 0 0 0.0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>0.02 0.15 0.15</size></box></geometry>
+          <material><ambient>1 0 1 1</ambient><diffuse>1 0 1 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+    <model name="marker_2">
+      <static>true</static>
+      <pose>11.88 0.5 0.3 0 0 3.1416</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>0.02 0.15 0.15</size></box></geometry>
+          <material><ambient>1 0 1 1</ambient><diffuse>1 0 1 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+    <model name="marker_3">
+      <static>true</static>
+      <pose>-8.0 7.88 0.3 0 0 -1.5708</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>0.02 0.15 0.15</size></box></geometry>
+          <material><ambient>1 0 1 1</ambient><diffuse>1 0 1 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+    <model name="marker_4">
+      <static>true</static>
+      <pose>-3.88 5.0 0.3 0 0 0.0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>0.02 0.15 0.15</size></box></geometry>
+          <material><ambient>1 0 1 1</ambient><diffuse>1 0 1 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+    <model name="marker_5">
+      <static>true</static>
+      <pose>11.88 5.0 0.3 0 0 3.1416</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>0.02 0.15 0.15</size></box></geometry>
+          <material><ambient>1 0 1 1</ambient><diffuse>1 0 1 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+    <model name="marker_6">
+      <static>true</static>
+      <pose>-11.88 -5.0 0.3 0 0 0.0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>0.02 0.15 0.15</size></box></geometry>
+          <material><ambient>1 0 1 1</ambient><diffuse>1 0 1 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+    <model name="marker_7">
+      <static>true</static>
+      <pose>4.0 -7.88 0.3 0 0 1.5708</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>0.02 0.15 0.15</size></box></geometry>
+          <material><ambient>1 0 1 1</ambient><diffuse>1 0 1 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+    <model name="marker_8">
+      <static>true</static>
+      <pose>-3.0 -1.32 0.3 0 0 -1.5708</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>0.02 0.15 0.15</size></box></geometry>
+          <material><ambient>1 0 1 1</ambient><diffuse>1 0 1 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+
+  </world>
+</sdf>

@@ -13,7 +13,12 @@ slam_toolbox:
     # --- Scan Matching ---
     use_scan_matching: true
     use_scan_barycenter: true
-    minimum_time_interval: 0.5
+    # 0.5 s / 0.2 rad starved the matcher during in-place rotations
+    # (skid-steer yaw odometry drifts fast) and caused rotated duplicate
+    # maps in corridor worlds. 0.05 s (pre-b2af3a6) was a CPU hog; these
+    # sit in between and keep RTF ~1 headless.
+    minimum_time_interval: 0.15
+    scan_queue_size: 5
 
     # --- Map Parameters ---
     resolution: 0.05
@@ -34,8 +39,12 @@ slam_toolbox:
     loop_match_minimum_response_coarse: 0.35
     loop_match_minimum_response_fine: 0.45
 
-    minimum_travel_distance: 0.2
-    minimum_travel_heading: 0.2
+    minimum_travel_distance: 0.1
+    minimum_travel_heading: 0.1
+    # Wider correlation window so the matcher recovers from the yaw error
+    # a skid-steer accumulates during in-place rotations (defaults 0.5/0.349).
+    correlation_search_space_dimension: 0.8
+    coarse_search_angle_offset: 0.523
 
     # --- Buffers and Limits ---
     tf_buffer_duration: 30.0

@@ -1,0 +1,70 @@
+[INFO] [launch]: All log files can be found below /root/.ros/log/2026-07-06-14-24-33-208829-085e5b276e33-990
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [frontier_explorer-1]: process started with pid [1082]
+[INFO] [frontier_explorer-2]: process started with pid [1084]
+[frontier_explorer-1] [INFO] [1783347876.791720985] [leo1.frontier_explorer]: Frontier explorer up for "leo1" (base_frame=leo1/base_link); coordination=coordinated, peers=['leo2']
+[frontier_explorer-2] [INFO] [1783347876.793134344] [leo2.frontier_explorer]: Frontier explorer up for "leo2" (base_frame=leo2/base_link); coordination=coordinated, peers=['leo1']
+[frontier_explorer-1] [WARN] [1783347877.014066190] [leo1.frontier_explorer]: Watchdog: work exists but no goal active and robot stationary - clearing costmaps
+[frontier_explorer-2] [WARN] [1783347877.015437867] [leo2.frontier_explorer]: Watchdog: work exists but no goal active and robot stationary - clearing costmaps
+[frontier_explorer-2] [INFO] [1783347880.312324724] [leo2.frontier_explorer]: Initial pose recorded: (3.38, -0.00)
+[frontier_explorer-1] [INFO] [1783347880.314145206] [leo1.frontier_explorer]: Initial pose recorded: (1.30, -0.00)
+[frontier_explorer-1] [INFO] [1783347880.475596457] [leo1.frontier_explorer]: New frontier goal: (-1.98, 0.03)
+[frontier_explorer-2] [INFO] [1783347880.550238519] [leo2.frontier_explorer]: New frontier goal: (5.77, -0.23)
+[frontier_explorer-2] [INFO] [1783347893.093242872] [leo2.frontier_explorer]: New frontier goal: (7.42, -0.28)
+[frontier_explorer-1] [INFO] [1783347897.405544416] [leo1.frontier_explorer]: New frontier goal: (-4.38, -0.12)
+[frontier_explorer-2] [WARN] [1783347901.426572981] [leo2.frontier_explorer]: Frontier goal done but frontier survived at (7.61, -0.85) - striking it
+[frontier_explorer-2] [INFO] [1783347901.498166117] [leo2.frontier_explorer]: New frontier goal: (10.11, 0.25)
+[frontier_explorer-1] [INFO] [1783347910.405559243] [leo1.frontier_explorer]: New frontier goal: (-8.20, 0.33)
+[frontier_explorer-2] [INFO] [1783347918.936135930] [leo2.frontier_explorer]: New frontier goal: (-4.99, 0.35)
+[frontier_explorer-1] [INFO] [1783347928.477305305] [leo1.frontier_explorer]: New frontier goal: (8.74, 0.05)
+[frontier_explorer-2] [WARN] [1783347956.157927686] [leo2.frontier_explorer]: frontier goal failed (status 6), blacklisted (-4.99, 0.35)
+[frontier_explorer-2] [INFO] [1783347960.762981584] [leo2.frontier_explorer]: New frontier goal: (6.01, -2.25)
+[frontier_explorer-2] [INFO] [1783347980.831903442] [leo2.frontier_explorer]: New frontier goal: (4.51, -2.31)
+[frontier_explorer-1] [INFO] [1783347991.199564593] [leo1.frontier_explorer]: New frontier goal: (0.09, 4.40)
+[frontier_explorer-2] [INFO] [1783347996.003131127] [leo2.frontier_explorer]: New frontier goal: (4.51, -3.71)
+[frontier_explorer-2] [INFO] [1783348011.242689792] [leo2.frontier_explorer]: New frontier goal: (2.71, -5.53)
+[frontier_explorer-1] [INFO] [1783348021.796046658] [leo1.frontier_explorer]: New frontier goal: (-2.51, 5.40)
+[frontier_explorer-2] [INFO] [1783348026.648421999] [leo2.frontier_explorer]: New frontier goal: (2.96, -6.58)
+[frontier_explorer-2] [INFO] [1783348035.647273936] [leo2.frontier_explorer]: No path to frontier goal (9.51, -4.89), skipping
+[frontier_explorer-2] [INFO] [1783348040.193171704] [leo2.frontier_explorer]: New frontier goal: (-5.94, 0.16)
+[frontier_explorer-1] [INFO] [1783348040.390664299] [leo1.frontier_explorer]: New frontier goal: (-6.26, -3.45)
+[frontier_explorer-2] [WARN] [1783348083.383665518] [leo2.frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (-5.94, 0.16)
+[frontier_explorer-2] [WARN] [1783348084.179004044] [leo2.frontier_explorer]: frontier goal failed (status 6), blacklisted (-5.94, 0.16)
+[frontier_explorer-2] [INFO] [1783348088.137980902] [leo2.frontier_explorer]: No path to frontier goal (9.71, -5.34), skipping
+[frontier_explorer-2] [INFO] [1783348092.891940460] [leo2.frontier_explorer]: New frontier goal: (10.61, 4.76)
+[frontier_explorer-1] [INFO] [1783348097.894058292] [leo1.frontier_explorer]: New frontier goal: (-7.17, -2.95)
+[frontier_explorer-1] [INFO] [1783348111.919981056] [leo1.frontier_explorer]: New frontier goal: (-9.33, -3.65)
+[frontier_explorer-1] [INFO] [1783348127.756333337] [leo1.frontier_explorer]: New frontier goal: (-2.78, -5.07)
+[frontier_explorer-2] [INFO] [1783348158.194694360] [leo2.frontier_explorer]: No path to frontier goal (6.41, 5.26), skipping
+[frontier_explorer-1] [INFO] [1783348158.282201427] [leo1.frontier_explorer]: New frontier goal: (-9.63, 3.38)
+[frontier_explorer-2] [INFO] [1783348163.611894724] [leo2.frontier_explorer]: New frontier goal: (-8.04, -0.19)
+[frontier_explorer-2] [WARN] [1783348175.768225171] [leo2.frontier_explorer]: frontier goal failed (status 6), blacklisted (-8.04, -0.19)
+[frontier_explorer-2] [INFO] [1783348179.004878530] [leo2.frontier_explorer]: No path to frontier goal (5.81, 5.06), skipping
+[frontier_explorer-2] [INFO] [1783348183.796993530] [leo2.frontier_explorer]: New frontier goal: (10.11, 6.86)
+[frontier_explorer-2] [WARN] [1783348203.527552646] [leo2.frontier_explorer]: Frontier goal done but frontier survived at (10.31, 7.16) - striking it
+[frontier_explorer-2] [INFO] [1783348203.620969066] [leo2.frontier_explorer]: New frontier goal: (6.06, 5.71)
+[frontier_explorer-1] [INFO] [1783348209.279481316] [leo1.frontier_explorer]: New frontier goal: (-6.93, 4.38)
+[frontier_explorer-2] [INFO] [1783348218.879980237] [leo2.frontier_explorer]: New frontier goal: (4.76, 2.11)
+[frontier_explorer-1] [INFO] [1783348228.651143957] [leo1.frontier_explorer]: New frontier goal: (-4.78, 6.38)
+[frontier_explorer-2] [INFO] [1783348237.831638953] [leo2.frontier_explorer]: New frontier goal: (11.06, -6.69)
+[frontier_explorer-1] [INFO] [1783348248.571975534] [leo1.frontier_explorer]: New frontier goal: (-9.03, 6.98)
+[frontier_explorer-1] [WARN] [1783348275.425910617] [leo1.frontier_explorer]: Frontier goal done but frontier survived at (-8.98, 7.18) - striking it
+[frontier_explorer-1] [INFO] [1783348275.505627505] [leo1.frontier_explorer]: New frontier goal: (-10.03, 6.68)
+[frontier_explorer-1] [INFO] [1783348284.525481793] [leo1.frontier_explorer]: New frontier goal: (-8.03, -7.22)
+[frontier_explorer-2] [INFO] [1783348298.184022614] [leo2.frontier_explorer]: No path to frontier goal (-8.84, 0.01), skipping
+[frontier_explorer-2] [INFO] [1783348302.725163665] [leo2.frontier_explorer]: New frontier goal: (10.76, -7.44)
+[frontier_explorer-2] [INFO] [1783348316.155044804] [leo2.frontier_explorer]: New frontier goal: (-0.84, 1.51)
+[frontier_explorer-1] [INFO] [1783348360.061068304] [leo1.frontier_explorer]: New frontier goal: (-7.09, -6.99)
+[frontier_explorer-2] [INFO] [1783348369.577390478] [leo2.frontier_explorer]: New frontier goal: (-9.89, -0.25)
+[frontier_explorer-1] [INFO] [1783348374.263227537] [leo1.frontier_explorer]: New frontier goal: (-7.04, -7.69)
+[frontier_explorer-1] [INFO] [1783348383.638504939] [leo1.frontier_explorer]: New frontier goal: (8.31, -1.89)
+[frontier_explorer-2] [INFO] [1783348436.890910120] [leo2.frontier_explorer]: New frontier goal: (-8.19, 2.35)
+[frontier_explorer-2] [INFO] [1783348462.122687718] [leo2.frontier_explorer]: New frontier goal: (-7.29, 4.00)
+[frontier_explorer-2] [INFO] [1783348477.729371910] [leo2.frontier_explorer]: New frontier goal: (-5.64, 6.75)
+[frontier_explorer-1] [INFO] [1783348487.690269734] [leo1.frontier_explorer]: New frontier goal: (7.61, -2.24)
+[frontier_explorer-2] [INFO] [1783348492.764891989] [leo2.frontier_explorer]: New frontier goal: (-11.09, 5.20)
+[frontier_explorer-1] [INFO] [1783348497.912950285] [leo1.frontier_explorer]: New frontier goal: (9.81, -3.64)
+[frontier_explorer-2] [INFO] [1783348507.698390942] [leo2.frontier_explorer]: No path to frontier goal (-10.69, 6.05), skipping
+[frontier_explorer-2] [INFO] [1783348513.350697825] [leo2.frontier_explorer]: New frontier goal: (-0.79, 2.30)
+[frontier_explorer-1] [INFO] [1783348518.617413299] [leo1.frontier_explorer]: New frontier goal: (3.26, -4.59)
+[frontier_explorer-1] [INFO] [1783348546.739146158] [leo1.frontier_explorer]: New frontier goal: (3.06, -6.14)
