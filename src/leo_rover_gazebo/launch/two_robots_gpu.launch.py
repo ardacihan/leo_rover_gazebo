@@ -29,6 +29,12 @@ def resolve_world(world):
 
 def launch_setup(context, *args, **kwargs):
     num_robots = int(LaunchConfiguration('num_robots').perform(context))
+    # The Gazebo OdometryPublisher reads the *true* model pose, so bridging its
+    # TF onto /tf hands SLAM a perfect odom->base_link prior that no physical
+    # rover can supply. Set gt_odom_tf:=false to divert it and let
+    # scripts/sim_realism_odom.py own that transform instead.
+    gt_odom_tf = LaunchConfiguration('gt_odom_tf').perform(context).lower() \
+        in ('true', '1', 'yes')
 
     # Per-robot spawn poses (x, y). leo1 sits at the world origin (the
     # single-robot spawn, verified free in every authored world); leo2 is
@@ -168,7 +174,8 @@ def launch_setup(context, *args, **kwargs):
                 f'/{robot_ns}/joint_states@sensor_msgs/msg/JointState[gz.msgs.Model',
             ],
             remappings=[
-                (f'/model/{robot_ns}/tf', '/tf')
+                (f'/model/{robot_ns}/tf',
+                 '/tf' if gt_odom_tf else f'/{robot_ns}/tf_ground_truth')
             ],
             parameters=[{'use_sim_time': True}],
             output='screen'
@@ -195,5 +202,10 @@ def generate_launch_description():
             'enable_camera', default_value='true',
             description='Spawn the RGBD camera sensor (disable for fast '
                         'lidar-only exploration)'),
+        DeclareLaunchArgument(
+            'gt_odom_tf', default_value='true',
+            description='Publish Gazebo ground-truth odom->base_link on /tf. '
+                        'Set false to run realistic wheel odometry instead '
+                        '(scripts/sim_realism_odom.py)'),
         OpaqueFunction(function=launch_setup),
     ])

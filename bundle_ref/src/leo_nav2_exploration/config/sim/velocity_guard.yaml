@@ -1,0 +1,20 @@
+velocity_guard:
+  ros__parameters:
+    use_sim_time: true
+    input_topic: /leo1/cmd_vel_smoothed
+    output_topic: /leo1/cmd_vel_guarded
+    scan_topic: /leo1/scan_filtered
+    odom_topic: /leo1/odom
+    battery_topic: /battery_state
+    require_battery: false
+    require_camera: false
+    max_linear_speed: 0.26
+    max_angular_speed: 0.9
+    command_timeout: 1.5
+    scan_timeout: 0.6
+    odom_timeout: 1.0
+    battery_timeout: 2.0
+    min_battery_voltage: 11.0
+    minimum_valid_scan_points: 30
+    publish_rate: 20.0
+    diagnostic_rate: 1.0

@@ -108,8 +108,19 @@ class MapRecorder(Node):
                             len(self.trail))
         cv2.imwrite(self.out_base + '_final.png', last)
 
+        # Exploration path as a simple CSV of map-frame poses (x, y).
+        path_csv = self.out_base + '_path.csv'
+        with open(path_csv, 'w', encoding='utf-8') as f:
+            f.write('x,y\n')
+            for tx, ty in self.trail:
+                f.write(f'{tx:.4f},{ty:.4f}\n')
+        print(f'path written: {path_csv} ({len(self.trail)} poses)', flush=True)
+
         # mp4v first; MJPG/avi fallback for restricted opencv builds
-        for ext, fourcc in (('.mp4', 'mp4v'), ('.avi', 'MJPG')):
+        # 'avc1' (H.264) first: 'mp4v' is MPEG-4 Part 2, which plays in VLC but
+        # NO browser will decode it, so those files look silently broken on any
+        # web page. Fall back only if this OpenCV build lacks an H.264 encoder.
+        for ext, fourcc in (('.mp4', 'avc1'), ('.mp4', 'mp4v'), ('.avi', 'MJPG')):
             vw = cv2.VideoWriter(self.out_base + ext,
                                  cv2.VideoWriter_fourcc(*fourcc), 5,
                                  (w, h))

@@ -64,3 +64,29 @@ install/setup_wsl.bash
 maps/*.data
 reports/**/*.data
 report_package/**/*.data
+
+# --- Third-party clones (nested git repos; fetch, do not vendor) ---
+# frontier_exploration_ros2 is pinned in bundle_ref/dependencies.repos:
+#   vcs import src < bundle_ref/dependencies.repos
+src/frontier_exploration_ros2/
+src/m-explore-ros2/
+src/husarion_gz_worlds/
+
+# --- Overnight experiment run outputs (2026-08-17) ---
+# ~36 MB of maps, time-lapses, pose CSVs and stack logs. The written findings
+# and the self-contained dashboard are tracked; the raw runs stay on disk.
+# Regenerate: scripts/exp_run.sh -> scripts/exp_score.sh -> scripts/exp_compare.py
+reports/exp/**
+!reports/exp/FINDINGS.md
+!reports/exp/BUNDLE_BUGS.md
+!reports/exp/comparison.md
+!reports/exp/dashboard.html
+
+# Older local run artifacts
+reports/slam_bench*/
+reports/slam_smoke/
+reports/slam_verify/
+reports/sim_run_*/
+reports/*.log
+reports/*.png
+reports/*.json

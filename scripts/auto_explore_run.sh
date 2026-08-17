@@ -31,7 +31,10 @@ in_sim_bg() { docker exec -d leo_sim bash -lc "source /opt/ros/humble/setup.bash
 
 # ---------- 1. sim ----------
 LOG "starting sim: world=$WORLD"
-CAM=false; { [[ "$MODE" == "item_search" ]] || [[ "$WORLD" == *husarion* ]]; } && CAM=true
+# RGBD camera stays on unless the caller sets ENABLE_CAMERA=false.
+# It feeds Nav2 costmaps (table legs / low obstacles). SLAM itself is lidar.
+CAM="${ENABLE_CAMERA:-true}"
+LOG "camera enable_camera=$CAM"
 WORLD="$WORLD" GUI=false ENABLE_CAMERA="$CAM" "$ROOT/scripts/sim_gpu_wsl.sh"
 
 LOG "waiting for /leo1/scan"

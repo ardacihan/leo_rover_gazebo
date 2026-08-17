@@ -1,0 +1,20 @@
+scan_to_scan_filter_chain:
+  ros__parameters:
+    use_sim_time: true
+    # laser_filters 2.0.x aborts with
+    #   tf2_ros::CreateTimerInterfaceException: timer interface not set
+    # when tf_message_filter_target_frame is set: the node builds a tf2
+    # message filter without giving it a timer interface. The box filter
+    # resolves scan -> box_frame itself, so drop the message filter.
+    filter1:
+      name: rover_self_box
+      type: laser_filters/LaserScanBoxFilter
+      params:
+        box_frame: leo1/base_link
+        min_x: -0.22
+        max_x: 0.22
+        min_y: -0.22
+        max_y: 0.22
+        min_z: -0.10
+        max_z: 0.80
+        invert: false
