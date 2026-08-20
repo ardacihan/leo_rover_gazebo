@@ -34,18 +34,15 @@ early in five runs out of fourteen: the rover stalls and never restarts. It is
 always a stall, never a collision — **zero contacts in every scored run
 tonight**, one near-miss in total.
 
-In the last ninety minutes one cause was found and fixed. Nav2's `BackUp`
+In the last ninety minutes one contributing cause was found and changed
+(it did not, on later testing, measurably fix the stall -- see 6.9). Nav2's `BackUp`
 recovery is given 10 s to travel 0.25 m at 0.04 m/s, which the collision
 monitor's 75% slowdown turns into 8.3 s of need against a 10 s budget; it was
 timing out and blacklisting the frontier. With a 20 s allowance and 0.08 m/s,
-**all three worst-stalling seeds recovered — 0.519, 0.301 and 0.645 coverage
-became 0.981, 0.979 and 0.977** — and the timeout log line went to zero in
-every one. Applied via `scripts/apply_recovery_timeout.py` (reversible).
-
-Three seeds is still three seeds, found at the end of the night, and the *other*
-recovery failure path (`Collision Ahead`) is untouched. **Still drive the first
-map yourself**, but expect the autonomous stack to be markedly better than the
-fourteen-run table below suggests.
+the five seeds that had stalled all completed. But on **fresh** seeds the stall
+rate went 5-in-14 to 1-in-6 — p = 0.61, no evidence of an effect. The change is
+kept because it is free and cannot hurt, not because it works. **Drive the first
+map yourself.**
 
 **A caveat on the evidence.** Nine of the night's runs had to be discarded — six
 because two experiment queues ended up driving two simulators on one ROS domain
@@ -749,20 +746,32 @@ Why believe this one more than the two that failed: the mechanism was predicted
 from the numbers *before* the run, the intervention made the predicted log line
 vanish, and the outcome replicated on every seed tried.
 
-**How much to believe it, stated honestly.** Re-running the *pre-fix* build on
-seed 101 a second time gave 0.955 coverage — it did not stall. So the stall is
-stochastic per seed, and "five paired improvements" is not five independent
-confirmations: some of those seeds might have completed anyway. Taking the
-pre-fix stall rate as 5 in 14, the chance of five clean post-fix runs by luck
-alone is 0.64^5 = 0.11. Suggestive, not settled. Six further post-fix runs on
-fresh seeds are in `reports/night/p*_post_*` to put a real number on it. The earlier
-two had none of those properties — they were a metric moving on one seed.
+**How much to believe it — the answer, after testing it properly.** Not much.
 
-**This does not close the stall.** It removes one of the two recovery failure
-paths. The other, `Collision Ahead` — where the recovery's own costmap check
-refuses to move in the commanded direction — is untouched and still open.
+Re-running the *pre-fix* build on seed 101 gave 0.955 coverage rather than
+stalling, so the stall is stochastic per seed. That makes the five paired
+improvements above much weaker evidence than they look: those seeds were
+chosen *because* they had stalled, and regression to the mean alone predicts
+they improve on a re-run.
 
-### A promising fix that did not replicate
+The unbiased test is fresh seeds. Six were run (`reports/night/p1..p6`):
+
+| | stalled | rate |
+| --- | --- | --- |
+| pre-fix, all shipped-config runs | 5 of 14 | 36% |
+| post-fix, six fresh seeds | 1 of 6 | 17% |
+
+Fisher exact, two-sided: **p = 0.61**. That is no evidence of an effect. The
+point estimate moved the right way and the sample is far too small to say
+anything; six more runs would still not settle it.
+
+What survives is narrower and still worth keeping: the 10 s allowance really
+was only 1.6x the nominal manoeuvre time, the change costs nothing, and it
+cannot make things worse. It stays in. But it should not be described as
+having fixed the stall, and the earlier draft of this section did exactly
+that.
+
+### A promising fix that did not replicate### A promising fix that did not replicate
 
 Seed 55 stalled at 85% coverage with 39 NavFn `failed to create a plan from
 potential` errors. Frontier goals sit on the boundary of known space, often a
@@ -798,6 +807,36 @@ Recording this partly for the result and partly for the method: the earlier
 version of this project's notes warns that aggregate metrics reward changes
 that are actually noise, and a single dramatic run is exactly what that looks
 like from the inside.
+
+## 6b. Reading the 2026-08-20 real-rover replays
+
+Two drives were recorded on the physical rover and replayed through several
+costmap variants (`reports/drive_2026-08-20/`). The replay is **shadow mode**:
+the bag drives the robot and the stack only perceives, maps, plans and
+*records* what it would have commanded as `/cmd_vel_shadow`. Nothing the stack
+decides moves anything.
+
+That split the outputs into two kinds, and only one is evidence:
+
+**Faithful** — anything that is a function of the recorded sensor data and the
+config: the maps, the global and local costmaps, and the footprint collision
+check, which evaluates real costmaps at real poses. `Collision Ahead` came out
+**0 across every variant of both drives**, in roughly a dozen recovery
+attempts. The inscribed-band refusal that dominates in simulation did not occur
+once on this office's costmaps.
+
+**Not faithful** — anything that measures the robot responding to a command.
+`Exceeded time allowance` (5-6 per drive), `Failed to make progress` (16-17),
+`backup failed`, `spin failed`, goal successes and failures. In shadow mode a
+`BackUp` can only "succeed" if the human driver happened to be reversing at
+that moment; otherwise it burns its entire allowance and reports a timeout. The
+logs show exactly that — failures landing at 20.1 s and 20.0 s, the allowance
+to the decisecond, while the successful ones finish in 1.7 s.
+
+So the replays cannot say whether recoveries work on the rover, and any count
+of navigation events taken from them is measuring the harness. They are
+excellent for perception and costmap questions, which is what they were built
+for and what the camera-layer fix rests on.
 
 ## 7. What to ship
 

@@ -1,0 +1,16 @@
+[INFO] [1787219119.405435593] [map_saver]: 
+	map_saver lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1787219119.405599956] [map_saver]: Creating
+[INFO] [1787219119.405662768] [map_saver]: Configuring
+[INFO] [1787219119.406838354] [map_saver]: Saving map from 'map' topic to '/mnt/c/Users/smirn/Desktop/leo_rover_gazebo/reports/night/p6_post_depot_s2006/map' file
+[WARN] [1787219119.406868480] [map_saver]: Free threshold unspecified. Setting it to default value: 0.250000
+[WARN] [1787219119.406875548] [map_saver]: Occupied threshold unspecified. Setting it to default value: 0.650000
+[WARN] [1787219119.449739117] [map_io]: Image format unspecified. Setting it to: pgm
+[INFO] [1787219119.449834791] [map_io]: Received a 283 X 285 map @ 0.05 m/pix
+[INFO] [1787219119.501949888] [map_io]: Writing map occupancy data to /mnt/c/Users/smirn/Desktop/leo_rover_gazebo/reports/night/p6_post_depot_s2006/map.pgm
+[INFO] [1787219119.517100478] [map_io]: Writing map metadata to /mnt/c/Users/smirn/Desktop/leo_rover_gazebo/reports/night/p6_post_depot_s2006/map.yaml
+[INFO] [1787219119.518995021] [map_io]: Map saved
+[INFO] [1787219119.519017292] [map_saver]: Map saved successfully
+[INFO] [1787219119.520721059] [map_saver]: Destroying

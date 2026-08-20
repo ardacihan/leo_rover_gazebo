@@ -1,0 +1,65 @@
+===== MAP QUALITY =====
+label                  p6_post_depot_s2006
+iou@2_aligned          0.7152
+precision@2_aligned    1.0000
+recall@2_aligned       0.7755
+rmse_m_aligned         0.0327
+phantom_frac           0.0000
+align_shift_m          0.0707
+align_deg              0.5000
+iou@2                  0.6547
+phantom_frac_raw       0.0041
+rmse_m                 0.0569
+slam_ate_rmse_m        0.0820
+slam_final_err_m       0.0338
+odom_ate_rmse_m        3.1476
+odom_final_err_m       2.7173
+free_area_m2           176.6950
+gt_free_area_m2        180.5850
+free_area_ratio        0.9785
+known_area_m2          188.1450
+map_extent_m           14.15, 14.25
+world_extent_m         14.20, 14.20
+extent_excess_m        -0.05, 0.05
+wrote /ros2_ws/reports/night/p6_post_depot_s2006/map_vs_world.png
+wrote /ros2_ws/reports/night/p6_post_depot_s2006/map_score.json
+
+===== DRIVING SAFETY =====
+samples                1269
+duration_s             634.0
+path_len_m             80.54
+min_clearance_m        0.35
+p05_clearance_m        0.412
+contacts               0
+contact_events         0
+near_misses            0
+doorway_passes         22
+stuck_events           7
+stuck_time_s           231.0
+stuck_frac             0.364
+mean_speed_mps         0.127
+visited_area_m2        1.67
+
+wrote /ros2_ws/reports/night/p6_post_depot_s2006/safety_score.json
+
+artefacts in reports/night/p6_post_depot_s2006:
+  972  explorer.log
+  161  imu.log
+  80670  map.pgm
+  121  map.yaml
+  1348  map_saver.log
+  1479  map_score.json
+  122410  map_vs_world.png
+  7781  odom.log
+  1179146  overlay.log
+  93146  pose_error.csv
+  0  pose_rec.log
+  1444  run.log
+  329  safety_score.json
+  5464  sim.log
+  523  timelapse.log
+  73627  timelapse.mp4
+  6876  timelapse_final.png
+  926  timelapse_path.csv
+  14941  traj.csv
+  0  traj.log

@@ -1,0 +1,882 @@
+[INFO] [launch]: All log files can be found below /home/smirn/.ros/log/2026-08-20-18-07-19-130233-Tornadosky-14768
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [scan_to_scan_filter_chain-1]: process started with pid [14798]
+[INFO] [async_slam_toolbox_node-2]: process started with pid [14800]
+[INFO] [velocity_guard-3]: process started with pid [14802]
+[INFO] [collision_monitor-4]: process started with pid [14804]
+[INFO] [lifecycle_manager-5]: process started with pid [14806]
+[INFO] [cloud_filter-6]: process started with pid [14808]
+[scan_to_scan_filter_chain-1] [WARN] [1787242039.180332882] [rcl.logging_rosout]: Publisher already registered for provided node name. If this is due to multiple nodes with the same name then all logs for that logger name will go out over the existing publisher. As soon as any node with that name is destructed it will unregister the publisher, preventing any further logs for that name from being published on the rosout topic.
+[async_slam_toolbox_node-2] [INFO] [1787242039.182811006] [slam_toolbox]: Node using stack size 40000000
+[lifecycle_manager-5] [INFO] [1787242039.184744602] [lifecycle_manager_collision_monitor]: Creating
+[lifecycle_manager-5] [INFO] [1787242039.185951834] [lifecycle_manager_collision_monitor]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[collision_monitor-4] [INFO] [1787242039.186308328] [collision_monitor]: 
+[collision_monitor-4] 	collision_monitor lifecycle node launched. 
+[collision_monitor-4] 	Waiting on external lifecycle transitions to activate
+[collision_monitor-4] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[lifecycle_manager-5] [INFO] [1787242039.187417028] [lifecycle_manager_collision_monitor]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-5] [INFO] [1787242039.187449410] [lifecycle_manager_collision_monitor]: [34m[1mConfiguring collision_monitor[0m[0m
+[collision_monitor-4] [INFO] [1787242039.187624890] [collision_monitor]: Configuring
+[collision_monitor-4] [INFO] [1787242039.190592067] [collision_monitor]: [StopZone]: Creating Polygon
+[collision_monitor-4] [INFO] [1787242039.191726914] [collision_monitor]: [FootprintApproach]: Creating Polygon
+[collision_monitor-4] [INFO] [1787242039.192679438] [collision_monitor]: [SlowdownZone]: Creating Polygon
+[collision_monitor-4] [INFO] [1787242039.193276308] [collision_monitor]: [scan]: Creating Scan
+[lifecycle_manager-5] [INFO] [1787242039.195027172] [lifecycle_manager_collision_monitor]: [34m[1mActivating collision_monitor[0m[0m
+[collision_monitor-4] [INFO] [1787242039.195166694] [collision_monitor]: Activating
+[collision_monitor-4] [INFO] [1787242039.195198376] [collision_monitor]: Creating bond (collision_monitor) to lifecycle manager.
+[lifecycle_manager-5] [INFO] [1787242039.196196466] [lifecycle_manager_collision_monitor]: [34m[1mManaged nodes are active[0m[0m
+[async_slam_toolbox_node-2] [INFO] [1787242039.210648997] [slam_toolbox]: Using solver plugin solver_plugins::CeresSolver
+[async_slam_toolbox_node-2] [INFO] [1787242039.210758300] [slam_toolbox]: CeresSolver: Using HuberLoss loss function.
+[async_slam_toolbox_node-2] [INFO] [1787242039.210764726] [slam_toolbox]: CeresSolver: Using SCHUR_JACOBI preconditioner.
+[velocity_guard-3] [INFO] [1787242039.472334493] [velocity_guard]: Guarding /cmd_vel -> /cmd_vel_guarded; scan=/scan_filtered, odom=/wheel_odom, battery_required=False
+[cloud_filter-6] [INFO] [1787242039.494991885] [cloud_filter]: cloud_filter /camera/camera/depth/color/points -> /camera_points_filtered z=[0.03,0.65]m in base_footprint, voxel 0.03 m, min neighbourhood 4
+[INFO] [controller_server-7]: process started with pid [15006]
+[INFO] [smoother_server-8]: process started with pid [15008]
+[INFO] [planner_server-9]: process started with pid [15010]
+[INFO] [behavior_server-10]: process started with pid [15012]
+[INFO] [bt_navigator-11]: process started with pid [15014]
+[INFO] [waypoint_follower-12]: process started with pid [15016]
+[INFO] [velocity_smoother-13]: process started with pid [15018]
+[INFO] [lifecycle_manager-14]: process started with pid [15020]
+[behavior_server-10] [INFO] [1787242042.578508361] [behavior_server]: 
+[behavior_server-10] 	behavior_server lifecycle node launched. 
+[behavior_server-10] 	Waiting on external lifecycle transitions to activate
+[behavior_server-10] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[waypoint_follower-12] [INFO] [1787242042.583686122] [waypoint_follower]: 
+[waypoint_follower-12] 	waypoint_follower lifecycle node launched. 
+[waypoint_follower-12] 	Waiting on external lifecycle transitions to activate
+[waypoint_follower-12] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[velocity_smoother-13] [INFO] [1787242042.583845012] [velocity_smoother]: 
+[velocity_smoother-13] 	velocity_smoother lifecycle node launched. 
+[velocity_smoother-13] 	Waiting on external lifecycle transitions to activate
+[velocity_smoother-13] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[waypoint_follower-12] [INFO] [1787242042.584277467] [waypoint_follower]: Creating
+[lifecycle_manager-14] [INFO] [1787242042.584462108] [lifecycle_manager_navigation]: Creating
+[controller_server-7] [INFO] [1787242042.584768496] [controller_server]: 
+[controller_server-7] 	controller_server lifecycle node launched. 
+[controller_server-7] 	Waiting on external lifecycle transitions to activate
+[controller_server-7] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[bt_navigator-11] [INFO] [1787242042.586825528] [bt_navigator]: 
+[bt_navigator-11] 	bt_navigator lifecycle node launched. 
+[bt_navigator-11] 	Waiting on external lifecycle transitions to activate
+[bt_navigator-11] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[bt_navigator-11] [INFO] [1787242042.586980725] [bt_navigator]: Creating
+[lifecycle_manager-14] [INFO] [1787242042.587177617] [lifecycle_manager_navigation]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[smoother_server-8] [INFO] [1787242042.588446007] [smoother_server]: 
+[smoother_server-8] 	smoother_server lifecycle node launched. 
+[smoother_server-8] 	Waiting on external lifecycle transitions to activate
+[smoother_server-8] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-7] [INFO] [1787242042.588904247] [controller_server]: Creating controller server
+[smoother_server-8] [INFO] [1787242042.589403776] [smoother_server]: Creating smoother server
+[planner_server-9] [INFO] [1787242042.593323855] [planner_server]: 
+[planner_server-9] 	planner_server lifecycle node launched. 
+[planner_server-9] 	Waiting on external lifecycle transitions to activate
+[planner_server-9] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-9] [INFO] [1787242042.594346827] [planner_server]: Creating
+[controller_server-7] [INFO] [1787242042.605781209] [local_costmap.local_costmap]: 
+[controller_server-7] 	local_costmap lifecycle node launched. 
+[controller_server-7] 	Waiting on external lifecycle transitions to activate
+[controller_server-7] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-7] [INFO] [1787242042.606352727] [local_costmap.local_costmap]: Creating Costmap
+[planner_server-9] [INFO] [1787242042.608506869] [global_costmap.global_costmap]: 
+[planner_server-9] 	global_costmap lifecycle node launched. 
+[planner_server-9] 	Waiting on external lifecycle transitions to activate
+[planner_server-9] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-9] [INFO] [1787242042.608804289] [global_costmap.global_costmap]: Creating Costmap
+[lifecycle_manager-14] [INFO] [1787242042.737813291] [lifecycle_manager_navigation]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-14] [INFO] [1787242042.737861299] [lifecycle_manager_navigation]: [34m[1mConfiguring controller_server[0m[0m
+[controller_server-7] [INFO] [1787242042.738075047] [controller_server]: Configuring controller interface
+[controller_server-7] [INFO] [1787242042.738303556] [controller_server]: getting goal checker plugins..
+[controller_server-7] [INFO] [1787242042.738656333] [controller_server]: Controller frequency set to 15.0000Hz
+[controller_server-7] [INFO] [1787242042.738680813] [local_costmap.local_costmap]: Configuring
+[controller_server-7] [INFO] [1787242042.755423542] [local_costmap.local_costmap]: Using plugin "obstacle_layer"
+[controller_server-7] [INFO] [1787242042.757594512] [local_costmap.local_costmap]: Subscribed to Topics: scan
+[controller_server-7] [INFO] [1787242042.760973980] [local_costmap.local_costmap]: Initialized plugin "obstacle_layer"
+[controller_server-7] [INFO] [1787242042.761003338] [local_costmap.local_costmap]: Using plugin "camera_obstacle_layer"
+[controller_server-7] [INFO] [1787242042.761674263] [local_costmap.local_costmap]: Subscribed to Topics: camera
+[controller_server-7] [INFO] [1787242042.764471031] [local_costmap.local_costmap]: Initialized plugin "camera_obstacle_layer"
+[controller_server-7] [INFO] [1787242042.764491803] [local_costmap.local_costmap]: Using plugin "inflation_layer"
+[controller_server-7] [INFO] [1787242042.765233785] [local_costmap.local_costmap]: Initialized plugin "inflation_layer"
+[controller_server-7] [INFO] [1787242042.772747019] [controller_server]: Created progress_checker : progress_checker of type nav2_controller::SimpleProgressChecker
+[controller_server-7] [INFO] [1787242042.773325821] [controller_server]: Created goal checker : general_goal_checker of type nav2_controller::SimpleGoalChecker
+[controller_server-7] [INFO] [1787242042.773720707] [controller_server]: Controller Server has general_goal_checker  goal checkers available.
+[controller_server-7] [INFO] [1787242042.774704958] [controller_server]: Created controller : FollowPath of type nav2_rotation_shim_controller::RotationShimController
+[controller_server-7] [INFO] [1787242042.776858005] [controller_server]: Created internal controller for rotation shimming: FollowPath of type nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-7] [INFO] [1787242042.781380452] [controller_server]: Controller Server has FollowPath  controllers available.
+[lifecycle_manager-14] [INFO] [1787242042.787479070] [lifecycle_manager_navigation]: [34m[1mConfiguring smoother_server[0m[0m
+[smoother_server-8] [INFO] [1787242042.787640696] [smoother_server]: Configuring smoother server
+[smoother_server-8] [INFO] [1787242042.793563576] [smoother_server]: Created smoother : simple_smoother of type nav2_smoother::SimpleSmoother
+[smoother_server-8] [INFO] [1787242042.794165483] [smoother_server]: Smoother Server has simple_smoother  smoothers available.
+[lifecycle_manager-14] [INFO] [1787242042.798913004] [lifecycle_manager_navigation]: [34m[1mConfiguring planner_server[0m[0m
+[planner_server-9] [INFO] [1787242043.323695014] [planner_server]: Configuring
+[planner_server-9] [INFO] [1787242043.323749822] [global_costmap.global_costmap]: Configuring
+[planner_server-9] [INFO] [1787242043.328386307] [global_costmap.global_costmap]: Using plugin "static_layer"
+[planner_server-9] [INFO] [1787242043.333075905] [global_costmap.global_costmap]: Subscribing to the map topic (/map) with transient local durability
+[planner_server-9] [INFO] [1787242043.335321213] [global_costmap.global_costmap]: Subscribing to updates
+[planner_server-9] [INFO] [1787242043.337094796] [global_costmap.global_costmap]: Initialized plugin "static_layer"
+[planner_server-9] [INFO] [1787242043.337128140] [global_costmap.global_costmap]: Using plugin "obstacle_layer"
+[planner_server-9] [INFO] [1787242043.338068196] [global_costmap.global_costmap]: Subscribed to Topics: scan
+[planner_server-9] [INFO] [1787242043.341266792] [global_costmap.global_costmap]: Initialized plugin "obstacle_layer"
+[planner_server-9] [INFO] [1787242043.341293711] [global_costmap.global_costmap]: Using plugin "inflation_layer"
+[planner_server-9] [INFO] [1787242043.342063585] [global_costmap.global_costmap]: Initialized plugin "inflation_layer"
+[planner_server-9] [INFO] [1787242043.349189960] [planner_server]: Created global planner plugin GridBased of type nav2_navfn_planner/NavfnPlanner
+[planner_server-9] [INFO] [1787242043.349233685] [planner_server]: Configuring plugin GridBased of type NavfnPlanner
+[planner_server-9] [INFO] [1787242043.349801474] [planner_server]: Planner Server has GridBased  planners available.
+[lifecycle_manager-14] [INFO] [1787242043.357810823] [lifecycle_manager_navigation]: [34m[1mConfiguring behavior_server[0m[0m
+[behavior_server-10] [INFO] [1787242043.357980929] [behavior_server]: Configuring
+[behavior_server-10] [INFO] [1787242043.363980416] [behavior_server]: Creating behavior plugin spin of type nav2_behaviors/Spin
+[behavior_server-10] [INFO] [1787242043.364366428] [behavior_server]: Configuring spin
+[behavior_server-10] [INFO] [1787242043.369352930] [behavior_server]: Creating behavior plugin backup of type nav2_behaviors/BackUp
+[behavior_server-10] [INFO] [1787242043.369719508] [behavior_server]: Configuring backup
+[behavior_server-10] [INFO] [1787242043.374021229] [behavior_server]: Creating behavior plugin drive_on_heading of type nav2_behaviors/DriveOnHeading
+[behavior_server-10] [INFO] [1787242043.374375877] [behavior_server]: Configuring drive_on_heading
+[behavior_server-10] [INFO] [1787242043.378649361] [behavior_server]: Creating behavior plugin assisted_teleop of type nav2_behaviors/AssistedTeleop
+[behavior_server-10] [INFO] [1787242043.379528544] [behavior_server]: Configuring assisted_teleop
+[behavior_server-10] [INFO] [1787242043.385228230] [behavior_server]: Creating behavior plugin wait of type nav2_behaviors/Wait
+[behavior_server-10] [INFO] [1787242043.385664557] [behavior_server]: Configuring wait
+[lifecycle_manager-14] [INFO] [1787242043.389910193] [lifecycle_manager_navigation]: [34m[1mConfiguring bt_navigator[0m[0m
+[bt_navigator-11] [INFO] [1787242043.390087939] [bt_navigator]: Configuring
+[lifecycle_manager-14] [INFO] [1787242043.440116571] [lifecycle_manager_navigation]: [34m[1mConfiguring waypoint_follower[0m[0m
+[waypoint_follower-12] [INFO] [1787242043.440287939] [waypoint_follower]: Configuring
+[waypoint_follower-12] [INFO] [1787242043.448648651] [waypoint_follower]: Created waypoint_task_executor : wait_at_waypoint of type nav2_waypoint_follower::WaitAtWaypoint
+[lifecycle_manager-14] [INFO] [1787242043.449235381] [lifecycle_manager_navigation]: [34m[1mConfiguring velocity_smoother[0m[0m
+[velocity_smoother-13] [INFO] [1787242043.449389426] [velocity_smoother]: Configuring velocity smoother
+[lifecycle_manager-14] [INFO] [1787242043.452432219] [lifecycle_manager_navigation]: [34m[1mActivating controller_server[0m[0m
+[controller_server-7] [INFO] [1787242043.452538948] [controller_server]: Activating
+[controller_server-7] [INFO] [1787242043.452559181] [local_costmap.local_costmap]: Activating
+[controller_server-7] [INFO] [1787242043.452564744] [local_costmap.local_costmap]: Checking transform
+[controller_server-7] [INFO] [1787242043.452576043] [local_costmap.local_costmap]: Timed out waiting for transform from base_footprint to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[controller_server-7] [INFO] [1787242043.953021231] [local_costmap.local_costmap]: Timed out waiting for transform from base_footprint to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[controller_server-7] [INFO] [1787242044.452777305] [local_costmap.local_costmap]: Timed out waiting for transform from base_footprint to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[controller_server-7] [INFO] [1787242044.952897828] [local_costmap.local_costmap]: Timed out waiting for transform from base_footprint to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[controller_server-7] [INFO] [1787242045.452650967] [local_costmap.local_costmap]: Timed out waiting for transform from base_footprint to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[controller_server-7] [INFO] [1787242045.952722223] [local_costmap.local_costmap]: Timed out waiting for transform from base_footprint to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[controller_server-7] [INFO] [1787242046.452729710] [local_costmap.local_costmap]: Timed out waiting for transform from base_footprint to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[controller_server-7] [INFO] [1787242046.952787185] [local_costmap.local_costmap]: Timed out waiting for transform from base_footprint to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[controller_server-7] [INFO] [1787242047.452750703] [local_costmap.local_costmap]: Timed out waiting for transform from base_footprint to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[controller_server-7] [INFO] [1787242047.952896284] [local_costmap.local_costmap]: Timed out waiting for transform from base_footprint to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[controller_server-7] [INFO] [1787242048.452714068] [local_costmap.local_costmap]: Timed out waiting for transform from base_footprint to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[controller_server-7] [INFO] [1787242048.952671218] [local_costmap.local_costmap]: Timed out waiting for transform from base_footprint to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[controller_server-7] [INFO] [1787242049.452744236] [local_costmap.local_costmap]: Timed out waiting for transform from base_footprint to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[controller_server-7] [INFO] [1787242049.952647635] [local_costmap.local_costmap]: Timed out waiting for transform from base_footprint to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[scan_to_scan_filter_chain-1] [WARN] [1787242050.228711027] [scan_to_scan_filter_chain]: diagnostic_updater: No HW_ID was set. This is probably a bug. Please report it. For devices that do not have a HW_ID, set this value to 'none'. This warning only occurs once all diagnostics are OK. It is okay to wait until the device is open before calling setHardwareID.
+[velocity_guard-3] [WARN] [1787242050.229319918] [velocity_guard]: velocity guard state: command_missing
+[collision_monitor-4] [WARN] [1787242050.237031027] [tf2_buffer]: Detected jump back in time. Clearing TF buffer.
+[scan_to_scan_filter_chain-1] [WARN] [1787242050.237033641] [tf2_buffer]: Detected jump back in time. Clearing TF buffer.
+[scan_to_scan_filter_chain-1] [WARN] [1787242050.237039419] [tf2_buffer]: Detected jump back in time. Clearing TF buffer.
+[controller_server-7] [INFO] [1787242050.452679253] [local_costmap.local_costmap]: Timed out waiting for transform from base_footprint to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[controller_server-7] [INFO] [1787242050.952710878] [local_costmap.local_costmap]: Timed out waiting for transform from base_footprint to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[INFO] [explore-15]: process started with pid [15211]
+[explore-15] [INFO] [1787242051.239145628] [explore_node]: Waiting for costmap to become available, topic: map
+[controller_server-7] [INFO] [1787242051.452635605] [local_costmap.local_costmap]: Timed out waiting for transform from base_footprint to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[controller_server-7] [INFO] [1787242051.952764929] [local_costmap.local_costmap]: start
+[controller_server-7] [INFO] [1787242052.055227293] [controller_server]: Activating controller: FollowPath of type nav2_rotation_shim_controller::RotationShimController
+[controller_server-7] [INFO] [1787242052.055513177] [controller_server]: Activating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-7] [INFO] [1787242052.055616619] [controller_server]: Creating bond (controller_server) to lifecycle manager.
+[lifecycle_manager-14] [INFO] [1787242052.058725978] [lifecycle_manager_navigation]: [34m[1mActivating smoother_server[0m[0m
+[smoother_server-8] [INFO] [1787242052.058917916] [smoother_server]: Activating
+[smoother_server-8] [INFO] [1787242052.058989936] [smoother_server]: Creating bond (smoother_server) to lifecycle manager.
+[lifecycle_manager-14] [INFO] [1787242052.061464421] [lifecycle_manager_navigation]: [34m[1mActivating planner_server[0m[0m
+[planner_server-9] [INFO] [1787242052.061725509] [planner_server]: Activating
+[planner_server-9] [INFO] [1787242052.061887936] [global_costmap.global_costmap]: Activating
+[planner_server-9] [INFO] [1787242052.062007982] [global_costmap.global_costmap]: Checking transform
+[planner_server-9] [INFO] [1787242052.062053725] [global_costmap.global_costmap]: Timed out waiting for transform from base_footprint to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[async_slam_toolbox_node-2] [WARN] [1787242052.523320625] [slam_toolbox]: minimum laser range setting (0.1 m) exceeds the capabilities of the used Lidar (0.2 m)
+[async_slam_toolbox_node-2] Registering sensor: [Custom Described Lidar]
+[planner_server-9] [INFO] [1787242052.562173498] [global_costmap.global_costmap]: Timed out waiting for transform from base_footprint to map to become available, tf error: Lookup would require extrapolation at time 1787226887.720806, but only time 1787226887.894055 is in the buffer, when looking up transform from frame [base_footprint] to frame [map]
+[planner_server-9] [INFO] [1787242053.062208079] [global_costmap.global_costmap]: start
+[planner_server-9] [INFO] [1787242053.215253822] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 157 X 162 at 0.050000 m/pix
+[planner_server-9] [INFO] [1787242053.563897393] [planner_server]: Activating plugin GridBased of type NavfnPlanner
+[planner_server-9] [INFO] [1787242053.565328149] [planner_server]: Creating bond (planner_server) to lifecycle manager.
+[lifecycle_manager-14] [INFO] [1787242053.567740360] [lifecycle_manager_navigation]: [34m[1mActivating behavior_server[0m[0m
+[behavior_server-10] [INFO] [1787242053.567927231] [behavior_server]: Activating
+[behavior_server-10] [INFO] [1787242053.567973026] [behavior_server]: Activating spin
+[behavior_server-10] [INFO] [1787242053.568008914] [behavior_server]: Activating backup
+[behavior_server-10] [INFO] [1787242053.568032944] [behavior_server]: Activating drive_on_heading
+[behavior_server-10] [INFO] [1787242053.568041128] [behavior_server]: Activating assisted_teleop
+[behavior_server-10] [INFO] [1787242053.568060210] [behavior_server]: Activating wait
+[behavior_server-10] [INFO] [1787242053.568103521] [behavior_server]: Creating bond (behavior_server) to lifecycle manager.
+[lifecycle_manager-14] [INFO] [1787242053.570155858] [lifecycle_manager_navigation]: [34m[1mActivating bt_navigator[0m[0m
+[bt_navigator-11] [INFO] [1787242053.570395649] [bt_navigator]: Activating
+[bt_navigator-11] [INFO] [1787242053.623348760] [bt_navigator]: Creating bond (bt_navigator) to lifecycle manager.
+[lifecycle_manager-14] [INFO] [1787242053.625535965] [lifecycle_manager_navigation]: [34m[1mActivating waypoint_follower[0m[0m
+[waypoint_follower-12] [INFO] [1787242053.625753523] [waypoint_follower]: Activating
+[waypoint_follower-12] [INFO] [1787242053.625810496] [waypoint_follower]: Creating bond (waypoint_follower) to lifecycle manager.
+[lifecycle_manager-14] [INFO] [1787242053.627924972] [lifecycle_manager_navigation]: [34m[1mActivating velocity_smoother[0m[0m
+[velocity_smoother-13] [INFO] [1787242053.628084031] [velocity_smoother]: Activating
+[velocity_smoother-13] [INFO] [1787242053.628144668] [velocity_smoother]: Creating bond (velocity_smoother) to lifecycle manager.
+[lifecycle_manager-14] [INFO] [1787242053.630215772] [lifecycle_manager_navigation]: [34m[1mManaged nodes are active[0m[0m
+[explore-15] [INFO] [1787242054.252336300] [explore_node]: Waiting to connect to move_base nav2 server
+[explore-15] [INFO] [1787242054.252488060] [explore_node]: Connected to move_base nav2 server
+[explore-15] [INFO] [1787242054.252521025] [explore_node]: Getting initial pose of the robot
+[bt_navigator-11] [INFO] [1787242054.253521629] [bt_navigator]: Begin navigating from current location (4.71, -1.77) to (5.24, -2.81)
+[controller_server-7] [INFO] [1787242054.274013574] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-7] [WARN] [1787242054.274101520] [controller_server]: No goal checker was specified in parameter 'current_goal_checker'. Server will use only plugin loaded general_goal_checker . This warning will appear once.
+[controller_server-7] [INFO] [1787242055.340891710] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242056.340889557] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242057.407571314] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242058.407554577] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242059.474247862] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242060.474224705] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242061.540894279] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242062.540874680] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242063.540914300] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242064.607550781] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242065.607585746] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242066.674194095] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242067.674247897] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242068.740884648] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242069.740873884] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242070.807590749] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242071.807572862] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242072.840417830] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242073.840388439] [controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1787242074.373937708] [controller_server]: Failed to make progress
+[controller_server-7] [WARN] [1787242074.374271860] [controller_server]: [follow_path] [ActionServer] Aborting handle.
+[controller_server-7] [INFO] [1787242074.386804133] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[controller_server-7] [INFO] [1787242074.387851821] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-7] [WARN] [1787242074.488176674] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[controller_server-7] [INFO] [1787242074.921399304] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242075.921469370] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242076.921427902] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242077.988034979] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242078.988036071] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242080.054693471] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242081.054709755] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242082.121377070] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242083.121368451] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242084.121400321] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242085.188027556] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242086.188038778] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242087.254713894] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242088.254709229] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242089.321357967] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242090.321404557] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242091.321449068] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242092.388049178] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242093.388047330] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242094.388033535] [controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1787242094.521412417] [controller_server]: Failed to make progress
+[controller_server-7] [WARN] [1787242094.521640574] [controller_server]: [follow_path] [ActionServer] Aborting handle.
+[controller_server-7] [INFO] [1787242094.536720831] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[planner_server-9] [INFO] [1787242094.537296840] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[controller_server-7] [INFO] [1787242094.616947937] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-7] [INFO] [1787242095.683832249] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242096.683821789] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242097.750583003] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242098.750543792] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242099.817184869] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242100.817136164] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242101.883834395] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242102.911262692] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242103.911195462] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242104.977877279] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242105.977898940] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242106.977896022] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242108.044535260] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242109.044525090] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242110.111239158] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242111.111216195] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242112.177854124] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242113.177874029] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242114.177865787] [controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1787242114.644532871] [controller_server]: Failed to make progress
+[controller_server-7] [WARN] [1787242114.644656353] [controller_server]: [follow_path] [ActionServer] Aborting handle.
+[controller_server-7] [INFO] [1787242114.664008866] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[controller_server-7] [INFO] [1787242114.664556237] [controller_server]: Received a goal, begin computing control effort.
+[velocity_guard-3] [WARN] [1787242115.032707125] [velocity_guard]: LaserScan has only 2 finite in-range samples; need 30 (1 consecutive)
+[controller_server-7] [INFO] [1787242115.198080206] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242116.264862573] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242117.264706262] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242118.331418799] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242119.331397406] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242120.398093993] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242121.398032920] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242122.398064063] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242123.464707269] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242124.464712453] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242125.531349141] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242126.531389209] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242127.598050573] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242128.598075354] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242129.664752959] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242130.664687457] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242131.664707597] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242132.697037128] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242133.763769276] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242134.763755643] [controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1787242134.764150013] [controller_server]: Failed to make progress
+[controller_server-7] [WARN] [1787242134.764319025] [controller_server]: [follow_path] [ActionServer] Aborting handle.
+[behavior_server-10] [INFO] [1787242134.787211898] [behavior_server]: Running backup
+[behavior_server-10] [INFO] [1787242134.787592661] [behavior_server]: DriveOnHeading: no acceleration or deceleration limits set
+[behavior_server-10] [WARN] [1787242154.887608270] [behavior_server]: Exceeded time allowance before reaching the DriveOnHeading goal - Exiting DriveOnHeading
+[behavior_server-10] [WARN] [1787242154.887714466] [behavior_server]: backup failed
+[behavior_server-10] [WARN] [1787242154.887779442] [behavior_server]: [backup] [ActionServer] Aborting handle.
+[behavior_server-10] [INFO] [1787242154.906789968] [behavior_server]: Running wait
+[behavior_server-10] [INFO] [1787242157.007078548] [behavior_server]: wait completed successfully
+[controller_server-7] [INFO] [1787242157.056568476] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-7] [INFO] [1787242158.123460601] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242159.123451668] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242160.190182579] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242161.190129375] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242162.256764755] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242163.289512795] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242164.289512514] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242165.289525981] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242166.356173584] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242167.356236294] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242168.422900566] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242169.422895846] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242170.489521759] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242171.489507499] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242172.489493136] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242173.556201556] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242174.556166608] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242175.622850860] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242176.622832935] [controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1787242177.089587206] [controller_server]: Failed to make progress
+[controller_server-7] [WARN] [1787242177.089873307] [controller_server]: [follow_path] [ActionServer] Aborting handle.
+[controller_server-7] [INFO] [1787242177.109179107] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[controller_server-7] [INFO] [1787242177.110011979] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-7] [WARN] [1787242177.190427827] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[controller_server-7] [INFO] [1787242177.643534200] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242178.710241111] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242179.710232237] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242180.710234301] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242181.776899399] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242182.776913039] [controller_server]: Passing new path to controller.
+[velocity_guard-3] [INFO] [1787242183.818298751] [velocity_guard]: velocity guard state: permitted
+[controller_server-7] [INFO] [1787242183.843575097] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242184.843580243] [controller_server]: Passing new path to controller.
+[velocity_guard-3] [WARN] [1787242185.315547308] [velocity_guard]: velocity guard state: command_stale
+[controller_server-7] [INFO] [1787242185.843546952] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242186.910218873] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242187.910224043] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242188.976893594] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242189.976909390] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242191.043585020] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242192.043554615] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242193.075449913] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242194.075449022] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242195.142159629] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242196.142127908] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242197.208780625] [controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1787242197.275469838] [controller_server]: Failed to make progress
+[controller_server-7] [WARN] [1787242197.275637727] [controller_server]: [follow_path] [ActionServer] Aborting handle.
+[behavior_server-10] [INFO] [1787242197.291776249] [behavior_server]: Running spin
+[behavior_server-10] [INFO] [1787242197.292156509] [behavior_server]: Turning 0.60 for spin behavior.
+[velocity_guard-3] [INFO] [1787242201.198902072] [velocity_guard]: velocity guard state: permitted_clamped
+[async_slam_toolbox_node-2] LaserRangeScan contains 509 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 508 range readings, expected 511
+[velocity_guard-3] [WARN] [1787242202.698248708] [velocity_guard]: velocity guard state: command_stale
+[velocity_guard-3] [INFO] [1787242203.797358170] [velocity_guard]: velocity guard state: permitted_clamped
+[async_slam_toolbox_node-2] LaserRangeScan contains 504 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 508 range readings, expected 511
+[velocity_guard-3] [WARN] [1787242205.295737478] [velocity_guard]: velocity guard state: command_stale
+[velocity_guard-3] [INFO] [1787242205.454866392] [velocity_guard]: velocity guard state: permitted_clamped
+[async_slam_toolbox_node-2] LaserRangeScan contains 505 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 502 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 505 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 507 range readings, expected 511
+[planner_server-9] [INFO] [1787242207.219524676] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 161 X 166 at 0.050000 m/pix
+[async_slam_toolbox_node-2] LaserRangeScan contains 510 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 509 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 505 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 505 range readings, expected 511
+[bt_navigator-11] [INFO] [1787242209.270911236] [bt_navigator]: Received goal preemption request
+[bt_navigator-11] [INFO] [1787242209.271230792] [bt_navigator]: Begin navigating from current location (4.07, -2.52) to (5.15, -4.34)
+[behavior_server-10] [INFO] [1787242209.392485185] [behavior_server]: spin completed successfully
+[controller_server-7] [INFO] [1787242209.441076170] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-7] [INFO] [1787242210.507932280] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242211.507889049] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 507 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 506 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 507 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 506 range readings, expected 511
+[controller_server-7] [INFO] [1787242212.574564637] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 510 range readings, expected 511
+[planner_server-9] [INFO] [1787242213.219498926] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 163 X 172 at 0.050000 m/pix
+[async_slam_toolbox_node-2] LaserRangeScan contains 512 range readings, expected 511
+[controller_server-7] [INFO] [1787242213.574569555] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 510 range readings, expected 511
+[planner_server-9] [INFO] [1787242214.219535172] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 164 X 173 at 0.050000 m/pix
+[bt_navigator-11] [INFO] [1787242214.280925066] [bt_navigator]: Received goal preemption request
+[bt_navigator-11] [INFO] [1787242214.281305994] [bt_navigator]: Begin navigating from current location (4.92, -2.89) to (3.00, -5.63)
+[controller_server-7] [INFO] [1787242214.641229103] [controller_server]: Passing new path to controller.
+[velocity_guard-3] [WARN] [1787242214.760335821] [velocity_guard]: velocity guard state: command_stale
+[velocity_guard-3] [INFO] [1787242214.958815011] [velocity_guard]: velocity guard state: permitted_clamped
+[controller_server-7] [INFO] [1787242215.641241096] [controller_server]: Passing new path to controller.
+[planner_server-9] [INFO] [1787242216.219507892] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 171 X 174 at 0.050000 m/pix
+[controller_server-7] [INFO] [1787242216.641240509] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242217.707943013] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 505 range readings, expected 511
+[controller_server-7] [INFO] [1787242218.707903622] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 504 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 504 range readings, expected 511
+[bt_navigator-11] [INFO] [1787242219.240821472] [bt_navigator]: Received goal preemption request
+[bt_navigator-11] [INFO] [1787242219.241148118] [bt_navigator]: Begin navigating from current location (5.20, -2.81) to (2.61, -5.55)
+[async_slam_toolbox_node-2] LaserRangeScan contains 505 range readings, expected 511
+[controller_server-7] [INFO] [1787242219.774565847] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 503 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 507 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 508 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 509 range readings, expected 511
+[controller_server-7] [INFO] [1787242220.774592217] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 509 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 507 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 506 range readings, expected 511
+[controller_server-7] [INFO] [1787242221.841221389] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242222.870626944] [controller_server]: Passing new path to controller.
+[collision_monitor-4] [INFO] [1787242223.194975155] [collision_monitor]: Robot to approach for 1.500000 seconds away from collision
+[planner_server-9] [INFO] [1787242223.248918732] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 177 X 174 at 0.050000 m/pix
+[async_slam_toolbox_node-2] LaserRangeScan contains 510 range readings, expected 511
+[controller_server-7] [INFO] [1787242223.870682599] [controller_server]: Passing new path to controller.
+[velocity_guard-3] [WARN] [1787242224.235598132] [velocity_guard]: velocity guard state: command_stale
+[collision_monitor-4] [INFO] [1787242224.245565092] [collision_monitor]: Robot to continue normal operation
+[bt_navigator-11] [INFO] [1787242224.260213762] [bt_navigator]: Received goal preemption request
+[bt_navigator-11] [INFO] [1787242224.260373027] [bt_navigator]: Begin navigating from current location (5.77, -2.11) to (2.40, -5.36)
+[velocity_guard-3] [INFO] [1787242224.336429909] [velocity_guard]: velocity guard state: permitted_clamped
+[collision_monitor-4] [INFO] [1787242224.346367891] [collision_monitor]: Robot to approach for 1.500000 seconds away from collision
+[async_slam_toolbox_node-2] LaserRangeScan contains 505 range readings, expected 511
+[controller_server-7] [INFO] [1787242224.937318088] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 508 range readings, expected 511
+[collision_monitor-4] [INFO] [1787242225.797954358] [collision_monitor]: Robot to continue normal operation
+[controller_server-7] [INFO] [1787242225.937304323] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242227.003979222] [controller_server]: Passing new path to controller.
+[collision_monitor-4] [INFO] [1787242227.247873326] [collision_monitor]: Robot to slowdown for 75.000000 percents due to SlowdownZone polygon
+[collision_monitor-4] [INFO] [1787242227.348249678] [collision_monitor]: Robot to continue normal operation
+[collision_monitor-4] [INFO] [1787242227.448010295] [collision_monitor]: Robot to slowdown for 75.000000 percents due to SlowdownZone polygon
+[collision_monitor-4] [INFO] [1787242227.498196458] [collision_monitor]: Robot to continue normal operation
+[controller_server-7] [INFO] [1787242228.004045141] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 508 range readings, expected 511
+[collision_monitor-4] [INFO] [1787242228.348080015] [collision_monitor]: Robot to slowdown for 75.000000 percents due to SlowdownZone polygon
+[async_slam_toolbox_node-2] LaserRangeScan contains 510 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 512 range readings, expected 511
+[collision_monitor-4] [INFO] [1787242228.998075833] [collision_monitor]: Robot to continue normal operation
+[controller_server-7] [INFO] [1787242229.003991199] [controller_server]: Passing new path to controller.
+[collision_monitor-4] [INFO] [1787242229.098284664] [collision_monitor]: Robot to slowdown for 75.000000 percents due to SlowdownZone polygon
+[collision_monitor-4] [INFO] [1787242229.198248719] [collision_monitor]: Robot to continue normal operation
+[planner_server-9] [INFO] [1787242229.248920662] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 177 X 177 at 0.050000 m/pix
+[async_slam_toolbox_node-2] LaserRangeScan contains 513 range readings, expected 511
+[bt_navigator-11] [INFO] [1787242229.260214947] [bt_navigator]: Received goal preemption request
+[bt_navigator-11] [INFO] [1787242229.260431037] [bt_navigator]: Begin navigating from current location (6.17, -2.29) to (2.38, -5.34)
+[collision_monitor-4] [INFO] [1787242229.298271190] [collision_monitor]: Robot to slowdown for 75.000000 percents due to SlowdownZone polygon
+[collision_monitor-4] [INFO] [1787242229.398357177] [collision_monitor]: Robot to continue normal operation
+[async_slam_toolbox_node-2] LaserRangeScan contains 505 range readings, expected 511
+[controller_server-7] [INFO] [1787242230.070628654] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 505 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 508 range readings, expected 511
+[controller_server-7] [INFO] [1787242231.070652322] [controller_server]: Passing new path to controller.
+[planner_server-9] [INFO] [1787242231.248926821] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 177 X 178 at 0.050000 m/pix
+[async_slam_toolbox_node-2] LaserRangeScan contains 512 range readings, expected 511
+[collision_monitor-4] [INFO] [1787242231.946312837] [collision_monitor]: Robot to approach for 1.500000 seconds away from collision
+[async_slam_toolbox_node-2] LaserRangeScan contains 508 range readings, expected 511
+[controller_server-7] [INFO] [1787242232.137304706] [controller_server]: Passing new path to controller.
+[planner_server-9] [INFO] [1787242232.248919074] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 177 X 180 at 0.050000 m/pix
+[async_slam_toolbox_node-2] LaserRangeScan contains 507 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 506 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 507 range readings, expected 511
+[controller_server-7] [INFO] [1787242233.137285660] [controller_server]: Passing new path to controller.
+[collision_monitor-4] [INFO] [1787242233.145468870] [collision_monitor]: Robot to continue normal operation
+[controller_server-7] [INFO] [1787242234.203964449] [controller_server]: Passing new path to controller.
+[bt_navigator-11] [INFO] [1787242234.260220616] [bt_navigator]: Received goal preemption request
+[bt_navigator-11] [INFO] [1787242234.260415857] [bt_navigator]: Begin navigating from current location (6.83, -3.02) to (2.08, -5.02)
+[controller_server-7] [INFO] [1787242235.203964376] [controller_server]: Passing new path to controller.
+[collision_monitor-4] [INFO] [1787242235.403851610] [collision_monitor]: Robot to slowdown for 75.000000 percents due to SlowdownZone polygon
+[collision_monitor-4] [INFO] [1787242236.202225365] [collision_monitor]: Robot to continue normal operation
+[controller_server-7] [INFO] [1787242236.204104963] [controller_server]: Passing new path to controller.
+[collision_monitor-4] [INFO] [1787242236.301659476] [collision_monitor]: Robot to slowdown for 75.000000 percents due to SlowdownZone polygon
+[async_slam_toolbox_node-2] LaserRangeScan contains 501 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 504 range readings, expected 511
+[controller_server-7] [INFO] [1787242237.270639734] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 504 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 504 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 501 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 498 range readings, expected 511
+[controller_server-7] [INFO] [1787242238.270635091] [controller_server]: Passing new path to controller.
+[collision_monitor-4] [INFO] [1787242238.398536009] [collision_monitor]: Robot to continue normal operation
+[async_slam_toolbox_node-2] LaserRangeScan contains 497 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 497 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 500 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 503 range readings, expected 511
+[controller_server-7] [INFO] [1787242239.337287266] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 502 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 502 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 502 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 498 range readings, expected 511
+[controller_server-7] [INFO] [1787242240.337294012] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 497 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 497 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 495 range readings, expected 511
+[controller_server-7] [INFO] [1787242241.403984057] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 496 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 500 range readings, expected 511
+[controller_server-7] [INFO] [1787242242.403967682] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242243.470637539] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242244.470640064] [controller_server]: Passing new path to controller.
+[velocity_guard-3] [WARN] [1787242244.938190618] [velocity_guard]: velocity guard state: command_stale
+[velocity_guard-3] [INFO] [1787242245.176633516] [velocity_guard]: velocity guard state: permitted_clamped
+[controller_server-7] [INFO] [1787242245.470635893] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242246.537306650] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242247.537329444] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242248.603964981] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242249.603996903] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242250.670649318] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 504 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 508 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 510 range readings, expected 511
+[controller_server-7] [INFO] [1787242251.670642924] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 508 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 506 range readings, expected 511
+[planner_server-9] [INFO] [1787242252.248941097] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 223 X 180 at 0.050000 m/pix
+[async_slam_toolbox_node-2] LaserRangeScan contains 503 range readings, expected 511
+[controller_server-7] [INFO] [1787242252.701534164] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 505 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 503 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 508 range readings, expected 511
+[controller_server-7] [INFO] [1787242253.701535363] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 508 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 510 range readings, expected 511
+[controller_server-7] [WARN] [1787242254.168456776] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[bt_navigator-11] [INFO] [1787242254.291177779] [bt_navigator]: Received goal preemption request
+[bt_navigator-11] [INFO] [1787242254.291392302] [bt_navigator]: Begin navigating from current location (4.85, -4.36) to (1.81, -5.32)
+[async_slam_toolbox_node-2] LaserRangeScan contains 509 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 506 range readings, expected 511
+[controller_server-7] [INFO] [1787242254.768217053] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 504 range readings, expected 511
+[planner_server-9] [INFO] [1787242255.279826601] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 224 X 180 at 0.050000 m/pix
+[async_slam_toolbox_node-2] LaserRangeScan contains 505 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 508 range readings, expected 511
+[controller_server-7] [INFO] [1787242255.768201943] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 510 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 510 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 509 range readings, expected 511
+[controller_server-7] [INFO] [1787242256.834882745] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 507 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 505 range readings, expected 511
+[planner_server-9] [INFO] [1787242257.279857250] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 228 X 180 at 0.050000 m/pix
+[async_slam_toolbox_node-2] LaserRangeScan contains 504 range readings, expected 511
+[controller_server-7] [INFO] [1787242257.834907968] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242258.901683490] [controller_server]: Passing new path to controller.
+[bt_navigator-11] [INFO] [1787242259.291229580] [bt_navigator]: Received goal preemption request
+[bt_navigator-11] [INFO] [1787242259.291544386] [bt_navigator]: Begin navigating from current location (3.79, -4.22) to (1.28, -5.75)
+[async_slam_toolbox_node-2] LaserRangeScan contains 501 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 505 range readings, expected 511
+[controller_server-7] [INFO] [1787242259.901550651] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 501 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 506 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 507 range readings, expected 511
+[controller_server-7] [INFO] [1787242260.901533738] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 505 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 505 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 506 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 504 range readings, expected 511
+[controller_server-7] [INFO] [1787242261.968200604] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 504 range readings, expected 511
+[collision_monitor-4] [INFO] [1787242262.432466999] [collision_monitor]: Robot to approach for 1.500000 seconds away from collision
+[async_slam_toolbox_node-2] LaserRangeScan contains 505 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 505 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 504 range readings, expected 511
+[controller_server-7] [INFO] [1787242262.968207170] [controller_server]: Passing new path to controller.
+[collision_monitor-4] [INFO] [1787242263.131465871] [collision_monitor]: Robot to continue normal operation
+[controller_server-7] [INFO] [1787242264.034896482] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242265.034897697] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 509 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 510 range readings, expected 511
+[controller_server-7] [INFO] [1787242266.101533730] [controller_server]: Passing new path to controller.
+[planner_server-9] [INFO] [1787242266.279820879] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 228 X 187 at 0.050000 m/pix
+[async_slam_toolbox_node-2] LaserRangeScan contains 512 range readings, expected 511
+[controller_server-7] [INFO] [1787242267.101554304] [controller_server]: Passing new path to controller.
+[planner_server-9] [INFO] [1787242267.279823808] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 231 X 187 at 0.050000 m/pix
+[async_slam_toolbox_node-2] LaserRangeScan contains 508 range readings, expected 511
+[controller_server-7] [INFO] [1787242268.101522423] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242269.168233217] [controller_server]: Passing new path to controller.
+[bt_navigator-11] [INFO] [1787242269.291134405] [bt_navigator]: Received goal preemption request
+[bt_navigator-11] [INFO] [1787242269.291333892] [bt_navigator]: Begin navigating from current location (2.38, -4.18) to (-0.70, -3.90)
+[controller_server-7] [INFO] [1787242270.168183499] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242271.234858467] [controller_server]: Passing new path to controller.
+[collision_monitor-4] [INFO] [1787242271.729209424] [collision_monitor]: Robot to slowdown for 75.000000 percents due to SlowdownZone polygon
+[async_slam_toolbox_node-2] LaserRangeScan contains 508 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 505 range readings, expected 511
+[controller_server-7] [INFO] [1787242272.234855788] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 504 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 504 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 505 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 508 range readings, expected 511
+[controller_server-7] [INFO] [1787242273.301532770] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 510 range readings, expected 511
+[collision_monitor-4] [INFO] [1787242273.934904301] [collision_monitor]: Robot to continue normal operation
+[async_slam_toolbox_node-2] LaserRangeScan contains 510 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 509 range readings, expected 511
+[bt_navigator-11] [INFO] [1787242274.251128834] [bt_navigator]: Received goal preemption request
+[bt_navigator-11] [INFO] [1787242274.251937327] [bt_navigator]: Begin navigating from current location (1.66, -4.83) to (-0.19, -3.77)
+[planner_server-9] [INFO] [1787242274.279795918] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 291 X 206 at 0.050000 m/pix
+[controller_server-7] [INFO] [1787242274.301532950] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242275.368210077] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 506 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 508 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 509 range readings, expected 511
+[controller_server-7] [INFO] [1787242276.368220103] [controller_server]: Passing new path to controller.
+[collision_monitor-4] [INFO] [1787242276.430493354] [collision_monitor]: Robot to approach for 1.500000 seconds away from collision
+[async_slam_toolbox_node-2] LaserRangeScan contains 512 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 512 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 509 range readings, expected 511
+[collision_monitor-4] [INFO] [1787242277.179665980] [collision_monitor]: Robot to continue normal operation
+[planner_server-9] [INFO] [1787242277.279817609] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 291 X 218 at 0.050000 m/pix
+[controller_server-7] [INFO] [1787242277.434885276] [controller_server]: Passing new path to controller.
+[collision_monitor-4] [INFO] [1787242277.928007261] [collision_monitor]: Robot to slowdown for 75.000000 percents due to SlowdownZone polygon
+[collision_monitor-4] [INFO] [1787242278.287917161] [collision_monitor]: Robot to continue normal operation
+[controller_server-7] [INFO] [1787242278.434865470] [controller_server]: Passing new path to controller.
+[bt_navigator-11] [INFO] [1787242279.241170655] [bt_navigator]: Received goal preemption request
+[bt_navigator-11] [INFO] [1787242279.241378667] [bt_navigator]: Begin navigating from current location (1.16, -5.03) to (-0.42, -3.48)
+[controller_server-7] [INFO] [1787242279.434860436] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242280.501522576] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242281.501522372] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 510 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 508 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 506 range readings, expected 511
+[controller_server-7] [INFO] [1787242282.568219525] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 507 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 506 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 509 range readings, expected 511
+[controller_server-7] [INFO] [1787242283.592815426] [controller_server]: Passing new path to controller.
+[collision_monitor-4] [INFO] [1787242283.906552433] [collision_monitor]: Robot to slowdown for 75.000000 percents due to SlowdownZone polygon
+[async_slam_toolbox_node-2] LaserRangeScan contains 509 range readings, expected 511
+[bt_navigator-11] [INFO] [1787242284.265749421] [bt_navigator]: Received goal preemption request
+[bt_navigator-11] [INFO] [1787242284.266008089] [bt_navigator]: Begin navigating from current location (1.20, -5.82) to (-0.39, -3.19)
+[async_slam_toolbox_node-2] LaserRangeScan contains 513 range readings, expected 511
+[controller_server-7] [INFO] [1787242284.592759075] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 510 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 501 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 500 range readings, expected 511
+[collision_monitor-4] [INFO] [1787242285.608398682] [collision_monitor]: Robot to continue normal operation
+[async_slam_toolbox_node-2] LaserRangeScan contains 506 range readings, expected 511
+[controller_server-7] [INFO] [1787242285.659403994] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 509 range readings, expected 511
+[collision_monitor-4] [INFO] [1787242286.409265160] [collision_monitor]: Robot to approach for 1.500000 seconds away from collision
+[async_slam_toolbox_node-2] LaserRangeScan contains 512 range readings, expected 511
+[controller_server-7] [INFO] [1787242286.659395728] [controller_server]: Passing new path to controller.
+[collision_monitor-4] [INFO] [1787242286.659549574] [collision_monitor]: Robot to continue normal operation
+[async_slam_toolbox_node-2] LaserRangeScan contains 508 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 509 range readings, expected 511
+[controller_server-7] [INFO] [1787242287.659392215] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242288.726064811] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 505 range readings, expected 511
+[bt_navigator-11] [INFO] [1787242289.265660563] [bt_navigator]: Received goal preemption request
+[bt_navigator-11] [INFO] [1787242289.265819577] [bt_navigator]: Begin navigating from current location (1.52, -6.56) to (-0.69, -3.18)
+[async_slam_toolbox_node-2] LaserRangeScan contains 505 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 504 range readings, expected 511
+[controller_server-7] [INFO] [1787242289.726067521] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 503 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 508 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 510 range readings, expected 511
+[controller_server-7] [INFO] [1787242290.792736111] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 510 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 510 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 509 range readings, expected 511
+[controller_server-7] [INFO] [1787242291.792725732] [controller_server]: Passing new path to controller.
+[planner_server-9] [INFO] [1787242292.304361197] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 291 X 226 at 0.050000 m/pix
+[controller_server-7] [INFO] [1787242292.859395558] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242293.859422508] [controller_server]: Passing new path to controller.
+[bt_navigator-11] [INFO] [1787242294.265747719] [bt_navigator]: Received goal preemption request
+[bt_navigator-11] [INFO] [1787242294.266078934] [bt_navigator]: Begin navigating from current location (2.30, -6.76) to (-0.75, -3.14)
+[async_slam_toolbox_node-2] LaserRangeScan contains 505 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 508 range readings, expected 511
+[controller_server-7] [INFO] [1787242294.859390627] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 512 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 510 range readings, expected 511
+[controller_server-7] [INFO] [1787242295.926099955] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242296.926070325] [controller_server]: Passing new path to controller.
+[collision_monitor-4] [INFO] [1787242297.153856835] [collision_monitor]: Robot to slowdown for 75.000000 percents due to SlowdownZone polygon
+[controller_server-7] [INFO] [1787242297.992705296] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 512 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 509 range readings, expected 511
+[controller_server-7] [INFO] [1787242298.992712235] [controller_server]: Passing new path to controller.
+[collision_monitor-4] [INFO] [1787242299.210701272] [collision_monitor]: Robot to continue normal operation
+[async_slam_toolbox_node-2] LaserRangeScan contains 506 range readings, expected 511
+[bt_navigator-11] [INFO] [1787242299.265661022] [bt_navigator]: Received goal preemption request
+[bt_navigator-11] [INFO] [1787242299.265954121] [bt_navigator]: Begin navigating from current location (2.17, -7.65) to (-0.85, -2.96)
+[async_slam_toolbox_node-2] LaserRangeScan contains 507 range readings, expected 511
+[collision_monitor-4] [INFO] [1787242299.709906851] [collision_monitor]: Robot to approach for 1.500000 seconds away from collision
+[async_slam_toolbox_node-2] LaserRangeScan contains 505 range readings, expected 511
+[controller_server-7] [INFO] [1787242300.059393652] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 508 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 510 range readings, expected 511
+[collision_monitor-4] [INFO] [1787242300.558217958] [collision_monitor]: Robot to slowdown for 75.000000 percents due to SlowdownZone polygon
+[controller_server-7] [INFO] [1787242301.059436711] [controller_server]: Passing new path to controller.
+[collision_monitor-4] [INFO] [1787242302.055780949] [collision_monitor]: Robot to continue normal operation
+[controller_server-7] [INFO] [1787242302.059460414] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242303.126063954] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 505 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 509 range readings, expected 511
+[controller_server-7] [INFO] [1787242304.126072348] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 512 range readings, expected 511
+[controller_server-7] [INFO] [1787242305.192738233] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242306.192736911] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242307.259394283] [controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1787242307.356789186] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[controller_server-7] [WARN] [1787242307.393052090] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[controller_server-7] [WARN] [1787242307.459757094] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[controller_server-7] [INFO] [1787242308.259394832] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242309.326087162] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 505 range readings, expected 511
+[controller_server-7] [WARN] [1787242309.659634098] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[async_slam_toolbox_node-2] LaserRangeScan contains 510 range readings, expected 511
+[controller_server-7] [INFO] [1787242310.326123094] [controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1787242310.392974379] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[async_slam_toolbox_node-2] LaserRangeScan contains 509 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 510 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 510 range readings, expected 511
+[controller_server-7] [INFO] [1787242311.326050242] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 506 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 505 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 507 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 508 range readings, expected 511
+[controller_server-7] [INFO] [1787242312.392761066] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 510 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 510 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 510 range readings, expected 511
+[controller_server-7] [INFO] [1787242313.419468110] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 508 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 506 range readings, expected 511
+[controller_server-7] [WARN] [1787242313.886306840] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[async_slam_toolbox_node-2] LaserRangeScan contains 505 range readings, expected 511
+[controller_server-7] [WARN] [1787242313.953010827] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[controller_server-7] [WARN] [1787242314.086383256] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[controller_server-7] [WARN] [1787242314.153158103] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[controller_server-7] [WARN] [1787242314.219701697] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[async_slam_toolbox_node-2] LaserRangeScan contains 506 range readings, expected 511
+[bt_navigator-11] [INFO] [1787242314.292425448] [bt_navigator]: Received goal preemption request
+[bt_navigator-11] [INFO] [1787242314.292848098] [bt_navigator]: Begin navigating from current location (2.43, -6.44) to (-0.88, -2.95)
+[controller_server-7] [INFO] [1787242314.419436905] [controller_server]: Passing new path to controller.
+[collision_monitor-4] [INFO] [1787242314.990709911] [collision_monitor]: Robot to slowdown for 75.000000 percents due to SlowdownZone polygon
+[collision_monitor-4] [INFO] [1787242315.180888442] [collision_monitor]: Robot to continue normal operation
+[controller_server-7] [INFO] [1787242315.486129719] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242316.486100344] [controller_server]: Passing new path to controller.
+[velocity_guard-3] [WARN] [1787242316.524468500] [velocity_guard]: velocity guard state: command_stale
+[velocity_guard-3] [INFO] [1787242316.564215834] [velocity_guard]: velocity guard state: permitted_clamped
+[collision_monitor-4] [INFO] [1787242317.435754031] [collision_monitor]: Robot to slowdown for 75.000000 percents due to SlowdownZone polygon
+[controller_server-7] [INFO] [1787242317.552764648] [controller_server]: Passing new path to controller.
+[collision_monitor-4] [INFO] [1787242317.786996225] [collision_monitor]: Robot to continue normal operation
+[controller_server-7] [INFO] [1787242318.552764364] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242319.619434627] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 514 range readings, expected 511
+[controller_server-7] [WARN] [1787242320.286267994] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[async_slam_toolbox_node-2] LaserRangeScan contains 510 range readings, expected 511
+[controller_server-7] [WARN] [1787242320.353056552] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[controller_server-7] [WARN] [1787242320.419686152] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[controller_server-7] [WARN] [1787242320.486352440] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[controller_server-7] [INFO] [1787242320.619433534] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 506 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 506 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 506 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 508 range readings, expected 511
+[controller_server-7] [INFO] [1787242321.686091338] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 510 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 512 range readings, expected 511
+[controller_server-7] [INFO] [1787242322.686092474] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242323.686093132] [controller_server]: Passing new path to controller.
+[velocity_guard-3] [WARN] [1787242324.662841270] [velocity_guard]: velocity guard state: command_stale
+[controller_server-7] [INFO] [1787242324.752759361] [controller_server]: Passing new path to controller.
+[velocity_guard-3] [INFO] [1787242325.162317333] [velocity_guard]: velocity guard state: permitted_clamped
+[controller_server-7] [INFO] [1787242325.752751638] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 507 range readings, expected 511
+[collision_monitor-4] [INFO] [1787242326.181212776] [collision_monitor]: Robot to approach for 1.500000 seconds away from collision
+[async_slam_toolbox_node-2] LaserRangeScan contains 506 range readings, expected 511
+[collision_monitor-4] [INFO] [1787242326.331489793] [collision_monitor]: Robot to continue normal operation
+[async_slam_toolbox_node-2] LaserRangeScan contains 508 range readings, expected 511
+[controller_server-7] [INFO] [1787242326.819426657] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 506 range readings, expected 511
+[collision_monitor-4] [INFO] [1787242327.290164446] [collision_monitor]: Robot to slowdown for 75.000000 percents due to SlowdownZone polygon
+[collision_monitor-4] [INFO] [1787242327.789513311] [collision_monitor]: Robot to continue normal operation
+[controller_server-7] [INFO] [1787242327.819395510] [controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1787242328.286368367] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[controller_server-7] [WARN] [1787242328.353032885] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[controller_server-7] [WARN] [1787242328.419645118] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[controller_server-7] [WARN] [1787242328.486309984] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[controller_server-7] [WARN] [1787242328.552924454] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[controller_server-7] [ERROR] [1787242328.552994827] [controller_server]: Controller patience exceeded
+[controller_server-7] [WARN] [1787242328.553074226] [controller_server]: [follow_path] [ActionServer] Aborting handle.
+[controller_server-7] [INFO] [1787242328.572503836] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[controller_server-7] [INFO] [1787242328.573315343] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-7] [WARN] [1787242328.633992678] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[async_slam_toolbox_node-2] LaserRangeScan contains 507 range readings, expected 511
+[controller_server-7] [WARN] [1787242328.640401332] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[controller_server-7] [WARN] [1787242328.707190844] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[controller_server-7] [WARN] [1787242328.773861479] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[async_slam_toolbox_node-2] LaserRangeScan contains 505 range readings, expected 511
+[controller_server-7] [INFO] [1787242328.840188181] [controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1787242328.890963306] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[controller_server-7] [ERROR] [1787242328.891043743] [controller_server]: Controller patience exceeded
+[controller_server-7] [WARN] [1787242328.891092777] [controller_server]: [follow_path] [ActionServer] Aborting handle.
+[controller_server-7] [INFO] [1787242328.902471851] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[planner_server-9] [INFO] [1787242328.902786464] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[async_slam_toolbox_node-2] LaserRangeScan contains 508 range readings, expected 511
+[planner_server-9] [WARN] [1787242329.333971356] [planner_server]: Planner loop missed its desired rate of 5.0000 Hz. Current loop rate is 2.3848 Hz
+[controller_server-7] [INFO] [1787242329.352782931] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-7] [INFO] [1787242330.419685836] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-2] LaserRangeScan contains 508 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 506 range readings, expected 511
+[collision_monitor-4] [INFO] [1787242330.784778135] [collision_monitor]: Robot to slowdown for 75.000000 percents due to SlowdownZone polygon
+[async_slam_toolbox_node-2] LaserRangeScan contains 505 range readings, expected 511
+[collision_monitor-4] [INFO] [1787242331.094054017] [collision_monitor]: Robot to stop due to StopZone polygon
+[async_slam_toolbox_node-2] LaserRangeScan contains 505 range readings, expected 511
+[planner_server-9] [INFO] [1787242331.331038725] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 291 X 226 at 0.050000 m/pix
+[controller_server-7] [INFO] [1787242331.419679321] [controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1787242331.440446429] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[async_slam_toolbox_node-2] LaserRangeScan contains 508 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 510 range readings, expected 511
+[controller_server-7] [WARN] [1787242332.020108847] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[controller_server-7] [WARN] [1787242332.086556180] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[async_slam_toolbox_node-2] LaserRangeScan contains 512 range readings, expected 511
+[controller_server-7] [WARN] [1787242332.153320429] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[controller_server-7] [WARN] [1787242332.219901454] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[controller_server-7] [WARN] [1787242332.286612696] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[controller_server-7] [ERROR] [1787242332.286715678] [controller_server]: Controller patience exceeded
+[controller_server-7] [WARN] [1787242332.286816933] [controller_server]: [follow_path] [ActionServer] Aborting handle.
+[controller_server-7] [INFO] [1787242332.302570504] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[controller_server-7] [INFO] [1787242332.303378533] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-7] [WARN] [1787242332.343908850] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[controller_server-7] [WARN] [1787242332.370448327] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[controller_server-7] [INFO] [1787242332.436917591] [controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1787242332.487772771] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[async_slam_toolbox_node-2] LaserRangeScan contains 512 range readings, expected 511
+[collision_monitor-4] [INFO] [1787242332.791204891] [collision_monitor]: Robot to slowdown for 75.000000 percents due to SlowdownZone polygon
+[async_slam_toolbox_node-2] LaserRangeScan contains 509 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 506 range readings, expected 511
+[async_slam_toolbox_node-2] LaserRangeScan contains 505 range readings, expected 511
+[controller_server-7] [INFO] [1787242333.503552587] [controller_server]: Passing new path to controller.
+[collision_monitor-4] [INFO] [1787242333.689967941] [collision_monitor]: Robot to continue normal operation
+[async_slam_toolbox_node-2] LaserRangeScan contains 509 range readings, expected 511
+[collision_monitor-4] [INFO] [1787242333.740148090] [collision_monitor]: Robot to approach for 1.500000 seconds away from collision
+[bt_navigator-11] [INFO] [1787242334.252350836] [bt_navigator]: Received goal preemption request
+[bt_navigator-11] [INFO] [1787242334.252872050] [bt_navigator]: Begin navigating from current location (0.76, -4.35) to (-2.27, -1.45)
+[controller_server-7] [INFO] [1787242334.503626941] [controller_server]: Passing new path to controller.
+[collision_monitor-4] [INFO] [1787242334.787868229] [collision_monitor]: Robot to continue normal operation
+[planner_server-9] [INFO] [1787242335.331048684] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 291 X 226 at 0.050000 m/pix
+[collision_monitor-4] [INFO] [1787242335.335928075] [collision_monitor]: Robot to slowdown for 75.000000 percents due to SlowdownZone polygon
+[controller_server-7] [INFO] [1787242335.570229382] [controller_server]: Passing new path to controller.
+[collision_monitor-4] [INFO] [1787242335.884944082] [collision_monitor]: Robot to continue normal operation
+[controller_server-7] [INFO] [1787242336.570228414] [controller_server]: Passing new path to controller.
+[velocity_guard-3] [WARN] [1787242336.923167460] [velocity_guard]: velocity guard state: command_stale
+[velocity_guard-3] [INFO] [1787242337.362624468] [velocity_guard]: velocity guard state: permitted
+[controller_server-7] [INFO] [1787242337.636885695] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242338.636897735] [controller_server]: Passing new path to controller.
+[velocity_guard-3] [WARN] [1787242338.859597430] [velocity_guard]: velocity guard state: command_stale
+[bt_navigator-11] [INFO] [1787242339.242396061] [bt_navigator]: Received goal preemption request
+[bt_navigator-11] [INFO] [1787242339.242584972] [bt_navigator]: Begin navigating from current location (0.75, -4.33) to (-2.75, -0.90)
+[controller_server-7] [INFO] [1787242339.636961641] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242340.703592103] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242341.703567933] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242342.724791353] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242343.791446414] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242344.791410724] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242345.858076444] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242346.858079923] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242347.924797851] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242348.924819545] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242349.924760401] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242350.991412102] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242351.991437161] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242353.058113200] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787242354.058166419] [controller_server]: Passing new path to controller.
