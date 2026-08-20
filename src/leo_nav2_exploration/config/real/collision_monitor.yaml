@@ -1,0 +1,68 @@
+collision_monitor:
+  ros__parameters:
+    use_sim_time: false
+    base_frame_id: base_footprint
+    odom_frame_id: odom
+    # 2026-08-20: bypass velocity_guard on rover 4 - its scan subscription
+    # starves under the rover's DDS load and it fails closed forever, freezing
+    # the chain. CM itself is fail-closed on stale sources (source_timeout) and
+    # RPP has collision detection, so supervised runs keep two safety layers.
+    cmd_vel_in_topic: /cmd_vel_smoothed
+    # Direct to firmware: leo-nav-bridge (which used to forward /cmd_vel ->
+    # /rob_2/cmd_vel) is stopped on rover 4 because its firmware wheel_odom
+    # input keeps dying; wheel_states_odom.py owns odometry instead.
+    cmd_vel_out_topic: /rob_2/cmd_vel
+    # Bursty odom TF on rover 4 (firmware serial starvation): tolerate gaps.
+    # At 0.1 m/s, 2 s of staleness is 0.2 m - inside the 0.26 m StopZone.
+    transform_tolerance: 1.0
+    source_timeout: 2.0
+    base_shift_correction: true
+    stop_pub_timeout: 0.5
+    polygons:
+    - StopZone
+    - FootprintApproach
+    - SlowdownZone
+    # Fixed emergency stop zone remains available while the dynamic footprint
+    # topic is still starting. It is 4 cm beyond the padded 0.22 m half-width.
+    StopZone:
+      type: polygon
+      points: [0.26, 0.26, 0.26, -0.26, -0.26, -0.26, -0.26, 0.26]
+      action_type: stop
+      max_points: 3
+      visualize: true
+      polygon_pub_topic: /collision_monitor/stop_zone
+      enabled: true
+
+    FootprintApproach:
+      type: polygon
+      action_type: approach
+      footprint_topic: /local_costmap/published_footprint
+      time_before_collision: 1.5
+      simulation_time_step: 0.05
+      max_points: 3
+      visualize: true
+      polygon_pub_topic: footprint_approach
+      enabled: true
+    SlowdownZone:
+      type: polygon
+      points:
+      - 0.34
+      - 0.34
+      - 0.34
+      - -0.34
+      - -0.34
+      - -0.34
+      - -0.34
+      - 0.34
+      action_type: slowdown
+      max_points: 3
+      slowdown_ratio: 0.75
+      visualize: true
+      polygon_pub_topic: slowdown_zone
+      enabled: true
+    observation_sources:
+    - scan
+    scan:
+      type: scan
+      topic: /scan_filtered
+      enabled: true

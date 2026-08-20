@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<sdf version="1.9">
+  <model name="leo_nav2_doorway_fixture">
+    <static>true</static>
+
+    <link name="door_wall_lower">
+      <pose>0 -1.445 0.75 0 0 0</pose>
+      <collision name="collision">
+        <geometry><box><size>0.10 2.11 1.50</size></box></geometry>
+      </collision>
+      <visual name="visual">
+        <geometry><box><size>0.10 2.11 1.50</size></box></geometry>
+        <material><ambient>0.85 0.85 0.85 1</ambient><diffuse>0.85 0.85 0.85 1</diffuse></material>
+      </visual>
+    </link>
+
+    <link name="door_wall_upper">
+      <pose>0 1.445 0.75 0 0 0</pose>
+      <collision name="collision">
+        <geometry><box><size>0.10 2.11 1.50</size></box></geometry>
+      </collision>
+      <visual name="visual">
+        <geometry><box><size>0.10 2.11 1.50</size></box></geometry>
+        <material><ambient>0.85 0.85 0.85 1</ambient><diffuse>0.85 0.85 0.85 1</diffuse></material>
+      </visual>
+    </link>
+
+    <link name="north_wall">
+      <pose>0 2.50 0.75 0 0 0</pose>
+      <collision name="collision"><geometry><box><size>6.00 0.10 1.50</size></box></geometry></collision>
+      <visual name="visual"><geometry><box><size>6.00 0.10 1.50</size></box></geometry></visual>
+    </link>
+    <link name="south_wall">
+      <pose>0 -2.50 0.75 0 0 0</pose>
+      <collision name="collision"><geometry><box><size>6.00 0.10 1.50</size></box></geometry></collision>
+      <visual name="visual"><geometry><box><size>6.00 0.10 1.50</size></box></geometry></visual>
+    </link>
+    <link name="west_wall">
+      <pose>-3.00 0 0.75 0 0 0</pose>
+      <collision name="collision"><geometry><box><size>0.10 5.00 1.50</size></box></geometry></collision>
+      <visual name="visual"><geometry><box><size>0.10 5.00 1.50</size></box></geometry></visual>
+    </link>
+    <link name="east_wall">
+      <pose>3.00 0 0.75 0 0 0</pose>
+      <collision name="collision"><geometry><box><size>0.10 5.00 1.50</size></box></geometry></collision>
+      <visual name="visual"><geometry><box><size>0.10 5.00 1.50</size></box></geometry></visual>
+    </link>
+  </model>
+</sdf>

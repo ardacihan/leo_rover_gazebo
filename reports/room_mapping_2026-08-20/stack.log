@@ -1,0 +1,488 @@
+[INFO] [launch]: All log files can be found below /home/jetson-04/.ros/log/2026-08-20-12-28-53-766673-jetson04-desktop-6678
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [static_transform_publisher-1]: process started with pid [6680]
+[INFO] [scan_to_scan_filter_chain-2]: process started with pid [6682]
+[INFO] [async_slam_toolbox_node-3]: process started with pid [6684]
+[INFO] [velocity_guard-4]: process started with pid [6686]
+[INFO] [collision_monitor-5]: process started with pid [6688]
+[INFO] [lifecycle_manager-6]: process started with pid [6690]
+[static_transform_publisher-1] [INFO] [1787221734.109488879] [camera_mount_static_transform]: Spinning until stopped - publishing transform
+[static_transform_publisher-1] translation: ('0.060000', '0.024000', '0.190500')
+[static_transform_publisher-1] rotation: ('-0.000318', '0.095624', '-0.017228', '0.995268')
+[static_transform_publisher-1] from 'base_link' to 'camera_link'
+[lifecycle_manager-6] [INFO] [1787221734.275629368] [lifecycle_manager_collision_monitor]: Creating
+[lifecycle_manager-6] [INFO] [1787221734.314165973] [lifecycle_manager_collision_monitor]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[collision_monitor-5] [INFO] [1787221734.389900612] [collision_monitor]: 
+[collision_monitor-5] 	collision_monitor lifecycle node launched. 
+[collision_monitor-5] 	Waiting on external lifecycle transitions to activate
+[collision_monitor-5] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[lifecycle_manager-6] [INFO] [1787221734.452589901] [lifecycle_manager_collision_monitor]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-6] [INFO] [1787221734.452855400] [lifecycle_manager_collision_monitor]: [34m[1mConfiguring collision_monitor[0m[0m
+[async_slam_toolbox_node-3] [INFO] [1787221734.582208823] [slam_toolbox]: Node using stack size 40000000
+[collision_monitor-5] [INFO] [1787221734.686277933] [collision_monitor]: Configuring
+[collision_monitor-5] [INFO] [1787221734.752174528] [collision_monitor]: [StopZone]: Creating Polygon
+[collision_monitor-5] [INFO] [1787221734.775721943] [collision_monitor]: [FootprintApproach]: Creating Polygon
+[scan_to_scan_filter_chain-2] [WARN] [1787221734.862563309] [rcl.logging_rosout]: Publisher already registered for provided node name. If this is due to multiple nodes with the same name then all logs for that logger name will go out over the existing publisher. As soon as any node with that name is destructed it will unregister the publisher, preventing any further logs for that name from being published on the rosout topic.
+[async_slam_toolbox_node-3] [INFO] [1787221735.639368246] [slam_toolbox]: Using solver plugin solver_plugins::CeresSolver
+[async_slam_toolbox_node-3] [INFO] [1787221735.655986815] [slam_toolbox]: CeresSolver: Using HuberLoss loss function.
+[async_slam_toolbox_node-3] [INFO] [1787221735.656093053] [slam_toolbox]: CeresSolver: Using SCHUR_JACOBI preconditioner.
+[collision_monitor-5] [INFO] [1787221736.254387679] [collision_monitor]: [SlowdownZone]: Creating Polygon
+[collision_monitor-5] [INFO] [1787221736.463627614] [collision_monitor]: [scan]: Creating Scan
+[scan_to_scan_filter_chain-2] [WARN] [1787221736.502481616] [scan_to_scan_filter_chain]: diagnostic_updater: No HW_ID was set. This is probably a bug. Please report it. For devices that do not have a HW_ID, set this value to 'none'. This warning only occurs once all diagnostics are OK. It is okay to wait until the device is open before calling setHardwareID.
+[lifecycle_manager-6] [INFO] [1787221736.541730972] [lifecycle_manager_collision_monitor]: [34m[1mActivating collision_monitor[0m[0m
+[collision_monitor-5] [INFO] [1787221736.544279057] [collision_monitor]: Activating
+[collision_monitor-5] [INFO] [1787221736.545996148] [collision_monitor]: Creating bond (collision_monitor) to lifecycle manager.
+[async_slam_toolbox_node-3] [WARN] [1787221736.564364575] [slam_toolbox]: minimum laser range setting (0.1 m) exceeds the capabilities of the used Lidar (0.2 m)
+[async_slam_toolbox_node-3] Registering sensor: [Custom Described Lidar]
+[async_slam_toolbox_node-3] [INFO] [1787221736.759232048] [slam_toolbox]: Message Filter dropping message: frame 'laser_frame' at time 1787221736.560 for reason 'discarding message because the queue is full'
+[lifecycle_manager-6] [INFO] [1787221736.809956602] [lifecycle_manager_collision_monitor]: Server collision_monitor connected with bond.
+[lifecycle_manager-6] [INFO] [1787221736.810087928] [lifecycle_manager_collision_monitor]: [34m[1mManaged nodes are active[0m[0m
+[lifecycle_manager-6] [INFO] [1787221736.810116599] [lifecycle_manager_collision_monitor]: [34m[1mCreating bond timer...[0m[0m
+[velocity_guard-4] [INFO] [1787221737.855483884] [velocity_guard]: Guarding /cmd_vel_smoothed -> /cmd_vel_guarded; scan=/scan_filtered, odom=/wheel_odom, battery_required=False
+[velocity_guard-4] [WARN] [1787221737.858531897] [velocity_guard]: New publisher discovered on topic '/wheel_odom', offering incompatible QoS. No messages will be received from it. Last incompatible policy: RELIABILITY
+[velocity_guard-4] [WARN] [1787221737.862412727] [velocity_guard]: velocity guard state: command_missing
+[INFO] [controller_server-7]: process started with pid [6794]
+[INFO] [smoother_server-8]: process started with pid [6796]
+[INFO] [planner_server-9]: process started with pid [6798]
+[INFO] [behavior_server-10]: process started with pid [6800]
+[INFO] [bt_navigator-11]: process started with pid [6802]
+[INFO] [waypoint_follower-12]: process started with pid [6804]
+[INFO] [velocity_smoother-13]: process started with pid [6806]
+[INFO] [lifecycle_manager-14]: process started with pid [6814]
+[async_slam_toolbox_node-3] [INFO] [1787221759.437470901] [slam_toolbox]: Message Filter dropping message: frame 'laser_frame' at time 1787221759.250 for reason 'discarding message because the queue is full'
+[smoother_server-8] [INFO] [1787221759.598809160] [smoother_server]: 
+[smoother_server-8] 	smoother_server lifecycle node launched. 
+[smoother_server-8] 	Waiting on external lifecycle transitions to activate
+[smoother_server-8] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[smoother_server-8] [INFO] [1787221759.654366170] [smoother_server]: Creating smoother server
+[controller_server-7] [INFO] [1787221759.933757682] [controller_server]: 
+[controller_server-7] 	controller_server lifecycle node launched. 
+[controller_server-7] 	Waiting on external lifecycle transitions to activate
+[controller_server-7] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-7] [INFO] [1787221759.980136873] [controller_server]: Creating controller server
+[lifecycle_manager-14] [INFO] [1787221760.154275981] [lifecycle_manager_navigation]: Creating
+[waypoint_follower-12] [INFO] [1787221760.231893163] [waypoint_follower]: 
+[waypoint_follower-12] 	waypoint_follower lifecycle node launched. 
+[waypoint_follower-12] 	Waiting on external lifecycle transitions to activate
+[waypoint_follower-12] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[waypoint_follower-12] [INFO] [1787221760.233318929] [waypoint_follower]: Creating
+[lifecycle_manager-14] [INFO] [1787221760.290975577] [lifecycle_manager_navigation]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[planner_server-9] [INFO] [1787221760.321361777] [planner_server]: 
+[planner_server-9] 	planner_server lifecycle node launched. 
+[planner_server-9] 	Waiting on external lifecycle transitions to activate
+[planner_server-9] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-9] [INFO] [1787221760.343676059] [planner_server]: Creating
+[velocity_smoother-13] [INFO] [1787221760.428283321] [velocity_smoother]: 
+[velocity_smoother-13] 	velocity_smoother lifecycle node launched. 
+[velocity_smoother-13] 	Waiting on external lifecycle transitions to activate
+[velocity_smoother-13] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[behavior_server-10] [INFO] [1787221760.481952010] [behavior_server]: 
+[behavior_server-10] 	behavior_server lifecycle node launched. 
+[behavior_server-10] 	Waiting on external lifecycle transitions to activate
+[behavior_server-10] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[bt_navigator-11] [INFO] [1787221761.474030882] [bt_navigator]: 
+[bt_navigator-11] 	bt_navigator lifecycle node launched. 
+[bt_navigator-11] 	Waiting on external lifecycle transitions to activate
+[bt_navigator-11] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[bt_navigator-11] [INFO] [1787221761.474608696] [bt_navigator]: Creating
+[async_slam_toolbox_node-3] [INFO] [1787221762.138889062] [slam_toolbox]: Message Filter dropping message: frame 'laser_frame' at time 1787221761.934 for reason 'discarding message because the queue is full'
+[controller_server-7] [INFO] [1787221762.923831420] [local_costmap.local_costmap]: 
+[controller_server-7] 	local_costmap lifecycle node launched. 
+[controller_server-7] 	Waiting on external lifecycle transitions to activate
+[controller_server-7] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-7] [INFO] [1787221762.924846217] [local_costmap.local_costmap]: Creating Costmap
+[lifecycle_manager-14] [INFO] [1787221765.090289133] [lifecycle_manager_navigation]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-14] [INFO] [1787221765.091122590] [lifecycle_manager_navigation]: [34m[1mConfiguring controller_server[0m[0m
+[controller_server-7] [INFO] [1787221765.123420171] [controller_server]: Configuring controller interface
+[controller_server-7] [INFO] [1787221765.128367120] [controller_server]: getting goal checker plugins..
+[controller_server-7] [INFO] [1787221765.128889222] [controller_server]: Controller frequency set to 15.0000Hz
+[controller_server-7] [INFO] [1787221765.129024676] [local_costmap.local_costmap]: Configuring
+[async_slam_toolbox_node-3] [INFO] [1787221765.233051911] [slam_toolbox]: Message Filter dropping message: frame 'laser_frame' at time 1787221765.036 for reason 'discarding message because the queue is full'
+[controller_server-7] [INFO] [1787221765.278747581] [local_costmap.local_costmap]: Using plugin "obstacle_layer"
+[controller_server-7] [INFO] [1787221765.378289619] [local_costmap.local_costmap]: Subscribed to Topics: scan camera
+[controller_server-7] [INFO] [1787221765.625328619] [local_costmap.local_costmap]: Initialized plugin "obstacle_layer"
+[controller_server-7] [INFO] [1787221765.625440873] [local_costmap.local_costmap]: Using plugin "inflation_layer"
+[controller_server-7] [INFO] [1787221765.631288157] [local_costmap.local_costmap]: Initialized plugin "inflation_layer"
+[controller_server-7] [INFO] [1787221766.412617197] [controller_server]: Created progress_checker : progress_checker of type nav2_controller::SimpleProgressChecker
+[controller_server-7] [INFO] [1787221766.429995083] [controller_server]: Created goal checker : general_goal_checker of type nav2_controller::SimpleGoalChecker
+[controller_server-7] [INFO] [1787221766.443640655] [controller_server]: Controller Server has general_goal_checker  goal checkers available.
+[planner_server-9] [INFO] [1787221766.561484430] [global_costmap.global_costmap]: 
+[planner_server-9] 	global_costmap lifecycle node launched. 
+[planner_server-9] 	Waiting on external lifecycle transitions to activate
+[planner_server-9] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-9] [INFO] [1787221766.562482012] [global_costmap.global_costmap]: Creating Costmap
+[controller_server-7] [INFO] [1787221766.563232782] [controller_server]: Created controller : FollowPath of type nav2_rotation_shim_controller::RotationShimController
+[controller_server-7] [INFO] [1787221766.748687436] [controller_server]: Created internal controller for rotation shimming: FollowPath of type nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-7] [INFO] [1787221766.956677609] [controller_server]: Controller Server has FollowPath  controllers available.
+[lifecycle_manager-14] [INFO] [1787221767.504025265] [lifecycle_manager_navigation]: [34m[1mConfiguring smoother_server[0m[0m
+[smoother_server-8] [INFO] [1787221767.508245603] [smoother_server]: Configuring smoother server
+[smoother_server-8] [INFO] [1787221767.742091511] [smoother_server]: Created smoother : simple_smoother of type nav2_smoother::SimpleSmoother
+[smoother_server-8] [INFO] [1787221767.752976878] [smoother_server]: Smoother Server has simple_smoother  smoothers available.
+[async_slam_toolbox_node-3] [INFO] [1787221767.832091476] [slam_toolbox]: Message Filter dropping message: frame 'laser_frame' at time 1787221767.636 for reason 'discarding message because the queue is full'
+[lifecycle_manager-14] [INFO] [1787221768.108075799] [lifecycle_manager_navigation]: [34m[1mConfiguring planner_server[0m[0m
+[planner_server-9] [INFO] [1787221768.178241696] [planner_server]: Configuring
+[planner_server-9] [INFO] [1787221768.178364222] [global_costmap.global_costmap]: Configuring
+[planner_server-9] [INFO] [1787221768.402631545] [global_costmap.global_costmap]: Using plugin "static_layer"
+[planner_server-9] [INFO] [1787221768.589507242] [global_costmap.global_costmap]: Subscribing to the map topic (/map) with transient local durability
+[planner_server-9] [INFO] [1787221768.646999583] [global_costmap.global_costmap]: Subscribing to updates
+[planner_server-9] [INFO] [1787221768.748630687] [global_costmap.global_costmap]: Initialized plugin "static_layer"
+[planner_server-9] [INFO] [1787221768.748857115] [global_costmap.global_costmap]: Using plugin "obstacle_layer"
+[planner_server-9] [INFO] [1787221768.778107196] [global_costmap.global_costmap]: Subscribed to Topics: scan
+[planner_server-9] [INFO] [1787221769.185442438] [global_costmap.global_costmap]: Initialized plugin "obstacle_layer"
+[planner_server-9] [INFO] [1787221769.185707330] [global_costmap.global_costmap]: Using plugin "inflation_layer"
+[planner_server-9] [INFO] [1787221769.333213191] [global_costmap.global_costmap]: Initialized plugin "inflation_layer"
+[planner_server-9] [INFO] [1787221770.220262809] [planner_server]: Created global planner plugin GridBased of type nav2_smac_planner/SmacPlannerLattice
+[planner_server-9] [INFO] [1787221770.245162088] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 175 X 99 at 0.050000 m/pix
+[planner_server-9] [INFO] [1787221770.392489130] [planner_server]: Configuring GridBased of type SmacPlannerLattice
+[planner_server-9] [INFO] [1787221770.530235519] [planner_server]: Even sized heuristic lookup table size set 200.000000, increasing size by 1 to make odd
+[async_slam_toolbox_node-3] [INFO] [1787221770.534185205] [slam_toolbox]: Message Filter dropping message: frame 'laser_frame' at time 1787221770.329 for reason 'discarding message because the queue is full'
+[planner_server-9] [INFO] [1787221772.794980323] [planner_server]: Configured plugin GridBased of type SmacPlannerLattice with maximum iterations 1000000, max on approach iterations 1000, and allowing unknown traversal. Tolerance 0.15. Using motion model: State Lattice. State lattice file: /opt/ros/humble/share/nav2_smac_planner/sample_primitives/5cm_resolution/0.5m_turning_radius/diff/output.json.
+[planner_server-9] [INFO] [1787221772.795146016] [planner_server]: Planner Server has GridBased  planners available.
+[lifecycle_manager-14] [INFO] [1787221772.940374492] [lifecycle_manager_navigation]: [34m[1mConfiguring behavior_server[0m[0m
+[behavior_server-10] [INFO] [1787221772.941436872] [behavior_server]: Configuring
+[behavior_server-10] [INFO] [1787221772.999191788] [behavior_server]: Creating behavior plugin spin of type nav2_behaviors/Spin
+[behavior_server-10] [INFO] [1787221773.001216294] [behavior_server]: Configuring spin
+[behavior_server-10] [INFO] [1787221773.054778743] [behavior_server]: Creating behavior plugin backup of type nav2_behaviors/BackUp
+[behavior_server-10] [INFO] [1787221773.057653761] [behavior_server]: Configuring backup
+[behavior_server-10] [INFO] [1787221773.109432787] [behavior_server]: Creating behavior plugin drive_on_heading of type nav2_behaviors/DriveOnHeading
+[behavior_server-10] [INFO] [1787221773.112659159] [behavior_server]: Configuring drive_on_heading
+[behavior_server-10] [INFO] [1787221773.157849157] [behavior_server]: Creating behavior plugin assisted_teleop of type nav2_behaviors/AssistedTeleop
+[behavior_server-10] [INFO] [1787221773.162665866] [behavior_server]: Configuring assisted_teleop
+[behavior_server-10] [INFO] [1787221773.208973507] [behavior_server]: Creating behavior plugin wait of type nav2_behaviors/Wait
+[behavior_server-10] [INFO] [1787221773.211862541] [behavior_server]: Configuring wait
+[lifecycle_manager-14] [INFO] [1787221773.247492367] [lifecycle_manager_navigation]: [34m[1mConfiguring bt_navigator[0m[0m
+[bt_navigator-11] [INFO] [1787221773.248148419] [bt_navigator]: Configuring
+[lifecycle_manager-14] [INFO] [1787221774.006627306] [lifecycle_manager_navigation]: [34m[1mConfiguring waypoint_follower[0m[0m
+[waypoint_follower-12] [INFO] [1787221774.007222687] [waypoint_follower]: Configuring
+[waypoint_follower-12] [INFO] [1787221774.415765193] [waypoint_follower]: Created waypoint_task_executor : wait_at_waypoint of type nav2_waypoint_follower::WaitAtWaypoint
+[lifecycle_manager-14] [INFO] [1787221774.421102405] [lifecycle_manager_navigation]: [34m[1mConfiguring velocity_smoother[0m[0m
+[velocity_smoother-13] [INFO] [1787221774.421815063] [velocity_smoother]: Configuring velocity smoother
+[lifecycle_manager-14] [INFO] [1787221774.458705824] [lifecycle_manager_navigation]: [34m[1mActivating controller_server[0m[0m
+[controller_server-7] [INFO] [1787221774.459145367] [controller_server]: Activating
+[controller_server-7] [INFO] [1787221774.459244054] [local_costmap.local_costmap]: Activating
+[controller_server-7] [INFO] [1787221774.459274165] [local_costmap.local_costmap]: Checking transform
+[controller_server-7] [INFO] [1787221774.459517808] [local_costmap.local_costmap]: start
+[controller_server-7] [INFO] [1787221774.582277510] [controller_server]: Activating controller: FollowPath of type nav2_rotation_shim_controller::RotationShimController
+[controller_server-7] [INFO] [1787221774.582398820] [controller_server]: Activating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-7] [INFO] [1787221774.582466499] [controller_server]: Creating bond (controller_server) to lifecycle manager.
+[lifecycle_manager-14] [INFO] [1787221774.726783522] [lifecycle_manager_navigation]: Server controller_server connected with bond.
+[lifecycle_manager-14] [INFO] [1787221774.727025469] [lifecycle_manager_navigation]: [34m[1mActivating smoother_server[0m[0m
+[smoother_server-8] [INFO] [1787221774.729241395] [smoother_server]: Activating
+[smoother_server-8] [INFO] [1787221774.729453264] [smoother_server]: Creating bond (smoother_server) to lifecycle manager.
+[lifecycle_manager-14] [INFO] [1787221774.905198398] [lifecycle_manager_navigation]: Server smoother_server connected with bond.
+[lifecycle_manager-14] [INFO] [1787221774.905411386] [lifecycle_manager_navigation]: [34m[1mActivating planner_server[0m[0m
+[planner_server-9] [INFO] [1787221774.907484371] [planner_server]: Activating
+[planner_server-9] [INFO] [1787221774.907713071] [global_costmap.global_costmap]: Activating
+[planner_server-9] [INFO] [1787221774.907767342] [global_costmap.global_costmap]: Checking transform
+[planner_server-9] [INFO] [1787221774.908229541] [global_costmap.global_costmap]: start
+[planner_server-9] [INFO] [1787221775.423743036] [planner_server]: Activating plugin GridBased of type SmacPlannerLattice
+[planner_server-9] [INFO] [1787221775.445427522] [planner_server]: Creating bond (planner_server) to lifecycle manager.
+[lifecycle_manager-14] [INFO] [1787221775.574754102] [lifecycle_manager_navigation]: Server planner_server connected with bond.
+[lifecycle_manager-14] [INFO] [1787221775.574917875] [lifecycle_manager_navigation]: [34m[1mActivating behavior_server[0m[0m
+[behavior_server-10] [INFO] [1787221775.576058013] [behavior_server]: Activating
+[behavior_server-10] [INFO] [1787221775.576151451] [behavior_server]: Activating spin
+[behavior_server-10] [INFO] [1787221775.576203930] [behavior_server]: Activating backup
+[behavior_server-10] [INFO] [1787221775.576244506] [behavior_server]: Activating drive_on_heading
+[behavior_server-10] [INFO] [1787221775.576279417] [behavior_server]: Activating assisted_teleop
+[behavior_server-10] [INFO] [1787221775.576307032] [behavior_server]: Activating wait
+[behavior_server-10] [INFO] [1787221775.576344024] [behavior_server]: Creating bond (behavior_server) to lifecycle manager.
+[lifecycle_manager-14] [INFO] [1787221775.707987680] [lifecycle_manager_navigation]: Server behavior_server connected with bond.
+[lifecycle_manager-14] [INFO] [1787221775.708200572] [lifecycle_manager_navigation]: [34m[1mActivating bt_navigator[0m[0m
+[bt_navigator-11] [INFO] [1787221775.710450065] [bt_navigator]: Activating
+[bt_navigator-11] [INFO] [1787221776.250317388] [bt_navigator]: Creating bond (bt_navigator) to lifecycle manager.
+[lifecycle_manager-14] [INFO] [1787221776.372127369] [lifecycle_manager_navigation]: Server bt_navigator connected with bond.
+[lifecycle_manager-14] [INFO] [1787221776.372338309] [lifecycle_manager_navigation]: [34m[1mActivating waypoint_follower[0m[0m
+[waypoint_follower-12] [INFO] [1787221776.374147490] [waypoint_follower]: Activating
+[waypoint_follower-12] [INFO] [1787221776.374279424] [waypoint_follower]: Creating bond (waypoint_follower) to lifecycle manager.
+[lifecycle_manager-14] [INFO] [1787221776.506536374] [lifecycle_manager_navigation]: Server waypoint_follower connected with bond.
+[lifecycle_manager-14] [INFO] [1787221776.506656020] [lifecycle_manager_navigation]: [34m[1mActivating velocity_smoother[0m[0m
+[velocity_smoother-13] [INFO] [1787221776.508054234] [velocity_smoother]: Activating
+[velocity_smoother-13] [INFO] [1787221776.508208663] [velocity_smoother]: Creating bond (velocity_smoother) to lifecycle manager.
+[lifecycle_manager-14] [INFO] [1787221776.676760254] [lifecycle_manager_navigation]: Server velocity_smoother connected with bond.
+[lifecycle_manager-14] [INFO] [1787221776.676987354] [lifecycle_manager_navigation]: [34m[1mManaged nodes are active[0m[0m
+[lifecycle_manager-14] [INFO] [1787221776.677030105] [lifecycle_manager_navigation]: [34m[1mCreating bond timer...[0m[0m
+[controller_server-7] [INFO] [1787221780.940954116] [local_costmap.local_costmap]: Message Filter dropping message: frame 'camera_depth_optical_frame' at time 1787221779.889 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787221781.618170581] [local_costmap.local_costmap]: Message Filter dropping message: frame 'laser_frame' at time 1787221780.523 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787221793.375484358] [local_costmap.local_costmap]: Message Filter dropping message: frame 'camera_depth_optical_frame' at time 1787221792.328 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787221793.413717142] [local_costmap.local_costmap]: Message Filter dropping message: frame 'laser_frame' at time 1787221792.311 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787221816.786060143] [local_costmap.local_costmap]: Message Filter dropping message: frame 'laser_frame' at time 1787221815.689 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787221816.953886273] [local_costmap.local_costmap]: Message Filter dropping message: frame 'camera_depth_optical_frame' at time 1787221815.903 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[async_slam_toolbox_node-3] [INFO] [1787221838.369954773] [slam_toolbox]: Message Filter dropping message: frame 'laser_frame' at time 1787221838.166 for reason 'discarding message because the queue is full'
+[async_slam_toolbox_node-3] [INFO] [1787221843.165254832] [slam_toolbox]: Message Filter dropping message: frame 'laser_frame' at time 1787221842.956 for reason 'discarding message because the queue is full'
+[bt_navigator-11] [INFO] [1787221846.573443622] [bt_navigator]: Begin navigating from current location (0.00, 0.00) to (4.48, 1.14)
+[controller_server-7] [INFO] [1787221846.595155511] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-7] [WARN] [1787221846.595293588] [controller_server]: No goal checker was specified in parameter 'current_goal_checker'. Server will use only plugin loaded general_goal_checker . This warning will appear once.
+[controller_server-7] [WARN] [1787221846.701397848] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[velocity_guard-4] [WARN] [1787221846.713224316] [velocity_guard]: velocity guard state: odom_missing
+[controller_server-7] [WARN] [1787221846.796731747] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[controller_server-7] [INFO] [1787221847.663517785] [controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1787221847.767285517] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 1787221847.665076 but the latest data is at time 1787221847.437581, when looking up transform from frame [map] to frame [base_footprint]
+[controller_server-7] 
+[controller_server-7] [WARN] [1787221847.768612656] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[async_slam_toolbox_node-3] LaserRangeScan contains 510 range readings, expected 509
+[async_slam_toolbox_node-3] LaserRangeScan contains 507 range readings, expected 509
+[controller_server-7] [INFO] [1787221848.529749479] [local_costmap.local_costmap]: Message Filter dropping message: frame 'camera_depth_optical_frame' at time 1787221847.483 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787221848.558930582] [local_costmap.local_costmap]: Message Filter dropping message: frame 'laser_frame' at time 1787221847.455 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787221848.663539157] [controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1787221848.746476357] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[async_slam_toolbox_node-3] LaserRangeScan contains 507 range readings, expected 509
+[controller_server-7] [WARN] [1787221848.898868356] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[async_slam_toolbox_node-3] LaserRangeScan contains 503 range readings, expected 509
+[controller_server-7] [WARN] [1787221849.723380661] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[controller_server-7] [INFO] [1787221849.723496339] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-3] LaserRangeScan contains 501 range readings, expected 509
+[async_slam_toolbox_node-3] LaserRangeScan contains 507 range readings, expected 509
+[bt_navigator-11] [INFO] [1787221850.594159348] [bt_navigator]: Received goal preemption request
+[bt_navigator-11] [INFO] [1787221850.597358896] [bt_navigator]: Begin navigating from current location (0.31, 0.10) to (4.71, 1.65)
+[controller_server-7] [INFO] [1787221850.768504597] [controller_server]: Passing new path to controller.
+[planner_server-9] [INFO] [1787221850.908435001] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 175 X 102 at 0.050000 m/pix
+[async_slam_toolbox_node-3] LaserRangeScan contains 507 range readings, expected 509
+[controller_server-7] [INFO] [1787221851.790198513] [controller_server]: Passing new path to controller.
+[bt_navigator-11] [WARN] [1787221851.870218521] [BehaviorTreeEngine]: Behavior Tree tick rate 100.00 was exceeded!
+[planner_server-9] [INFO] [1787221851.908532929] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 176 X 103 at 0.050000 m/pix
+[async_slam_toolbox_node-3] LaserRangeScan contains 508 range readings, expected 509
+[async_slam_toolbox_node-3] LaserRangeScan contains 510 range readings, expected 509
+[async_slam_toolbox_node-3] LaserRangeScan contains 507 range readings, expected 509
+[controller_server-7] [INFO] [1787221853.735733326] [local_costmap.local_costmap]: Message Filter dropping message: frame 'camera_depth_optical_frame' at time 1787221852.684 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787221853.749624382] [local_costmap.local_costmap]: Message Filter dropping message: frame 'laser_frame' at time 1787221852.654 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[async_slam_toolbox_node-3] LaserRangeScan contains 505 range readings, expected 509
+[bt_navigator-11] [INFO] [1787221854.583920806] [bt_navigator]: Received goal preemption request
+[bt_navigator-11] [INFO] [1787221854.584354736] [bt_navigator]: Begin navigating from current location (0.69, 0.20) to (4.75, 2.79)
+[async_slam_toolbox_node-3] LaserRangeScan contains 505 range readings, expected 509
+[async_slam_toolbox_node-3] LaserRangeScan contains 507 range readings, expected 509
+[async_slam_toolbox_node-3] LaserRangeScan contains 511 range readings, expected 509
+[async_slam_toolbox_node-3] LaserRangeScan contains 498 range readings, expected 509
+[async_slam_toolbox_node-3] LaserRangeScan contains 503 range readings, expected 509
+[planner_server-9] [WARN] [1787221857.578944215] [planner_server]: GridBased: failed to create plan, no valid path found.
+[planner_server-9] [WARN] [1787221857.579736099] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (4.71, 1.65)
+[planner_server-9] [INFO] [1787221857.579788296] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 176 X 103 at 0.050000 m/pix
+[planner_server-9] [WARN] [1787221857.579817899] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-9] [INFO] [1787221857.594836864] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[async_slam_toolbox_node-3] LaserRangeScan contains 510 range readings, expected 509
+[planner_server-9] [WARN] [1787221858.224818541] [planner_server]: Planner loop missed its desired rate of 5.0000 Hz. Current loop rate is 1.5956 Hz
+[controller_server-7] [INFO] [1787221858.256856617] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-3] LaserRangeScan contains 510 range readings, expected 509
+[bt_navigator-11] [INFO] [1787221858.573891324] [bt_navigator]: Received goal preemption request
+[bt_navigator-11] [INFO] [1787221858.574656708] [bt_navigator]: Begin navigating from current location (1.01, 0.43) to (5.08, 2.90)
+[controller_server-7] [INFO] [1787221859.323504961] [controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1787221860.323488848] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-3] LaserRangeScan contains 503 range readings, expected 509
+[controller_server-7] [INFO] [1787221861.390198339] [controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1787221861.497640481] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 1787221861.392237 but the latest data is at time 1787221861.390372, when looking up transform from frame [map] to frame [base_footprint]
+[controller_server-7] 
+[controller_server-7] [WARN] [1787221861.504218248] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[async_slam_toolbox_node-3] LaserRangeScan contains 508 range readings, expected 509
+[controller_server-7] [WARN] [1787221861.796665880] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[controller_server-7] [WARN] [1787221861.897527151] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[controller_server-7] [WARN] [1787221862.001504841] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[async_slam_toolbox_node-3] LaserRangeScan contains 508 range readings, expected 509
+[controller_server-7] [INFO] [1787221862.402793047] [controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1787221862.497423616] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[bt_navigator-11] [INFO] [1787221862.573978135] [bt_navigator]: Received goal preemption request
+[bt_navigator-11] [INFO] [1787221862.574795395] [bt_navigator]: Begin navigating from current location (1.17, 0.50) to (5.78, 2.37)
+[planner_server-9] [INFO] [1787221863.105313029] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 177 X 103 at 0.050000 m/pix
+[async_slam_toolbox_node-3] LaserRangeScan contains 510 range readings, expected 509
+[controller_server-7] [WARN] [1787221863.735878417] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[controller_server-7] [WARN] [1787221863.803380802] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[bt_navigator-11] [WARN] [1787221863.813799399] [BehaviorTreeEngine]: Behavior Tree tick rate 100.00 was exceeded!
+[controller_server-7] [WARN] [1787221863.869202102] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[controller_server-7] [WARN] [1787221863.935644836] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[controller_server-7] [WARN] [1787221864.098486419] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[controller_server-7] [ERROR] [1787221864.098662788] [controller_server]: Controller patience exceeded
+[controller_server-7] [WARN] [1787221864.098821650] [controller_server]: [follow_path] [ActionServer] Aborting handle.
+[controller_server-7] [INFO] [1787221864.114461654] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[controller_server-7] [INFO] [1787221864.115933629] [controller_server]: Received a goal, begin computing control effort.
+[async_slam_toolbox_node-3] LaserRangeScan contains 506 range readings, expected 509
+[controller_server-7] [WARN] [1787221864.298510989] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[controller_server-7] [WARN] [1787221864.298979769] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[controller_server-7] [WARN] [1787221864.391017798] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[collision_monitor-5] [INFO] [1787221864.548864492] [collision_monitor]: Robot to slowdown for 75.000000 percents due to SlowdownZone polygon
+[controller_server-7] [WARN] [1787221864.591677947] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[controller_server-7] [WARN] [1787221864.797971831] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[collision_monitor-5] [INFO] [1787221864.798964595] [collision_monitor]: Robot to stop due to StopZone polygon
+[collision_monitor-5] [INFO] [1787221864.899119981] [collision_monitor]: Robot to slowdown for 75.000000 percents due to SlowdownZone polygon
+[controller_server-7] [WARN] [1787221864.901589361] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[controller_server-7] [WARN] [1787221865.194396080] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[controller_server-7] [WARN] [1787221865.297965372] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[controller_server-7] [WARN] [1787221865.400612818] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[async_slam_toolbox_node-3] LaserRangeScan contains 510 range readings, expected 509
+[collision_monitor-5] [INFO] [1787221865.899062325] [collision_monitor]: Robot to stop due to StopZone polygon
+[collision_monitor-5] [INFO] [1787221865.999182628] [collision_monitor]: Robot to slowdown for 75.000000 percents due to SlowdownZone polygon
+[controller_server-7] [WARN] [1787221866.001356267] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+[collision_monitor-5] [INFO] [1787221866.300967931] [collision_monitor]: Robot to stop due to StopZone polygon
+[async_slam_toolbox_node-3] LaserRangeScan contains 506 range readings, expected 509
+[collision_monitor-5] [INFO] [1787221866.399393062] [collision_monitor]: Robot to slowdown for 75.000000 percents due to SlowdownZone polygon
+[collision_monitor-5] [INFO] [1787221866.499329531] [collision_monitor]: Robot to stop due to StopZone polygon
+[planner_server-9] [WARN] [1787221866.524841657] [planner_server]: GridBased: failed to create plan, no valid path found.
+[planner_server-9] [WARN] [1787221866.524980806] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (5.78, 2.37)
+[planner_server-9] [INFO] [1787221866.525005192] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 177 X 107 at 0.050000 m/pix
+[planner_server-9] [WARN] [1787221866.525023690] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-9] [INFO] [1787221866.544476189] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[bt_navigator-11] [INFO] [1787221866.594062645] [bt_navigator]: Received goal preemption request
+[bt_navigator-11] [INFO] [1787221866.594850397] [bt_navigator]: Begin navigating from current location (1.39, 0.69) to (5.79, 2.43)
+[collision_monitor-5] [INFO] [1787221867.301171110] [collision_monitor]: Robot to slowdown for 75.000000 percents due to SlowdownZone polygon
+[collision_monitor-5] [INFO] [1787221867.800003196] [collision_monitor]: Robot to continue normal operation
+[async_slam_toolbox_node-3] LaserRangeScan contains 510 range readings, expected 509
+[collision_monitor-5] [INFO] [1787221869.199785192] [collision_monitor]: Robot to slowdown for 75.000000 percents due to SlowdownZone polygon
+[collision_monitor-5] [INFO] [1787221869.249295901] [collision_monitor]: Robot to continue normal operation
+[async_slam_toolbox_node-3] LaserRangeScan contains 510 range readings, expected 509
+[async_slam_toolbox_node-3] LaserRangeScan contains 508 range readings, expected 509
+[planner_server-9] [WARN] [1787221870.329059327] [planner_server]: GridBased: failed to create plan, no valid path found.
+[planner_server-9] [INFO] [1787221870.329277426] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 178 X 107 at 0.050000 m/pix
+[planner_server-9] [WARN] [1787221870.330205830] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (5.78, 2.37)
+[planner_server-9] [WARN] [1787221870.330311183] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-11] [ERROR] [1787221870.365473895] [bt_navigator_navigate_to_pose_rclcpp_node]: Failed to get result for follow_path in node halt!
+[controller_server-7] [INFO] [1787221870.367721265] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[planner_server-9] [INFO] [1787221870.369911670] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[bt_navigator-11] [WARN] [1787221870.374119792] [BehaviorTreeEngine]: Behavior Tree tick rate 100.00 was exceeded!
+[controller_server-7] [INFO] [1787221870.400734441] [controller_server]: Goal was canceled. Stopping the robot.
+[controller_server-7] [INFO] [1787221870.400971102] [controller_server]: [follow_path] [ActionServer] Client requested to cancel the goal. Cancelling.
+[async_slam_toolbox_node-3] LaserRangeScan contains 506 range readings, expected 509
+[bt_navigator-11] [INFO] [1787221870.574539406] [bt_navigator]: Received goal preemption request
+[bt_navigator-11] [INFO] [1787221870.575069693] [bt_navigator]: Begin navigating from current location (1.59, 0.91) to (6.24, 2.54)
+[velocity_guard-4] [WARN] [1787221872.362815581] [velocity_guard]: velocity guard state: command_stale
+[planner_server-9] [WARN] [1787221874.712726546] [planner_server]: GridBased: failed to create plan, no valid path found.
+[planner_server-9] [WARN] [1787221874.712865534] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (5.79, 2.43)
+[planner_server-9] [WARN] [1787221874.712908802] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-9] [INFO] [1787221874.725370350] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-9] [WARN] [1787221875.554875035] [planner_server]: Planner loop missed its desired rate of 5.0000 Hz. Current loop rate is 1.2078 Hz
+[controller_server-7] [INFO] [1787221875.575930294] [controller_server]: Received a goal, begin computing control effort.
+[velocity_guard-4] [WARN] [1787221875.615689054] [velocity_guard]: velocity guard state: odom_missing
+[async_slam_toolbox_node-3] LaserRangeScan contains 506 range readings, expected 509
+[planner_server-9] [WARN] [1787221876.893861052] [planner_server]: Planner loop missed its desired rate of 5.0000 Hz. Current loop rate is 3.2428 Hz
+[controller_server-7] [INFO] [1787221876.976400116] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-3] LaserRangeScan contains 508 range readings, expected 509
+[async_slam_toolbox_node-3] LaserRangeScan contains 510 range readings, expected 509
+[planner_server-9] [WARN] [1787221878.158553199] [planner_server]: Planner loop missed its desired rate of 5.0000 Hz. Current loop rate is 4.2808 Hz
+[controller_server-7] [INFO] [1787221878.176375833] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-3] LaserRangeScan contains 508 range readings, expected 509
+[bt_navigator-11] [INFO] [1787221878.574421087] [bt_navigator]: Received goal preemption request
+[bt_navigator-11] [INFO] [1787221878.575179681] [bt_navigator]: Begin navigating from current location (1.82, 1.07) to (6.38, 2.60)
+[async_slam_toolbox_node-3] LaserRangeScan contains 508 range readings, expected 509
+[async_slam_toolbox_node-3] LaserRangeScan contains 506 range readings, expected 509
+[controller_server-7] [INFO] [1787221879.376400733] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-3] LaserRangeScan contains 506 range readings, expected 509
+[planner_server-9] [WARN] [1787221880.603052859] [planner_server]: Planner loop missed its desired rate of 5.0000 Hz. Current loop rate is 3.8953 Hz
+[controller_server-7] [INFO] [1787221880.643070189] [controller_server]: Passing new path to controller.
+[async_slam_toolbox_node-3] LaserRangeScan contains 511 range readings, expected 509
+[planner_server-9] [INFO] [1787221881.103508338] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 190 X 147 at 0.050000 m/pix
+[async_slam_toolbox_node-3] LaserRangeScan contains 510 range readings, expected 509
+[planner_server-9] [WARN] [1787221881.855287327] [planner_server]: Planner loop missed its desired rate of 5.0000 Hz. Current loop rate is 4.3429 Hz
+[controller_server-7] [INFO] [1787221881.909704914] [controller_server]: Passing new path to controller.
+[planner_server-9] [INFO] [1787221882.109975107] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 190 X 147 at 0.050000 m/pix
+[async_slam_toolbox_node-3] LaserRangeScan contains 503 range readings, expected 509
+[bt_navigator-11] [INFO] [1787221882.564375087] [bt_navigator]: Received goal preemption request
+[bt_navigator-11] [INFO] [1787221882.565237785] [bt_navigator]: Begin navigating from current location (2.12, 1.19) to (-1.29, 2.28)
+[bt_navigator-11] [WARN] [1787221882.861527616] [BehaviorTreeEngine]: Behavior Tree tick rate 100.00 was exceeded!
+[bt_navigator-11] [WARN] [1787221882.871615996] [BehaviorTreeEngine]: Behavior Tree tick rate 100.00 was exceeded!
+[bt_navigator-11] [WARN] [1787221882.874392265] [BehaviorTreeEngine]: Behavior Tree tick rate 100.00 was exceeded!
+[bt_navigator-11] [WARN] [1787221882.897719469] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for compute_path_to_pose
+[planner_server-9] [INFO] [1787221882.898416809] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[bt_navigator-11] [WARN] [1787221882.904630010] [BehaviorTreeEngine]: Behavior Tree tick rate 100.00 was exceeded!
+[async_slam_toolbox_node-3] [INFO] [1787221883.024669065] [slam_toolbox]: Message Filter dropping message: frame 'laser_frame' at time 1787221882.821 for reason 'discarding message because the queue is full'
+[async_slam_toolbox_node-3] LaserRangeScan contains 512 range readings, expected 509
+[bt_navigator-11] [WARN] [1787221883.388288307] [BehaviorTreeEngine]: Behavior Tree tick rate 100.00 was exceeded!
+[async_slam_toolbox_node-3] LaserRangeScan contains 511 range readings, expected 509
+[async_slam_toolbox_node-3] LaserRangeScan contains 508 range readings, expected 509
+[async_slam_toolbox_node-3] LaserRangeScan contains 507 range readings, expected 509
+[async_slam_toolbox_node-3] LaserRangeScan contains 510 range readings, expected 509
+[bt_navigator-11] [INFO] [1787221886.584654577] [bt_navigator]: Received goal preemption request
+[bt_navigator-11] [INFO] [1787221886.585528506] [bt_navigator]: Begin navigating from current location (2.33, 1.46) to (4.30, -1.18)
+[controller_server-7] [WARN] [1787221887.198212795] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[controller_server-7] [WARN] [1787221887.301270155] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[controller_server-7] [WARN] [1787221887.398522871] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[controller_server-7] [WARN] [1787221887.700755268] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[controller_server-7] [WARN] [1787221887.792082369] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[controller_server-7] [WARN] [1787221887.891781881] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[controller_server-7] [WARN] [1787221888.101568486] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[controller_server-7] [WARN] [1787221888.197668686] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[planner_server-9] [WARN] [1787221888.217073177] [planner_server]: GridBased: failed to create plan, no valid path found.
+[planner_server-9] [WARN] [1787221888.217224933] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-1.29, 2.28)
+[planner_server-9] [INFO] [1787221888.217240103] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 190 X 147 at 0.050000 m/pix
+[planner_server-9] [WARN] [1787221888.217267945] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-11] [ERROR] [1787221888.256003320] [bt_navigator_navigate_to_pose_rclcpp_node]: Failed to get result for follow_path in node halt!
+[bt_navigator-11] [WARN] [1787221888.258929771] [BehaviorTreeEngine]: Behavior Tree tick rate 100.00 was exceeded!
+[behavior_server-10] [INFO] [1787221888.259615012] [behavior_server]: Running backup
+[behavior_server-10] [INFO] [1787221888.260361954] [behavior_server]: DriveOnHeading: no acceleration or deceleration limits set
+[controller_server-7] [WARN] [1787221888.295968525] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[controller_server-7] [INFO] [1787221888.296175518] [controller_server]: Goal was canceled. Stopping the robot.
+[controller_server-7] [INFO] [1787221888.296217602] [controller_server]: [follow_path] [ActionServer] Client requested to cancel the goal. Cancelling.
+[bt_navigator-11] [WARN] [1787221889.124009175] [BehaviorTreeEngine]: Behavior Tree tick rate 100.00 was exceeded!
+[controller_server-7] [INFO] [1787221889.379494638] [local_costmap.local_costmap]: Message Filter dropping message: frame 'camera_depth_optical_frame' at time 1787221888.336 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787221889.423991659] [local_costmap.local_costmap]: Message Filter dropping message: frame 'laser_frame' at time 1787221888.318 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[bt_navigator-11] [INFO] [1787221890.579185655] [bt_navigator]: Received goal preemption request
+[bt_navigator-11] [INFO] [1787221890.580089217] [bt_navigator]: Begin navigating from current location (2.27, 1.44) to (-1.37, 2.32)
+[planner_server-9] [INFO] [1787221892.242315371] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 190 X 147 at 0.050000 m/pix
+[controller_server-7] [INFO] [1787221893.198368550] [local_costmap.local_costmap]: Message Filter dropping message: frame 'camera_depth_optical_frame' at time 1787221892.170 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[async_slam_toolbox_node-3] LaserRangeScan contains 499 range readings, expected 509
+[bt_navigator-11] [INFO] [1787221894.579124136] [bt_navigator]: Received goal preemption request
+[bt_navigator-11] [INFO] [1787221894.580463252] [bt_navigator]: Begin navigating from current location (2.13, 1.35) to (5.35, -1.78)
+[async_slam_toolbox_node-3] LaserRangeScan contains 508 range readings, expected 509
+[behavior_server-10] [INFO] [1787221895.260436351] [behavior_server]: backup completed successfully
+[controller_server-7] [INFO] [1787221895.322083679] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-7] [ERROR] [1787221895.426964469] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 1787221895.322835 but the latest data is at time 1787221894.893873, when looking up transform from frame [map] to frame [base_footprint]
+[controller_server-7] 
+[controller_server-7] [WARN] [1787221895.428078287] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[controller_server-7] [INFO] [1787221895.986615543] [local_costmap.local_costmap]: Message Filter dropping message: frame 'camera_depth_optical_frame' at time 1787221894.938 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787221896.019888038] [local_costmap.local_costmap]: Message Filter dropping message: frame 'laser_frame' at time 1787221894.915 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787221896.389709147] [controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1787221896.492952457] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 1787221896.390431 but the latest data is at time 1787221894.893873, when looking up transform from frame [map] to frame [base_footprint]
+[controller_server-7] 
+[controller_server-7] [WARN] [1787221896.494291956] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[async_slam_toolbox_node-3] LaserRangeScan contains 508 range readings, expected 509
+[planner_server-9] [WARN] [1787221897.672347547] [planner_server]: Planner loop missed its desired rate of 5.0000 Hz. Current loop rate is 3.1407 Hz
+[controller_server-7] [INFO] [1787221897.722837941] [controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1787221898.398017751] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[controller_server-7] [WARN] [1787221898.501361091] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[bt_navigator-11] [ERROR] [1787221898.600618602] [bt_navigator_navigate_to_pose_rclcpp_node]: Failed to get result for follow_path in node halt!
+[bt_navigator-11] [INFO] [1787221898.600841980] [bt_navigator]: [navigate_to_pose] [ActionServer] Client requested to cancel the goal. Cancelling.
+[bt_navigator-11] [WARN] [1787221898.601181367] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-11] [INFO] [1787221898.601345252] [bt_navigator]: Goal canceled
+[controller_server-7] [WARN] [1787221898.601185239] [controller_server]: Control loop missed its desired rate of 15.0000Hz
+[controller_server-7] [INFO] [1787221898.601259485] [controller_server]: Goal was canceled. Stopping the robot.
+[controller_server-7] [INFO] [1787221898.601283231] [controller_server]: [follow_path] [ActionServer] Client requested to cancel the goal. Cancelling.
+[velocity_guard-4] [WARN] [1787221900.613403040] [velocity_guard]: velocity guard state: command_stale
+[controller_server-7] [INFO] [1787221919.940355468] [local_costmap.local_costmap]: Message Filter dropping message: frame 'camera_depth_optical_frame' at time 1787221918.883 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787221919.994952276] [local_costmap.local_costmap]: Message Filter dropping message: frame 'laser_frame' at time 1787221918.894 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787221927.831269417] [local_costmap.local_costmap]: Message Filter dropping message: frame 'camera_depth_optical_frame' at time 1787221926.787 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787221927.882381682] [local_costmap.local_costmap]: Message Filter dropping message: frame 'laser_frame' at time 1787221926.786 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787221930.929915871] [local_costmap.local_costmap]: Message Filter dropping message: frame 'camera_depth_optical_frame' at time 1787221929.888 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787221930.986058065] [local_costmap.local_costmap]: Message Filter dropping message: frame 'laser_frame' at time 1787221929.880 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787221935.236655802] [local_costmap.local_costmap]: Message Filter dropping message: frame 'camera_depth_optical_frame' at time 1787221934.190 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787221935.280245897] [local_costmap.local_costmap]: Message Filter dropping message: frame 'laser_frame' at time 1787221934.177 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787221940.141768023] [local_costmap.local_costmap]: Message Filter dropping message: frame 'camera_depth_optical_frame' at time 1787221939.094 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787221940.173845233] [local_costmap.local_costmap]: Message Filter dropping message: frame 'laser_frame' at time 1787221939.070 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787221964.382246956] [local_costmap.local_costmap]: Message Filter dropping message: frame 'camera_depth_optical_frame' at time 1787221963.337 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787221964.449416342] [local_costmap.local_costmap]: Message Filter dropping message: frame 'laser_frame' at time 1787221963.354 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787221976.225625285] [local_costmap.local_costmap]: Message Filter dropping message: frame 'camera_depth_optical_frame' at time 1787221975.176 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787221976.237394194] [local_costmap.local_costmap]: Message Filter dropping message: frame 'laser_frame' at time 1787221975.142 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787221985.034738092] [local_costmap.local_costmap]: Message Filter dropping message: frame 'laser_frame' at time 1787221983.930 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787221985.035567544] [local_costmap.local_costmap]: Message Filter dropping message: frame 'camera_depth_optical_frame' at time 1787221983.980 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787221991.230196073] [local_costmap.local_costmap]: Message Filter dropping message: frame 'laser_frame' at time 1787221990.128 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787221991.477769651] [local_costmap.local_costmap]: Message Filter dropping message: frame 'camera_depth_optical_frame' at time 1787221990.350 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[async_slam_toolbox_node-3] [INFO] [1787221991.639322425] [slam_toolbox]: Message Filter dropping message: frame 'laser_frame' at time 1787221991.431 for reason 'discarding message because the queue is full'
+[async_slam_toolbox_node-3] [INFO] [1787221995.020223705] [slam_toolbox]: Message Filter dropping message: frame 'laser_frame' at time 1787221994.816 for reason 'discarding message because the queue is full'
+[controller_server-7] [INFO] [1787221997.898823009] [local_costmap.local_costmap]: Message Filter dropping message: frame 'camera_depth_optical_frame' at time 1787221996.853 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787221997.921715264] [local_costmap.local_costmap]: Message Filter dropping message: frame 'laser_frame' at time 1787221996.818 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787222021.048518517] [local_costmap.local_costmap]: Message Filter dropping message: frame 'camera_depth_optical_frame' at time 1787222019.998 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787222021.098716764] [local_costmap.local_costmap]: Message Filter dropping message: frame 'laser_frame' at time 1787222020.002 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787222036.449147754] [local_costmap.local_costmap]: Message Filter dropping message: frame 'camera_depth_optical_frame' at time 1787222035.404 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787222036.491729396] [local_costmap.local_costmap]: Message Filter dropping message: frame 'laser_frame' at time 1787222035.388 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[async_slam_toolbox_node-3] [INFO] [1787222044.881010710] [slam_toolbox]: Message Filter dropping message: frame 'laser_frame' at time 1787222044.691 for reason 'discarding message because the queue is full'
+[controller_server-7] [INFO] [1787222046.176249796] [local_costmap.local_costmap]: Message Filter dropping message: frame 'laser_frame' at time 1787222045.073 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787222046.565735246] [local_costmap.local_costmap]: Message Filter dropping message: frame 'camera_depth_optical_frame' at time 1787222045.141 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787222064.036568083] [local_costmap.local_costmap]: Message Filter dropping message: frame 'camera_depth_optical_frame' at time 1787222062.983 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787222064.057576137] [local_costmap.local_costmap]: Message Filter dropping message: frame 'laser_frame' at time 1787222062.963 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787222066.956765550] [local_costmap.local_costmap]: Message Filter dropping message: frame 'laser_frame' at time 1787222065.860 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787222067.003591478] [local_costmap.local_costmap]: Message Filter dropping message: frame 'camera_depth_optical_frame' at time 1787222065.951 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[async_slam_toolbox_node-3] [INFO] [1787222097.132957849] [slam_toolbox]: Message Filter dropping message: frame 'laser_frame' at time 1787222096.928 for reason 'discarding message because the queue is full'
+[controller_server-7] [INFO] [1787222099.848438539] [local_costmap.local_costmap]: Message Filter dropping message: frame 'laser_frame' at time 1787222098.726 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787222100.094028013] [local_costmap.local_costmap]: Message Filter dropping message: frame 'camera_depth_optical_frame' at time 1787222098.832 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[async_slam_toolbox_node-3] [INFO] [1787222100.329394980] [slam_toolbox]: Message Filter dropping message: frame 'laser_frame' at time 1787222100.125 for reason 'discarding message because the queue is full'
+[velocity_guard-4] [WARN] [1787222112.225033284] [velocity_guard]: LaserScan has only 2 finite in-range samples; need 30 (1 consecutive)
+[controller_server-7] [INFO] [1787222114.023113848] [local_costmap.local_costmap]: Message Filter dropping message: frame 'laser_frame' at time 1787222112.918 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787222114.053771528] [local_costmap.local_costmap]: Message Filter dropping message: frame 'camera_depth_optical_frame' at time 1787222113.005 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787222117.456554117] [local_costmap.local_costmap]: Message Filter dropping message: frame 'camera_depth_optical_frame' at time 1787222116.406 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787222117.509768014] [local_costmap.local_costmap]: Message Filter dropping message: frame 'laser_frame' at time 1787222116.413 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787222131.859099046] [local_costmap.local_costmap]: Message Filter dropping message: frame 'camera_depth_optical_frame' at time 1787222130.812 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1787222131.895298614] [local_costmap.local_costmap]: Message Filter dropping message: frame 'laser_frame' at time 1787222130.792 for reason 'the timestamp on the message is earlier than all the data in the transform cache'

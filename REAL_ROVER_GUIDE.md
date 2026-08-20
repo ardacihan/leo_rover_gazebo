@@ -930,6 +930,10 @@ stop layer with zero/very-low-speed commands before room exploration.
 
 ## Jetson 4 (`192.168.178.104`)
 
+Nav2 overlay bringup, fail-closed command chains, and the 2026-08-20
+“topics never start” failure mode are in
+[`deploy/jetson04/MOTION_STACK.md`](deploy/jetson04/MOTION_STACK.md).
+
 ### Rover 4 readiness session, no firmware dropout under full stack (2026-08-14)
 
 State found on connection (fresh boot, battery 12.00 V):

@@ -3,6 +3,9 @@
 Machine configuration that lives outside the ROS workspace and would otherwise
 be lost if the Jetson were reimaged or the SD card replaced.
 
+For why Nav2/mapping sessions report dead topics and the rover will not
+move, see [MOTION_STACK.md](MOTION_STACK.md).
+
 ## `lidar-tf.service.d-override.conf`
 
 The stock `lidar-tf.service` publishes `base_link -> laser_frame` with `--y 0`,

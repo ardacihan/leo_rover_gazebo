@@ -1,0 +1,34 @@
+fixture:
+  door_clear_width: 0.78
+  robot_physical_width: 0.42
+  footprint_padding: 0.01
+  robot_spawn: [-1.50, 0.0, 0.20, 0.0, 0.0, 0.0]
+  fixture_pose: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  door_center_from_start: [1.50, 0.0]
+
+action_name: /navigate_to_pose
+frame_id: map
+robot_base_frame: leo1/base_link
+goal_coordinates: relative_to_start
+server_timeout_sec: 45.0
+transform_timeout_sec: 15.0
+settle_time_sec: 3.0
+
+# Coordinates are relative to the robot pose captured when the regression starts.
+# x=3.0 is 1.5 m beyond the doorway; x=0.0 returns to the initial room.
+goals:
+  - {name: centered_start_to_far_1, x: 3.00, y: 0.00, yaw: 0.0, timeout_sec: 120.0}
+  - {name: centered_far_to_start_1, x: 0.00, y: 0.00, yaw: 3.141592653589793, timeout_sec: 120.0}
+  - {name: offset_start_to_far, x: 3.00, y: 0.08, yaw: 0.0, timeout_sec: 120.0}
+  - {name: offset_far_to_start, x: 0.00, y: -0.08, yaw: 3.141592653589793, timeout_sec: 120.0}
+  - {name: centered_start_to_far_2, x: 3.00, y: 0.00, yaw: 0.0, timeout_sec: 120.0}
+  - {name: centered_far_to_start_2, x: 0.00, y: 0.00, yaw: 3.141592653589793, timeout_sec: 120.0}
+  - {name: repeat_start_to_far, x: 3.00, y: -0.06, yaw: 0.0, timeout_sec: 120.0}
+  - {name: repeat_far_to_start, x: 0.00, y: 0.06, yaw: 3.141592653589793, timeout_sec: 120.0}
+
+acceptance:
+  required_successes: 8
+  max_failures: 0
+  maximum_contact_count: 0
+  maximum_planner_failures: 1
+  maximum_recovery_cycles_per_goal: 2
