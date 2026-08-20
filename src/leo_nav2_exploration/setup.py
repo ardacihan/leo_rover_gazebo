@@ -15,6 +15,10 @@ setup(
         (os.path.join("share", package_name, "launch"), glob("launch/*.launch.py")),
         (os.path.join("share", package_name, "config", "sim"), glob("config/sim/*.yaml")),
         (os.path.join("share", package_name, "config", "real"), glob("config/real/*.yaml")),
+        (
+            os.path.join("share", package_name, "config", "real_baseline_2026-08-20"),
+            glob("config/real_baseline_2026-08-20/*.yaml"),
+        ),
         (os.path.join("share", package_name, "behavior_trees"), glob("behavior_trees/*.xml")),
         (
             os.path.join("share", package_name, "models", "doorway_fixture"),
@@ -41,6 +45,7 @@ setup(
             "doorway_regression = leo_nav2_exploration.doorway_regression:main",
             "aruco_detector = leo_nav2_exploration.aruco_detector:main",
             "leo_imu_bridge = leo_nav2_exploration.leo_imu_bridge:main",
+            "cloud_filter = leo_nav2_exploration.cloud_filter:main",
         ],
     },
 )

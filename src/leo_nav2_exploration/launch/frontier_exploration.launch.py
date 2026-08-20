@@ -45,7 +45,7 @@ def generate_launch_description():
             DeclareLaunchArgument(
                 'profile',
                 default_value='sim_leo1',
-                choices=['sim_leo1', 'real_root'],
+                choices=['sim_leo1', 'real_root', 'real_baseline'],
             ),
             DeclareLaunchArgument(
                 'autostart',

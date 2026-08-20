@@ -1,0 +1,37 @@
+### explore_lite on the physical rover.
+#
+# `frontier_exploration_ros2` (config/real/frontier.yaml) ships with the bundle
+# but declared "No more frontiers found" at 24% coverage once the SLAM map's
+# free space reached the edge of the occupancy grid -- there was then no
+# free/unknown adjacency left inside the array to find. explore_lite reads
+# `/map` directly with a metric `min_frontier_size` and does not have that
+# failure mode.
+#
+# The frames are the difference from the simulation config: `base_footprint`,
+# not `leo1/base_link`.
+
+explore_node:
+  ros__parameters:
+    use_sim_time: false
+    robot_base_frame: base_footprint
+    # Read the SLAM map, not the costmap: /map keeps frontiers visible beyond
+    # the rolling costmap's bounds.
+    costmap_topic: map
+    costmap_updates_topic: map_updates
+    return_to_init: true
+    visualize: true
+    planner_frequency: 0.2
+    # A frontier is blacklisted if the rover makes no progress toward it for
+    # this long, and once every frontier is blacklisted exploration stops. On
+    # hardware the rover is slower than in simulation and a human may well be
+    # standing in a doorway, so this is longer than the simulation's 30 s --
+    # a blacklisting is permanent for the run, and re-trying a frontier costs
+    # far less than abandoning a room.
+    progress_timeout: 60.0
+    potential_scale: 3.0
+    orientation_scale: 0.0
+    gain_scale: 1.0
+    transform_tolerance: 0.5
+    # Metres. Smaller finds more detail and more noise; 0.5 m is about one
+    # rover width, so anything it chases is somewhere it could actually go.
+    min_frontier_size: 0.5

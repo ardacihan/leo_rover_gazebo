@@ -39,7 +39,7 @@ class ScanTopics:
 def _scan_topics(profile: str) -> ScanTopics:
     if profile == 'sim_leo1':
         return ScanTopics(raw='/leo1/scan', filtered='/leo1/scan_filtered')
-    if profile == 'real_root':
+    if profile in ('real_root', 'real_baseline'):
         return ScanTopics(raw='/scan', filtered='/scan_filtered')
     raise ValueError(f'unsupported profile: {profile!r}')
 
@@ -55,7 +55,7 @@ class CommandTopics:
 def _command_topics(profile: str) -> CommandTopics:
     if profile == 'sim_leo1':
         prefix = '/leo1'
-    elif profile == 'real_root':
+    elif profile in ('real_root', 'real_baseline'):
         prefix = ''
     else:
         raise ValueError(f'unsupported profile: {profile!r}')
@@ -97,8 +97,15 @@ def _drop_camera_source(nav2_yaml):
             if not isinstance(sources, str) or 'camera' not in sources.split():
                 continue
             kept = ' '.join(s for s in sources.split() if s != 'camera')
-            overrides[(scope, scope, 'ros__parameters', layer,
-                       'observation_sources')] = kept
+            if kept:
+                overrides[(scope, scope, 'ros__parameters', layer,
+                           'observation_sources')] = kept
+            else:
+                # The camera now has a layer of its own; with its only source
+                # removed the layer must be disabled outright -- an
+                # ObstacleLayer with an empty source list aborts at configure.
+                overrides[(scope, scope, 'ros__parameters', layer,
+                           'enabled')] = False
     return overrides
 
 
@@ -167,6 +174,19 @@ def _launch_setup(context):
             **common,
         ),
     ]
+
+    # The tuned real profile reads /camera_points_filtered; the node that
+    # produces it belongs to that profile alone. The frozen baseline reads
+    # the raw driver cloud, and sim's synthetic depth needs no filtering.
+    if profile == 'real_root' and enable_voxel:
+        actions.append(
+            Node(
+                package='leo_nav2_exploration',
+                executable='cloud_filter',
+                name='cloud_filter',
+                **common,
+            )
+        )
 
     if start_slam:
         actions.append(
@@ -304,8 +324,9 @@ def generate_launch_description():
             DeclareLaunchArgument(
                 'profile',
                 default_value='sim_leo1',
-                choices=['sim_leo1', 'real_root'],
-                description='Select simulator or root-level real-rover topics and frames.',
+                choices=['sim_leo1', 'real_root', 'real_baseline'],
+                description='Select simulator or root-level real-rover topics and frames; '
+                            'real_baseline is the frozen 2026-08-20 parameter snapshot.',
             ),
             DeclareLaunchArgument('start_slam', default_value='true'),
             DeclareLaunchArgument('enable_voxel', default_value='true'),

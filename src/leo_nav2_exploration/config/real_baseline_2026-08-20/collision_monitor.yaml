@@ -1,0 +1,59 @@
+collision_monitor:
+  ros__parameters:
+    use_sim_time: false
+    base_frame_id: base_footprint
+    odom_frame_id: odom
+    cmd_vel_in_topic: /cmd_vel_guarded
+    cmd_vel_out_topic: /cmd_vel
+    transform_tolerance: 0.3
+    source_timeout: 0.6
+    base_shift_correction: true
+    stop_pub_timeout: 0.5
+    polygons:
+    - StopZone
+    - FootprintApproach
+    - SlowdownZone
+    # Fixed emergency stop zone remains available while the dynamic footprint
+    # topic is still starting. It is 4 cm beyond the padded 0.22 m half-width.
+    StopZone:
+      type: polygon
+      points: [0.26, 0.26, 0.26, -0.26, -0.26, -0.26, -0.26, 0.26]
+      action_type: stop
+      max_points: 3
+      visualize: true
+      polygon_pub_topic: /collision_monitor/stop_zone
+      enabled: true
+
+    FootprintApproach:
+      type: polygon
+      action_type: approach
+      footprint_topic: /local_costmap/published_footprint
+      time_before_collision: 1.5
+      simulation_time_step: 0.05
+      max_points: 3
+      visualize: true
+      polygon_pub_topic: footprint_approach
+      enabled: true
+    SlowdownZone:
+      type: polygon
+      points:
+      - 0.34
+      - 0.34
+      - 0.34
+      - -0.34
+      - -0.34
+      - -0.34
+      - -0.34
+      - 0.34
+      action_type: slowdown
+      max_points: 3
+      slowdown_ratio: 0.75
+      visualize: true
+      polygon_pub_topic: slowdown_zone
+      enabled: true
+    observation_sources:
+    - scan
+    scan:
+      type: scan
+      topic: /scan_filtered
+      enabled: true

@@ -56,9 +56,4 @@ slam_toolbox:
     minimum_distance_penalty: 0.5
     use_response_expansion: true
     min_pass_through: 2
-    # 0.1 marked a cell occupied on 10% hit evidence; on the real rover that
-    # turned stray returns and walking humans into single-cell speckle which
-    # the costmap inflated into 0.35 m no-go disks all over open floor
-    # (drive_2026-08-20 t=502s). 0.25 requires real evidence before a cell
-    # becomes a wall.
-    occupancy_threshold: 0.25
+    occupancy_threshold: 0.1

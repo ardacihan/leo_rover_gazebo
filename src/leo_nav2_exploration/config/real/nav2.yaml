@@ -138,12 +138,13 @@ local_costmap:
       transform_tolerance: 0.3
       plugins:
       - obstacle_layer
+      - camera_obstacle_layer
       - inflation_layer
       obstacle_layer:
         plugin: nav2_costmap_2d::ObstacleLayer
         footprint_clearing_enabled: true
         enabled: true
-        observation_sources: scan camera
+        observation_sources: scan
         scan:
           topic: /scan_filtered
           data_type: LaserScan
@@ -156,19 +157,39 @@ local_costmap:
           raytrace_min_range: 0.05
           raytrace_max_range: 5.0
           inf_is_valid: true
+      # The camera lives in its own layer: when it shared the scan's layer,
+      # every lidar sweep raytrace-cleared the cells the camera had just
+      # marked for obstacles below the lidar plane (shoes, pi-pucks,
+      # bottles) -- the lidar's rays pass straight over them. Verified on
+      # drive_2026-08-20 t=472s. In its own layer the camera clears only
+      # against its own rays.
+      camera_obstacle_layer:
+        plugin: nav2_costmap_2d::ObstacleLayer
+        footprint_clearing_enabled: true
+        enabled: true
+        observation_sources: camera
         camera:
-          topic: /camera/camera/depth/color/points
+          # Filtered by leo_nav2_exploration cloud_filter: ground removal,
+          # voxel clustering, and 2-of-3-frame temporal voting -- a return
+          # that exists for a single frame can never become an obstacle.
+          topic: /camera_points_filtered
           data_type: PointCloud2
           marking: true
           clearing: true
-          # Above the floor plane, below the rover's own camera mast, so the
-          # layer sees table bases and crossbars the 2-D lidar plane misses.
-          min_obstacle_height: 0.06
+          # Robust profile (2026-08-20 evening): the operating floor is kept
+          # clear, so the camera's job is chair and table legs, crossbars,
+          # and table tops -- structures with points through this whole
+          # band. 0.10 sits above the floor-noise tail entirely; low loose
+          # objects (shoes, pi-pucks) are deliberately out of scope.
+          min_obstacle_height: 0.10
           max_obstacle_height: 0.60
           obstacle_min_range: 0.25
-          obstacle_max_range: 2.5
+          # RealSense depth error grows ~quadratically with range; distant
+          # floor pixels were the phantom-blob source. Trust the camera only
+          # close in; beyond that the lidar owns detection.
+          obstacle_max_range: 2.2
           raytrace_min_range: 0.25
-          raytrace_max_range: 3.0
+          raytrace_max_range: 2.7
       inflation_layer:
         plugin: nav2_costmap_2d::InflationLayer
         enabled: true
