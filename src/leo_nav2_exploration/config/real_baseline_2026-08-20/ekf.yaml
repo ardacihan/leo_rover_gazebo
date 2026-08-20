@@ -1,0 +1,91 @@
+### robot_localization EKF for the physical Leo Rover: wheel odometry + gyro
+#
+# Same fusion design that halved odometry error in simulation (see
+# reports/exp/FINDINGS.md, "IMU fusion"): forward velocity from the wheels,
+# yaw rate from the gyro, nothing else. On a skid-steer chassis the wheels
+# slide sideways through every turn, so wheel-derived yaw carries a systematic
+# scale error; a MEMS gyro is wrong by bias drift alone.
+#
+# ---------------------------------------------------------------------------
+# BEFORE ENABLING THIS ON THE ROVER
+#
+# This node publishes `odom -> base_footprint`. Exactly one node may. The
+# rover's existing bringup publishes it from `wheel_odom_tf.py`, so that node
+# must be stopped or launched with `publish_tf:=false` first. Two publishers of
+# one transform do not error -- tf2 accepts both and consumers see the pose
+# jitter between them, which looks like a SLAM problem and is not.
+#
+# Check with:  ros2 run tf2_ros tf2_echo odom base_footprint
+#              ros2 topic info /tf --verbose | grep -c "Node name"
+# ---------------------------------------------------------------------------
+#
+# Inputs expected:
+#   /wheel_odom   nav_msgs/Odometry   -- from the rover firmware bringup
+#   /imu/data     sensor_msgs/Imu     -- from `leo_imu_bridge`, which converts
+#                                        the firmware's leo_msgs/Imu
+#
+# The IMU orientation quaternion is not fused: the firmware IMU has no
+# magnetometer and reports no attitude, and the bridge flags it absent.
+
+ekf_filter_node:
+  ros__parameters:
+    use_sim_time: false
+    frequency: 30.0
+    sensor_timeout: 0.2
+    two_d_mode: true                 # planar rover; kills z/roll/pitch drift
+    transform_time_offset: 0.0
+    transform_timeout: 0.1
+    print_diagnostics: true
+    debug: false
+    permit_corrected_publication: false
+    publish_acceleration: false
+    publish_tf: true
+
+    map_frame: map
+    odom_frame: odom
+    base_link_frame: base_footprint
+    world_frame: odom
+
+    # Wheel odometry: forward velocity only. Its yaw is the channel being
+    # replaced, so pose and yaw rate are both excluded.
+    # Order: x y z, roll pitch yaw, vx vy vz, vroll vpitch vyaw, ax ay az
+    odom0: /wheel_odom
+    odom0_config: [false, false, false,
+                   false, false, false,
+                   true,  false, false,
+                   false, false, false,
+                   false, false, false]
+    odom0_queue_size: 10
+    odom0_differential: false
+    odom0_relative: false
+    odom0_nodelay: true
+
+    # Gyro: yaw rate only.
+    imu0: /imu/data
+    imu0_config: [false, false, false,
+                  false, false, false,
+                  false, false, false,
+                  false, false, true,
+                  false, false, false]
+    imu0_queue_size: 20
+    imu0_differential: false
+    imu0_relative: false
+    imu0_remove_gravitational_acceleration: true
+    imu0_nodelay: true
+
+    process_noise_covariance: [
+      0.02, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+      0.0, 0.02, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+      0.0, 0.0, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+      0.0, 0.0, 0.0, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+      0.0, 0.0, 0.0, 0.0, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+      0.0, 0.0, 0.0, 0.0, 0.0, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.015, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.015, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0,
+      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.01, 0.0, 0.0, 0.0, 0.0,
+      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.01, 0.0, 0.0, 0.0,
+      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.01, 0.0, 0.0,
+      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.01, 0.0,
+      0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.01]

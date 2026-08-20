@@ -1312,6 +1312,49 @@ This timing is an observation, not proof that the driver caused the outage.
 Before the next attempt, physically check power/battery, restore SSH, inspect
 boot logs, check `/dev/ttyUSB0` ownership, and confirm the actual LIDAR model.
 
+### Robust-mode overlay imported from ivan-branch (2026-08-20)
+
+`src/leo_nav2_exploration` on this branch now carries the ivan-branch
+robust-perception stack (ivan-branch tip `2f57b33`), which produced the
+acceptable replay maps in robust and lidar-only modes. The previous
+field-tuned version of the package is preserved verbatim in the snapshot
+commit `407b995` ("Snapshot field-tuned overlay...") — restore it with
+`git checkout 407b995 -- src/leo_nav2_exploration` if the import misbehaves.
+
+What the import adds on top of the field-tuned version:
+
+- `cloud_filter.py`: filters the RealSense depth cloud into
+  `/camera_points_filtered` before the costmap reads it (the "robust mode"
+  core — no pi-puck/aux experiments, just SLAM + clean costmap sources).
+- Tuned `config/real/` nav2/slam parameters, plus `ekf.yaml`/`explore.yaml`
+  and `odometry_fusion.launch.py`, `real_mapping.launch.py`,
+  `real_exploration.launch.py`, ArUco detector, IMU bridge.
+- Frozen reference profile `config/real_baseline_2026-08-20/` selectable at
+  launch, so tuned-vs-baseline A/B needs no git juggling.
+- `scripts/drive_replay/`: the WSL bag-replay harness used to validate the
+  maps offline (robust / lidar-only / baseline variants + dashboard).
+
+How to run the three variants on the rover (all through the same launch):
+
+```bash
+# Robust mode (default): cloud_filter + camera in the costmap
+ros2 launch leo_nav2_exploration real_navigation.launch.py
+
+# Lidar-only: drop the camera as a costmap source entirely
+ros2 launch leo_nav2_exploration real_navigation.launch.py enable_voxel:=false
+
+# Frozen 2026-08-20 baseline configs (raw driver cloud, pre-tuning)
+ros2 launch leo_nav2_exploration real_navigation.launch.py profile:=real_baseline
+```
+
+Known caveats carried over: 12 contract tests fail identically on
+ivan-branch itself (tuning outran the test expectations, e.g. recovery
+`backup_speed` 0.08 vs the asserted 0.05 ceiling); this is pre-existing,
+not an artifact of the import. The systemd boot stack on Jetson 4 already
+runs SLAM+Nav2 — stop it before launching this overlay, as with
+`safe_mapping.launch.py`. The local `real_sensor_tf.launch.py` from the
+field sessions is retained alongside the imported files.
+
 ## Jetson 6
 
 Only one fact has been reported: it currently has no LIDAR. Nothing else was

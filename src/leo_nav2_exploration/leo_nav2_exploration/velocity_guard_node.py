@@ -76,7 +76,12 @@ class VelocityGuardNode(Node):
         self._publisher = self.create_publisher(Twist, output_topic, 10)
         self.create_subscription(Twist, input_topic, self._command_callback, 10)
         self.create_subscription(LaserScan, scan_topic, self._scan_callback, qos_profile_sensor_data)
-        self.create_subscription(Odometry, odom_topic, self._odom_callback, 20)
+        # Sensor-data QoS, like the scan: the rover's /wheel_odom is published
+        # best-effort, and a reliable subscription is incompatible with it --
+        # the guard then sees odometry as permanently stale and zeroes every
+        # command (found replaying drive_2026-08-20 through the stack).
+        self.create_subscription(Odometry, odom_topic, self._odom_callback,
+                                 qos_profile_sensor_data)
         if self._config.require_battery:
             self.create_subscription(BatteryState, battery_topic, self._battery_callback, 10)
 

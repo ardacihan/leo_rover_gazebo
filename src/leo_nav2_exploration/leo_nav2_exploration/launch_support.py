@@ -14,6 +14,10 @@ import yaml
 _PROFILE_DIRECTORIES = {
     "sim_leo1": "sim",
     "real_root": "real",
+    # Frozen snapshot of config/real as deployed for the 2026-08-20 drives.
+    # Never edited: it is the fixed reference point for costmap/behaviour
+    # tuning comparisons. Topics and frames are identical to real_root.
+    "real_baseline": "real_baseline_2026-08-20",
 }
 
 

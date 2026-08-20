@@ -25,7 +25,7 @@ def _parser() -> argparse.ArgumentParser:
             "Keep the rover stationary on a flat floor."
         )
     )
-    parser.add_argument("--topic", default="/rob_4/camera/depth/color/points")
+    parser.add_argument("--topic", default="/camera/camera/depth/color/points")
     parser.add_argument("--frames", type=int, default=8)
     parser.add_argument("--timeout", type=float, default=25.0)
     parser.add_argument("--max-points", type=int, default=50000)

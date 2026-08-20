@@ -21,6 +21,7 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, OpaqueFunction, SetEnvironmentVariable, TimerAction
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
+import yaml
 
 from leo_nav2_exploration.launch_support import (
     materialize_parameter_file,
@@ -38,7 +39,7 @@ class ScanTopics:
 def _scan_topics(profile: str) -> ScanTopics:
     if profile == 'sim_leo1':
         return ScanTopics(raw='/leo1/scan', filtered='/leo1/scan_filtered')
-    if profile == 'real_root':
+    if profile in ('real_root', 'real_baseline'):
         return ScanTopics(raw='/scan', filtered='/scan_filtered')
     raise ValueError(f'unsupported profile: {profile!r}')
 
@@ -54,7 +55,7 @@ class CommandTopics:
 def _command_topics(profile: str) -> CommandTopics:
     if profile == 'sim_leo1':
         prefix = '/leo1'
-    elif profile == 'real_root':
+    elif profile in ('real_root', 'real_baseline'):
         prefix = ''
     else:
         raise ValueError(f'unsupported profile: {profile!r}')
@@ -73,6 +74,39 @@ def _as_bool(value: str) -> bool:
     if normalized in {'0', 'false', 'no', 'off'}:
         return False
     raise ValueError(f'expected boolean launch value, got {value!r}')
+
+
+
+def _drop_camera_source(nav2_yaml):
+    """Overrides that remove the depth camera from every costmap it feeds.
+
+    Built by reading the file rather than assuming its shape: an override path
+    that does not exist raises, and silently different configs between the sim
+    and real profiles are exactly how the previous version broke.
+    """
+    with open(nav2_yaml, encoding='utf-8') as handle:
+        data = yaml.safe_load(handle)
+
+    overrides = {}
+    for scope in ('local_costmap', 'global_costmap'):
+        params = data.get(scope, {}).get(scope, {}).get('ros__parameters', {})
+        for layer, contents in params.items():
+            if not isinstance(contents, dict):
+                continue
+            sources = contents.get('observation_sources')
+            if not isinstance(sources, str) or 'camera' not in sources.split():
+                continue
+            kept = ' '.join(s for s in sources.split() if s != 'camera')
+            if kept:
+                overrides[(scope, scope, 'ros__parameters', layer,
+                           'observation_sources')] = kept
+            else:
+                # The camera now has a layer of its own; with its only source
+                # removed the layer must be disabled outright -- an
+                # ObstacleLayer with an empty source list aborts at configure.
+                overrides[(scope, scope, 'ros__parameters', layer,
+                           'enabled')] = False
+    return overrides
 
 
 def _launch_setup(context):
@@ -94,15 +128,21 @@ def _launch_setup(context):
     scan_topics = _scan_topics(profile)
     use_sim_time = profile == 'sim_leo1'
 
-    # The camera is a source of the local obstacle_layer, not a separate voxel
-    # layer. Disabling it must drop the source from observation_sources; the old
-    # voxel_layer override path no longer exists in the config and would make
-    # materialize_parameter_file abort the whole launch.
+    # `enable_voxel` predates the move from VoxelLayer to ObstacleLayer for the
+    # depth camera (2026-08-17). Its old override wrote
+    # local_costmap.voxel_layer.enabled, a key the configs no longer contain,
+    # and `materialize_parameter_file` raises KeyError on a missing path -- so
+    # `enable_voxel:=false` did not merely do nothing, it prevented the whole
+    # overlay from launching. `real_navigation.launch.py` defaulted it to false,
+    # which meant the rover profile could not start at all.
+    #
+    # It now means what an operator would expect it to mean: use the depth
+    # camera as a costmap obstacle source, or do not. Turning it off leaves the
+    # lidar as the only source, which is the right fallback if the RealSense
+    # cannot keep up on the rover's computer.
     overrides = {}
     if not enable_voxel:
-        overrides = {
-            ('local_costmap', 'local_costmap', 'ros__parameters', 'obstacle_layer', 'observation_sources'): 'scan',
-        }
+        overrides = _drop_camera_source(paths.nav2)
 
     nav2_params = materialize_parameter_file(
         paths.nav2,
@@ -122,9 +162,6 @@ def _launch_setup(context):
 
     actions = [
         SetEnvironmentVariable('RCUTILS_LOGGING_BUFFERED_STREAM', '1'),
-    ]
-
-    actions.append(
         Node(
             package='laser_filters',
             executable='scan_to_scan_filter_chain',
@@ -135,8 +172,21 @@ def _launch_setup(context):
                 ('scan_filtered', scan_topics.filtered),
             ],
             **common,
+        ),
+    ]
+
+    # The tuned real profile reads /camera_points_filtered; the node that
+    # produces it belongs to that profile alone. The frozen baseline reads
+    # the raw driver cloud, and sim's synthetic depth needs no filtering.
+    if profile == 'real_root' and enable_voxel:
+        actions.append(
+            Node(
+                package='leo_nav2_exploration',
+                executable='cloud_filter',
+                name='cloud_filter',
+                **common,
+            )
         )
-    )
 
     if start_slam:
         actions.append(
@@ -274,16 +324,12 @@ def generate_launch_description():
             DeclareLaunchArgument(
                 'profile',
                 default_value='sim_leo1',
-                choices=['sim_leo1', 'real_root'],
-                description='Select simulator or root-level real-rover topics and frames.',
+                choices=['sim_leo1', 'real_root', 'real_baseline'],
+                description='Select simulator or root-level real-rover topics and frames; '
+                            'real_baseline is the frozen 2026-08-20 parameter snapshot.',
             ),
             DeclareLaunchArgument('start_slam', default_value='true'),
-            DeclareLaunchArgument(
-                'enable_voxel',
-                default_value='true',
-                description='Keep the depth-camera source in the local costmap obstacle_layer '
-                            '(historical name; the camera is an ObstacleLayer source now).',
-            ),
+            DeclareLaunchArgument('enable_voxel', default_value='true'),
             DeclareLaunchArgument('autostart', default_value='true'),
             DeclareLaunchArgument('use_respawn', default_value='false'),
             DeclareLaunchArgument('navigation_start_delay', default_value='3.0'),

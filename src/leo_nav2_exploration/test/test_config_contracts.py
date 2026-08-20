@@ -23,7 +23,7 @@ PROFILES = {
         "odom": "odom",
         "raw_scan": "/scan",
         "scan": "/scan_filtered",
-        "cloud": "/rob_4/camera/depth/color/points",
+        "cloud": "/camera_points_filtered",
         "odom_topic": "/wheel_odom",
         "nav": "/cmd_vel_nav",
         "smoothed": "/cmd_vel_smoothed",
@@ -131,38 +131,19 @@ def test_sensor_topics_and_frames_match_profile(profile):
     assert bt["odom_topic"] == expected["odom_topic"]
     assert local["obstacle_layer"]["scan"]["topic"] == expected["scan"]
     assert global_["obstacle_layer"]["scan"]["topic"] == expected["scan"]
-    assert local["obstacle_layer"]["observation_sources"] == "scan camera"
-    assert local["obstacle_layer"]["camera"]["topic"] == expected["cloud"]
-    assert local["obstacle_layer"]["camera"]["data_type"] == "PointCloud2"
-    assert local["obstacle_layer"]["camera"]["marking"] is True
-    assert local["obstacle_layer"]["camera"]["clearing"] is True
-    assert local["obstacle_layer"]["camera"]["min_obstacle_height"] > 0.0
-
-
-@pytest.mark.parametrize("profile", ["sim", "real"])
-def test_camera_source_can_be_disabled_via_launch_override(profile):
-    """The enable_voxel=false path must drop the camera from the obstacle layer."""
-    import sys
-
-    sys.path.insert(0, str(PACKAGE))
-    try:
-        from leo_nav2_exploration.launch_support import materialize_parameter_file
-    finally:
-        sys.path.pop(0)
-
-    materialized = materialize_parameter_file(
-        PACKAGE / "config" / profile / "nav2.yaml",
-        {},
-        path_overrides={
-            ("local_costmap", "local_costmap", "ros__parameters", "obstacle_layer", "observation_sources"): "scan",
-        },
-    )
-    try:
-        data = yaml.safe_load(materialized.read_text())
-    finally:
-        materialized.unlink()
-    local = data["local_costmap"]["local_costmap"]["ros__parameters"]
-    assert local["obstacle_layer"]["observation_sources"] == "scan"
+    # The camera must live in its own layer: sharing the scan's layer lets
+    # lidar raytrace clearing erase camera marks for obstacles below the
+    # lidar plane (found on drive_2026-08-20).
+    assert "camera" not in local["obstacle_layer"]["observation_sources"].split()
+    camera = local["camera_obstacle_layer"]["camera"]
+    assert local["camera_obstacle_layer"]["observation_sources"] == "camera"
+    assert camera["topic"] == expected["cloud"]
+    assert camera["data_type"] == "PointCloud2"
+    assert camera["marking"] is True
+    assert camera["clearing"] is True
+    assert camera["min_obstacle_height"] <= 0.06  # shoes and pi-pucks
+    assert "camera_obstacle_layer" in local["plugins"]
+    assert local["plugins"].index("camera_obstacle_layer") < local["plugins"].index("inflation_layer")
 
 
 @pytest.mark.parametrize("profile", ["sim", "real"])
