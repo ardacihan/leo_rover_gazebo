@@ -40,6 +40,7 @@ STACK_PANELS = [
 # Order = display order. 'logic' always holds the render of the CURRENT
 # config/real; older tunings keep their own directories.
 VARIANTS = [('robust', 'logic'),
+            ('lidar-only', 'logic_lidar'),
             ('low-obstacle', 'logic_lowobs'),
             ('baseline', 'logic_baseline')]
 
@@ -179,6 +180,8 @@ TEMPLATE = r'''<title>__TITLE__</title>
   .pane[data-variant="robust"] .chip{background:var(--plan);color:#171512}
   .pane[data-variant="low-obstacle"] h2{color:#6fb8e8}
   .pane[data-variant="low-obstacle"] .chip{background:#6fb8e8;color:#171512}
+  .pane[data-variant="lidar-only"] h2{color:#5fd8c8}
+  .pane[data-variant="lidar-only"] .chip{background:#5fd8c8;color:#171512}
   .pane[data-variant="baseline"] h2{color:var(--baseline)}
   .pane[data-variant="baseline"] .chip{background:var(--baseline);color:#171512}
 

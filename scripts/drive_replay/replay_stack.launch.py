@@ -51,9 +51,16 @@ def _launch_setup(context):
                               os.path.join(out, 'scan_filter.yaml'), {})
     p['slam'] = _patch(os.path.join(cfg, 'slam.yaml'),
                        os.path.join(out, 'slam.yaml'), {})
+    nav2_repl = {'__BT_XML__': bt_xml}
+    lidar_only = LaunchConfiguration('lidar_only').perform(context).lower() \
+        in ('1', 'true', 'yes', 'on')
+    if lidar_only:
+        # Drop the camera layer from the plugin list entirely -- the local
+        # costmap then sees obstacles through the lidar alone, mirroring
+        # `enable_voxel:=false` on the rover.
+        nav2_repl['- camera_obstacle_layer'] = '# camera layer dropped (lidar_only)'
     p['nav2'] = _patch(os.path.join(cfg, 'nav2.yaml'),
-                       os.path.join(out, 'nav2.yaml'),
-                       {'__BT_XML__': bt_xml})
+                       os.path.join(out, 'nav2.yaml'), nav2_repl)
     p['guard'] = _patch(os.path.join(cfg, 'velocity_guard.yaml'),
                         os.path.join(out, 'velocity_guard.yaml'),
                         {'input_topic: /cmd_vel_smoothed':
@@ -147,5 +154,6 @@ def generate_launch_description():
         DeclareLaunchArgument('config_dir',
                               default_value='/tmp/drive_replay_cfg'),
         DeclareLaunchArgument('config_profile', default_value='real'),
+        DeclareLaunchArgument('lidar_only', default_value='false'),
         OpaqueFunction(function=_launch_setup),
     ])

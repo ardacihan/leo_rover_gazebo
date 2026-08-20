@@ -10,6 +10,7 @@
 BAG=${1:?bag dir}
 OUT=${2:?output dir}
 PROFILE=${3:-real}   # or real_baseline_2026-08-20 for the frozen snapshot
+LIDAR_ONLY=${4:-false}   # true = drop the camera costmap layer (lidar only)
 HERE=$(cd "$(dirname "$0")" && pwd)
 REPO=/mnt/c/Users/smirn/Desktop/leo_rover_gazebo
 
@@ -25,7 +26,7 @@ bash "$REPO/scripts/leo_cleanup_wsl.sh"
 CFG=$(mktemp -d /tmp/drive_replay_cfg.XXXX)
 echo "=== launching replay stack (configs in $CFG)"
 ros2 launch "$HERE/replay_stack.launch.py" config_dir:="$CFG" \
-    config_profile:="$PROFILE" > "$OUT/stack.log" 2>&1 &
+    config_profile:="$PROFILE" lidar_only:="$LIDAR_ONLY" > "$OUT/stack.log" 2>&1 &
 LAUNCH_PID=$!
 
 python3 "$HERE/depth_to_points.py" --ros-args -p use_sim_time:=true \
@@ -51,7 +52,8 @@ for attempt in 1 2; do
     kill -INT "$LAUNCH_PID" 2>/dev/null; sleep 5
     bash "$REPO/scripts/leo_cleanup_wsl.sh"
     ros2 launch "$HERE/replay_stack.launch.py" config_dir:="$CFG" \
-        config_profile:="$PROFILE" > "$OUT/stack.log" 2>&1 &
+        config_profile:="$PROFILE" lidar_only:="$LIDAR_ONLY" \
+        > "$OUT/stack.log" 2>&1 &
     LAUNCH_PID=$!
     python3 "$HERE/depth_to_points.py" --ros-args -p use_sim_time:=true \
         > "$OUT/depth_to_points.log" 2>&1 &

@@ -13,9 +13,9 @@ sys.path.insert(0, '/mnt/c/Users/smirn/Desktop/leo_rover_gazebo/scripts/drive_re
 from pathlib import Path
 from compact_media import recode
 
-# Artifact carries robust (logic/) + baseline; the low-obstacle variant
-# stays in the full-quality local dashboard only -- three variants of video
-# do not fit the 16 MB artifact cap.
+# Artifact carries robust (logic/) + lidar-only; baseline and low-obstacle
+# stay in the full-quality local dashboard only -- more than two variants
+# of video do not fit the 16 MB artifact cap.
 LC_W = {'drive_2026-08-20': 240, 'drive_2026-08-20_run2': 280}
 base = Path('/mnt/c/Users/smirn/Desktop/leo_rover_gazebo/reports/drive_2026-08-20')
 for run in ('drive_2026-08-20', 'drive_2026-08-20_run2'):
@@ -25,9 +25,9 @@ for run in ('drive_2026-08-20', 'drive_2026-08-20_run2'):
         ('logic/map.mp4', 320, 4),
         ('logic/global_costmap.mp4', 320, 4),
         ('logic/local_costmap.mp4', LC_W[run], 4),
-        ('logic_baseline/map.mp4', 320, 4),
-        ('logic_baseline/global_costmap.mp4', 320, 4),
-        ('logic_baseline/local_costmap.mp4', LC_W[run], 4),
+        ('logic_lidar/map.mp4', 320, 4),
+        ('logic_lidar/global_costmap.mp4', 320, 4),
+        ('logic_lidar/local_costmap.mp4', LC_W[run], 4),
     ]
     total = 0
     for rel, width, drop in PLAN:

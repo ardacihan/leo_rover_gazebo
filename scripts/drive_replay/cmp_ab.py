@@ -34,12 +34,14 @@ def frame(path, t, label):
 
 def main():
     run, t, out = Path(sys.argv[1]), float(sys.argv[2]), sys.argv[3]
+    # optional extra args: dir:label pairs, default baseline-vs-current
+    pairs = [a.split(':', 1) for a in sys.argv[4:]] or \
+        [['logic_baseline', 'baseline'], ['logic', 'robust']]
     rows = []
     cam = frame(run / 'default/color.mp4', t, f'camera t={t:.0f}s')
     for name in ('map', 'global_costmap', 'local_costmap'):
         pair = []
-        for variant, label in (('logic_baseline', 'baseline'),
-                               ('logic', 'robust')):
+        for variant, label in pairs:
             f = frame(run / variant / f'{name}.mp4', t, f'{label} {name}')
             if f is not None:
                 pair.append(f)
