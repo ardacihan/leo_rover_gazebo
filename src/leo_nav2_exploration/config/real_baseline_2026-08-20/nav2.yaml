@@ -157,7 +157,7 @@ local_costmap:
           raytrace_max_range: 5.0
           inf_is_valid: true
         camera:
-          topic: /camera/camera/depth/color/points
+          topic: /rob_4/camera/depth/color/points
           data_type: PointCloud2
           marking: true
           clearing: true

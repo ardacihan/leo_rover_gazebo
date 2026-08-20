@@ -1347,13 +1347,31 @@ ros2 launch leo_nav2_exploration real_navigation.launch.py enable_voxel:=false
 ros2 launch leo_nav2_exploration real_navigation.launch.py profile:=real_baseline
 ```
 
+Rover-4 adaptations applied on top of the import (ivan-branch validated
+against replay bags where the depth bridge publishes under the RealSense
+default `/camera/camera/...` namespace, but rover 4 publishes under
+`/rob_4/...`):
+
+- `navigation_overlay.launch.py` now passes
+  `input_topic:=/rob_4/camera/depth/color/points` to `cloud_filter`;
+  without it the filter subscribes to a dead topic and robust mode
+  silently degrades to lidar-only with no camera clearing.
+- `real_navigation.launch.py` keeps the field-session
+  `real_sensor_tf.launch.py` include (`publish_camera_tf` arg) — the
+  import had dropped it, which would have left the camera frames
+  disconnected from `base_link`.
+- `config/real_baseline_2026-08-20/nav2.yaml` camera source points at the
+  rover topic; `replay_stack.launch.py` maps it back to the bridge topic
+  so baseline replays still work.
+
 Known caveats carried over: 12 contract tests fail identically on
 ivan-branch itself (tuning outran the test expectations, e.g. recovery
 `backup_speed` 0.08 vs the asserted 0.05 ceiling); this is pre-existing,
 not an artifact of the import. The systemd boot stack on Jetson 4 already
 runs SLAM+Nav2 — stop it before launching this overlay, as with
-`safe_mapping.launch.py`. The local `real_sensor_tf.launch.py` from the
-field sessions is retained alongside the imported files.
+`safe_mapping.launch.py`. Remember the RealSense pointcloud filter param
+on the Jetson build is `pointcloud__neon_.enable` (off at boot; not
+persisted across leo-ros restarts).
 
 ## Jetson 6
 

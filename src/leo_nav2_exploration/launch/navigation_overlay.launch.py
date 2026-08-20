@@ -184,6 +184,13 @@ def _launch_setup(context):
                 package='leo_nav2_exploration',
                 executable='cloud_filter',
                 name='cloud_filter',
+                # The node's default input topic matches the replay bridge
+                # (/camera/camera/...); rover 4's RealSense publishes under
+                # the /rob_4 namespace, so the live profile must say so
+                # explicitly or the filter subscribes to a dead topic.
+                parameters=[{
+                    'input_topic': '/rob_4/camera/depth/color/points',
+                }],
                 **common,
             )
         )

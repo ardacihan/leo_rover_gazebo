@@ -52,6 +52,10 @@ def _launch_setup(context):
     p['slam'] = _patch(os.path.join(cfg, 'slam.yaml'),
                        os.path.join(out, 'slam.yaml'), {})
     nav2_repl = {'__BT_XML__': bt_xml}
+    # The configs name the rover-4 camera topic; in replay the depth bridge
+    # publishes the cloud under the RealSense default namespace instead.
+    nav2_repl['topic: /rob_4/camera/depth/color/points'] = \
+        'topic: /camera/camera/depth/color/points'
     lidar_only = LaunchConfiguration('lidar_only').perform(context).lower() \
         in ('1', 'true', 'yes', 'on')
     if lidar_only:
