@@ -1,0 +1,331 @@
+[INFO] [launch]: All log files can be found below /home/smirn/.ros/log/2026-08-20-10-05-26-502289-Tornadosky-28150
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [scan_to_scan_filter_chain-1]: process started with pid [28151]
+[INFO] [async_slam_toolbox_node-2]: process started with pid [28153]
+[INFO] [velocity_guard-3]: process started with pid [28155]
+[INFO] [collision_monitor-4]: process started with pid [28157]
+[INFO] [lifecycle_manager-5]: process started with pid [28159]
+[lifecycle_manager-5] [INFO] [1787213126.559684207] [lifecycle_manager_collision_monitor]: Creating
+[async_slam_toolbox_node-2] [INFO] [1787213126.560421653] [slam_toolbox]: Node using stack size 40000000
+[lifecycle_manager-5] [INFO] [1787213126.561248008] [lifecycle_manager_collision_monitor]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[lifecycle_manager-5] [INFO] [1787213126.562661094] [lifecycle_manager_collision_monitor]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-5] [INFO] [1787213126.562684873] [lifecycle_manager_collision_monitor]: [34m[1mConfiguring collision_monitor[0m[0m
+[collision_monitor-4] [INFO] [1787213126.563219988] [collision_monitor]: 
+[collision_monitor-4] 	collision_monitor lifecycle node launched. 
+[collision_monitor-4] 	Waiting on external lifecycle transitions to activate
+[collision_monitor-4] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[scan_to_scan_filter_chain-1] [WARN] [1787213126.564249686] [rcl.logging_rosout]: Publisher already registered for provided node name. If this is due to multiple nodes with the same name then all logs for that logger name will go out over the existing publisher. As soon as any node with that name is destructed it will unregister the publisher, preventing any further logs for that name from being published on the rosout topic.
+[collision_monitor-4] [INFO] [1787213126.585434973] [collision_monitor]: Configuring
+[collision_monitor-4] [INFO] [1787213126.588005869] [collision_monitor]: [StopZone]: Creating Polygon
+[collision_monitor-4] [INFO] [1787213126.588835015] [collision_monitor]: [FootprintApproach]: Creating Polygon
+[collision_monitor-4] [INFO] [1787213126.589945399] [collision_monitor]: [SlowdownZone]: Creating Polygon
+[collision_monitor-4] [INFO] [1787213126.590975389] [collision_monitor]: [scan]: Creating Scan
+[lifecycle_manager-5] [INFO] [1787213126.592180738] [lifecycle_manager_collision_monitor]: [34m[1mActivating collision_monitor[0m[0m
+[collision_monitor-4] [INFO] [1787213126.592284318] [collision_monitor]: Activating
+[collision_monitor-4] [INFO] [1787213126.592310071] [collision_monitor]: Creating bond (collision_monitor) to lifecycle manager.
+[lifecycle_manager-5] [INFO] [1787213126.695164223] [lifecycle_manager_collision_monitor]: Server collision_monitor connected with bond.
+[lifecycle_manager-5] [INFO] [1787213126.695206345] [lifecycle_manager_collision_monitor]: [34m[1mManaged nodes are active[0m[0m
+[lifecycle_manager-5] [INFO] [1787213126.695242580] [lifecycle_manager_collision_monitor]: [34m[1mCreating bond timer...[0m[0m
+[async_slam_toolbox_node-2] [INFO] [1787213126.800968644] [slam_toolbox]: Using solver plugin solver_plugins::CeresSolver
+[async_slam_toolbox_node-2] [INFO] [1787213126.802342411] [slam_toolbox]: CeresSolver: Using HuberLoss loss function.
+[async_slam_toolbox_node-2] [INFO] [1787213126.802368393] [slam_toolbox]: CeresSolver: Using SCHUR_JACOBI preconditioner.
+[async_slam_toolbox_node-2] [WARN] [1787213126.846394209] [slam_toolbox]: minimum laser range setting (0.1 m) exceeds the capabilities of the used Lidar (0.1 m)
+[async_slam_toolbox_node-2] Registering sensor: [Custom Described Lidar]
+[velocity_guard-3] [INFO] [1787213126.924502605] [velocity_guard]: Guarding /leo1/cmd_vel_smoothed -> /leo1/cmd_vel_guarded; scan=/leo1/scan_filtered, odom=/leo1/odom, battery_required=False
+[velocity_guard-3] [WARN] [1787213126.927863623] [velocity_guard]: velocity guard state: command_missing
+[scan_to_scan_filter_chain-1] [WARN] [1787213127.598337050] [scan_to_scan_filter_chain]: diagnostic_updater: No HW_ID was set. This is probably a bug. Please report it. For devices that do not have a HW_ID, set this value to 'none'. This warning only occurs once all diagnostics are OK. It is okay to wait until the device is open before calling setHardwareID.
+[INFO] [controller_server-6]: process started with pid [28401]
+[INFO] [smoother_server-7]: process started with pid [28403]
+[INFO] [planner_server-8]: process started with pid [28405]
+[INFO] [behavior_server-9]: process started with pid [28407]
+[INFO] [bt_navigator-10]: process started with pid [28409]
+[INFO] [waypoint_follower-11]: process started with pid [28411]
+[INFO] [velocity_smoother-12]: process started with pid [28413]
+[INFO] [lifecycle_manager-13]: process started with pid [28415]
+[planner_server-8] [INFO] [1787213129.572952466] [planner_server]: 
+[planner_server-8] 	planner_server lifecycle node launched. 
+[planner_server-8] 	Waiting on external lifecycle transitions to activate
+[planner_server-8] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[smoother_server-7] [INFO] [1787213129.573584667] [smoother_server]: 
+[smoother_server-7] 	smoother_server lifecycle node launched. 
+[smoother_server-7] 	Waiting on external lifecycle transitions to activate
+[smoother_server-7] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[smoother_server-7] [INFO] [1787213129.575045085] [smoother_server]: Creating smoother server
+[velocity_smoother-12] [INFO] [1787213129.574143672] [velocity_smoother]: 
+[velocity_smoother-12] 	velocity_smoother lifecycle node launched. 
+[velocity_smoother-12] 	Waiting on external lifecycle transitions to activate
+[velocity_smoother-12] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[lifecycle_manager-13] [INFO] [1787213129.574491882] [lifecycle_manager_navigation]: Creating
+[lifecycle_manager-13] [INFO] [1787213129.577012748] [lifecycle_manager_navigation]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[planner_server-8] [INFO] [1787213129.575159189] [planner_server]: Creating
+[bt_navigator-10] [INFO] [1787213129.575899842] [bt_navigator]: 
+[bt_navigator-10] 	bt_navigator lifecycle node launched. 
+[bt_navigator-10] 	Waiting on external lifecycle transitions to activate
+[bt_navigator-10] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[bt_navigator-10] [INFO] [1787213129.575965119] [bt_navigator]: Creating
+[waypoint_follower-11] [INFO] [1787213129.578378957] [waypoint_follower]: 
+[waypoint_follower-11] 	waypoint_follower lifecycle node launched. 
+[waypoint_follower-11] 	Waiting on external lifecycle transitions to activate
+[waypoint_follower-11] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[waypoint_follower-11] [INFO] [1787213129.578855261] [waypoint_follower]: Creating
+[behavior_server-9] [INFO] [1787213129.578880373] [behavior_server]: 
+[behavior_server-9] 	behavior_server lifecycle node launched. 
+[behavior_server-9] 	Waiting on external lifecycle transitions to activate
+[behavior_server-9] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-6] [INFO] [1787213129.583255387] [controller_server]: 
+[controller_server-6] 	controller_server lifecycle node launched. 
+[controller_server-6] 	Waiting on external lifecycle transitions to activate
+[controller_server-6] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-6] [INFO] [1787213129.589037152] [controller_server]: Creating controller server
+[planner_server-8] [INFO] [1787213129.589988915] [global_costmap.global_costmap]: 
+[planner_server-8] 	global_costmap lifecycle node launched. 
+[planner_server-8] 	Waiting on external lifecycle transitions to activate
+[planner_server-8] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-8] [INFO] [1787213129.590648707] [global_costmap.global_costmap]: Creating Costmap
+[lifecycle_manager-13] [INFO] [1787213129.599466202] [lifecycle_manager_navigation]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-13] [INFO] [1787213129.599509042] [lifecycle_manager_navigation]: [34m[1mConfiguring controller_server[0m[0m
+[controller_server-6] [INFO] [1787213129.605908066] [local_costmap.local_costmap]: 
+[controller_server-6] 	local_costmap lifecycle node launched. 
+[controller_server-6] 	Waiting on external lifecycle transitions to activate
+[controller_server-6] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-6] [INFO] [1787213129.606278093] [local_costmap.local_costmap]: Creating Costmap
+[controller_server-6] [INFO] [1787213129.612240929] [controller_server]: Configuring controller interface
+[controller_server-6] [INFO] [1787213129.612552932] [controller_server]: getting goal checker plugins..
+[controller_server-6] [INFO] [1787213129.612815266] [controller_server]: Controller frequency set to 15.0000Hz
+[controller_server-6] [INFO] [1787213129.612837359] [local_costmap.local_costmap]: Configuring
+[controller_server-6] [INFO] [1787213129.616421628] [local_costmap.local_costmap]: Using plugin "obstacle_layer"
+[controller_server-6] [INFO] [1787213129.620151822] [local_costmap.local_costmap]: Subscribed to Topics: scan camera
+[controller_server-6] [INFO] [1787213129.629618913] [local_costmap.local_costmap]: Initialized plugin "obstacle_layer"
+[controller_server-6] [INFO] [1787213129.629721485] [local_costmap.local_costmap]: Using plugin "inflation_layer"
+[controller_server-6] [INFO] [1787213129.631194774] [local_costmap.local_costmap]: Initialized plugin "inflation_layer"
+[controller_server-6] [INFO] [1787213129.636817665] [controller_server]: Created progress_checker : progress_checker of type nav2_controller::SimpleProgressChecker
+[controller_server-6] [INFO] [1787213129.637941225] [controller_server]: Created goal checker : general_goal_checker of type nav2_controller::SimpleGoalChecker
+[controller_server-6] [INFO] [1787213129.638680779] [controller_server]: Controller Server has general_goal_checker  goal checkers available.
+[controller_server-6] [INFO] [1787213129.640053042] [controller_server]: Created controller : FollowPath of type nav2_rotation_shim_controller::RotationShimController
+[controller_server-6] [INFO] [1787213129.643592857] [controller_server]: Created internal controller for rotation shimming: FollowPath of type nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-6] [INFO] [1787213129.651508310] [controller_server]: Controller Server has FollowPath  controllers available.
+[lifecycle_manager-13] [INFO] [1787213129.656725749] [lifecycle_manager_navigation]: [34m[1mConfiguring smoother_server[0m[0m
+[smoother_server-7] [INFO] [1787213129.657020281] [smoother_server]: Configuring smoother server
+[smoother_server-7] [INFO] [1787213129.662425345] [smoother_server]: Created smoother : simple_smoother of type nav2_smoother::SimpleSmoother
+[smoother_server-7] [INFO] [1787213129.663586417] [smoother_server]: Smoother Server has simple_smoother  smoothers available.
+[lifecycle_manager-13] [INFO] [1787213129.667372830] [lifecycle_manager_navigation]: [34m[1mConfiguring planner_server[0m[0m
+[planner_server-8] [INFO] [1787213129.667631835] [planner_server]: Configuring
+[planner_server-8] [INFO] [1787213129.667690401] [global_costmap.global_costmap]: Configuring
+[planner_server-8] [INFO] [1787213129.672123674] [global_costmap.global_costmap]: Using plugin "static_layer"
+[planner_server-8] [INFO] [1787213129.676339342] [global_costmap.global_costmap]: Subscribing to the map topic (/map) with transient local durability
+[planner_server-8] [INFO] [1787213129.677026866] [global_costmap.global_costmap]: Subscribing to updates
+[planner_server-8] [INFO] [1787213129.677968066] [global_costmap.global_costmap]: Initialized plugin "static_layer"
+[planner_server-8] [INFO] [1787213129.677993950] [global_costmap.global_costmap]: Using plugin "obstacle_layer"
+[planner_server-8] [INFO] [1787213129.679380286] [global_costmap.global_costmap]: Subscribed to Topics: scan
+[planner_server-8] [INFO] [1787213129.683359865] [global_costmap.global_costmap]: Initialized plugin "obstacle_layer"
+[planner_server-8] [INFO] [1787213129.683396961] [global_costmap.global_costmap]: Using plugin "inflation_layer"
+[planner_server-8] [INFO] [1787213129.684902567] [global_costmap.global_costmap]: Initialized plugin "inflation_layer"
+[planner_server-8] [INFO] [1787213129.690058657] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 451 X 206 at 0.050000 m/pix
+[planner_server-8] [INFO] [1787213129.690110476] [planner_server]: Created global planner plugin GridBased of type nav2_navfn_planner/NavfnPlanner
+[planner_server-8] [INFO] [1787213129.690136849] [planner_server]: Configuring plugin GridBased of type NavfnPlanner
+[planner_server-8] [INFO] [1787213129.691753546] [planner_server]: Planner Server has GridBased  planners available.
+[lifecycle_manager-13] [INFO] [1787213129.698164851] [lifecycle_manager_navigation]: [34m[1mConfiguring behavior_server[0m[0m
+[behavior_server-9] [INFO] [1787213129.698366208] [behavior_server]: Configuring
+[behavior_server-9] [INFO] [1787213129.703127103] [behavior_server]: Creating behavior plugin spin of type nav2_behaviors/Spin
+[behavior_server-9] [INFO] [1787213129.703716510] [behavior_server]: Configuring spin
+[behavior_server-9] [INFO] [1787213129.707802413] [behavior_server]: Creating behavior plugin backup of type nav2_behaviors/BackUp
+[behavior_server-9] [INFO] [1787213129.708320949] [behavior_server]: Configuring backup
+[behavior_server-9] [INFO] [1787213129.711782153] [behavior_server]: Creating behavior plugin drive_on_heading of type nav2_behaviors/DriveOnHeading
+[behavior_server-9] [INFO] [1787213129.712402038] [behavior_server]: Configuring drive_on_heading
+[behavior_server-9] [INFO] [1787213129.716010840] [behavior_server]: Creating behavior plugin assisted_teleop of type nav2_behaviors/AssistedTeleop
+[behavior_server-9] [INFO] [1787213129.717071557] [behavior_server]: Configuring assisted_teleop
+[behavior_server-9] [INFO] [1787213129.721715278] [behavior_server]: Creating behavior plugin wait of type nav2_behaviors/Wait
+[behavior_server-9] [INFO] [1787213129.722222463] [behavior_server]: Configuring wait
+[lifecycle_manager-13] [INFO] [1787213129.726109058] [lifecycle_manager_navigation]: [34m[1mConfiguring bt_navigator[0m[0m
+[bt_navigator-10] [INFO] [1787213129.726316616] [bt_navigator]: Configuring
+[lifecycle_manager-13] [INFO] [1787213129.778787478] [lifecycle_manager_navigation]: [34m[1mConfiguring waypoint_follower[0m[0m
+[waypoint_follower-11] [INFO] [1787213129.779078623] [waypoint_follower]: Configuring
+[waypoint_follower-11] [INFO] [1787213129.784832591] [waypoint_follower]: Created waypoint_task_executor : wait_at_waypoint of type nav2_waypoint_follower::WaitAtWaypoint
+[lifecycle_manager-13] [INFO] [1787213129.785901398] [lifecycle_manager_navigation]: [34m[1mConfiguring velocity_smoother[0m[0m
+[velocity_smoother-12] [INFO] [1787213129.786120717] [velocity_smoother]: Configuring velocity smoother
+[lifecycle_manager-13] [INFO] [1787213129.790037833] [lifecycle_manager_navigation]: [34m[1mActivating controller_server[0m[0m
+[controller_server-6] [INFO] [1787213129.790270613] [controller_server]: Activating
+[controller_server-6] [INFO] [1787213129.790299683] [local_costmap.local_costmap]: Activating
+[controller_server-6] [INFO] [1787213129.790308359] [local_costmap.local_costmap]: Checking transform
+[controller_server-6] [INFO] [1787213129.790410948] [local_costmap.local_costmap]: start
+[controller_server-6] [INFO] [1787213129.941024753] [controller_server]: Activating controller: FollowPath of type nav2_rotation_shim_controller::RotationShimController
+[controller_server-6] [INFO] [1787213129.941059108] [controller_server]: Activating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-6] [INFO] [1787213129.941074269] [controller_server]: Creating bond (controller_server) to lifecycle manager.
+[lifecycle_manager-13] [INFO] [1787213130.043252627] [lifecycle_manager_navigation]: Server controller_server connected with bond.
+[lifecycle_manager-13] [INFO] [1787213130.043290702] [lifecycle_manager_navigation]: [34m[1mActivating smoother_server[0m[0m
+[smoother_server-7] [INFO] [1787213130.043457797] [smoother_server]: Activating
+[smoother_server-7] [INFO] [1787213130.043497531] [smoother_server]: Creating bond (smoother_server) to lifecycle manager.
+[lifecycle_manager-13] [INFO] [1787213130.145717765] [lifecycle_manager_navigation]: Server smoother_server connected with bond.
+[lifecycle_manager-13] [INFO] [1787213130.145768291] [lifecycle_manager_navigation]: [34m[1mActivating planner_server[0m[0m
+[planner_server-8] [INFO] [1787213130.145911043] [planner_server]: Activating
+[planner_server-8] [INFO] [1787213130.145936369] [global_costmap.global_costmap]: Activating
+[planner_server-8] [INFO] [1787213130.145943302] [global_costmap.global_costmap]: Checking transform
+[planner_server-8] [INFO] [1787213130.146007309] [global_costmap.global_costmap]: start
+[planner_server-8] [INFO] [1787213130.696470791] [planner_server]: Activating plugin GridBased of type NavfnPlanner
+[planner_server-8] [INFO] [1787213130.697006251] [planner_server]: Creating bond (planner_server) to lifecycle manager.
+[lifecycle_manager-13] [INFO] [1787213130.798990854] [lifecycle_manager_navigation]: Server planner_server connected with bond.
+[lifecycle_manager-13] [INFO] [1787213130.799028142] [lifecycle_manager_navigation]: [34m[1mActivating behavior_server[0m[0m
+[behavior_server-9] [INFO] [1787213130.799184771] [behavior_server]: Activating
+[behavior_server-9] [INFO] [1787213130.799204767] [behavior_server]: Activating spin
+[behavior_server-9] [INFO] [1787213130.799212467] [behavior_server]: Activating backup
+[behavior_server-9] [INFO] [1787213130.799218360] [behavior_server]: Activating drive_on_heading
+[behavior_server-9] [INFO] [1787213130.799223737] [behavior_server]: Activating assisted_teleop
+[behavior_server-9] [INFO] [1787213130.799229185] [behavior_server]: Activating wait
+[behavior_server-9] [INFO] [1787213130.799235831] [behavior_server]: Creating bond (behavior_server) to lifecycle manager.
+[lifecycle_manager-13] [INFO] [1787213130.901193964] [lifecycle_manager_navigation]: Server behavior_server connected with bond.
+[lifecycle_manager-13] [INFO] [1787213130.901231708] [lifecycle_manager_navigation]: [34m[1mActivating bt_navigator[0m[0m
+[bt_navigator-10] [INFO] [1787213130.901394445] [bt_navigator]: Activating
+[bt_navigator-10] [INFO] [1787213130.929510736] [bt_navigator]: Creating bond (bt_navigator) to lifecycle manager.
+[lifecycle_manager-13] [INFO] [1787213131.032240817] [lifecycle_manager_navigation]: Server bt_navigator connected with bond.
+[lifecycle_manager-13] [INFO] [1787213131.032279611] [lifecycle_manager_navigation]: [34m[1mActivating waypoint_follower[0m[0m
+[waypoint_follower-11] [INFO] [1787213131.032477145] [waypoint_follower]: Activating
+[waypoint_follower-11] [INFO] [1787213131.032503993] [waypoint_follower]: Creating bond (waypoint_follower) to lifecycle manager.
+[lifecycle_manager-13] [INFO] [1787213131.134968587] [lifecycle_manager_navigation]: Server waypoint_follower connected with bond.
+[lifecycle_manager-13] [INFO] [1787213131.135033964] [lifecycle_manager_navigation]: [34m[1mActivating velocity_smoother[0m[0m
+[velocity_smoother-12] [INFO] [1787213131.135262558] [velocity_smoother]: Activating
+[velocity_smoother-12] [INFO] [1787213131.135303418] [velocity_smoother]: Creating bond (velocity_smoother) to lifecycle manager.
+[lifecycle_manager-13] [INFO] [1787213131.237745874] [lifecycle_manager_navigation]: Server velocity_smoother connected with bond.
+[lifecycle_manager-13] [INFO] [1787213131.237783924] [lifecycle_manager_navigation]: [34m[1mManaged nodes are active[0m[0m
+[lifecycle_manager-13] [INFO] [1787213131.237790852] [lifecycle_manager_navigation]: [34m[1mCreating bond timer...[0m[0m
+[planner_server-8] [INFO] [1787213164.653394667] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 451 X 209 at 0.050000 m/pix
+[planner_server-8] [INFO] [1787213167.653397159] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 451 X 212 at 0.050000 m/pix
+[planner_server-8] [INFO] [1787213170.153389064] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 451 X 214 at 0.050000 m/pix
+[planner_server-8] [INFO] [1787213171.653443244] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 451 X 217 at 0.050000 m/pix
+[bt_navigator-10] [INFO] [1787213180.622153791] [bt_navigator]: Begin navigating from current location (0.79, 0.00) to (1.54, 6.14)
+[controller_server-6] [INFO] [1787213180.643312931] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-6] [WARN] [1787213180.643362419] [controller_server]: No goal checker was specified in parameter 'current_goal_checker'. Server will use only plugin loaded general_goal_checker . This warning will appear once.
+[velocity_guard-3] [INFO] [1787213180.731014913] [velocity_guard]: velocity guard state: permitted
+[controller_server-6] [INFO] [1787213181.710216992] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787213182.710180634] [controller_server]: Passing new path to controller.
+[planner_server-8] [INFO] [1787213183.163272029] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 454 X 219 at 0.050000 m/pix
+[planner_server-8] [ERROR] [1787213183.713923669] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1787213183.713994641] [planner_server]: GridBased: failed to create plan with tolerance 0.25.
+[planner_server-8] [WARN] [1787213183.714003862] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (1.54, 6.14)
+[planner_server-8] [WARN] [1787213183.714010356] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-8] [INFO] [1787213183.732468671] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-8] [ERROR] [1787213184.174164790] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1787213184.174231343] [planner_server]: GridBased: failed to create plan with tolerance 0.25.
+[planner_server-8] [WARN] [1787213184.174240088] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (1.54, 6.14)
+[planner_server-8] [WARN] [1787213184.174247828] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-10] [ERROR] [1787213184.212763525] [bt_navigator_navigate_to_pose_rclcpp_node]: Failed to get result for follow_path in node halt!
+[controller_server-6] [INFO] [1787213184.212915061] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[bt_navigator-10] [WARN] [1787213184.218384622] [BehaviorTreeEngine]: Behavior Tree tick rate 100.00 was exceeded!
+[bt_navigator-10] [WARN] [1787213184.233920861] [bt_navigator_navigate_to_pose_rclcpp_node]: Node timed out while executing service call to local_costmap/clear_entirely_local_costmap.
+[behavior_server-9] [INFO] [1787213184.234242150] [behavior_server]: Running backup
+[behavior_server-9] [INFO] [1787213184.234369602] [behavior_server]: DriveOnHeading: no acceleration or deceleration limits set
+[controller_server-6] [INFO] [1787213184.243525911] [controller_server]: Goal was canceled. Stopping the robot.
+[controller_server-6] [INFO] [1787213184.243602430] [controller_server]: [follow_path] [ActionServer] Client requested to cancel the goal. Cancelling.
+[bt_navigator-10] [INFO] [1787213185.628594400] [bt_navigator]: Received goal preemption request
+[bt_navigator-10] [INFO] [1787213185.629265378] [bt_navigator]: Begin navigating from current location (0.73, 0.02) to (1.64, 6.09)
+[planner_server-8] [INFO] [1787213187.163258748] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 454 X 220 at 0.050000 m/pix
+[behavior_server-9] [INFO] [1787213187.734553043] [behavior_server]: backup completed successfully
+[controller_server-6] [INFO] [1787213187.779168536] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-6] [INFO] [1787213188.846014136] [controller_server]: Passing new path to controller.
+[planner_server-8] [ERROR] [1787213189.819805027] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1787213189.819868587] [planner_server]: GridBased: failed to create plan with tolerance 0.25.
+[planner_server-8] [WARN] [1787213189.819877820] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (1.64, 6.09)
+[planner_server-8] [WARN] [1787213189.819884537] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-8] [INFO] [1787213189.838575472] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-8] [ERROR] [1787213190.170203570] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1787213190.170273041] [planner_server]: GridBased: failed to create plan with tolerance 0.25.
+[planner_server-8] [WARN] [1787213190.170282113] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (1.64, 6.09)
+[planner_server-8] [WARN] [1787213190.170289846] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-10] [ERROR] [1787213190.208808446] [bt_navigator_navigate_to_pose_rclcpp_node]: Failed to get result for follow_path in node halt!
+[behavior_server-9] [INFO] [1787213190.209115577] [behavior_server]: Running wait
+[bt_navigator-10] [WARN] [1787213190.209409834] [BehaviorTreeEngine]: Behavior Tree tick rate 100.00 was exceeded!
+[controller_server-6] [INFO] [1787213190.246009457] [controller_server]: Goal was canceled. Stopping the robot.
+[controller_server-6] [INFO] [1787213190.246052292] [controller_server]: [follow_path] [ActionServer] Client requested to cancel the goal. Cancelling.
+[behavior_server-9] [INFO] [1787213192.209379687] [behavior_server]: wait completed successfully
+[planner_server-8] [ERROR] [1787213192.230845566] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1787213192.230907455] [planner_server]: GridBased: failed to create plan with tolerance 0.25.
+[planner_server-8] [WARN] [1787213192.230915373] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (1.64, 6.09)
+[planner_server-8] [WARN] [1787213192.230921605] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-8] [INFO] [1787213192.249709270] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[velocity_guard-3] [WARN] [1787213192.280899350] [velocity_guard]: velocity guard state: command_stale
+[planner_server-8] [ERROR] [1787213192.671581036] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1787213192.671649585] [planner_server]: GridBased: failed to create plan with tolerance 0.25.
+[planner_server-8] [WARN] [1787213192.671659960] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (1.64, 6.09)
+[planner_server-8] [WARN] [1787213192.671667839] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[behavior_server-9] [INFO] [1787213192.689895121] [behavior_server]: Running spin
+[behavior_server-9] [INFO] [1787213192.690019503] [behavior_server]: Turning 0.60 for spin behavior.
+[velocity_guard-3] [INFO] [1787213192.780996556] [velocity_guard]: velocity guard state: permitted
+[behavior_server-9] [INFO] [1787213194.890195037] [behavior_server]: spin completed successfully
+[planner_server-8] [ERROR] [1787213194.920825932] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1787213194.920891428] [planner_server]: GridBased: failed to create plan with tolerance 0.25.
+[planner_server-8] [WARN] [1787213194.920899465] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (1.64, 6.09)
+[planner_server-8] [WARN] [1787213194.920905634] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-8] [INFO] [1787213194.939632823] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-8] [ERROR] [1787213195.171423235] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1787213195.171501928] [planner_server]: GridBased: failed to create plan with tolerance 0.25.
+[planner_server-8] [WARN] [1787213195.171515890] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (1.64, 6.09)
+[planner_server-8] [WARN] [1787213195.171527509] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[controller_server-6] [INFO] [1787213195.189657895] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[planner_server-8] [INFO] [1787213195.189944142] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-8] [ERROR] [1787213195.671568031] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1787213195.671632511] [planner_server]: GridBased: failed to create plan with tolerance 0.25.
+[planner_server-8] [WARN] [1787213195.671641516] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (1.64, 6.09)
+[planner_server-8] [WARN] [1787213195.671649748] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-8] [INFO] [1787213195.689673015] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-8] [ERROR] [1787213196.171461168] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1787213196.171534800] [planner_server]: GridBased: failed to create plan with tolerance 0.25.
+[planner_server-8] [WARN] [1787213196.171544445] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (1.64, 6.09)
+[planner_server-8] [WARN] [1787213196.171552504] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[behavior_server-9] [INFO] [1787213196.189791177] [behavior_server]: Running backup
+[planner_server-8] [INFO] [1787213199.663294593] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 467 X 220 at 0.050000 m/pix
+[behavior_server-9] [INFO] [1787213199.689998554] [behavior_server]: backup completed successfully
+[controller_server-6] [INFO] [1787213199.739933893] [controller_server]: Received a goal, begin computing control effort.
+[bt_navigator-10] [INFO] [1787213200.599523640] [bt_navigator]: Received goal preemption request
+[bt_navigator-10] [INFO] [1787213200.600147773] [bt_navigator]: Begin navigating from current location (0.41, -0.29) to (1.54, 6.17)
+[controller_server-6] [INFO] [1787213200.806745650] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787213201.806752121] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787213202.879598125] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787213203.879613115] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787213204.946270848] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787213205.946245680] [controller_server]: Passing new path to controller.
+[planner_server-8] [INFO] [1787213206.169472595] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 468 X 221 at 0.050000 m/pix
+[controller_server-6] [INFO] [1787213206.946267663] [controller_server]: Passing new path to controller.
+[planner_server-8] [INFO] [1787213207.169493399] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 472 X 221 at 0.050000 m/pix
+[planner_server-8] [INFO] [1787213207.669465837] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 477 X 221 at 0.050000 m/pix
+[controller_server-6] [INFO] [1787213208.012934592] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787213209.012938862] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787213210.079611026] [controller_server]: Passing new path to controller.
+[bt_navigator-10] [INFO] [1787213210.605768467] [bt_navigator]: Received goal preemption request
+[bt_navigator-10] [INFO] [1787213210.606446794] [bt_navigator]: Begin navigating from current location (-0.19, 1.24) to (-10.19, -2.12)
+[planner_server-8] [ERROR] [1787213211.047684123] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1787213211.047757375] [planner_server]: GridBased: failed to create plan with tolerance 0.25.
+[planner_server-8] [WARN] [1787213211.047771682] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-10.19, -2.12)
+[planner_server-8] [WARN] [1787213211.047782599] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-8] [INFO] [1787213211.065847032] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-8] [ERROR] [1787213211.178618115] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1787213211.178685428] [planner_server]: GridBased: failed to create plan with tolerance 0.25.
+[planner_server-8] [WARN] [1787213211.178695809] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-10.19, -2.12)
+[planner_server-8] [WARN] [1787213211.178704714] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[controller_server-6] [INFO] [1787213211.212933826] [controller_server]: Goal was canceled. Stopping the robot.
+[controller_server-6] [INFO] [1787213211.212977186] [controller_server]: [follow_path] [ActionServer] Client requested to cancel the goal. Cancelling.
+[behavior_server-9] [INFO] [1787213211.213361867] [behavior_server]: Running wait
+[bt_navigator-10] [WARN] [1787213211.213721706] [BehaviorTreeEngine]: Behavior Tree tick rate 100.00 was exceeded!
+[behavior_server-9] [INFO] [1787213213.213567984] [behavior_server]: wait completed successfully
+[planner_server-8] [ERROR] [1787213213.237423977] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1787213213.237496267] [planner_server]: GridBased: failed to create plan with tolerance 0.25.
+[planner_server-8] [WARN] [1787213213.237509197] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-10.19, -2.12)
+[planner_server-8] [WARN] [1787213213.237520318] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-8] [INFO] [1787213213.255789958] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-8] [ERROR] [1787213213.677904622] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1787213213.677970515] [planner_server]: GridBased: failed to create plan with tolerance 0.25.
+[planner_server-8] [WARN] [1787213213.677979956] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-10.19, -2.12)
+[planner_server-8] [WARN] [1787213213.677989000] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-10] [WARN] [1787213213.705697410] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-10] [ERROR] [1787213213.706301454] [bt_navigator]: Goal failed
+[velocity_guard-3] [WARN] [1787213213.742044171] [velocity_guard]: velocity guard state: command_stale
+[bt_navigator-10] [INFO] [1787213215.599829060] [bt_navigator]: Begin navigating from current location (-0.18, 1.53) to (-8.75, -2.35)
+[controller_server-6] [INFO] [1787213215.620568341] [controller_server]: Received a goal, begin computing control effort.
+[velocity_guard-3] [INFO] [1787213215.692150778] [velocity_guard]: velocity guard state: permitted
+[controller_server-6] [INFO] [1787213216.687613040] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787213217.687593347] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787213218.754246739] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787213219.754248891] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787213220.820926927] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787213221.820939519] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787213222.887588376] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787213223.887581929] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787213224.954252111] [controller_server]: Passing new path to controller.

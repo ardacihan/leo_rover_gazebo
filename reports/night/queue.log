@@ -392,3 +392,17 @@ n6_navfn_s33                   0.967    0.166   0.614      0.179     0.681      
 n7_navfn_depot_s21             0.968    0.000   0.701      0.043     0.070      2.06    40.0    0.60   0.070     12         0     0   0.361     574       -
 n8_navfn_noisy_s21             0.846    0.112   0.527      0.118     0.773      2.27    37.8    0.73   0.046     10         0     0   0.350     815     4/8
 n9_navfn_noekf_s21             0.638    0.000   0.563      0.041     0.650      5.30    26.7    0.62   0.052     15         0     0   0.300     514     2/8
+[queue 09:04:01] start n40_cmrec_depot_s7 : USE_EKF=1 USE_COSTMAP_REC=1 SEED=7 hybrid depot_world cap=25m
+[queue 09:16:14] finish n40_cmrec_depot_s7 rc=0 in 12 min
+[queue 09:16:14] scoring n40_cmrec_depot_s7
+[queue 09:16:16] start n41_cmrec_s55 : USE_EKF=1 USE_COSTMAP_REC=1 SEED=55 hybrid office_world cap=25m
+[queue 09:43:29] finish n41_cmrec_s55 rc=3 in 27 min
+[queue 09:43:29] scoring n41_cmrec_s55
+[queue 09:43:31] start n42_cmrec_s1212 : USE_EKF=1 USE_COSTMAP_REC=1 SEED=1212 hybrid office_world cap=25m
+[queue 09:44:43] pre: python scripts/apply_recovery_timeout.py --revert
+C:\Users\smirn\Desktop\leo_rover_gazebo\src\leo_nav2_exploration\behavior_trees\navigate_to_pose_doorway_recovery.xml: 2 recovery node(s) reverted
+[queue 09:44:43] start n43_diag_prefix_s101 : USE_EKF=1 USE_COSTMAP_REC=1 SEED=101 hybrid office_world cap=25m
+[queue 10:02:54] finish n43_diag_prefix_s101 rc=0 in 18 min
+[queue 10:02:54] scoring n43_diag_prefix_s101
+[queue 10:02:56] start n44_diag_prefix_s808 : USE_EKF=1 USE_COSTMAP_REC=1 SEED=808 hybrid office_world cap=25m
+[queue 10:04:42] start p1_post_s2001 : USE_EKF=1 USE_COSTMAP_REC=1 SEED=2001 hybrid office_world cap=25m

@@ -173,6 +173,12 @@ LOG "starting recorders"
 in_sim_bg "python3 $WS/scripts/pose_error_recorder.py $WIN_ROOT/$OUT/pose_error.csv 0.5 > $WIN_ROOT/$OUT/pose_rec.log 2>&1"
 in_sim_bg "python3 $WS/scripts/map_recorder.py $WIN_ROOT/$OUT/timelapse 10 > $WIN_ROOT/$OUT/timelapse.log 2>&1"
 in_sim_bg "python3 $WS/scripts/traj_recorder.py leo1 $WIN_ROOT/$OUT/traj.csv 1.0 > $WIN_ROOT/$OUT/traj.log 2>&1"
+# The local costmap as the recovery behaviours see it. `Collision Ahead` says
+# the footprint check failed but never what it saw; these frames show it.
+if [[ "${USE_COSTMAP_REC:-0}" == "1" ]]; then
+  LOG "starting costmap recorder"
+  in_sim_bg "python3 $WS/scripts/costmap_recorder.py $WIN_ROOT/$OUT/costmaps ${COSTMAP_PERIOD:-1.0} > $WIN_ROOT/$OUT/costmap_rec.log 2>&1"
+fi
 if [[ "${USE_ARUCO:-0}" == "1" ]]; then
   LOG "starting ArUco detector"
   in_sim_bg "ros2 launch leo_nav2_exploration aruco.launch.py profile:=sim \

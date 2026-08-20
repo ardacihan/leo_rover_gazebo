@@ -475,6 +475,66 @@ the recovery backup fails, the frontier is blacklisted, and eventually every
 frontier is. The 2026-08-17 study met the same wall with the lattice planner,
 where it announced itself as `Starting point in lethal space!`.
 
+#### What `Collision Ahead` actually means, looked at rather than guessed
+
+`scripts/costmap_recorder.py` writes the local costmap out once a second as a
+picture, with the footprint drawn on it and the cost bands coloured the way the
+recovery checker reads them. Frames live in `<run>/costmaps/` with an
+`index.csv` carrying pose, speed and the cost under the footprint.
+
+Building it caught an error in the measurement first. The initial version took
+the robot pose from `/leo1/odom` and drew it on a costmap anchored in the EKF's
+`odom` frame. Those two diverge by the odometry drift — **11 m by the end of
+some runs** — so the footprint was being sampled somewhere the robot was not.
+With `rolling_window: true` the robot is always at the centre of the window,
+which makes the mistake self-detecting, so the recorder now looks the pose up
+through TF and logs a `miscentred` counter that is non-zero if the frames ever
+disagree again.
+
+With that fixed, the answer is arithmetic:
+
+```
+footprint half-width   0.21 m   + padding 0.01
+inscribed radius       0.22 m   <- InflationLayer paints cost 253 within this
+                                   distance of EVERY obstacle
+circumscribed radius   0.31 m   <- what an in-place rotation sweeps
+inflation_radius       0.35 m   <- the gradient; does NOT set the 253 band
+```
+
+The recovery behaviours refuse to move when any footprint cell is >= 253. So
+they refuse **whenever the robot's side is within 0.22 m of anything**. In
+`n43` that was **502 of 994 frames — 51% of the run**, and 35 of those frames
+were recorded while the rover was driving at over 0.05 m/s. It was "in
+collision" and moving perfectly well at the same time.
+
+The reason is a double-count. Costmap inflation is defined for the robot
+*centre*: a cell at 253 means "a robot centred here touches something".
+`FootprintCollisionChecker` samples cost along the footprint *outline* and
+applies the same threshold, so the robot's own radius is counted twice. The
+check is conservative by exactly the inscribed radius, all the way round.
+
+The consequence is sharpest in a gap:
+
+| gap | free space between the two 253 bands | footprint needs | recovery |
+| --- | --- | --- | --- |
+| 0.78 m (the doorway fixture) | 0.34 m | 0.44 m | **impossible** |
+| 1.00 m | 0.56 m | 0.44 m | possible |
+| 1.30 m (office_world doorways) | 0.86 m | 0.44 m | possible |
+| 2.40 m (the corridor) | 1.96 m | 0.44 m | possible |
+
+So on the purpose-built 0.78 m doorway the rover can *drive through* — it did,
+7 times out of 8 — but if anything ever asks it to recover while it is in
+there, no recovery can execute. Not "will probably fail": cannot.
+
+**The fix this suggests, untested.** `behavior_server` takes its costmap by
+parameter (`costmap_topic`, default `local_costmap/costmap_raw`). Pointing it
+at a second, minimal costmap carrying the obstacle layer and **no inflation
+layer** would make the footprint check mean what it says — the footprint
+overlapping an actual obstacle — instead of overlapping an obstacle's inflation.
+That is the correct semantics for a body-collision test. It costs another
+costmap node's CPU on a rover that does not have much to spare, and it is not
+validated here, so it is written down rather than shipped.
+
 #### A hypothesis that looked right and was not
 
 `n18`'s behaviour server logged `Collision Ahead` seven times — `BackUp` and
@@ -670,22 +730,32 @@ authority), and does the same for `Spin`.
 
 Run on the three seeds that had stalled worst:
 
-| seed | before | after |
-| --- | --- | --- |
-| 101 | 0.519 | **0.981** |
-| 808 | 0.301 | **0.979** |
-| 707 | 0.645 | **0.977** |
+| seed | world | before | after |
+| --- | --- | --- | --- |
+| 101 | office | 0.519 | **0.981** |
+| 808 | office | 0.301 | **0.979** |
+| 707 | office | 0.645 | **0.977** |
+| 7 | depot | 0.567 | **0.979** |
+| 55 | office | 0.849 | **0.978** |
 
-**Three seeds, three recoveries**, all to the 0.977-0.981 band the healthy runs
-occupy — and the predicted error disappeared: `Exceeded time allowance` 6 -> **0**
+**Five seeds, five recoveries** (101, 808, 707, depot-7, 55), all to the
+0.977-0.981 band the healthy runs occupy — and the predicted error disappeared: `Exceeded time allowance` 6 -> **0**
 on seed 101, zero on both others. Seed 101 also went from 13 m driven and 5
 narrow-gap transits to **132 m and 42** — the most doorway work of any run
 tonight — with zero contacts. Map quality held: phantom 0.059 / 0.000 / 0.042,
 wall error 0.219 / 0.037 / 0.188 m.
 
-Why believe this one when two others failed: the mechanism was predicted from
-the numbers *before* the run, the intervention made the predicted log line
-vanish, and the outcome replicated on every seed tried. The earlier
+Why believe this one more than the two that failed: the mechanism was predicted
+from the numbers *before* the run, the intervention made the predicted log line
+vanish, and the outcome replicated on every seed tried.
+
+**How much to believe it, stated honestly.** Re-running the *pre-fix* build on
+seed 101 a second time gave 0.955 coverage — it did not stall. So the stall is
+stochastic per seed, and "five paired improvements" is not five independent
+confirmations: some of those seeds might have completed anyway. Taking the
+pre-fix stall rate as 5 in 14, the chance of five clean post-fix runs by luck
+alone is 0.64^5 = 0.11. Suggestive, not settled. Six further post-fix runs on
+fresh seeds are in `reports/night/p*_post_*` to put a real number on it. The earlier
 two had none of those properties — they were a metric moving on one seed.
 
 **This does not close the stall.** It removes one of the two recovery failure
