@@ -1,0 +1,5 @@
+n5_navfn_s7|USE_EKF=1 USE_ARUCO=1 SEED=7|hybrid|office_world|30|python scripts/apply_navfn_planner.py --profile sim
+n6_navfn_s33|USE_EKF=1 USE_ARUCO=1 SEED=33|hybrid|office_world|30|
+n7_navfn_depot|USE_EKF=1 SEED=21|hybrid|depot_world|30|
+n8_navfn_noisy_s21|USE_EKF=1 USE_ARUCO=1 SEED=21 YAW_SCALE=0.24 LINEAR_SCALE=0.05 SLIP=0.03|hybrid|office_world|30|
+n9_navfn_noekf_s21|USE_ARUCO=1 SEED=21|hybrid|office_world|30|

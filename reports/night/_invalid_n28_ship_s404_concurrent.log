@@ -1,0 +1,23 @@
+[wsl-exp 05:27:29] backend=wsl:Ubuntu stack=hybrid world=office_world profile=realistic cap=30min out=reports/night/n28_ship_s404
+[wsl-exp 05:27:29] syncing src/ and scripts/ into /home/smirn/leo_ws
+[wsl-exp 05:27:30] colcon build (leo_nav2_exploration, leo_rover_gazebo)
+[wsl-exp 05:27:32] killing any previous sim
+[wsl-exp 05:27:36] cleanup: 0 ROS processes still alive
+[wsl-exp 05:27:41] starting simulator (GPU, headless)
+[wsl-exp 05:27:42] waiting for /leo1/scan
+[wsl-exp 05:27:54] scan: average rate: 60.473
+[wsl-exp 05:27:54] renderer: 05:27:50: GL_RENDERER = D3D12 (NVIDIA GeForce RTX 4060 Ti)
+[wsl-exp 05:27:57] wheel-odometry model (message only) + gyro + EKF
+[wsl-exp 05:28:12] overlay stack: sim_navigation.launch.py
+[wsl-exp 05:28:13] waiting for Nav2 planner action
+[wsl-exp 05:28:35] camera/points (with stack up): average rate: 5.005
+[wsl-exp 05:28:38] scan_filtered: average rate: 10.014
+[wsl-exp 05:28:39] starting recorders
+[wsl-exp 05:28:41] starting ArUco detector
+[wsl-exp 05:28:47] bootstrap jog
+[wsl-exp 05:29:04] explorer launched; polling (cap 30 min)
+[wsl-exp 05:35:05] FATAL: no trajectory samples for 3 min -- simulator wedged
+[wsl-exp 05:35:12] saving map
+[wsl-exp 05:35:13] flushing recorders
+[wsl-exp 05:35:33] cleanup: 0 ROS processes still alive
+[wsl-exp 05:35:35] done -> reports/night/n28_ship_s404

@@ -25,8 +25,11 @@ def generate_launch_description():
     return LaunchDescription(
         [
             DeclareLaunchArgument('start_slam', default_value='true'),
-            # Camera obstacles are opt-in until the PointCloud2 topic and camera TF pass preflight.
-            DeclareLaunchArgument('enable_voxel', default_value='false'),
+            # Depth camera as a costmap obstacle source. On by default: it is
+            # what sees the table crossbars and chair legs the 2-D lidar plane
+            # misses. Set false if the RealSense cannot keep up on the rover's
+            # computer -- the lidar alone still builds the map.
+            DeclareLaunchArgument('enable_voxel', default_value='true'),
             DeclareLaunchArgument('autostart', default_value='true'),
             DeclareLaunchArgument('use_respawn', default_value='false'),
             DeclareLaunchArgument('navigation_start_delay', default_value='3.0'),

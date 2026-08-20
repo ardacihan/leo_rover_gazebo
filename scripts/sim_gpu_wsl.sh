@@ -60,7 +60,7 @@ docker run -d --name leo_sim \
   -lc 'export LD_LIBRARY_PATH=/usr/lib/wsl/lib:${LD_LIBRARY_PATH} && \
        source /opt/ros/humble/setup.bash && \
        source /ros2_ws/install/setup.bash && \
-       export GZ_SIM_RESOURCE_PATH=/ros2_ws/install/leo_rover_description/share:/ros2_ws/src/husarion_gz_worlds/models && \
+       export GZ_SIM_RESOURCE_PATH=/ros2_ws/install/leo_rover_description/share:/ros2_ws/src/husarion_gz_worlds/models:/ros2_ws/src/leo_rover_gazebo/models && \
        mkdir -p /tmp/runtime-dir && chmod 700 /tmp/runtime-dir && \
        if [[ -f /ros2_ws/docker/patched/RenderSystem_GL3Plus.so ]]; then \
          mkdir -p /usr/local/share/leo_rover_gazebo && \

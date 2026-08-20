@@ -217,9 +217,25 @@
       <static>true</static>
       <pose>-11.88 0.0 0.3 0 0 0.0</pose>
       <link name="link">
+        <!-- White backing board: an ArUco marker needs a light quiet zone
+             around the black square or detectMarkers never finds the quad.
+             Making it geometry rather than part of the texture keeps
+             marker_length equal to the plate side, with nothing to derive. -->
+        <visual name="board">
+          <pose>-0.005 0 0 0 0 0</pose>
+          <geometry><box><size>0.01 0.30 0.30</size></box></geometry>
+          <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse></material>
+        </visual>
+        <!-- The marker itself: 0.20 m black square, edge to edge. -->
         <visual name="visual">
-          <geometry><box><size>0.02 0.15 0.15</size></box></geometry>
-          <material><ambient>1 0 1 1</ambient><diffuse>1 0 1 1</diffuse></material>
+          <geometry><box><size>0.01 0.20 0.20</size></box></geometry>
+          <material>
+            <ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse>
+            <pbr><metal>
+              <albedo_map>model://aruco_markers/textures/aruco_1_bare.png</albedo_map>
+              <metalness>0.0</metalness><roughness>0.9</roughness>
+            </metal></pbr>
+          </material>
         </visual>
       </link>
     </model>
@@ -227,9 +243,25 @@
       <static>true</static>
       <pose>11.88 0.5 0.3 0 0 3.1416</pose>
       <link name="link">
+        <!-- White backing board: an ArUco marker needs a light quiet zone
+             around the black square or detectMarkers never finds the quad.
+             Making it geometry rather than part of the texture keeps
+             marker_length equal to the plate side, with nothing to derive. -->
+        <visual name="board">
+          <pose>-0.005 0 0 0 0 0</pose>
+          <geometry><box><size>0.01 0.30 0.30</size></box></geometry>
+          <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse></material>
+        </visual>
+        <!-- The marker itself: 0.20 m black square, edge to edge. -->
         <visual name="visual">
-          <geometry><box><size>0.02 0.15 0.15</size></box></geometry>
-          <material><ambient>1 0 1 1</ambient><diffuse>1 0 1 1</diffuse></material>
+          <geometry><box><size>0.01 0.20 0.20</size></box></geometry>
+          <material>
+            <ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse>
+            <pbr><metal>
+              <albedo_map>model://aruco_markers/textures/aruco_2_bare.png</albedo_map>
+              <metalness>0.0</metalness><roughness>0.9</roughness>
+            </metal></pbr>
+          </material>
         </visual>
       </link>
     </model>
@@ -237,9 +269,25 @@
       <static>true</static>
       <pose>-8.0 7.88 0.3 0 0 -1.5708</pose>
       <link name="link">
+        <!-- White backing board: an ArUco marker needs a light quiet zone
+             around the black square or detectMarkers never finds the quad.
+             Making it geometry rather than part of the texture keeps
+             marker_length equal to the plate side, with nothing to derive. -->
+        <visual name="board">
+          <pose>-0.005 0 0 0 0 0</pose>
+          <geometry><box><size>0.01 0.30 0.30</size></box></geometry>
+          <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse></material>
+        </visual>
+        <!-- The marker itself: 0.20 m black square, edge to edge. -->
         <visual name="visual">
-          <geometry><box><size>0.02 0.15 0.15</size></box></geometry>
-          <material><ambient>1 0 1 1</ambient><diffuse>1 0 1 1</diffuse></material>
+          <geometry><box><size>0.01 0.20 0.20</size></box></geometry>
+          <material>
+            <ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse>
+            <pbr><metal>
+              <albedo_map>model://aruco_markers/textures/aruco_3_bare.png</albedo_map>
+              <metalness>0.0</metalness><roughness>0.9</roughness>
+            </metal></pbr>
+          </material>
         </visual>
       </link>
     </model>
@@ -247,9 +295,25 @@
       <static>true</static>
       <pose>-3.88 5.0 0.3 0 0 0.0</pose>
       <link name="link">
+        <!-- White backing board: an ArUco marker needs a light quiet zone
+             around the black square or detectMarkers never finds the quad.
+             Making it geometry rather than part of the texture keeps
+             marker_length equal to the plate side, with nothing to derive. -->
+        <visual name="board">
+          <pose>-0.005 0 0 0 0 0</pose>
+          <geometry><box><size>0.01 0.30 0.30</size></box></geometry>
+          <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse></material>
+        </visual>
+        <!-- The marker itself: 0.20 m black square, edge to edge. -->
         <visual name="visual">
-          <geometry><box><size>0.02 0.15 0.15</size></box></geometry>
-          <material><ambient>1 0 1 1</ambient><diffuse>1 0 1 1</diffuse></material>
+          <geometry><box><size>0.01 0.20 0.20</size></box></geometry>
+          <material>
+            <ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse>
+            <pbr><metal>
+              <albedo_map>model://aruco_markers/textures/aruco_4_bare.png</albedo_map>
+              <metalness>0.0</metalness><roughness>0.9</roughness>
+            </metal></pbr>
+          </material>
         </visual>
       </link>
     </model>
@@ -257,9 +321,25 @@
       <static>true</static>
       <pose>11.88 5.0 0.3 0 0 3.1416</pose>
       <link name="link">
+        <!-- White backing board: an ArUco marker needs a light quiet zone
+             around the black square or detectMarkers never finds the quad.
+             Making it geometry rather than part of the texture keeps
+             marker_length equal to the plate side, with nothing to derive. -->
+        <visual name="board">
+          <pose>-0.005 0 0 0 0 0</pose>
+          <geometry><box><size>0.01 0.30 0.30</size></box></geometry>
+          <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse></material>
+        </visual>
+        <!-- The marker itself: 0.20 m black square, edge to edge. -->
         <visual name="visual">
-          <geometry><box><size>0.02 0.15 0.15</size></box></geometry>
-          <material><ambient>1 0 1 1</ambient><diffuse>1 0 1 1</diffuse></material>
+          <geometry><box><size>0.01 0.20 0.20</size></box></geometry>
+          <material>
+            <ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse>
+            <pbr><metal>
+              <albedo_map>model://aruco_markers/textures/aruco_5_bare.png</albedo_map>
+              <metalness>0.0</metalness><roughness>0.9</roughness>
+            </metal></pbr>
+          </material>
         </visual>
       </link>
     </model>
@@ -267,9 +347,25 @@
       <static>true</static>
       <pose>-11.88 -5.0 0.3 0 0 0.0</pose>
       <link name="link">
+        <!-- White backing board: an ArUco marker needs a light quiet zone
+             around the black square or detectMarkers never finds the quad.
+             Making it geometry rather than part of the texture keeps
+             marker_length equal to the plate side, with nothing to derive. -->
+        <visual name="board">
+          <pose>-0.005 0 0 0 0 0</pose>
+          <geometry><box><size>0.01 0.30 0.30</size></box></geometry>
+          <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse></material>
+        </visual>
+        <!-- The marker itself: 0.20 m black square, edge to edge. -->
         <visual name="visual">
-          <geometry><box><size>0.02 0.15 0.15</size></box></geometry>
-          <material><ambient>1 0 1 1</ambient><diffuse>1 0 1 1</diffuse></material>
+          <geometry><box><size>0.01 0.20 0.20</size></box></geometry>
+          <material>
+            <ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse>
+            <pbr><metal>
+              <albedo_map>model://aruco_markers/textures/aruco_6_bare.png</albedo_map>
+              <metalness>0.0</metalness><roughness>0.9</roughness>
+            </metal></pbr>
+          </material>
         </visual>
       </link>
     </model>
@@ -277,9 +373,25 @@
       <static>true</static>
       <pose>4.0 -7.88 0.3 0 0 1.5708</pose>
       <link name="link">
+        <!-- White backing board: an ArUco marker needs a light quiet zone
+             around the black square or detectMarkers never finds the quad.
+             Making it geometry rather than part of the texture keeps
+             marker_length equal to the plate side, with nothing to derive. -->
+        <visual name="board">
+          <pose>-0.005 0 0 0 0 0</pose>
+          <geometry><box><size>0.01 0.30 0.30</size></box></geometry>
+          <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse></material>
+        </visual>
+        <!-- The marker itself: 0.20 m black square, edge to edge. -->
         <visual name="visual">
-          <geometry><box><size>0.02 0.15 0.15</size></box></geometry>
-          <material><ambient>1 0 1 1</ambient><diffuse>1 0 1 1</diffuse></material>
+          <geometry><box><size>0.01 0.20 0.20</size></box></geometry>
+          <material>
+            <ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse>
+            <pbr><metal>
+              <albedo_map>model://aruco_markers/textures/aruco_7_bare.png</albedo_map>
+              <metalness>0.0</metalness><roughness>0.9</roughness>
+            </metal></pbr>
+          </material>
         </visual>
       </link>
     </model>
@@ -287,9 +399,25 @@
       <static>true</static>
       <pose>-3.0 -1.32 0.3 0 0 -1.5708</pose>
       <link name="link">
+        <!-- White backing board: an ArUco marker needs a light quiet zone
+             around the black square or detectMarkers never finds the quad.
+             Making it geometry rather than part of the texture keeps
+             marker_length equal to the plate side, with nothing to derive. -->
+        <visual name="board">
+          <pose>-0.005 0 0 0 0 0</pose>
+          <geometry><box><size>0.01 0.30 0.30</size></box></geometry>
+          <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse></material>
+        </visual>
+        <!-- The marker itself: 0.20 m black square, edge to edge. -->
         <visual name="visual">
-          <geometry><box><size>0.02 0.15 0.15</size></box></geometry>
-          <material><ambient>1 0 1 1</ambient><diffuse>1 0 1 1</diffuse></material>
+          <geometry><box><size>0.01 0.20 0.20</size></box></geometry>
+          <material>
+            <ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse>
+            <pbr><metal>
+              <albedo_map>model://aruco_markers/textures/aruco_8_bare.png</albedo_map>
+              <metalness>0.0</metalness><roughness>0.9</roughness>
+            </metal></pbr>
+          </material>
         </visual>
       </link>
     </model>

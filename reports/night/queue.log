@@ -1,0 +1,394 @@
+[queue 23:21:58] pre: python scripts/apply_navfn_planner.py --profile sim
+  C:\Users\smirn\Desktop\leo_rover_gazebo\src/leo_nav2_exploration/config/sim/nav2.yaml: SmacPlannerLattice -> NavfnPlanner
+1 file(s) changed
+[queue 23:21:58] start n5_navfn_s7 : USE_EKF=1 USE_ARUCO=1 SEED=7 hybrid office_world cap=30m
+[queue 23:23:28] finish n5_navfn_s7 rc=2 in 1 min
+[queue 23:23:28] scoring n5_navfn_s7
+[queue 23:23:30] queue complete
+run                            cover  phantom     iou  wall_rmse  slam_ate  odom_ate    path   stuck   speed  doors  contacts  near  minclr     dur   aruco
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+n1_ekf_s21                     0.643    0.000   0.654      0.038     0.555      1.75    37.8    0.61   0.068     12         0     0   0.304     552       -
+n2_navfn_ekf_s21               0.865    0.145   0.571      0.322     0.405      2.79    61.8    0.46   0.100     17         0     0   0.391     616     2/8
+n3_wslgpu_navfn_s21            0.979    0.000   0.878      0.043     0.577      7.48   103.4    0.37   0.104     34         0     0   0.391     995     7/8
+n4_wslgpu_lattice_s21          0.197    0.064   0.188      0.082     4.606      0.08     1.2    0.65   0.013      0         0     0   1.100      91     0/8
+n5_navfn_s7                        -        -       -          -         -         -     0.9    0.00   0.046      0         0     0   1.100      20     0/8
+[queue 23:26:33] pre: python scripts/apply_navfn_planner.py --profile sim --revert
+  C:\Users\smirn\Desktop\leo_rover_gazebo\src/leo_nav2_exploration/config/sim/nav2.yaml: reverted to SmacPlannerLattice
+1 file(s) changed
+[queue 23:26:33] start n4_lattice_s21 : USE_EKF=1 USE_ARUCO=1 SEED=21 hybrid office_world cap=30m
+[queue 23:44:45] finish n4_lattice_s21 rc=0 in 18 min
+[queue 23:44:45] scoring n4_lattice_s21
+[queue 23:44:47] queue complete
+run                            cover  phantom     iou  wall_rmse  slam_ate  odom_ate    path   stuck   speed  doors  contacts  near  minclr     dur   aruco
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+n1_ekf_s21                     0.643    0.000   0.654      0.038     0.555      1.75    37.8    0.61   0.068     12         0     0   0.304     552       -
+n2_navfn_ekf_s21               0.865    0.145   0.571      0.322     0.405      2.79    61.8    0.46   0.100     17         0     0   0.391     616     2/8
+n3_wslgpu_navfn_s21            0.979    0.000   0.878      0.043     0.577      7.48   103.4    0.37   0.104     34         0     0   0.391     995     7/8
+n4_lattice_s21                 0.962    0.222   0.548      0.366     0.743      7.24   113.2    0.37   0.114     26         0     0   0.300     996     5/8
+[queue 23:58:14] skip n4_lattice_s21 (already scored)
+[queue 23:58:14] pre: python scripts/apply_navfn_planner.py --profile sim
+  C:\Users\smirn\Desktop\leo_rover_gazebo\src/leo_nav2_exploration/config/sim/nav2.yaml: SmacPlannerLattice -> NavfnPlanner
+1 file(s) changed
+[queue 23:58:14] start n10_navfn_s21b : USE_EKF=1 USE_ARUCO=1 SEED=21 hybrid office_world cap=30m
+[queue 00:16:24] finish n10_navfn_s21b rc=0 in 18 min
+[queue 00:16:24] scoring n10_navfn_s21b
+[queue 00:16:26] start n5_navfn_s7 : USE_EKF=1 USE_ARUCO=1 SEED=7 hybrid office_world cap=30m
+[queue 00:48:39] finish n5_navfn_s7 rc=3 in 32 min
+[queue 00:48:39] scoring n5_navfn_s7
+[queue 00:48:41] start n6_navfn_s33 : USE_EKF=1 USE_ARUCO=1 SEED=33 hybrid office_world cap=30m
+[queue 01:09:50] finish n6_navfn_s33 rc=0 in 21 min
+[queue 01:09:51] scoring n6_navfn_s33
+[queue 01:09:52] start n9_navfn_noekf_s21 : USE_ARUCO=1 SEED=21 hybrid office_world cap=30m
+[queue 01:19:54] finish n9_navfn_noekf_s21 rc=0 in 10 min
+[queue 01:19:54] scoring n9_navfn_noekf_s21
+[queue 01:19:55] start n7_navfn_depot_s21 : USE_EKF=1 SEED=21 hybrid depot_world cap=30m
+[queue 01:31:03] finish n7_navfn_depot_s21 rc=0 in 11 min
+[queue 01:31:03] scoring n7_navfn_depot_s21
+[queue 01:31:04] start n8_navfn_noisy_s21 : USE_EKF=1 USE_ARUCO=1 SEED=21 YAW_SCALE=0.24 LINEAR_SCALE=0.05 SLIP=0.03 hybrid office_world cap=30m
+[queue 01:46:13] finish n8_navfn_noisy_s21 rc=0 in 15 min
+[queue 01:46:13] scoring n8_navfn_noisy_s21
+[queue 01:46:15] pre: perl -pi -e 's/progress_timeout: 30.0/progress_timeout: 60.0/' src/leo_rover_gazebo/config/explore_params_leo.yaml
+[queue 01:46:15] start n11_navfn_ptimeout60_s21 : USE_EKF=1 USE_ARUCO=1 SEED=21 hybrid office_world cap=30m
+[queue 02:03:24] finish n11_navfn_ptimeout60_s21 rc=0 in 17 min
+[queue 02:03:24] scoring n11_navfn_ptimeout60_s21
+[queue 02:03:26] queue complete
+run                            cover  phantom     iou  wall_rmse  slam_ate  odom_ate    path   stuck   speed  doors  contacts  near  minclr     dur   aruco
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+n10_navfn_s21b                 0.979    0.104   0.729      0.287     0.437      7.19   109.0    0.39   0.110     33         0     0   0.391     995     6/8
+n11_navfn_ptimeout60_s21       0.969    0.079   0.656      0.090     0.578      6.73    85.3    0.47   0.091     28         0     0   0.300     935     5/8
+n1_ekf_s21                     0.643    0.000   0.654      0.038     0.555      1.75    37.8    0.61   0.068     12         0     0   0.304     552       -
+n2_navfn_ekf_s21               0.865    0.145   0.571      0.322     0.405      2.79    61.8    0.46   0.100     17         0     0   0.391     616     2/8
+n3_wslgpu_navfn_s21            0.979    0.000   0.878      0.043     0.577      7.48   103.4    0.37   0.104     34         0     0   0.391     995     7/8
+n4_lattice_s21                 0.962    0.222   0.548      0.366     0.743      7.24   113.2    0.37   0.114     26         0     0   0.300     996     5/8
+n5_navfn_s7                    0.978    0.033   0.757      0.069     0.462      5.26   110.0    0.66   0.060     36         0     0   0.381    1838     7/8
+n6_navfn_s33                   0.967    0.166   0.614      0.179     0.681      6.23   128.3    0.40   0.109     35         0     0   0.361    1176     5/8
+n7_navfn_depot_s21             0.968    0.000   0.701      0.043     0.070      2.06    40.0    0.60   0.070     12         0     0   0.361     574       -
+n8_navfn_noisy_s21             0.846    0.112   0.527      0.118     0.773      2.27    37.8    0.73   0.046     10         0     0   0.350     815     4/8
+n9_navfn_noekf_s21             0.638    0.000   0.563      0.041     0.650      5.30    26.7    0.62   0.052     15         0     0   0.300     514     2/8
+[queue 02:04:09] pre: perl -pi -e 's/progress_timeout: 60.0/progress_timeout: 30.0/' src/leo_rover_gazebo/config/explore_params_leo.yaml && python scripts/apply_navfn_planner.py --profile sim --revert
+  C:\Users\smirn\Desktop\leo_rover_gazebo\src/leo_nav2_exploration/config/sim/nav2.yaml: reverted to SmacPlannerLattice
+1 file(s) changed
+[queue 02:04:09] start n12_lattice_s7 : USE_EKF=1 USE_ARUCO=1 SEED=7 hybrid office_world cap=30m
+[queue 02:16:19] finish n12_lattice_s7 rc=0 in 12 min
+[queue 02:16:19] scoring n12_lattice_s7
+[queue 02:16:21] pre: python scripts/apply_navfn_planner.py --profile sim
+  C:\Users\smirn\Desktop\leo_rover_gazebo\src/leo_nav2_exploration/config/sim/nav2.yaml: SmacPlannerLattice -> NavfnPlanner
+1 file(s) changed
+[queue 02:16:21] start n13_navfn_s55 : USE_EKF=1 USE_ARUCO=1 SEED=55 hybrid office_world cap=30m
+[queue 02:31:30] finish n13_navfn_s55 rc=0 in 15 min
+[queue 02:31:30] scoring n13_navfn_s55
+[queue 02:31:32] start n14_navfn_depot_s7 : USE_EKF=1 SEED=7 hybrid depot_world cap=30m
+[queue 02:45:39] finish n14_navfn_depot_s7 rc=0 in 14 min
+[queue 02:45:39] scoring n14_navfn_depot_s7
+[queue 02:45:41] queue complete
+run                            cover  phantom     iou  wall_rmse  slam_ate  odom_ate    path   stuck   speed  doors  contacts  near  minclr     dur   aruco
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+n10_navfn_s21b                 0.979    0.104   0.729      0.287     0.437      7.19   109.0    0.39   0.110     33         0     0   0.391     995     6/8
+n11_navfn_ptimeout60_s21       0.969    0.079   0.656      0.090     0.578      6.73    85.3    0.47   0.091     28         0     0   0.300     935     5/8
+n12_lattice_s7                 0.853    0.247   0.496      0.390     0.704      1.76    51.7    0.53   0.081     15         0     0   0.350     635     4/8
+n13_navfn_s55                  0.849    0.000   0.621      0.046     0.577      2.85    55.5    0.35   0.068     13         0     0   0.350     816     3/8
+n14_navfn_depot_s7             0.567    0.000   0.298      0.042     0.036      0.18     4.3    0.94   0.006      1         0     0   0.391     754       -
+n1_ekf_s21                     0.643    0.000   0.654      0.038     0.555      1.75    37.8    0.61   0.068     12         0     0   0.304     552       -
+n2_navfn_ekf_s21               0.865    0.145   0.571      0.322     0.405      2.79    61.8    0.46   0.100     17         0     0   0.391     616     2/8
+n3_wslgpu_navfn_s21            0.979    0.000   0.878      0.043     0.577      7.48   103.4    0.37   0.104     34         0     0   0.391     995     7/8
+n4_lattice_s21                 0.962    0.222   0.548      0.366     0.743      7.24   113.2    0.37   0.114     26         0     0   0.300     996     5/8
+n5_navfn_s7                    0.978    0.033   0.757      0.069     0.462      5.26   110.0    0.66   0.060     36         0     0   0.381    1838     7/8
+n6_navfn_s33                   0.967    0.166   0.614      0.179     0.681      6.23   128.3    0.40   0.109     35         0     0   0.361    1176     5/8
+n7_navfn_depot_s21             0.968    0.000   0.701      0.043     0.070      2.06    40.0    0.60   0.070     12         0     0   0.361     574       -
+n8_navfn_noisy_s21             0.846    0.112   0.527      0.118     0.773      2.27    37.8    0.73   0.046     10         0     0   0.350     815     4/8
+n9_navfn_noekf_s21             0.638    0.000   0.563      0.041     0.650      5.30    26.7    0.62   0.052     15         0     0   0.300     514     2/8
+[queue 02:46:23] pre: perl -pi -e 's/^      tolerance: 0.25$/      tolerance: 0.5/' src/leo_nav2_exploration/config/sim/nav2.yaml
+[queue 02:46:23] start n15_navfn_tol05_s55 : USE_EKF=1 USE_ARUCO=1 SEED=55 hybrid office_world cap=30m
+[queue 03:02:34] finish n15_navfn_tol05_s55 rc=0 in 16 min
+[queue 03:02:34] scoring n15_navfn_tol05_s55
+[queue 03:02:36] start n16_navfn_tol05_s21 : USE_EKF=1 USE_ARUCO=1 SEED=21 hybrid office_world cap=30m
+[queue 03:17:45] finish n16_navfn_tol05_s21 rc=0 in 15 min
+[queue 03:17:45] scoring n16_navfn_tol05_s21
+[queue 03:17:46] start n17_navfn_tol05_s7 : USE_EKF=1 USE_ARUCO=1 SEED=7 hybrid office_world cap=30m
+[queue 03:32:55] finish n17_navfn_tol05_s7 rc=0 in 15 min
+[queue 03:32:55] scoring n17_navfn_tol05_s7
+[queue 03:32:57] queue complete
+run                            cover  phantom     iou  wall_rmse  slam_ate  odom_ate    path   stuck   speed  doors  contacts  near  minclr     dur   aruco
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+n10_navfn_s21b                 0.979    0.104   0.729      0.287     0.437      7.19   109.0    0.39   0.110     33         0     0   0.391     995     6/8
+n11_navfn_ptimeout60_s21       0.969    0.079   0.656      0.090     0.578      6.73    85.3    0.47   0.091     28         0     0   0.300     935     5/8
+n12_lattice_s7                 0.853    0.247   0.496      0.390     0.704      1.76    51.7    0.53   0.081     15         0     0   0.350     635     4/8
+n13_navfn_s55                  0.849    0.000   0.621      0.046     0.577      2.85    55.5    0.35   0.068     13         0     0   0.350     816     3/8
+n14_navfn_depot_s7             0.567    0.000   0.298      0.042     0.036      0.18     4.3    0.94   0.006      1         0     0   0.391     754       -
+n15_navfn_tol05_s55            0.978    0.006   0.794      0.041     0.530      6.97   110.8    0.30   0.127     27         0     0   0.354     875     7/8
+n16_navfn_tol05_s21            0.776    0.044   0.614      0.190     0.436      2.15    47.5    0.65   0.058      9         0     0   0.361     815     4/8
+n17_navfn_tol05_s7             0.967    0.069   0.773      0.234     0.390      4.68    74.6    0.33   0.091     22         0     0   0.354     815     5/8
+n1_ekf_s21                     0.643    0.000   0.654      0.038     0.555      1.75    37.8    0.61   0.068     12         0     0   0.304     552       -
+n2_navfn_ekf_s21               0.865    0.145   0.571      0.322     0.405      2.79    61.8    0.46   0.100     17         0     0   0.391     616     2/8
+n3_wslgpu_navfn_s21            0.979    0.000   0.878      0.043     0.577      7.48   103.4    0.37   0.104     34         0     0   0.391     995     7/8
+n4_lattice_s21                 0.962    0.222   0.548      0.366     0.743      7.24   113.2    0.37   0.114     26         0     0   0.300     996     5/8
+n5_navfn_s7                    0.978    0.033   0.757      0.069     0.462      5.26   110.0    0.66   0.060     36         0     0   0.381    1838     7/8
+n6_navfn_s33                   0.967    0.166   0.614      0.179     0.681      6.23   128.3    0.40   0.109     35         0     0   0.361    1176     5/8
+n7_navfn_depot_s21             0.968    0.000   0.701      0.043     0.070      2.06    40.0    0.60   0.070     12         0     0   0.361     574       -
+n8_navfn_noisy_s21             0.846    0.112   0.527      0.118     0.773      2.27    37.8    0.73   0.046     10         0     0   0.350     815     4/8
+n9_navfn_noekf_s21             0.638    0.000   0.563      0.041     0.650      5.30    26.7    0.62   0.052     15         0     0   0.300     514     2/8
+[queue 03:49:09] start n18_ship_s101 : USE_EKF=1 USE_ARUCO=1 SEED=101 hybrid office_world cap=30m
+[queue 04:00:15] finish n18_ship_s101 rc=0 in 11 min
+[queue 04:00:15] scoring n18_ship_s101
+[queue 04:00:17] start n19_ship_s202 : USE_EKF=1 USE_ARUCO=1 SEED=202 hybrid office_world cap=30m
+[queue 04:20:26] finish n19_ship_s202 rc=0 in 20 min
+[queue 04:20:26] scoring n19_ship_s202
+[queue 04:20:28] start n20_ship_depot_s101 : USE_EKF=1 SEED=101 hybrid depot_world cap=30m
+[queue 04:34:35] finish n20_ship_depot_s101 rc=0 in 14 min
+[queue 04:34:35] scoring n20_ship_depot_s101
+[queue 04:34:36] queue complete
+run                            cover  phantom     iou  wall_rmse  slam_ate  odom_ate    path   stuck   speed  doors  contacts  near  minclr     dur   aruco
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+n10_navfn_s21b                 0.979    0.104   0.729      0.287     0.437      7.19   109.0    0.39   0.110     33         0     0   0.391     995     6/8
+n11_navfn_ptimeout60_s21       0.969    0.079   0.656      0.090     0.578      6.73    85.3    0.47   0.091     28         0     0   0.300     935     5/8
+n12_lattice_s7                 0.853    0.247   0.496      0.390     0.704      1.76    51.7    0.53   0.081     15         0     0   0.350     635     4/8
+n13_navfn_s55                  0.849    0.000   0.621      0.046     0.577      2.85    55.5    0.35   0.068     13         0     0   0.350     816     3/8
+n14_navfn_depot_s7             0.567    0.000   0.298      0.042     0.036      0.18     4.3    0.94   0.006      1         0     0   0.391     754       -
+n15_navfn_tol05_s55            0.978    0.006   0.794      0.041     0.530      6.97   110.8    0.30   0.127     27         0     0   0.354     875     7/8
+n16_navfn_tol05_s21            0.776    0.044   0.614      0.190     0.436      2.15    47.5    0.65   0.058      9         0     0   0.361     815     4/8
+n17_navfn_tol05_s7             0.967    0.069   0.773      0.234     0.390      4.68    74.6    0.33   0.091     22         0     0   0.354     815     5/8
+n18_ship_s101                  0.519    0.209   0.311      0.217     0.228      1.03    13.4    0.73   0.023      5         0     0   0.350     574     0/8
+n19_ship_s202                  0.980    0.000   0.795      0.046     0.572     15.38   126.0    0.36   0.113     28         0     0   0.354    1116     6/8
+n1_ekf_s21                     0.643    0.000   0.654      0.038     0.555      1.75    37.8    0.61   0.068     12         0     0   0.304     552       -
+n20_ship_depot_s101            0.976    0.000   0.718      0.035     0.117      4.07    62.0    0.54   0.082     20         0     1   0.292     754       -
+n2_navfn_ekf_s21               0.865    0.145   0.571      0.322     0.405      2.79    61.8    0.46   0.100     17         0     0   0.391     616     2/8
+n3_wslgpu_navfn_s21            0.979    0.000   0.878      0.043     0.577      7.48   103.4    0.37   0.104     34         0     0   0.391     995     7/8
+n4_lattice_s21                 0.962    0.222   0.548      0.366     0.743      7.24   113.2    0.37   0.114     26         0     0   0.300     996     5/8
+n5_navfn_s7                    0.978    0.033   0.757      0.069     0.462      5.26   110.0    0.66   0.060     36         0     0   0.381    1838     7/8
+n6_navfn_s33                   0.967    0.166   0.614      0.179     0.681      6.23   128.3    0.40   0.109     35         0     0   0.361    1176     5/8
+n7_navfn_depot_s21             0.968    0.000   0.701      0.043     0.070      2.06    40.0    0.60   0.070     12         0     0   0.361     574       -
+n8_navfn_noisy_s21             0.846    0.112   0.527      0.118     0.773      2.27    37.8    0.73   0.046     10         0     0   0.350     815     4/8
+n9_navfn_noekf_s21             0.638    0.000   0.563      0.041     0.650      5.30    26.7    0.62   0.052     15         0     0   0.300     514     2/8
+[queue 04:37:27] start n21_nocam_s101 : USE_EKF=1 USE_ARUCO=1 SEED=101 ENABLE_VOXEL=false hybrid office_world cap=30m
+[queue 04:51:45] finish n21_nocam_s101 rc=0 in 14 min
+[queue 04:51:45] scoring n21_nocam_s101
+[queue 04:51:47] start n22_nocam_s55 : USE_EKF=1 USE_ARUCO=1 SEED=55 ENABLE_VOXEL=false hybrid office_world cap=30m
+[queue 05:03:05] finish n22_nocam_s55 rc=0 in 11 min
+[queue 05:03:05] scoring n22_nocam_s55
+[queue 05:03:07] start n23_nocam_depot_s7 : USE_EKF=1 SEED=7 ENABLE_VOXEL=false hybrid depot_world cap=30m
+[queue 05:17:24] finish n23_nocam_depot_s7 rc=0 in 14 min
+[queue 05:17:24] scoring n23_nocam_depot_s7
+[queue 05:17:26] queue complete
+run                            cover  phantom     iou  wall_rmse  slam_ate  odom_ate    path   stuck   speed  doors  contacts  near  minclr     dur   aruco
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+n10_navfn_s21b                 0.979    0.104   0.729      0.287     0.437      7.19   109.0    0.39   0.110     33         0     0   0.391     995     6/8
+n11_navfn_ptimeout60_s21       0.969    0.079   0.656      0.090     0.578      6.73    85.3    0.47   0.091     28         0     0   0.300     935     5/8
+n12_lattice_s7                 0.853    0.247   0.496      0.390     0.704      1.76    51.7    0.53   0.081     15         0     0   0.350     635     4/8
+n13_navfn_s55                  0.849    0.000   0.621      0.046     0.577      2.85    55.5    0.35   0.068     13         0     0   0.350     816     3/8
+n14_navfn_depot_s7             0.567    0.000   0.298      0.042     0.036      0.18     4.3    0.94   0.006      1         0     0   0.391     754       -
+n15_navfn_tol05_s55            0.978    0.006   0.794      0.041     0.530      6.97   110.8    0.30   0.127     27         0     0   0.354     875     7/8
+n16_navfn_tol05_s21            0.776    0.044   0.614      0.190     0.436      2.15    47.5    0.65   0.058      9         0     0   0.361     815     4/8
+n17_navfn_tol05_s7             0.967    0.069   0.773      0.234     0.390      4.68    74.6    0.33   0.091     22         0     0   0.354     815     5/8
+n18_ship_s101                  0.519    0.209   0.311      0.217     0.228      1.03    13.4    0.73   0.023      5         0     0   0.350     574     0/8
+n19_ship_s202                  0.980    0.000   0.795      0.046     0.572     15.38   126.0    0.36   0.113     28         0     0   0.354    1116     6/8
+n1_ekf_s21                     0.643    0.000   0.654      0.038     0.555      1.75    37.8    0.61   0.068     12         0     0   0.304     552       -
+n20_ship_depot_s101            0.976    0.000   0.718      0.035     0.117      4.07    62.0    0.54   0.082     20         0     1   0.292     754       -
+n21_nocam_s101                 0.866    0.091   0.548      0.093     0.387      5.65    57.4    0.48   0.076     14         0     0   0.354     755     0/8
+n22_nocam_s55                  0.543    0.024   0.439      0.131     0.542      3.27    18.5    0.73   0.032      6         0     0   0.350     574     2/8
+n23_nocam_depot_s7             0.947    0.000   0.604      0.040     0.043      0.99    22.1    0.76   0.029      5         0     0   0.354     754       -
+n2_navfn_ekf_s21               0.865    0.145   0.571      0.322     0.405      2.79    61.8    0.46   0.100     17         0     0   0.391     616     2/8
+n3_wslgpu_navfn_s21            0.979    0.000   0.878      0.043     0.577      7.48   103.4    0.37   0.104     34         0     0   0.391     995     7/8
+n4_lattice_s21                 0.962    0.222   0.548      0.366     0.743      7.24   113.2    0.37   0.114     26         0     0   0.300     996     5/8
+n5_navfn_s7                    0.978    0.033   0.757      0.069     0.462      5.26   110.0    0.66   0.060     36         0     0   0.381    1838     7/8
+n6_navfn_s33                   0.967    0.166   0.614      0.179     0.681      6.23   128.3    0.40   0.109     35         0     0   0.361    1176     5/8
+n7_navfn_depot_s21             0.968    0.000   0.701      0.043     0.070      2.06    40.0    0.60   0.070     12         0     0   0.361     574       -
+n8_navfn_noisy_s21             0.846    0.112   0.527      0.118     0.773      2.27    37.8    0.73   0.046     10         0     0   0.350     815     4/8
+n9_navfn_noekf_s21             0.638    0.000   0.563      0.041     0.650      5.30    26.7    0.62   0.052     15         0     0   0.300     514     2/8
+[queue 05:17:32] pre: python scripts/apply_camera_layer_tuning.py --profile sim
+C:\Users\smirn\Desktop\leo_rover_gazebo\src\leo_nav2_exploration\config\sim\nav2.yaml: 2 camera parameter(s) set to tuned values {'min_obstacle_height': 0.15, 'obstacle_max_range': 1.8}
+  local_costmap: min_obstacle_height=0.15 obstacle_max_range=1.8 raytrace_max_range=3.0
+[queue 05:17:32] start n24_camtuned_s101 : USE_EKF=1 USE_ARUCO=1 SEED=101 hybrid office_world cap=30m
+[queue 05:18:17] start n27_ship_s303 : USE_EKF=1 USE_ARUCO=1 SEED=303 hybrid office_world cap=30m
+[queue 05:23:23] finish n24_camtuned_s101 rc=0 in 5 min
+[queue 05:23:23] scoring n24_camtuned_s101
+[queue 05:23:25] start n25_camtuned_s55 : USE_EKF=1 USE_ARUCO=1 SEED=55 hybrid office_world cap=30m
+[queue 05:27:27] finish n27_ship_s303 rc=3 in 9 min
+[queue 05:27:27] scoring n27_ship_s303
+[queue 05:27:29] start n28_ship_s404 : USE_EKF=1 USE_ARUCO=1 SEED=404 hybrid office_world cap=30m
+[queue 05:31:31] finish n25_camtuned_s55 rc=3 in 8 min
+[queue 05:31:31] scoring n25_camtuned_s55
+[queue 05:31:33] start n26_camtuned_depot_s7 : USE_EKF=1 SEED=7 hybrid depot_world cap=30m
+[queue 05:35:35] finish n28_ship_s404 rc=3 in 8 min
+[queue 05:35:35] scoring n28_ship_s404
+[queue 05:35:36] start n29_ship_s505 : USE_EKF=1 USE_ARUCO=1 SEED=505 hybrid office_world cap=30m
+[queue 05:39:38] finish n26_camtuned_depot_s7 rc=3 in 8 min
+[queue 05:39:38] scoring n26_camtuned_depot_s7
+[queue 05:39:40] queue complete
+run                            cover  phantom     iou  wall_rmse  slam_ate  odom_ate    path   stuck   speed  doors  contacts  near  minclr     dur   aruco
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+_invalid_n27_ship_s303_simwedge   0.527    0.000   0.384      0.040     0.367      0.51     5.8    0.49   0.028      3         0     0   0.450     210     1/8
+_invalid_n28_ship_s404_simwedge   0.293    0.816   0.050      0.802     0.570      0.19     9.3    0.42   0.062      3         0     0   0.461     150     1/8
+n10_navfn_s21b                 0.979    0.104   0.729      0.287     0.437      7.19   109.0    0.39   0.110     33         0     0   0.391     995     6/8
+n11_navfn_ptimeout60_s21       0.969    0.079   0.656      0.090     0.578      6.73    85.3    0.47   0.091     28         0     0   0.300     935     5/8
+n12_lattice_s7                 0.853    0.247   0.496      0.390     0.704      1.76    51.7    0.53   0.081     15         0     0   0.350     635     4/8
+n13_navfn_s55                  0.849    0.000   0.621      0.046     0.577      2.85    55.5    0.35   0.068     13         0     0   0.350     816     3/8
+n14_navfn_depot_s7             0.567    0.000   0.298      0.042     0.036      0.18     4.3    0.94   0.006      1         0     0   0.391     754       -
+n15_navfn_tol05_s55            0.978    0.006   0.794      0.041     0.530      6.97   110.8    0.30   0.127     27         0     0   0.354     875     7/8
+n16_navfn_tol05_s21            0.776    0.044   0.614      0.190     0.436      2.15    47.5    0.65   0.058      9         0     0   0.361     815     4/8
+n17_navfn_tol05_s7             0.967    0.069   0.773      0.234     0.390      4.68    74.6    0.33   0.091     22         0     0   0.354     815     5/8
+n18_ship_s101                  0.519    0.209   0.311      0.217     0.228      1.03    13.4    0.73   0.023      5         0     0   0.350     574     0/8
+n19_ship_s202                  0.980    0.000   0.795      0.046     0.572     15.38   126.0    0.36   0.113     28         0     0   0.354    1116     6/8
+n1_ekf_s21                     0.643    0.000   0.654      0.038     0.555      1.75    37.8    0.61   0.068     12         0     0   0.304     552       -
+n20_ship_depot_s101            0.976    0.000   0.718      0.035     0.117      4.07    62.0    0.54   0.082     20         0     1   0.292     754       -
+n21_nocam_s101                 0.866    0.091   0.548      0.093     0.387      5.65    57.4    0.48   0.076     14         0     0   0.354     755     0/8
+n22_nocam_s55                  0.543    0.024   0.439      0.131     0.542      3.27    18.5    0.73   0.032      6         0     0   0.350     574     2/8
+n23_nocam_depot_s7             0.947    0.000   0.604      0.040     0.043      0.99    22.1    0.76   0.029      5         0     0   0.354     754       -
+n24_camtuned_s101              0.309    0.064   0.319      0.194     0.364      0.51     5.8    0.48   0.027      3         0     0   0.450     213     1/8
+n25_camtuned_s55               0.327    0.000   0.349      0.045     0.562      0.86    11.2    0.43   0.075      3         0     0   0.447     150     2/8
+n26_camtuned_depot_s7          0.645    0.778   0.058      0.782     0.037      0.27     9.2    0.29   0.061      1         0     0   0.403     150       -
+n2_navfn_ekf_s21               0.865    0.145   0.571      0.322     0.405      2.79    61.8    0.46   0.100     17         0     0   0.391     616     2/8
+n3_wslgpu_navfn_s21            0.979    0.000   0.878      0.043     0.577      7.48   103.4    0.37   0.104     34         0     0   0.391     995     7/8
+n4_lattice_s21                 0.962    0.222   0.548      0.366     0.743      7.24   113.2    0.37   0.114     26         0     0   0.300     996     5/8
+n5_navfn_s7                    0.978    0.033   0.757      0.069     0.462      5.26   110.0    0.66   0.060     36         0     0   0.381    1838     7/8
+n6_navfn_s33                   0.967    0.166   0.614      0.179     0.681      6.23   128.3    0.40   0.109     35         0     0   0.361    1176     5/8
+n7_navfn_depot_s21             0.968    0.000   0.701      0.043     0.070      2.06    40.0    0.60   0.070     12         0     0   0.361     574       -
+n8_navfn_noisy_s21             0.846    0.112   0.527      0.118     0.773      2.27    37.8    0.73   0.046     10         0     0   0.350     815     4/8
+n9_navfn_noekf_s21             0.638    0.000   0.563      0.041     0.650      5.30    26.7    0.62   0.052     15         0     0   0.300     514     2/8
+[queue 05:43:52] finish n29_ship_s505 rc=1 in 8 min
+[queue 05:43:52] scoring n29_ship_s505
+[queue 05:43:52] scoring failed for n29_ship_s505
+[queue 05:43:52] start n30_ship_depot_s303 : USE_EKF=1 SEED=303 hybrid depot_world cap=30m
+[queue 05:44:11] start n27b_ship_s303 : USE_EKF=1 USE_ARUCO=1 SEED=303 hybrid office_world cap=30m
+[queue 05:44:15] finish n30_ship_depot_s303 rc=9 in 0 min
+[queue 05:44:15] scoring n30_ship_depot_s303
+[queue 05:44:15] start n27b_ship_s303 : USE_EKF=1 USE_ARUCO=1 SEED=303 hybrid office_world cap=30m
+[queue 05:44:17] finish n27b_ship_s303 rc=1 in 0 min
+[queue 05:44:17] scoring n27b_ship_s303
+[queue 05:44:17] queue complete
+run                            cover  phantom     iou  wall_rmse  slam_ate  odom_ate    path   stuck   speed  doors  contacts  near  minclr     dur   aruco
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+_invalid_n27_ship_s303_simwedge   0.527    0.000   0.384      0.040     0.367      0.51     5.8    0.49   0.028      3         0     0   0.450     210     1/8
+_invalid_n28_ship_s404_simwedge   0.293    0.816   0.050      0.802     0.570      0.19     9.3    0.42   0.062      3         0     0   0.461     150     1/8
+n10_navfn_s21b                 0.979    0.104   0.729      0.287     0.437      7.19   109.0    0.39   0.110     33         0     0   0.391     995     6/8
+n11_navfn_ptimeout60_s21       0.969    0.079   0.656      0.090     0.578      6.73    85.3    0.47   0.091     28         0     0   0.300     935     5/8
+n12_lattice_s7                 0.853    0.247   0.496      0.390     0.704      1.76    51.7    0.53   0.081     15         0     0   0.350     635     4/8
+n13_navfn_s55                  0.849    0.000   0.621      0.046     0.577      2.85    55.5    0.35   0.068     13         0     0   0.350     816     3/8
+n14_navfn_depot_s7             0.567    0.000   0.298      0.042     0.036      0.18     4.3    0.94   0.006      1         0     0   0.391     754       -
+n15_navfn_tol05_s55            0.978    0.006   0.794      0.041     0.530      6.97   110.8    0.30   0.127     27         0     0   0.354     875     7/8
+n16_navfn_tol05_s21            0.776    0.044   0.614      0.190     0.436      2.15    47.5    0.65   0.058      9         0     0   0.361     815     4/8
+n17_navfn_tol05_s7             0.967    0.069   0.773      0.234     0.390      4.68    74.6    0.33   0.091     22         0     0   0.354     815     5/8
+n18_ship_s101                  0.519    0.209   0.311      0.217     0.228      1.03    13.4    0.73   0.023      5         0     0   0.350     574     0/8
+n19_ship_s202                  0.980    0.000   0.795      0.046     0.572     15.38   126.0    0.36   0.113     28         0     0   0.354    1116     6/8
+n1_ekf_s21                     0.643    0.000   0.654      0.038     0.555      1.75    37.8    0.61   0.068     12         0     0   0.304     552       -
+n20_ship_depot_s101            0.976    0.000   0.718      0.035     0.117      4.07    62.0    0.54   0.082     20         0     1   0.292     754       -
+n21_nocam_s101                 0.866    0.091   0.548      0.093     0.387      5.65    57.4    0.48   0.076     14         0     0   0.354     755     0/8
+n22_nocam_s55                  0.543    0.024   0.439      0.131     0.542      3.27    18.5    0.73   0.032      6         0     0   0.350     574     2/8
+n23_nocam_depot_s7             0.947    0.000   0.604      0.040     0.043      0.99    22.1    0.76   0.029      5         0     0   0.354     754       -
+n24_camtuned_s101              0.309    0.064   0.319      0.194     0.364      0.51     5.8    0.48   0.027      3         0     0   0.450     213     1/8
+n25_camtuned_s55               0.327    0.000   0.349      0.045     0.562      0.86    11.2    0.43   0.075      3         0     0   0.447     150     2/8
+n26_camtuned_depot_s7          0.645    0.778   0.058      0.782     0.037      0.27     9.2    0.29   0.061      1         0     0   0.403     150       -
+n2_navfn_ekf_s21               0.865    0.145   0.571      0.322     0.405      2.79    61.8    0.46   0.100     17         0     0   0.391     616     2/8
+n3_wslgpu_navfn_s21            0.979    0.000   0.878      0.043     0.577      7.48   103.4    0.37   0.104     34         0     0   0.391     995     7/8
+n4_lattice_s21                 0.962    0.222   0.548      0.366     0.743      7.24   113.2    0.37   0.114     26         0     0   0.300     996     5/8
+n5_navfn_s7                    0.978    0.033   0.757      0.069     0.462      5.26   110.0    0.66   0.060     36         0     0   0.381    1838     7/8
+n6_navfn_s33                   0.967    0.166   0.614      0.179     0.681      6.23   128.3    0.40   0.109     35         0     0   0.361    1176     5/8
+n7_navfn_depot_s21             0.968    0.000   0.701      0.043     0.070      2.06    40.0    0.60   0.070     12         0     0   0.361     574       -
+n8_navfn_noisy_s21             0.846    0.112   0.527      0.118     0.773      2.27    37.8    0.73   0.046     10         0     0   0.350     815     4/8
+n9_navfn_noekf_s21             0.638    0.000   0.563      0.041     0.650      5.30    26.7    0.62   0.052     15         0     0   0.300     514     2/8
+[queue 06:02:19] finish n27b_ship_s303 rc=0 in 18 min
+[queue 06:02:19] scoring n27b_ship_s303
+[queue 06:02:21] start n28b_ship_s404 : USE_EKF=1 USE_ARUCO=1 SEED=404 hybrid office_world cap=30m
+[queue 06:20:30] finish n28b_ship_s404 rc=0 in 18 min
+[queue 06:20:30] scoring n28b_ship_s404
+[queue 06:20:32] start n30_ship_depot_s303 : USE_EKF=1 SEED=303 hybrid depot_world cap=30m
+[queue 06:52:43] finish n30_ship_depot_s303 rc=3 in 32 min
+[queue 06:52:43] scoring n30_ship_depot_s303
+[queue 06:53:16] start n31_ship_s606 : USE_EKF=1 USE_ARUCO=1 SEED=606 hybrid office_world cap=25m
+[queue 07:11:27] finish n31_ship_s606 rc=0 in 18 min
+[queue 07:11:27] scoring n31_ship_s606
+[queue 07:11:29] start n32_ship_s707 : USE_EKF=1 USE_ARUCO=1 SEED=707 hybrid office_world cap=25m
+[queue 07:21:37] finish n32_ship_s707 rc=0 in 10 min
+[queue 07:21:37] scoring n32_ship_s707
+[queue 07:21:39] start n33_ship_s808 : USE_EKF=1 USE_ARUCO=1 SEED=808 hybrid office_world cap=25m
+[queue 07:30:46] finish n33_ship_s808 rc=0 in 9 min
+[queue 07:30:46] scoring n33_ship_s808
+[queue 07:30:47] queue complete
+run                            cover  phantom     iou  wall_rmse  slam_ate  odom_ate    path   stuck   speed  doors  contacts  near  minclr     dur   aruco
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+_invalid_n24_camtuned_s101_concurrent   0.309    0.064   0.319      0.194     0.364      0.51     5.8    0.48   0.027      3         0     0   0.450     213     1/8
+_invalid_n25_camtuned_s55_concurrent   0.327    0.000   0.349      0.045     0.562      0.86    11.2    0.43   0.075      3         0     0   0.447     150     2/8
+_invalid_n26_camtuned_depot_s7_concurrent   0.645    0.778   0.058      0.782     0.037      0.27     9.2    0.29   0.061      1         0     0   0.403     150       -
+_invalid_n27_ship_s303_concurrent   0.527    0.000   0.384      0.040     0.367      0.51     5.8    0.49   0.028      3         0     0   0.450     210     1/8
+_invalid_n28_ship_s404_concurrent   0.293    0.816   0.050      0.802     0.570      0.19     9.3    0.42   0.062      3         0     0   0.461     150     1/8
+n10_navfn_s21b                 0.979    0.104   0.729      0.287     0.437      7.19   109.0    0.39   0.110     33         0     0   0.391     995     6/8
+n11_navfn_ptimeout60_s21       0.969    0.079   0.656      0.090     0.578      6.73    85.3    0.47   0.091     28         0     0   0.300     935     5/8
+n12_lattice_s7                 0.853    0.247   0.496      0.390     0.704      1.76    51.7    0.53   0.081     15         0     0   0.350     635     4/8
+n13_navfn_s55                  0.849    0.000   0.621      0.046     0.577      2.85    55.5    0.35   0.068     13         0     0   0.350     816     3/8
+n14_navfn_depot_s7             0.567    0.000   0.298      0.042     0.036      0.18     4.3    0.94   0.006      1         0     0   0.391     754       -
+n15_navfn_tol05_s55            0.978    0.006   0.794      0.041     0.530      6.97   110.8    0.30   0.127     27         0     0   0.354     875     7/8
+n16_navfn_tol05_s21            0.776    0.044   0.614      0.190     0.436      2.15    47.5    0.65   0.058      9         0     0   0.361     815     4/8
+n17_navfn_tol05_s7             0.967    0.069   0.773      0.234     0.390      4.68    74.6    0.33   0.091     22         0     0   0.354     815     5/8
+n18_ship_s101                  0.519    0.209   0.311      0.217     0.228      1.03    13.4    0.73   0.023      5         0     0   0.350     574     0/8
+n19_ship_s202                  0.980    0.000   0.795      0.046     0.572     15.38   126.0    0.36   0.113     28         0     0   0.354    1116     6/8
+n1_ekf_s21                     0.643    0.000   0.654      0.038     0.555      1.75    37.8    0.61   0.068     12         0     0   0.304     552       -
+n20_ship_depot_s101            0.976    0.000   0.718      0.035     0.117      4.07    62.0    0.54   0.082     20         0     1   0.292     754       -
+n21_nocam_s101                 0.866    0.091   0.548      0.093     0.387      5.65    57.4    0.48   0.076     14         0     0   0.354     755     0/8
+n22_nocam_s55                  0.543    0.024   0.439      0.131     0.542      3.27    18.5    0.73   0.032      6         0     0   0.350     574     2/8
+n23_nocam_depot_s7             0.947    0.000   0.604      0.040     0.043      0.99    22.1    0.76   0.029      5         0     0   0.354     754       -
+n27b_camtuned_s303             0.965    0.070   0.696      0.236     0.597      8.86    90.6    0.47   0.091     27         0     0   0.361     995     8/8
+n28b_camtuned_s404             0.948    0.295   0.477      0.401     0.879      3.05   108.0    0.37   0.109     31         0     0   0.354     995     6/8
+n2_navfn_ekf_s21               0.865    0.145   0.571      0.322     0.405      2.79    61.8    0.46   0.100     17         0     0   0.391     616     2/8
+n30_camtuned_depot_s303        0.977    0.000   0.683      0.037     0.117      6.13    65.1    0.77   0.035     20         0     0   0.354    1838       -
+n31_ship_s606                  0.980    0.086   0.747      0.263     0.460      1.70   119.0    0.31   0.119     31         0     0   0.364     996     6/8
+n32_ship_s707                  0.645    0.000   0.623      0.038     0.289      0.55    40.0    0.59   0.078     15         0     0   0.350     514     3/8
+n33_ship_s808                  0.301    0.001   0.344      0.039     0.184      0.54     4.8    0.84   0.011      3         0     0   0.335     454     1/8
+n3_wslgpu_navfn_s21            0.979    0.000   0.878      0.043     0.577      7.48   103.4    0.37   0.104     34         0     0   0.391     995     7/8
+n4_lattice_s21                 0.962    0.222   0.548      0.366     0.743      7.24   113.2    0.37   0.114     26         0     0   0.300     996     5/8
+n5_navfn_s7                    0.978    0.033   0.757      0.069     0.462      5.26   110.0    0.66   0.060     36         0     0   0.381    1838     7/8
+n6_navfn_s33                   0.967    0.166   0.614      0.179     0.681      6.23   128.3    0.40   0.109     35         0     0   0.361    1176     5/8
+n7_navfn_depot_s21             0.968    0.000   0.701      0.043     0.070      2.06    40.0    0.60   0.070     12         0     0   0.361     574       -
+n8_navfn_noisy_s21             0.846    0.112   0.527      0.118     0.773      2.27    37.8    0.73   0.046     10         0     0   0.350     815     4/8
+n9_navfn_noekf_s21             0.638    0.000   0.563      0.041     0.650      5.30    26.7    0.62   0.052     15         0     0   0.300     514     2/8
+[queue 07:34:12] start n34_ship_s909 : USE_EKF=1 USE_ARUCO=1 SEED=909 hybrid office_world cap=22m
+[queue 07:35:39] finish n34_ship_s909 rc=9 in 1 min
+[queue 07:35:39] scoring n34_ship_s909
+[queue 07:35:40] start n35_ship_s111 : USE_EKF=1 USE_ARUCO=1 SEED=111 hybrid office_world cap=22m
+[queue 07:36:50] start n37_btfix_s101 : USE_EKF=1 USE_ARUCO=1 SEED=101 hybrid office_world cap=22m
+[queue 08:01:04] finish n37_btfix_s101 rc=3 in 24 min
+[queue 08:01:04] scoring n37_btfix_s101
+[queue 08:01:06] start n38_btfix_s808 : USE_EKF=1 USE_ARUCO=1 SEED=808 hybrid office_world cap=22m
+[queue 08:18:14] finish n38_btfix_s808 rc=0 in 17 min
+[queue 08:18:14] scoring n38_btfix_s808
+[queue 08:18:16] start n39_btfix_s707 : USE_EKF=1 USE_ARUCO=1 SEED=707 hybrid office_world cap=22m
+[queue 08:34:25] finish n39_btfix_s707 rc=0 in 16 min
+[queue 08:34:25] scoring n39_btfix_s707
+[queue 08:34:25] scoring failed for n39_btfix_s707
+[queue 08:34:25] queue complete
+run                            cover  phantom     iou  wall_rmse  slam_ate  odom_ate    path   stuck   speed  doors  contacts  near  minclr     dur   aruco
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+_invalid_n24_camtuned_s101_concurrent   0.309    0.064   0.319      0.194     0.364      0.51     5.8    0.48   0.027      3         0     0   0.450     213     1/8
+_invalid_n25_camtuned_s55_concurrent   0.327    0.000   0.349      0.045     0.562      0.86    11.2    0.43   0.075      3         0     0   0.447     150     2/8
+_invalid_n26_camtuned_depot_s7_concurrent   0.645    0.778   0.058      0.782     0.037      0.27     9.2    0.29   0.061      1         0     0   0.403     150       -
+_invalid_n27_ship_s303_concurrent   0.527    0.000   0.384      0.040     0.367      0.51     5.8    0.49   0.028      3         0     0   0.450     210     1/8
+_invalid_n28_ship_s404_concurrent   0.293    0.816   0.050      0.802     0.570      0.19     9.3    0.42   0.062      3         0     0   0.461     150     1/8
+n10_navfn_s21b                 0.979    0.104   0.729      0.287     0.437      7.19   109.0    0.39   0.110     33         0     0   0.391     995     6/8
+n11_navfn_ptimeout60_s21       0.969    0.079   0.656      0.090     0.578      6.73    85.3    0.47   0.091     28         0     0   0.300     935     5/8
+n12_lattice_s7                 0.853    0.247   0.496      0.390     0.704      1.76    51.7    0.53   0.081     15         0     0   0.350     635     4/8
+n13_navfn_s55                  0.849    0.000   0.621      0.046     0.577      2.85    55.5    0.35   0.068     13         0     0   0.350     816     3/8
+n14_navfn_depot_s7             0.567    0.000   0.298      0.042     0.036      0.18     4.3    0.94   0.006      1         0     0   0.391     754       -
+n15_navfn_tol05_s55            0.978    0.006   0.794      0.041     0.530      6.97   110.8    0.30   0.127     27         0     0   0.354     875     7/8
+n16_navfn_tol05_s21            0.776    0.044   0.614      0.190     0.436      2.15    47.5    0.65   0.058      9         0     0   0.361     815     4/8
+n17_navfn_tol05_s7             0.967    0.069   0.773      0.234     0.390      4.68    74.6    0.33   0.091     22         0     0   0.354     815     5/8
+n18_ship_s101                  0.519    0.209   0.311      0.217     0.228      1.03    13.4    0.73   0.023      5         0     0   0.350     574     0/8
+n19_ship_s202                  0.980    0.000   0.795      0.046     0.572     15.38   126.0    0.36   0.113     28         0     0   0.354    1116     6/8
+n1_ekf_s21                     0.643    0.000   0.654      0.038     0.555      1.75    37.8    0.61   0.068     12         0     0   0.304     552       -
+n20_ship_depot_s101            0.976    0.000   0.718      0.035     0.117      4.07    62.0    0.54   0.082     20         0     1   0.292     754       -
+n21_nocam_s101                 0.866    0.091   0.548      0.093     0.387      5.65    57.4    0.48   0.076     14         0     0   0.354     755     0/8
+n22_nocam_s55                  0.543    0.024   0.439      0.131     0.542      3.27    18.5    0.73   0.032      6         0     0   0.350     574     2/8
+n23_nocam_depot_s7             0.947    0.000   0.604      0.040     0.043      0.99    22.1    0.76   0.029      5         0     0   0.354     754       -
+n27b_camtuned_s303             0.965    0.070   0.696      0.236     0.597      8.86    90.6    0.47   0.091     27         0     0   0.361     995     8/8
+n28b_camtuned_s404             0.948    0.295   0.477      0.401     0.879      3.05   108.0    0.37   0.109     31         0     0   0.354     995     6/8
+n2_navfn_ekf_s21               0.865    0.145   0.571      0.322     0.405      2.79    61.8    0.46   0.100     17         0     0   0.391     616     2/8
+n30_camtuned_depot_s303        0.977    0.000   0.683      0.037     0.117      6.13    65.1    0.77   0.035     20         0     0   0.354    1838       -
+n31_ship_s606                  0.980    0.086   0.747      0.263     0.460      1.70   119.0    0.31   0.119     31         0     0   0.364     996     6/8
+n32_ship_s707                  0.645    0.000   0.623      0.038     0.289      0.55    40.0    0.59   0.078     15         0     0   0.350     514     3/8
+n33_ship_s808                  0.301    0.001   0.344      0.039     0.184      0.54     4.8    0.84   0.011      3         0     0   0.335     454     1/8
+n37_btfix_s101                 0.981    0.059   0.733      0.219     0.558     12.93   132.1    0.49   0.097     42         0     0   0.381    1356     7/8
+n38_btfix_s808                 0.979    0.000   0.773      0.037     0.401     12.12    88.9    0.44   0.095     27         0     0   0.335     936     3/8
+n3_wslgpu_navfn_s21            0.979    0.000   0.878      0.043     0.577      7.48   103.4    0.37   0.104     34         0     0   0.391     995     7/8
+n4_lattice_s21                 0.962    0.222   0.548      0.366     0.743      7.24   113.2    0.37   0.114     26         0     0   0.300     996     5/8
+n5_navfn_s7                    0.978    0.033   0.757      0.069     0.462      5.26   110.0    0.66   0.060     36         0     0   0.381    1838     7/8
+n6_navfn_s33                   0.967    0.166   0.614      0.179     0.681      6.23   128.3    0.40   0.109     35         0     0   0.361    1176     5/8
+n7_navfn_depot_s21             0.968    0.000   0.701      0.043     0.070      2.06    40.0    0.60   0.070     12         0     0   0.361     574       -
+n8_navfn_noisy_s21             0.846    0.112   0.527      0.118     0.773      2.27    37.8    0.73   0.046     10         0     0   0.350     815     4/8
+n9_navfn_noekf_s21             0.638    0.000   0.563      0.041     0.650      5.30    26.7    0.62   0.052     15         0     0   0.300     514     2/8

@@ -1,0 +1,3 @@
+n15_navfn_tol05_s55|USE_EKF=1 USE_ARUCO=1 SEED=55|hybrid|office_world|30|perl -pi -e 's/^      tolerance: 0.25$/      tolerance: 0.5/' src/leo_nav2_exploration/config/sim/nav2.yaml
+n16_navfn_tol05_s21|USE_EKF=1 USE_ARUCO=1 SEED=21|hybrid|office_world|30|
+n17_navfn_tol05_s7|USE_EKF=1 USE_ARUCO=1 SEED=7|hybrid|office_world|30|

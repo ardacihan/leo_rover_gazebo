@@ -132,6 +132,13 @@ LOG "starting recorders"
 in_sim_bg "exec python3 /ros2_ws/scripts/pose_error_recorder.py /ros2_ws/$OUT/pose_error.csv 0.5 > /ros2_ws/$OUT/pose_rec.log 2>&1"
 in_sim_bg "exec python3 /ros2_ws/scripts/map_recorder.py /ros2_ws/$OUT/timelapse 10 > /ros2_ws/$OUT/timelapse.log 2>&1"
 in_sim_bg "exec python3 /ros2_ws/scripts/traj_recorder.py leo1 /ros2_ws/$OUT/traj.csv 1.0 > /ros2_ws/$OUT/traj.log 2>&1"
+
+# ArUco is a passive consumer of the same RGB stream the costmap already
+# subscribes to, so it costs one extra node and no extra sensor traffic.
+if [[ "${USE_ARUCO:-0}" == "1" ]]; then
+  LOG "starting ArUco detector"
+  in_sim_bg "exec ros2 launch leo_nav2_exploration aruco.launch.py profile:=sim       use_sim_time:=true marker_length:=${ARUCO_LEN:-0.20}       registry_file:=/ros2_ws/$OUT/aruco_registry.json       > /ros2_ws/$OUT/aruco.log 2>&1"
+fi
 sleep 5
 
 # ---------- 5. bootstrap jog ----------

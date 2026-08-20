@@ -226,26 +226,38 @@ planner_server:
     expected_planner_frequency: 5.0
     planner_plugins:
     - GridBased
+      # >>> navfn-planner (apply_navfn_planner.py)
+      # original:
+      #     GridBased:
+      #       plugin: nav2_smac_planner/SmacPlannerLattice
+      #       lattice_filepath: __LATTICE_FILE__
+      #       tolerance: 0.15
+      #       allow_unknown: true
+      #       max_iterations: 1000000
+      #       max_on_approach_iterations: 1000
+      #       max_planning_time: 5.0
+      #       analytic_expansion_ratio: 3.5
+      #       analytic_expansion_max_length: 2.5
+      #       reverse_penalty: 2.5
+      #       change_penalty: 0.2
+      #       non_straight_penalty: 1.15
+      #       cost_penalty: 3.0
+      #       retrospective_penalty: 0.025
+      #       rotation_penalty: 2.0
+      #       lookup_table_size: 10.0
+      #       cache_obstacle_heuristic: true
+      #       allow_reverse_expansion: true
+      #       smooth_path: false
     GridBased:
-      plugin: nav2_smac_planner/SmacPlannerLattice
-      lattice_filepath: __LATTICE_FILE__
-      tolerance: 0.15
+      plugin: nav2_navfn_planner/NavfnPlanner
+      # Frontier goals sit on the boundary of known space by construction, so
+      # a planner that refuses unknown cells cannot reach any of them.
       allow_unknown: true
-      max_iterations: 1000000
-      max_on_approach_iterations: 1000
-      max_planning_time: 5.0
-      analytic_expansion_ratio: 3.5
-      analytic_expansion_max_length: 2.5
-      reverse_penalty: 2.5
-      change_penalty: 0.2
-      non_straight_penalty: 1.15
-      cost_penalty: 3.0
-      retrospective_penalty: 0.025
-      rotation_penalty: 2.0
-      lookup_table_size: 10.0
-      cache_obstacle_heuristic: true
-      allow_reverse_expansion: true
-      smooth_path: false
+      # Wider than the lattice's 0.15: explore_lite's goals land wherever the
+      # frontier centroid is, which is often a cell or two inside inflation.
+      tolerance: 0.25
+      use_astar: false
+      # <<< navfn-planner
 smoother_server:
   ros__parameters:
     use_sim_time: false

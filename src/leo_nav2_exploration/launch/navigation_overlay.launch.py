@@ -21,6 +21,7 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, OpaqueFunction, SetEnvironmentVariable, TimerAction
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
+import yaml
 
 from leo_nav2_exploration.launch_support import (
     materialize_parameter_file,
@@ -75,6 +76,32 @@ def _as_bool(value: str) -> bool:
     raise ValueError(f'expected boolean launch value, got {value!r}')
 
 
+
+def _drop_camera_source(nav2_yaml):
+    """Overrides that remove the depth camera from every costmap it feeds.
+
+    Built by reading the file rather than assuming its shape: an override path
+    that does not exist raises, and silently different configs between the sim
+    and real profiles are exactly how the previous version broke.
+    """
+    with open(nav2_yaml, encoding='utf-8') as handle:
+        data = yaml.safe_load(handle)
+
+    overrides = {}
+    for scope in ('local_costmap', 'global_costmap'):
+        params = data.get(scope, {}).get(scope, {}).get('ros__parameters', {})
+        for layer, contents in params.items():
+            if not isinstance(contents, dict):
+                continue
+            sources = contents.get('observation_sources')
+            if not isinstance(sources, str) or 'camera' not in sources.split():
+                continue
+            kept = ' '.join(s for s in sources.split() if s != 'camera')
+            overrides[(scope, scope, 'ros__parameters', layer,
+                       'observation_sources')] = kept
+    return overrides
+
+
 def _launch_setup(context):
     profile = LaunchConfiguration('profile').perform(context)
     start_slam = _as_bool(LaunchConfiguration('start_slam').perform(context))
@@ -94,15 +121,21 @@ def _launch_setup(context):
     scan_topics = _scan_topics(profile)
     use_sim_time = profile == 'sim_leo1'
 
+    # `enable_voxel` predates the move from VoxelLayer to ObstacleLayer for the
+    # depth camera (2026-08-17). Its old override wrote
+    # local_costmap.voxel_layer.enabled, a key the configs no longer contain,
+    # and `materialize_parameter_file` raises KeyError on a missing path -- so
+    # `enable_voxel:=false` did not merely do nothing, it prevented the whole
+    # overlay from launching. `real_navigation.launch.py` defaulted it to false,
+    # which meant the rover profile could not start at all.
+    #
+    # It now means what an operator would expect it to mean: use the depth
+    # camera as a costmap obstacle source, or do not. Turning it off leaves the
+    # lidar as the only source, which is the right fallback if the RealSense
+    # cannot keep up on the rover's computer.
     overrides = {}
     if not enable_voxel:
-        overrides = {
-            ('local_costmap', 'local_costmap', 'ros__parameters', 'plugins'): [
-                'obstacle_layer',
-                'inflation_layer',
-            ],
-            ('local_costmap', 'local_costmap', 'ros__parameters', 'voxel_layer', 'enabled'): False,
-        }
+        overrides = _drop_camera_source(paths.nav2)
 
     nav2_params = materialize_parameter_file(
         paths.nav2,

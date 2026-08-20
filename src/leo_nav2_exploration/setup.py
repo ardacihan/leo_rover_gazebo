@@ -39,6 +39,8 @@ setup(
             "tf_snapshot = leo_nav2_exploration.tf_snapshot:main",
             "navigate_goal = leo_nav2_exploration.navigate_goal:main",
             "doorway_regression = leo_nav2_exploration.doorway_regression:main",
+            "aruco_detector = leo_nav2_exploration.aruco_detector:main",
+            "leo_imu_bridge = leo_nav2_exploration.leo_imu_bridge:main",
         ],
     },
 )
