@@ -37,6 +37,16 @@
   <exec_depend>sensor_msgs</exec_depend>
   <exec_depend>sensor_msgs_py</exec_depend>
   <exec_depend>slam_toolbox</exec_depend>
+  <!-- planner plugin loaded by nav2_planner (config/*/nav2.yaml) -->
+  <exec_depend>nav2_navfn_planner</exec_depend>
+  <!-- ekf_node, launch/odometry_fusion.launch.py -->
+  <exec_depend>robot_localization</exec_depend>
+  <!-- leo_msgs/Imu, consumed by leo_imu_bridge -->
+  <exec_depend>leo_msgs</exec_depend>
+  <!-- cv2.aruco, used by aruco_detector -->
+  <exec_depend>python3-opencv</exec_depend>
+  <!-- launch/real_exploration.launch.py -->
+  <exec_depend>explore_lite</exec_depend>
   <exec_depend>std_msgs</exec_depend>
   <exec_depend>tf2_ros</exec_depend>
   <exec_depend>python3-numpy</exec_depend>
