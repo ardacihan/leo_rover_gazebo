@@ -30,7 +30,9 @@ import numpy as np
 import rclpy
 from rclpy.duration import Duration
 from rclpy.node import Node
-from rclpy.qos import qos_profile_sensor_data
+from rclpy.qos import (QoSProfile, QoSReliabilityPolicy,
+                       qos_profile_sensor_data)
+from rclpy.serialization import deserialize_message
 from sensor_msgs.msg import PointCloud2, PointField
 from tf2_ros import Buffer, TransformListener, TransformException
 
@@ -48,13 +50,23 @@ def xyz_of(msg):
     offsets = {f.name: f.offset for f in msg.fields}
     if any(n not in offsets for n in 'xyz'):
         return None
-    data = np.frombuffer(msg.data, dtype=np.uint8)
     n = msg.width * msg.height
-    data = data[:n * msg.point_step].reshape(n, msg.point_step)
-    if offsets['y'] == offsets['x'] + 4 and offsets['z'] == offsets['x'] + 8:
-        return data[:, offsets['x']:offsets['x'] + 12].view(np.float32).reshape(n, 3)
+    step = msg.point_step
+    # Fast path: word-aligned consecutive x,y,z (any point_step, e.g. the
+    # Jetson NEON filter pads points to 16 bytes) — view rows as float32
+    # words and slice, which stays a copy-free view.
+    if (step % 4 == 0 and offsets['x'] % 4 == 0
+            and offsets['y'] == offsets['x'] + 4
+            and offsets['z'] == offsets['x'] + 8):
+        words = np.frombuffer(msg.data, dtype=np.uint8)[:n * step].view(
+            np.float32).reshape(n, step // 4)
+        i = offsets['x'] // 4
+        return words[:, i:i + 3]
+    data = np.frombuffer(msg.data, dtype=np.uint8)
+    data = data[:n * step].reshape(n, step)
     return np.stack([
-        data[:, offsets[c]:offsets[c] + 4].view(np.float32).ravel()
+        np.ascontiguousarray(data[:, offsets[c]:offsets[c] + 4])
+        .view(np.float32).ravel()
         for c in 'xyz'], axis=1)
 
 
@@ -93,15 +105,34 @@ class CloudFilter(Node):
         self.last_stamp = None
 
         self.tf_buffer = Buffer()
-        self.tf_listener = TransformListener(self.tf_buffer, self)
+        # Dedicated spin thread: on this rover the 30 Hz cloud callbacks
+        # starve a shared executor and the TF buffer falls seconds behind,
+        # failing every lookup (observed 2026-08-21).
+        self.tf_listener = TransformListener(self.tf_buffer, self,
+                                             spin_thread=True)
         self.pub = self.create_publisher(PointCloud2, str(g('output_topic')), 2)
+        # Raw + depth-1 subscription: deserializing every 30 Hz cloud just to
+        # drop it in the stamp rate-limit holds the GIL long enough to starve
+        # the TF thread (observed 2026-08-21). Keep only the newest sample in
+        # DDS and deserialize at most at the processed rate.
+        self._last_rx = None
+        raw_qos = QoSProfile(
+            depth=1, reliability=QoSReliabilityPolicy.BEST_EFFORT)
         self.create_subscription(PointCloud2, str(g('input_topic')),
-                                 self.on_cloud, qos_profile_sensor_data)
+                                 self.on_cloud_raw, raw_qos, raw=True)
         self.get_logger().info(
             f"cloud_filter {g('input_topic')} -> {g('output_topic')} "
             f"z=[{self.min_z},{self.max_z}]m in {self.target}, "
             f"voxel {self.voxel} m, min neighbourhood {self.min_neighbors}, "
             f"voting {self.persist_hits}/{self.persist_n} frames")
+
+    def on_cloud_raw(self, data):
+        now = self.get_clock().now()
+        if (self._last_rx is not None
+                and (now - self._last_rx).nanoseconds < self.min_period * 1e9):
+            return
+        self._last_rx = now
+        self.on_cloud(deserialize_message(bytes(data), PointCloud2))
 
     def on_cloud(self, msg):
         t = rclpy.time.Time.from_msg(msg.header.stamp)

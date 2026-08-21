@@ -196,6 +196,23 @@ def _launch_setup(context):
         )
 
     if start_slam:
+        # The RPLidar emits a different ray count and angular grid every
+        # revolution; karto templates its laser on the first scan and rejects
+        # any scan whose count differs, discarding most of the stream. The
+        # normalizer rebins scans onto a constant 512-ray grid so slam
+        # (config scan_topic /scan_uniform) accepts every revolution.
+        actions.append(
+            Node(
+                package='leo_nav2_exploration',
+                executable='scan_normalizer',
+                name='scan_normalizer',
+                parameters=[{
+                    'input_topic': scan_topics.filtered,
+                    'output_topic': '/scan_uniform',
+                }],
+                **common,
+            )
+        )
         actions.append(
             Node(
                 package='slam_toolbox',

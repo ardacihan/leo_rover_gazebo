@@ -1373,6 +1373,55 @@ runs SLAM+Nav2 — stop it before launching this overlay, as with
 on the Jetson build is `pointcloud__neon_.enable` (off at boot; not
 persisted across leo-ros restarts).
 
+### 2026-08-21: dense mapping, livelock fix, doorway transit
+
+Two autonomous runs (data + full debrief:
+`reports/room_mapping_2026-08-21/`, published report linked there as
+`report.html`). Run 1 livelocked 170 s on a frontier under the robot;
+run 2, after the fixes below, mapped 82.5 m² (8x), found the doorway and
+drove 10+ m into the corridor. Everything below is committed here AND
+deployed+built on jetson-4; `rover_ws/jetson4/README.md` is the replay
+kit with the exact run procedure.
+
+Fixes (all in `src/leo_nav2_exploration` unless noted):
+
+1. **cloud_filter on real hardware**: `xyz_of` crashed on the Jetson's
+   16-byte-padded NEON clouds (non-contiguous view); the TF listener was
+   starved by 30 Hz cloud deserialization (GIL) — every lookup failed.
+   Now: aligned float32 row view, `raw=True` depth-1 BEST_EFFORT
+   subscription deserializing only at the processed rate, TF listener on
+   its own spin thread, RealSense decimation magnitude 4 set at bringup.
+2. **scan_normalizer (new node)**: the RPLidar emits 505-513 rays per
+   revolution on a shifting angular grid; karto templates the laser on the
+   first scan and rejects every scan that differs, which left run-1 maps
+   thin and speckled. The normalizer rebins onto a fixed 512-ray grid;
+   slam reads `/scan_uniform` (slam.yaml). Karto rejects went to zero.
+3. **explore_lite vacuous-success patch** (`rover_ws/jetson4/explore.{cpp,h}`,
+   built on the rover in `~/leo_nav2_ws/src/m-explore-ros2`): a frontier
+   "reached" 3x in a row without clearing is blacklisted. Without it, a
+   robot parked inside goal tolerance of its last frontier re-succeeds
+   ~7x/s forever while the frozen map never clears the frontier (run 1:
+   1142 goals, 1181 instant successes).
+4. **Costmap/motion tuning** (`config/real/nav2.yaml`, explore.yaml):
+   inflation 0.35/4.0 -> 0.30/8.0 both costmaps (speckles were growing
+   0.7 m walls across the doorway); RotationShim `angular_dist_threshold`
+   0.5 -> 1.0, disengage 0.45, rotation vel 0.6 -> 1.2, accel 2.0;
+   `use_cost_regulated_linear_velocity_scaling: false` (it pinned cruise
+   to the 0.10 m/s floor all run); explore `planner_frequency` 0.2 -> 0.1.
+   Rationale: run 2 was 32% driving / 18% rotating in place / 50%
+   stationary — the shim stopped to rotate on a large share of the ~1.4 s
+   path refreshes (338 in 470 s).
+5. **Diagnostics**: `rover_ws/jetson4/run_recorder.py` (on the rover)
+   records map/costmaps/plan/pose/frontiers/goal-status/1 Hz video per
+   run; `scripts/render_run.py` renders any run into 3-panel debug frames
+   (red dots = obstacle cells sourcing the penalty halos) + GIF. Render
+   after every run — this is how both failure modes were found.
+
+Interpretation notes: preempted goals report ABORTED on Humble (a healthy
+run is nearly all aborts); instant-SUCCEEDED storms are the pathology.
+Battery floor per operator: ~10.0 V. At session end sshd stopped
+answering (ping fine) — check the rover before the next session.
+
 ## Jetson 6
 
 Only one fact has been reported: it currently has no LIDAR. Nothing else was

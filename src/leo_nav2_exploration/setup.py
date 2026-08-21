@@ -46,6 +46,7 @@ setup(
             "aruco_detector = leo_nav2_exploration.aruco_detector:main",
             "leo_imu_bridge = leo_nav2_exploration.leo_imu_bridge:main",
             "cloud_filter = leo_nav2_exploration.cloud_filter:main",
+            "scan_normalizer = leo_nav2_exploration.scan_normalizer:main",
         ],
     },
 )

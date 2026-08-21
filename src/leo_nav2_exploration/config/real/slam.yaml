@@ -10,7 +10,7 @@ slam_toolbox:
     odom_frame: odom
     map_frame: map
     base_frame: base_footprint
-    scan_topic: /scan_filtered
+    scan_topic: /scan_uniform  # fixed-grid rebin; karto rejects variable-length raw scans
     use_map_saver: true
     mode: mapping
     debug_logging: false
