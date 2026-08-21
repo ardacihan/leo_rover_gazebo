@@ -1,0 +1,8 @@
+[INFO] [1787312769.202049370] [explore_node]: Waiting for costmap to become available, topic: map
+[INFO] [1787312775.530659865] [explore_node]: Waiting to connect to move_base nav2 server
+[INFO] [1787312775.548013127] [explore_node]: Connected to move_base nav2 server
+[INFO] [1787312775.548296562] [explore_node]: Getting initial pose of the robot
+[ERROR] [1787313016.063321497] [explore_node]: Extrapolation Error looking up robot pose: Lookup would require extrapolation into the future.  Requested time 1787313015.556541 but the latest data is at time 1787313015.066281, when looking up transform from frame [base_footprint] to frame [map]
+
+[INFO] [1787313183.522598667] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [1787313183.522965940] [explore_node]: Exploration stopped.
