@@ -1,0 +1,16 @@
+[INFO] [1787196181.320042316] [map_saver]: 
+	map_saver lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1787196181.320155895] [map_saver]: Creating
+[INFO] [1787196181.320223148] [map_saver]: Configuring
+[INFO] [1787196181.322949423] [map_saver]: Saving map from 'map' topic to '/mnt/c/Users/smirn/Desktop/leo_rover_gazebo/reports/night/n24_camtuned_s101/map' file
+[WARN] [1787196181.323075344] [map_saver]: Free threshold unspecified. Setting it to default value: 0.250000
+[WARN] [1787196181.323120977] [map_saver]: Occupied threshold unspecified. Setting it to default value: 0.650000
+[WARN] [1787196181.367954849] [map_io]: Image format unspecified. Setting it to: pgm
+[INFO] [1787196181.368034104] [map_io]: Received a 482 X 238 map @ 0.05 m/pix
+[INFO] [1787196181.433323484] [map_io]: Writing map occupancy data to /mnt/c/Users/smirn/Desktop/leo_rover_gazebo/reports/night/n24_camtuned_s101/map.pgm
+[INFO] [1787196181.454673480] [map_io]: Writing map metadata to /mnt/c/Users/smirn/Desktop/leo_rover_gazebo/reports/night/n24_camtuned_s101/map.yaml
+[INFO] [1787196181.456904556] [map_io]: Map saved
+[INFO] [1787196181.456935012] [map_saver]: Map saved successfully
+[INFO] [1787196181.458783836] [map_saver]: Destroying

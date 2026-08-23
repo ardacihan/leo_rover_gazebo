@@ -1,0 +1,775 @@
+[INFO] [launch]: All log files can be found below /home/smirn/.ros/log/2026-08-20-05-28-12-934307-Tornadosky-125793
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [scan_to_scan_filter_chain-1]: process started with pid [125794]
+[INFO] [async_slam_toolbox_node-2]: process started with pid [125796]
+[INFO] [velocity_guard-3]: process started with pid [125798]
+[INFO] [collision_monitor-4]: process started with pid [125800]
+[INFO] [lifecycle_manager-5]: process started with pid [125802]
+[scan_to_scan_filter_chain-1] [WARN] [1787196492.995478872] [rcl.logging_rosout]: Publisher already registered for provided node name. If this is due to multiple nodes with the same name then all logs for that logger name will go out over the existing publisher. As soon as any node with that name is destructed it will unregister the publisher, preventing any further logs for that name from being published on the rosout topic.
+[collision_monitor-4] [INFO] [1787196492.996586983] [collision_monitor]: 
+[collision_monitor-4] 	collision_monitor lifecycle node launched. 
+[collision_monitor-4] 	Waiting on external lifecycle transitions to activate
+[collision_monitor-4] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[async_slam_toolbox_node-2] [INFO] [1787196492.997316887] [slam_toolbox]: Node using stack size 40000000
+[lifecycle_manager-5] [INFO] [1787196492.998969519] [lifecycle_manager_collision_monitor]: Creating
+[lifecycle_manager-5] [INFO] [1787196493.000127891] [lifecycle_manager_collision_monitor]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[lifecycle_manager-5] [INFO] [1787196493.007597676] [lifecycle_manager_collision_monitor]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-5] [INFO] [1787196493.007671013] [lifecycle_manager_collision_monitor]: [34m[1mConfiguring collision_monitor[0m[0m
+[collision_monitor-4] [INFO] [1787196493.007874418] [collision_monitor]: Configuring
+[collision_monitor-4] [INFO] [1787196493.010616999] [collision_monitor]: [StopZone]: Creating Polygon
+[collision_monitor-4] [INFO] [1787196493.011511246] [collision_monitor]: [FootprintApproach]: Creating Polygon
+[collision_monitor-4] [INFO] [1787196493.012722827] [collision_monitor]: [SlowdownZone]: Creating Polygon
+[collision_monitor-4] [INFO] [1787196493.013784353] [collision_monitor]: [scan]: Creating Scan
+[lifecycle_manager-5] [INFO] [1787196493.015477173] [lifecycle_manager_collision_monitor]: [34m[1mActivating collision_monitor[0m[0m
+[collision_monitor-4] [INFO] [1787196493.015570989] [collision_monitor]: Activating
+[collision_monitor-4] [INFO] [1787196493.015596010] [collision_monitor]: Creating bond (collision_monitor) to lifecycle manager.
+[lifecycle_manager-5] [INFO] [1787196493.118004958] [lifecycle_manager_collision_monitor]: Server collision_monitor connected with bond.
+[lifecycle_manager-5] [INFO] [1787196493.118044416] [lifecycle_manager_collision_monitor]: [34m[1mManaged nodes are active[0m[0m
+[lifecycle_manager-5] [INFO] [1787196493.118056655] [lifecycle_manager_collision_monitor]: [34m[1mCreating bond timer...[0m[0m
+[async_slam_toolbox_node-2] [INFO] [1787196493.229229823] [slam_toolbox]: Using solver plugin solver_plugins::CeresSolver
+[async_slam_toolbox_node-2] [INFO] [1787196493.230062951] [slam_toolbox]: CeresSolver: Using HuberLoss loss function.
+[async_slam_toolbox_node-2] [INFO] [1787196493.230085567] [slam_toolbox]: CeresSolver: Using SCHUR_JACOBI preconditioner.
+[velocity_guard-3] [INFO] [1787196493.267076355] [velocity_guard]: Guarding /leo1/cmd_vel_smoothed -> /leo1/cmd_vel_guarded; scan=/leo1/scan_filtered, odom=/leo1/odom, battery_required=False
+[velocity_guard-3] [WARN] [1787196493.268589784] [velocity_guard]: velocity guard state: command_missing
+[async_slam_toolbox_node-2] [INFO] [1787196493.362196808] [slam_toolbox]: Message Filter dropping message: frame 'leo1/sensor_lidar_link' at time 26.600 for reason 'discarding message because the queue is full'
+[async_slam_toolbox_node-2] [WARN] [1787196493.362559394] [slam_toolbox]: minimum laser range setting (0.1 m) exceeds the capabilities of the used Lidar (0.1 m)
+[async_slam_toolbox_node-2] Registering sensor: [Custom Described Lidar]
+[scan_to_scan_filter_chain-1] [WARN] [1787196494.043403285] [scan_to_scan_filter_chain]: diagnostic_updater: No HW_ID was set. This is probably a bug. Please report it. For devices that do not have a HW_ID, set this value to 'none'. This warning only occurs once all diagnostics are OK. It is okay to wait until the device is open before calling setHardwareID.
+[INFO] [controller_server-6]: process started with pid [126043]
+[INFO] [smoother_server-7]: process started with pid [126045]
+[INFO] [planner_server-8]: process started with pid [126047]
+[INFO] [behavior_server-9]: process started with pid [126049]
+[INFO] [bt_navigator-10]: process started with pid [126051]
+[INFO] [waypoint_follower-11]: process started with pid [126053]
+[INFO] [velocity_smoother-12]: process started with pid [126055]
+[INFO] [lifecycle_manager-13]: process started with pid [126057]
+[lifecycle_manager-13] [INFO] [1787196496.004518799] [lifecycle_manager_navigation]: Creating
+[waypoint_follower-11] [INFO] [1787196496.004687693] [waypoint_follower]: 
+[waypoint_follower-11] 	waypoint_follower lifecycle node launched. 
+[waypoint_follower-11] 	Waiting on external lifecycle transitions to activate
+[waypoint_follower-11] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[waypoint_follower-11] [INFO] [1787196496.005137663] [waypoint_follower]: Creating
+[smoother_server-7] [INFO] [1787196496.006450309] [smoother_server]: 
+[smoother_server-7] 	smoother_server lifecycle node launched. 
+[smoother_server-7] 	Waiting on external lifecycle transitions to activate
+[smoother_server-7] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[smoother_server-7] [INFO] [1787196496.007824693] [smoother_server]: Creating smoother server
+[behavior_server-9] [INFO] [1787196496.007103963] [behavior_server]: 
+[behavior_server-9] 	behavior_server lifecycle node launched. 
+[behavior_server-9] 	Waiting on external lifecycle transitions to activate
+[behavior_server-9] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[lifecycle_manager-13] [INFO] [1787196496.008846352] [lifecycle_manager_navigation]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[planner_server-8] [INFO] [1787196496.009054594] [planner_server]: 
+[planner_server-8] 	planner_server lifecycle node launched. 
+[planner_server-8] 	Waiting on external lifecycle transitions to activate
+[planner_server-8] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[bt_navigator-10] [INFO] [1787196496.010282017] [bt_navigator]: 
+[bt_navigator-10] 	bt_navigator lifecycle node launched. 
+[bt_navigator-10] 	Waiting on external lifecycle transitions to activate
+[bt_navigator-10] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[bt_navigator-10] [INFO] [1787196496.010404126] [bt_navigator]: Creating
+[controller_server-6] [INFO] [1787196496.010830325] [controller_server]: 
+[controller_server-6] 	controller_server lifecycle node launched. 
+[controller_server-6] 	Waiting on external lifecycle transitions to activate
+[controller_server-6] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-8] [INFO] [1787196496.011096838] [planner_server]: Creating
+[velocity_smoother-12] [INFO] [1787196496.011407355] [velocity_smoother]: 
+[velocity_smoother-12] 	velocity_smoother lifecycle node launched. 
+[velocity_smoother-12] 	Waiting on external lifecycle transitions to activate
+[velocity_smoother-12] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-6] [INFO] [1787196496.014592989] [controller_server]: Creating controller server
+[planner_server-8] [INFO] [1787196496.020948339] [global_costmap.global_costmap]: 
+[planner_server-8] 	global_costmap lifecycle node launched. 
+[planner_server-8] 	Waiting on external lifecycle transitions to activate
+[planner_server-8] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-8] [INFO] [1787196496.021464092] [global_costmap.global_costmap]: Creating Costmap
+[controller_server-6] [INFO] [1787196496.028409397] [local_costmap.local_costmap]: 
+[controller_server-6] 	local_costmap lifecycle node launched. 
+[controller_server-6] 	Waiting on external lifecycle transitions to activate
+[controller_server-6] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-6] [INFO] [1787196496.028964332] [local_costmap.local_costmap]: Creating Costmap
+[lifecycle_manager-13] [INFO] [1787196496.032083610] [lifecycle_manager_navigation]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-13] [INFO] [1787196496.032121716] [lifecycle_manager_navigation]: [34m[1mConfiguring controller_server[0m[0m
+[controller_server-6] [INFO] [1787196496.032604423] [controller_server]: Configuring controller interface
+[controller_server-6] [INFO] [1787196496.032977775] [controller_server]: getting goal checker plugins..
+[controller_server-6] [INFO] [1787196496.033170601] [controller_server]: Controller frequency set to 15.0000Hz
+[controller_server-6] [INFO] [1787196496.033196338] [local_costmap.local_costmap]: Configuring
+[controller_server-6] [INFO] [1787196496.036698054] [local_costmap.local_costmap]: Using plugin "obstacle_layer"
+[controller_server-6] [INFO] [1787196496.040215691] [local_costmap.local_costmap]: Subscribed to Topics: scan camera
+[controller_server-6] [INFO] [1787196496.048575995] [local_costmap.local_costmap]: Initialized plugin "obstacle_layer"
+[controller_server-6] [INFO] [1787196496.048615299] [local_costmap.local_costmap]: Using plugin "inflation_layer"
+[controller_server-6] [INFO] [1787196496.049845316] [local_costmap.local_costmap]: Initialized plugin "inflation_layer"
+[controller_server-6] [INFO] [1787196496.055890323] [controller_server]: Created progress_checker : progress_checker of type nav2_controller::SimpleProgressChecker
+[controller_server-6] [INFO] [1787196496.056997173] [controller_server]: Created goal checker : general_goal_checker of type nav2_controller::SimpleGoalChecker
+[controller_server-6] [INFO] [1787196496.057804972] [controller_server]: Controller Server has general_goal_checker  goal checkers available.
+[controller_server-6] [INFO] [1787196496.059396253] [controller_server]: Created controller : FollowPath of type nav2_rotation_shim_controller::RotationShimController
+[controller_server-6] [INFO] [1787196496.062571798] [controller_server]: Created internal controller for rotation shimming: FollowPath of type nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-6] [INFO] [1787196496.069859438] [controller_server]: Controller Server has FollowPath  controllers available.
+[lifecycle_manager-13] [INFO] [1787196496.074351834] [lifecycle_manager_navigation]: [34m[1mConfiguring smoother_server[0m[0m
+[smoother_server-7] [INFO] [1787196496.074545488] [smoother_server]: Configuring smoother server
+[smoother_server-7] [INFO] [1787196496.079665711] [smoother_server]: Created smoother : simple_smoother of type nav2_smoother::SimpleSmoother
+[smoother_server-7] [INFO] [1787196496.080822440] [smoother_server]: Smoother Server has simple_smoother  smoothers available.
+[lifecycle_manager-13] [INFO] [1787196496.084375944] [lifecycle_manager_navigation]: [34m[1mConfiguring planner_server[0m[0m
+[planner_server-8] [INFO] [1787196496.084589930] [planner_server]: Configuring
+[planner_server-8] [INFO] [1787196496.084616381] [global_costmap.global_costmap]: Configuring
+[planner_server-8] [INFO] [1787196496.088467306] [global_costmap.global_costmap]: Using plugin "static_layer"
+[planner_server-8] [INFO] [1787196496.091980746] [global_costmap.global_costmap]: Subscribing to the map topic (/map) with transient local durability
+[planner_server-8] [INFO] [1787196496.092686125] [global_costmap.global_costmap]: Subscribing to updates
+[planner_server-8] [INFO] [1787196496.093465073] [global_costmap.global_costmap]: Initialized plugin "static_layer"
+[planner_server-8] [INFO] [1787196496.093486309] [global_costmap.global_costmap]: Using plugin "obstacle_layer"
+[planner_server-8] [INFO] [1787196496.095126084] [global_costmap.global_costmap]: Subscribed to Topics: scan
+[planner_server-8] [INFO] [1787196496.099163922] [global_costmap.global_costmap]: Initialized plugin "obstacle_layer"
+[planner_server-8] [INFO] [1787196496.099199389] [global_costmap.global_costmap]: Using plugin "inflation_layer"
+[planner_server-8] [INFO] [1787196496.100892668] [global_costmap.global_costmap]: Initialized plugin "inflation_layer"
+[planner_server-8] [INFO] [1787196496.106107394] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 451 X 204 at 0.050000 m/pix
+[planner_server-8] [INFO] [1787196496.106372854] [planner_server]: Created global planner plugin GridBased of type nav2_navfn_planner/NavfnPlanner
+[planner_server-8] [INFO] [1787196496.106399123] [planner_server]: Configuring plugin GridBased of type NavfnPlanner
+[planner_server-8] [INFO] [1787196496.107606275] [planner_server]: Planner Server has GridBased  planners available.
+[lifecycle_manager-13] [INFO] [1787196496.114386956] [lifecycle_manager_navigation]: [34m[1mConfiguring behavior_server[0m[0m
+[behavior_server-9] [INFO] [1787196496.114599252] [behavior_server]: Configuring
+[behavior_server-9] [INFO] [1787196496.119717429] [behavior_server]: Creating behavior plugin spin of type nav2_behaviors/Spin
+[behavior_server-9] [INFO] [1787196496.120291693] [behavior_server]: Configuring spin
+[behavior_server-9] [INFO] [1787196496.124485084] [behavior_server]: Creating behavior plugin backup of type nav2_behaviors/BackUp
+[behavior_server-9] [INFO] [1787196496.125099397] [behavior_server]: Configuring backup
+[behavior_server-9] [INFO] [1787196496.129162140] [behavior_server]: Creating behavior plugin drive_on_heading of type nav2_behaviors/DriveOnHeading
+[behavior_server-9] [INFO] [1787196496.129709506] [behavior_server]: Configuring drive_on_heading
+[behavior_server-9] [INFO] [1787196496.133649020] [behavior_server]: Creating behavior plugin assisted_teleop of type nav2_behaviors/AssistedTeleop
+[behavior_server-9] [INFO] [1787196496.134870242] [behavior_server]: Configuring assisted_teleop
+[behavior_server-9] [INFO] [1787196496.139758044] [behavior_server]: Creating behavior plugin wait of type nav2_behaviors/Wait
+[behavior_server-9] [INFO] [1787196496.140264048] [behavior_server]: Configuring wait
+[lifecycle_manager-13] [INFO] [1787196496.143534111] [lifecycle_manager_navigation]: [34m[1mConfiguring bt_navigator[0m[0m
+[bt_navigator-10] [INFO] [1787196496.143708518] [bt_navigator]: Configuring
+[lifecycle_manager-13] [INFO] [1787196496.197869108] [lifecycle_manager_navigation]: [34m[1mConfiguring waypoint_follower[0m[0m
+[waypoint_follower-11] [INFO] [1787196496.198059944] [waypoint_follower]: Configuring
+[waypoint_follower-11] [INFO] [1787196496.204279766] [waypoint_follower]: Created waypoint_task_executor : wait_at_waypoint of type nav2_waypoint_follower::WaitAtWaypoint
+[lifecycle_manager-13] [INFO] [1787196496.205189997] [lifecycle_manager_navigation]: [34m[1mConfiguring velocity_smoother[0m[0m
+[velocity_smoother-12] [INFO] [1787196496.205382944] [velocity_smoother]: Configuring velocity smoother
+[lifecycle_manager-13] [INFO] [1787196496.209574384] [lifecycle_manager_navigation]: [34m[1mActivating controller_server[0m[0m
+[controller_server-6] [INFO] [1787196496.209844529] [controller_server]: Activating
+[controller_server-6] [INFO] [1787196496.209909735] [local_costmap.local_costmap]: Activating
+[controller_server-6] [INFO] [1787196496.209921049] [local_costmap.local_costmap]: Checking transform
+[controller_server-6] [INFO] [1787196496.210029474] [local_costmap.local_costmap]: start
+[controller_server-6] [INFO] [1787196496.310968319] [controller_server]: Activating controller: FollowPath of type nav2_rotation_shim_controller::RotationShimController
+[controller_server-6] [INFO] [1787196496.311031496] [controller_server]: Activating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-6] [INFO] [1787196496.311058386] [controller_server]: Creating bond (controller_server) to lifecycle manager.
+[lifecycle_manager-13] [INFO] [1787196496.413559428] [lifecycle_manager_navigation]: Server controller_server connected with bond.
+[lifecycle_manager-13] [INFO] [1787196496.413610342] [lifecycle_manager_navigation]: [34m[1mActivating smoother_server[0m[0m
+[smoother_server-7] [INFO] [1787196496.413850960] [smoother_server]: Activating
+[smoother_server-7] [INFO] [1787196496.413895491] [smoother_server]: Creating bond (smoother_server) to lifecycle manager.
+[lifecycle_manager-13] [INFO] [1787196496.516866734] [lifecycle_manager_navigation]: Server smoother_server connected with bond.
+[lifecycle_manager-13] [INFO] [1787196496.516910347] [lifecycle_manager_navigation]: [34m[1mActivating planner_server[0m[0m
+[planner_server-8] [INFO] [1787196496.517125179] [planner_server]: Activating
+[planner_server-8] [INFO] [1787196496.517151542] [global_costmap.global_costmap]: Activating
+[planner_server-8] [INFO] [1787196496.517158473] [global_costmap.global_costmap]: Checking transform
+[planner_server-8] [INFO] [1787196496.517231209] [global_costmap.global_costmap]: start
+[planner_server-8] [INFO] [1787196497.067783434] [planner_server]: Activating plugin GridBased of type NavfnPlanner
+[planner_server-8] [INFO] [1787196497.068204349] [planner_server]: Creating bond (planner_server) to lifecycle manager.
+[lifecycle_manager-13] [INFO] [1787196497.169856776] [lifecycle_manager_navigation]: Server planner_server connected with bond.
+[lifecycle_manager-13] [INFO] [1787196497.169922214] [lifecycle_manager_navigation]: [34m[1mActivating behavior_server[0m[0m
+[behavior_server-9] [INFO] [1787196497.170148930] [behavior_server]: Activating
+[behavior_server-9] [INFO] [1787196497.170168126] [behavior_server]: Activating spin
+[behavior_server-9] [INFO] [1787196497.170175305] [behavior_server]: Activating backup
+[behavior_server-9] [INFO] [1787196497.170180645] [behavior_server]: Activating drive_on_heading
+[behavior_server-9] [INFO] [1787196497.170197377] [behavior_server]: Activating assisted_teleop
+[behavior_server-9] [INFO] [1787196497.170203795] [behavior_server]: Activating wait
+[behavior_server-9] [INFO] [1787196497.170211461] [behavior_server]: Creating bond (behavior_server) to lifecycle manager.
+[lifecycle_manager-13] [INFO] [1787196497.272235206] [lifecycle_manager_navigation]: Server behavior_server connected with bond.
+[lifecycle_manager-13] [INFO] [1787196497.272271829] [lifecycle_manager_navigation]: [34m[1mActivating bt_navigator[0m[0m
+[bt_navigator-10] [INFO] [1787196497.272401087] [bt_navigator]: Activating
+[bt_navigator-10] [INFO] [1787196497.297797265] [bt_navigator]: Creating bond (bt_navigator) to lifecycle manager.
+[lifecycle_manager-13] [INFO] [1787196497.400135506] [lifecycle_manager_navigation]: Server bt_navigator connected with bond.
+[lifecycle_manager-13] [INFO] [1787196497.400173834] [lifecycle_manager_navigation]: [34m[1mActivating waypoint_follower[0m[0m
+[waypoint_follower-11] [INFO] [1787196497.400337542] [waypoint_follower]: Activating
+[waypoint_follower-11] [INFO] [1787196497.400373821] [waypoint_follower]: Creating bond (waypoint_follower) to lifecycle manager.
+[lifecycle_manager-13] [INFO] [1787196497.502089927] [lifecycle_manager_navigation]: Server waypoint_follower connected with bond.
+[lifecycle_manager-13] [INFO] [1787196497.502130865] [lifecycle_manager_navigation]: [34m[1mActivating velocity_smoother[0m[0m
+[velocity_smoother-12] [INFO] [1787196497.502333586] [velocity_smoother]: Activating
+[velocity_smoother-12] [INFO] [1787196497.502377134] [velocity_smoother]: Creating bond (velocity_smoother) to lifecycle manager.
+[lifecycle_manager-13] [INFO] [1787196497.604201825] [lifecycle_manager_navigation]: Server velocity_smoother connected with bond.
+[lifecycle_manager-13] [INFO] [1787196497.604239262] [lifecycle_manager_navigation]: [34m[1mManaged nodes are active[0m[0m
+[lifecycle_manager-13] [INFO] [1787196497.604245797] [lifecycle_manager_navigation]: [34m[1mCreating bond timer...[0m[0m
+[planner_server-8] [INFO] [1787196531.017453165] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 451 X 207 at 0.050000 m/pix
+[planner_server-8] [INFO] [1787196534.517435387] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 451 X 210 at 0.050000 m/pix
+[planner_server-8] [INFO] [1787196536.517468967] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 451 X 213 at 0.050000 m/pix
+[planner_server-8] [INFO] [1787196538.517438839] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 451 X 216 at 0.050000 m/pix
+[bt_navigator-10] [INFO] [1787196546.668085138] [bt_navigator]: Begin navigating from current location (0.54, 0.00) to (1.13, 6.11)
+[controller_server-6] [INFO] [1787196546.689013303] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-6] [WARN] [1787196546.689105871] [controller_server]: No goal checker was specified in parameter 'current_goal_checker'. Server will use only plugin loaded general_goal_checker . This warning will appear once.
+[velocity_guard-3] [INFO] [1787196546.768546383] [velocity_guard]: velocity guard state: permitted
+[controller_server-6] [INFO] [1787196547.755964731] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196548.755943774] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196549.821859732] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196550.821867236] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196551.888503914] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196552.888511697] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196553.955174801] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196554.955176911] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196556.021847146] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196557.021876930] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196558.021851027] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196559.088506431] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196560.088497592] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196561.155165385] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196562.155176184] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196563.221851930] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196564.221851482] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196565.288510289] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196566.288510455] [controller_server]: Passing new path to controller.
+[planner_server-8] [INFO] [1787196566.516679468] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 455 X 220 at 0.050000 m/pix
+[bt_navigator-10] [INFO] [1787196566.677470896] [bt_navigator]: Received goal preemption request
+[bt_navigator-10] [INFO] [1787196566.678006728] [bt_navigator]: Begin navigating from current location (0.59, 0.07) to (1.13, 6.06)
+[controller_server-6] [ERROR] [1787196566.755232108] [controller_server]: Failed to make progress
+[controller_server-6] [WARN] [1787196566.755314837] [controller_server]: [follow_path] [ActionServer] Aborting handle.
+[controller_server-6] [INFO] [1787196566.767550972] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[controller_server-6] [INFO] [1787196566.768644791] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-6] [INFO] [1787196567.302096530] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196568.368763220] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196569.368783077] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196570.435442908] [controller_server]: Passing new path to controller.
+[planner_server-8] [INFO] [1787196571.016678163] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 467 X 220 at 0.050000 m/pix
+[controller_server-6] [INFO] [1787196571.435444026] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196572.502101239] [controller_server]: Passing new path to controller.
+[planner_server-8] [INFO] [1787196572.516676523] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 471 X 222 at 0.050000 m/pix
+[controller_server-6] [INFO] [1787196573.502099725] [controller_server]: Passing new path to controller.
+[planner_server-8] [INFO] [1787196573.516687633] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 473 X 225 at 0.050000 m/pix
+[controller_server-6] [INFO] [1787196574.502148379] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196575.568772543] [controller_server]: Passing new path to controller.
+[planner_server-8] [INFO] [1787196576.016689660] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 473 X 226 at 0.050000 m/pix
+[controller_server-6] [INFO] [1787196576.568773807] [controller_server]: Passing new path to controller.
+[bt_navigator-10] [INFO] [1787196576.677475360] [bt_navigator]: Received goal preemption request
+[bt_navigator-10] [INFO] [1787196576.678017735] [bt_navigator]: Begin navigating from current location (-0.23, 0.73) to (1.99, 5.82)
+[controller_server-6] [INFO] [1787196577.635432062] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196578.635431104] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196579.702062423] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196580.702043323] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196581.768708951] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196582.768714370] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196583.768711311] [controller_server]: Passing new path to controller.
+[planner_server-8] [INFO] [1787196584.016630993] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 480 X 226 at 0.050000 m/pix
+[controller_server-6] [INFO] [1787196584.835390342] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196585.835382998] [controller_server]: Passing new path to controller.
+[bt_navigator-10] [INFO] [1787196586.677496188] [bt_navigator]: Received goal preemption request
+[bt_navigator-10] [INFO] [1787196586.678202355] [bt_navigator]: Begin navigating from current location (-0.32, 1.63) to (-9.91, -2.37)
+[controller_server-6] [INFO] [1787196586.902044073] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196587.902048821] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196588.968722248] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196589.968757861] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196591.035381414] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196592.035380873] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196593.102060607] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196594.102081786] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196595.102056150] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196596.168720965] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196597.168725634] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196598.235386212] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196599.235385280] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196600.302052107] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196601.302050287] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196602.368723388] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196603.368712796] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196604.368715696] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196605.435406306] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196606.435387339] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196607.502051195] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196608.502063216] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196609.569063830] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196610.569075203] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196611.569082897] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196612.635744810] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196613.635728920] [controller_server]: Passing new path to controller.
+[controller_server-6] [ERROR] [1787196614.035775028] [controller_server]: Failed to make progress
+[controller_server-6] [WARN] [1787196614.035859846] [controller_server]: [follow_path] [ActionServer] Aborting handle.
+[controller_server-6] [INFO] [1787196614.047872475] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[planner_server-8] [INFO] [1787196614.048203931] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-8] [WARN] [1787196614.520060718] [planner_server]: Planner loop missed its desired rate of 5.0000 Hz. Current loop rate is 2.1231 Hz
+[controller_server-6] [INFO] [1787196614.538348022] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-6] [INFO] [1787196615.605222627] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196616.605202882] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196617.671859341] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196618.671849810] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196619.738540297] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196620.738567239] [controller_server]: Passing new path to controller.
+[bt_navigator-10] [INFO] [1787196621.677793671] [bt_navigator]: Received goal preemption request
+[bt_navigator-10] [INFO] [1787196621.678533085] [bt_navigator]: Begin navigating from current location (-0.57, 1.27) to (9.36, -1.82)
+[controller_server-6] [INFO] [1787196621.805215482] [controller_server]: Passing new path to controller.
+[planner_server-8] [INFO] [1787196622.516970761] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 489 X 226 at 0.050000 m/pix
+[planner_server-8] [ERROR] [1787196622.759716944] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1787196622.759788929] [planner_server]: GridBased: failed to create plan with tolerance 0.25.
+[planner_server-8] [WARN] [1787196622.759806294] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (9.36, -1.82)
+[planner_server-8] [WARN] [1787196622.759817813] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-8] [INFO] [1787196622.777856478] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-8] [INFO] [1787196623.017017481] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 489 X 226 at 0.050000 m/pix
+[planner_server-8] [ERROR] [1787196623.019864177] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1787196623.019932155] [planner_server]: GridBased: failed to create plan with tolerance 0.25.
+[planner_server-8] [WARN] [1787196623.019942010] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (9.36, -1.82)
+[planner_server-8] [WARN] [1787196623.019950625] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-10] [ERROR] [1787196623.058110968] [bt_navigator_navigate_to_pose_rclcpp_node]: Failed to get result for follow_path in node halt!
+[behavior_server-9] [INFO] [1787196623.058682837] [behavior_server]: Running backup
+[behavior_server-9] [INFO] [1787196623.058830420] [behavior_server]: DriveOnHeading: no acceleration or deceleration limits set
+[bt_navigator-10] [WARN] [1787196623.058902599] [BehaviorTreeEngine]: Behavior Tree tick rate 100.00 was exceeded!
+[controller_server-6] [INFO] [1787196623.071859093] [controller_server]: Goal was canceled. Stopping the robot.
+[controller_server-6] [INFO] [1787196623.071907203] [controller_server]: [follow_path] [ActionServer] Client requested to cancel the goal. Cancelling.
+[planner_server-8] [INFO] [1787196626.516994592] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 489 X 226 at 0.050000 m/pix
+[bt_navigator-10] [INFO] [1787196626.668990817] [bt_navigator]: Received goal preemption request
+[bt_navigator-10] [INFO] [1787196626.669479469] [bt_navigator]: Begin navigating from current location (-0.61, 1.22) to (9.33, -1.81)
+[behavior_server-9] [INFO] [1787196629.358948272] [behavior_server]: backup completed successfully
+[planner_server-8] [ERROR] [1787196629.381322124] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1787196629.381721619] [planner_server]: GridBased: failed to create plan with tolerance 0.25.
+[planner_server-8] [WARN] [1787196629.381741027] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (9.33, -1.81)
+[planner_server-8] [WARN] [1787196629.381754910] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-8] [INFO] [1787196629.399165776] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-8] [ERROR] [1787196629.521674485] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1787196629.521743640] [planner_server]: GridBased: failed to create plan with tolerance 0.25.
+[planner_server-8] [WARN] [1787196629.521754364] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (9.33, -1.81)
+[planner_server-8] [WARN] [1787196629.521763176] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[behavior_server-9] [INFO] [1787196629.539250297] [behavior_server]: Running wait
+[velocity_guard-3] [WARN] [1787196631.368768389] [velocity_guard]: velocity guard state: command_stale
+[behavior_server-9] [INFO] [1787196631.539470747] [behavior_server]: wait completed successfully
+[planner_server-8] [ERROR] [1787196631.570829148] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1787196631.570889686] [planner_server]: GridBased: failed to create plan with tolerance 0.25.
+[planner_server-8] [WARN] [1787196631.570900002] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (9.33, -1.81)
+[planner_server-8] [WARN] [1787196631.570907771] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-8] [INFO] [1787196631.589086722] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-8] [ERROR] [1787196632.020997965] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1787196632.021064055] [planner_server]: GridBased: failed to create plan with tolerance 0.25.
+[planner_server-8] [WARN] [1787196632.021073002] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (9.33, -1.81)
+[planner_server-8] [WARN] [1787196632.021080798] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[behavior_server-9] [INFO] [1787196632.039379917] [behavior_server]: Running spin
+[behavior_server-9] [INFO] [1787196632.039493561] [behavior_server]: Turning 0.60 for spin behavior.
+[velocity_guard-3] [INFO] [1787196632.068986807] [velocity_guard]: velocity guard state: permitted
+[behavior_server-9] [INFO] [1787196633.839663480] [behavior_server]: spin completed successfully
+[planner_server-8] [ERROR] [1787196633.870739038] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1787196633.870799939] [planner_server]: GridBased: failed to create plan with tolerance 0.25.
+[planner_server-8] [WARN] [1787196633.870808309] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (9.33, -1.81)
+[planner_server-8] [WARN] [1787196633.870815386] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-8] [INFO] [1787196633.889071254] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-8] [ERROR] [1787196634.020944952] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1787196634.021020261] [planner_server]: GridBased: failed to create plan with tolerance 0.25.
+[planner_server-8] [WARN] [1787196634.021030015] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (9.33, -1.81)
+[planner_server-8] [WARN] [1787196634.021038143] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[controller_server-6] [INFO] [1787196634.039147785] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[planner_server-8] [INFO] [1787196634.039567433] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-8] [ERROR] [1787196634.521427865] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1787196634.521493901] [planner_server]: GridBased: failed to create plan with tolerance 0.25.
+[planner_server-8] [WARN] [1787196634.521503286] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (9.33, -1.81)
+[planner_server-8] [WARN] [1787196634.521512257] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-8] [INFO] [1787196634.539077425] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-8] [ERROR] [1787196635.021011560] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1787196635.021077073] [planner_server]: GridBased: failed to create plan with tolerance 0.25.
+[planner_server-8] [WARN] [1787196635.021086276] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (9.33, -1.81)
+[planner_server-8] [WARN] [1787196635.021094079] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[behavior_server-9] [INFO] [1787196635.039397751] [behavior_server]: Running backup
+[behavior_server-9] [INFO] [1787196641.240230353] [behavior_server]: backup completed successfully
+[planner_server-8] [ERROR] [1787196641.271378942] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1787196641.271458843] [planner_server]: GridBased: failed to create plan with tolerance 0.25.
+[planner_server-8] [WARN] [1787196641.271471017] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (9.33, -1.81)
+[planner_server-8] [WARN] [1787196641.271478643] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-8] [INFO] [1787196641.289639671] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-8] [ERROR] [1787196641.521532724] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1787196641.521601112] [planner_server]: GridBased: failed to create plan with tolerance 0.25.
+[planner_server-8] [WARN] [1787196641.521611365] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (9.33, -1.81)
+[planner_server-8] [WARN] [1787196641.521620168] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-10] [WARN] [1787196641.549569894] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-10] [ERROR] [1787196641.550221787] [bt_navigator]: Goal failed
+[bt_navigator-10] [INFO] [1787196641.668045404] [bt_navigator]: Begin navigating from current location (-0.52, 1.56) to (-10.34, -2.21)
+[controller_server-6] [INFO] [1787196641.688766839] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-6] [INFO] [1787196642.755591836] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196643.755591017] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196644.822267194] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196645.822271869] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196646.888954989] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196647.888924376] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196648.955594836] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196649.955593261] [controller_server]: Passing new path to controller.
+[planner_server-8] [INFO] [1787196651.017553003] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 489 X 233 at 0.050000 m/pix
+[controller_server-6] [INFO] [1787196651.022264955] [controller_server]: Passing new path to controller.
+[bt_navigator-10] [INFO] [1787196651.678267462] [bt_navigator]: Received goal preemption request
+[bt_navigator-10] [INFO] [1787196651.678909415] [bt_navigator]: Begin navigating from current location (-1.41, 0.59) to (-10.62, -2.41)
+[planner_server-8] [INFO] [1787196652.017547140] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 489 X 233 at 0.050000 m/pix
+[controller_server-6] [INFO] [1787196652.022267107] [controller_server]: Passing new path to controller.
+[planner_server-8] [INFO] [1787196652.517557938] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 489 X 235 at 0.050000 m/pix
+[controller_server-6] [INFO] [1787196653.022259426] [controller_server]: Passing new path to controller.
+[planner_server-8] [INFO] [1787196653.517572110] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 489 X 237 at 0.050000 m/pix
+[controller_server-6] [INFO] [1787196654.088976118] [controller_server]: Passing new path to controller.
+[planner_server-8] [INFO] [1787196654.517554716] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 489 X 238 at 0.050000 m/pix
+[planner_server-8] [INFO] [1787196655.017575080] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 489 X 241 at 0.050000 m/pix
+[controller_server-6] [INFO] [1787196655.088949426] [controller_server]: Passing new path to controller.
+[controller_server-6] [INFO] [1787196656.155587142] [controller_server]: Passing new path to controller.
+[planner_server-8] [INFO] [1787196656.517562399] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 489 X 243 at 0.050000 m/pix
+[controller_server-6] [WARN] [1787196656.610517359] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-3.77, -1.80) to (0.21, 2.19). The costmap cannot raytrace for it.
+[bt_navigator-10] [INFO] [1787196656.668275984] [bt_navigator]: Received goal preemption request
+[bt_navigator-10] [INFO] [1787196656.668899601] [bt_navigator]: Begin navigating from current location (-2.64, 0.34) to (-10.32, -2.16)
+[controller_server-6] [WARN] [1787196656.710519504] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-3.80, -1.80) to (0.19, 2.19). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196656.810519866] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-3.82, -1.83) to (0.16, 2.16). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196656.910537361] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-3.85, -1.83) to (0.14, 2.16). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196657.010530918] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-3.87, -1.85) to (0.11, 2.14). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196657.110527391] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-3.90, -1.85) to (0.09, 2.14). The costmap cannot raytrace for it.
+[planner_server-8] [ERROR] [1787196657.119730637] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1787196657.119803519] [planner_server]: GridBased: failed to create plan with tolerance 0.25.
+[planner_server-8] [WARN] [1787196657.119816553] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-10.32, -2.16)
+[planner_server-8] [WARN] [1787196657.119828772] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-8] [INFO] [1787196657.138285236] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[controller_server-6] [WARN] [1787196657.210531065] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-3.92, -1.85) to (0.06, 2.14). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196657.310524978] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-3.95, -1.88) to (0.04, 2.11). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196657.410541302] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-3.97, -1.88) to (0.01, 2.11). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196657.510532808] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.00, -1.88) to (-0.01, 2.11). The costmap cannot raytrace for it.
+[planner_server-8] [INFO] [1787196657.517530207] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 489 X 244 at 0.050000 m/pix
+[planner_server-8] [ERROR] [1787196657.519988278] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1787196657.520056034] [planner_server]: GridBased: failed to create plan with tolerance 0.25.
+[planner_server-8] [WARN] [1787196657.520065209] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-10.32, -2.16)
+[planner_server-8] [WARN] [1787196657.520074041] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[controller_server-6] [INFO] [1787196657.555599042] [controller_server]: Goal was canceled. Stopping the robot.
+[controller_server-6] [INFO] [1787196657.555641313] [controller_server]: [follow_path] [ActionServer] Client requested to cancel the goal. Cancelling.
+[behavior_server-9] [INFO] [1787196657.556143224] [behavior_server]: Running wait
+[bt_navigator-10] [WARN] [1787196657.556400175] [BehaviorTreeEngine]: Behavior Tree tick rate 100.00 was exceeded!
+[controller_server-6] [WARN] [1787196657.610529302] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.02, -1.90) to (-0.04, 2.09). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196657.710538618] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.05, -1.90) to (-0.06, 2.09). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196657.810543520] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.07, -1.93) to (-0.09, 2.06). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196657.910530023] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.10, -1.93) to (-0.11, 2.06). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196658.010524884] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.10, -1.95) to (-0.11, 2.04). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196658.110533975] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.12, -1.95) to (-0.14, 2.04). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196658.210520237] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.12, -1.95) to (-0.14, 2.04). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196658.310520064] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.15, -1.95) to (-0.16, 2.04). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196658.410529666] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.15, -1.95) to (-0.16, 2.04). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196658.510521581] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.15, -1.95) to (-0.16, 2.04). The costmap cannot raytrace for it.
+[planner_server-8] [INFO] [1787196658.517548547] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 489 X 248 at 0.050000 m/pix
+[controller_server-6] [WARN] [1787196658.610515624] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.15, -1.98) to (-0.16, 2.01). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196658.710527795] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.15, -1.98) to (-0.16, 2.01). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196658.810538062] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.15, -1.98) to (-0.16, 2.01). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196658.910515310] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.15, -1.98) to (-0.16, 2.01). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196659.010533972] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.15, -1.98) to (-0.16, 2.01). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196659.110525527] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.15, -1.98) to (-0.16, 2.01). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196659.210538930] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.15, -1.98) to (-0.16, 2.01). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196659.310530933] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.15, -1.98) to (-0.16, 2.01). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196659.410650902] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.15, -1.98) to (-0.16, 2.01). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196659.510544476] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.15, -1.98) to (-0.16, 2.01). The costmap cannot raytrace for it.
+[behavior_server-9] [INFO] [1787196659.556306819] [behavior_server]: wait completed successfully
+[controller_server-6] [INFO] [1787196659.598785156] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-6] [WARN] [1787196659.629596157] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.15, -1.98) to (-0.16, 2.01). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196659.710531116] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.15, -1.98) to (-0.16, 2.01). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196659.810511046] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.15, -1.98) to (-0.16, 2.01). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196659.910512544] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.17, -1.98) to (-0.19, 2.01). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196660.010542948] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.17, -1.98) to (-0.19, 2.01). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196660.110555893] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.17, -1.98) to (-0.19, 2.01). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196660.210546963] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.20, -1.98) to (-0.21, 2.01). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196660.310523716] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.20, -1.98) to (-0.21, 2.01). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196660.410546261] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.22, -2.00) to (-0.24, 1.99). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196660.510541500] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.22, -2.00) to (-0.24, 1.99). The costmap cannot raytrace for it.
+[planner_server-8] [INFO] [1787196660.517554255] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 489 X 249 at 0.050000 m/pix
+[controller_server-6] [WARN] [1787196660.610533001] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.25, -2.00) to (-0.26, 1.99). The costmap cannot raytrace for it.
+[controller_server-6] [INFO] [1787196660.665604853] [controller_server]: Passing new path to controller.
+[controller_server-6] [WARN] [1787196660.710528916] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.27, -2.00) to (-0.29, 1.99). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196660.810527321] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.30, -2.00) to (-0.31, 1.99). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196660.910557017] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.32, -2.02) to (-0.34, 1.96). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196661.010527682] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.35, -2.02) to (-0.36, 1.96). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196661.110528078] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.37, -2.02) to (-0.39, 1.96). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196661.210532583] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.40, -2.05) to (-0.41, 1.94). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196661.310522866] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.42, -2.05) to (-0.44, 1.94). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196661.410537376] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.45, -2.05) to (-0.46, 1.94). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196661.510539741] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.47, -2.07) to (-0.49, 1.91). The costmap cannot raytrace for it.
+[planner_server-8] [INFO] [1787196661.517547113] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 489 X 250 at 0.050000 m/pix
+[controller_server-6] [WARN] [1787196661.610543166] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.50, -2.07) to (-0.51, 1.91). The costmap cannot raytrace for it.
+[controller_server-6] [INFO] [1787196661.665601568] [controller_server]: Passing new path to controller.
+[bt_navigator-10] [INFO] [1787196661.678204948] [bt_navigator]: Received goal preemption request
+[bt_navigator-10] [INFO] [1787196661.678845380] [bt_navigator]: Begin navigating from current location (-3.38, 0.17) to (-10.22, -2.11)
+[controller_server-6] [WARN] [1787196661.710542833] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.53, -2.10) to (-0.54, 1.89). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196661.810545902] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.55, -2.10) to (-0.56, 1.89). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196661.910527888] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.58, -2.12) to (-0.59, 1.86). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196662.010527355] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.60, -2.12) to (-0.61, 1.86). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196662.110569436] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.63, -2.15) to (-0.64, 1.84). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196662.210558842] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.63, -2.15) to (-0.64, 1.84). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196662.310567856] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.65, -2.17) to (-0.66, 1.81). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196662.410614974] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.68, -2.20) to (-0.69, 1.79). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196662.510566430] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.70, -2.20) to (-0.71, 1.79). The costmap cannot raytrace for it.
+[planner_server-8] [INFO] [1787196662.517561386] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 489 X 255 at 0.050000 m/pix
+[controller_server-6] [WARN] [1787196662.610542415] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.73, -2.22) to (-0.74, 1.76). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196662.710559160] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.75, -2.22) to (-0.76, 1.76). The costmap cannot raytrace for it.
+[controller_server-6] [INFO] [1787196662.732264794] [controller_server]: Passing new path to controller.
+[controller_server-6] [WARN] [1787196662.810717503] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.78, -2.25) to (-0.79, 1.74). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196662.910594617] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.78, -2.25) to (-0.79, 1.74). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196663.010740789] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.80, -2.27) to (-0.81, 1.71). The costmap cannot raytrace for it.
+[planner_server-8] [INFO] [1787196663.017581903] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 489 X 256 at 0.050000 m/pix
+[controller_server-6] [WARN] [1787196663.110543235] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.83, -2.27) to (-0.84, 1.71). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196663.210676078] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.85, -2.30) to (-0.86, 1.69). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196663.310727903] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.88, -2.30) to (-0.89, 1.69). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196663.410742816] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.90, -2.32) to (-0.91, 1.66). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196663.510598459] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.93, -2.32) to (-0.94, 1.66). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196663.610724534] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.95, -2.35) to (-0.96, 1.64). The costmap cannot raytrace for it.
+[planner_server-8] [ERROR] [1787196663.699587451] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1787196663.699653502] [planner_server]: GridBased: failed to create plan with tolerance 0.25.
+[planner_server-8] [WARN] [1787196663.699662977] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-10.22, -2.11)
+[planner_server-8] [WARN] [1787196663.699671499] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[controller_server-6] [WARN] [1787196663.710717538] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-4.98, -2.35) to (-0.99, 1.64). The costmap cannot raytrace for it.
+[planner_server-8] [INFO] [1787196663.718360615] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[controller_server-6] [WARN] [1787196663.810614010] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.00, -2.35) to (-1.01, 1.64). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196663.910832148] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.03, -2.37) to (-1.04, 1.61). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196664.010775425] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.05, -2.37) to (-1.06, 1.61). The costmap cannot raytrace for it.
+[planner_server-8] [INFO] [1787196664.017543719] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 489 X 263 at 0.050000 m/pix
+[planner_server-8] [ERROR] [1787196664.020095857] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1787196664.020161895] [planner_server]: GridBased: failed to create plan with tolerance 0.25.
+[planner_server-8] [WARN] [1787196664.020171200] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-10.22, -2.11)
+[planner_server-8] [WARN] [1787196664.020180300] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-10] [ERROR] [1787196664.058626773] [bt_navigator_navigate_to_pose_rclcpp_node]: Failed to get result for follow_path in node halt!
+[behavior_server-9] [INFO] [1787196664.058880933] [behavior_server]: Running spin
+[behavior_server-9] [INFO] [1787196664.058972941] [behavior_server]: Turning 0.60 for spin behavior.
+[bt_navigator-10] [WARN] [1787196664.059224080] [BehaviorTreeEngine]: Behavior Tree tick rate 100.00 was exceeded!
+[controller_server-6] [INFO] [1787196664.065597583] [controller_server]: Goal was canceled. Stopping the robot.
+[controller_server-6] [INFO] [1787196664.065642491] [controller_server]: [follow_path] [ActionServer] Client requested to cancel the goal. Cancelling.
+[controller_server-6] [WARN] [1787196664.110729061] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.08, -2.37) to (-1.09, 1.61). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196664.210713194] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.10, -2.40) to (-1.11, 1.59). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196664.310704254] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.13, -2.40) to (-1.14, 1.59). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196664.410564592] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.15, -2.40) to (-1.16, 1.59). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196664.510562462] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.18, -2.40) to (-1.19, 1.59). The costmap cannot raytrace for it.
+[planner_server-8] [INFO] [1787196664.517559648] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 489 X 266 at 0.050000 m/pix
+[controller_server-6] [WARN] [1787196664.610682724] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.18, -2.42) to (-1.19, 1.56). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196664.710539411] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.20, -2.42) to (-1.21, 1.56). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196664.810703287] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.20, -2.42) to (-1.21, 1.56). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196664.910719183] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196665.010584576] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196665.110590424] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196665.210648309] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196665.310734590] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196665.410519362] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196665.510708112] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196665.610528261] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196665.710711756] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196665.810704490] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196665.910554711] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[behavior_server-9] [INFO] [1787196665.959146937] [behavior_server]: spin completed successfully
+[controller_server-6] [INFO] [1787196666.000026093] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-6] [WARN] [1787196666.020791671] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196666.117693703] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196666.220627366] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196666.317672490] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196666.420696987] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196666.517622477] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196666.620665619] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[bt_navigator-10] [INFO] [1787196666.659437156] [bt_navigator]: Received goal preemption request
+[bt_navigator-10] [INFO] [1787196666.660307724] [bt_navigator]: Begin navigating from current location (-4.12, -0.10) to (-9.97, -3.68)
+[controller_server-6] [WARN] [1787196666.717628136] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196666.820668452] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196666.917643051] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196667.020649076] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [INFO] [1787196667.066856668] [controller_server]: Passing new path to controller.
+[controller_server-6] [WARN] [1787196667.117859714] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196667.220816370] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196667.317636107] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196667.420755430] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196667.517651877] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196667.620650156] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196667.717603957] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196667.820658620] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196667.917574132] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196668.020716280] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [INFO] [1787196668.066846082] [controller_server]: Passing new path to controller.
+[controller_server-6] [WARN] [1787196668.117748699] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196668.220634371] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196668.317750295] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196668.420773409] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196668.517638084] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196668.620640070] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196668.717738975] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196668.820633162] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196668.917708550] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196669.020739059] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196669.117673120] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [INFO] [1787196669.133516193] [controller_server]: Passing new path to controller.
+[controller_server-6] [WARN] [1787196669.220863215] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196669.317708730] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196669.420830799] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196669.518366511] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196669.631359756] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196669.711025862] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196669.831179012] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196669.911039610] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196670.031304006] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196670.111042501] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [INFO] [1787196670.134020389] [controller_server]: Passing new path to controller.
+[controller_server-6] [WARN] [1787196670.231228872] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196670.311034832] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196670.431310830] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196670.511036110] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196670.631236332] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196670.711040298] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196670.831202782] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196670.911020893] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196671.031170690] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196671.111018264] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [INFO] [1787196671.200680323] [controller_server]: Passing new path to controller.
+[controller_server-6] [WARN] [1787196671.231450859] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196671.311013097] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196671.431172040] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196671.511021425] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196671.631153896] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196671.711016779] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196671.810999278] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196671.911014561] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196672.011009691] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196672.111021450] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [INFO] [1787196672.200674778] [controller_server]: Passing new path to controller.
+[controller_server-6] [WARN] [1787196672.231558400] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.23, -2.45) to (-1.24, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196672.311061674] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.25, -2.45) to (-1.26, 1.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196672.411421027] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.25, -2.47) to (-1.26, 1.51). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196672.511023368] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.28, -2.47) to (-1.29, 1.51). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196672.611016810] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.28, -2.47) to (-1.29, 1.51). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196672.711022362] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.30, -2.47) to (-1.31, 1.51). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196672.811027604] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.33, -2.50) to (-1.34, 1.49). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196672.911050585] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.35, -2.50) to (-1.36, 1.49). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196673.011019060] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.38, -2.50) to (-1.39, 1.49). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196673.111010372] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.40, -2.52) to (-1.41, 1.46). The costmap cannot raytrace for it.
+[controller_server-6] [INFO] [1787196673.200670133] [controller_server]: Passing new path to controller.
+[controller_server-6] [WARN] [1787196673.231894575] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.43, -2.52) to (-1.44, 1.46). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196673.311028303] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.45, -2.52) to (-1.46, 1.46). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196673.411028082] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.48, -2.55) to (-1.49, 1.44). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196673.511014382] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.50, -2.55) to (-1.51, 1.44). The costmap cannot raytrace for it.
+[planner_server-8] [INFO] [1787196673.518033869] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 489 X 282 at 0.050000 m/pix
+[controller_server-6] [WARN] [1787196673.611016650] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.53, -2.55) to (-1.54, 1.44). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196673.711019424] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.55, -2.57) to (-1.56, 1.41). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196673.811024838] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.58, -2.57) to (-1.59, 1.41). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196673.911022534] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.60, -2.60) to (-1.61, 1.39). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196674.011016513] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.63, -2.60) to (-1.64, 1.39). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196674.111018364] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.65, -2.60) to (-1.66, 1.39). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196674.211012125] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.68, -2.62) to (-1.69, 1.36). The costmap cannot raytrace for it.
+[controller_server-6] [INFO] [1787196674.267392919] [controller_server]: Passing new path to controller.
+[controller_server-6] [WARN] [1787196674.311025261] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.70, -2.62) to (-1.71, 1.36). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196674.411029230] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.73, -2.65) to (-1.74, 1.34). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196674.511004625] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.75, -2.65) to (-1.76, 1.34). The costmap cannot raytrace for it.
+[planner_server-8] [INFO] [1787196674.518032627] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 489 X 292 at 0.050000 m/pix
+[controller_server-6] [WARN] [1787196674.610995618] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.78, -2.67) to (-1.79, 1.31). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196674.711022088] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.80, -2.67) to (-1.81, 1.31). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196674.811014089] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.83, -2.70) to (-1.84, 1.29). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196674.911016236] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.83, -2.70) to (-1.84, 1.29). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196675.011003318] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.85, -2.72) to (-1.86, 1.26). The costmap cannot raytrace for it.
+[planner_server-8] [INFO] [1787196675.018035008] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 489 X 305 at 0.050000 m/pix
+[controller_server-6] [WARN] [1787196675.111016296] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.88, -2.72) to (-1.89, 1.26). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196675.211054990] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.90, -2.75) to (-1.91, 1.24). The costmap cannot raytrace for it.
+[controller_server-6] [INFO] [1787196675.267364010] [controller_server]: Passing new path to controller.
+[controller_server-6] [WARN] [1787196675.311031534] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.95, -2.75) to (-1.96, 1.24). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196675.411019492] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.95, -2.77) to (-1.96, 1.21). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196675.511023272] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-5.98, -2.77) to (-1.99, 1.21). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196675.611002202] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.00, -2.80) to (-2.01, 1.19). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196675.711010683] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.03, -2.80) to (-2.04, 1.19). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196675.811009981] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.05, -2.82) to (-2.06, 1.16). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196675.911003099] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.08, -2.82) to (-2.09, 1.16). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196676.011015478] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.10, -2.85) to (-2.11, 1.14). The costmap cannot raytrace for it.
+[planner_server-8] [INFO] [1787196676.018045705] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 489 X 319 at 0.050000 m/pix
+[controller_server-6] [WARN] [1787196676.111013962] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.13, -2.85) to (-2.14, 1.14). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196676.211014449] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.13, -2.87) to (-2.14, 1.11). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196676.311012056] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.15, -2.90) to (-2.16, 1.09). The costmap cannot raytrace for it.
+[controller_server-6] [INFO] [1787196676.334011005] [controller_server]: Passing new path to controller.
+[controller_server-6] [WARN] [1787196676.411031689] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.18, -2.90) to (-2.19, 1.09). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196676.511010451] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.20, -2.92) to (-2.21, 1.06). The costmap cannot raytrace for it.
+[planner_server-8] [INFO] [1787196676.518043659] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 489 X 320 at 0.050000 m/pix
+[controller_server-6] [WARN] [1787196676.611018695] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.23, -2.92) to (-2.24, 1.06). The costmap cannot raytrace for it.
+[bt_navigator-10] [INFO] [1787196676.669817252] [bt_navigator]: Received goal preemption request
+[bt_navigator-10] [INFO] [1787196676.670359488] [bt_navigator]: Begin navigating from current location (-5.18, -0.40) to (-10.38, -5.35)
+[controller_server-6] [WARN] [1787196676.711039684] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.25, -2.95) to (-2.26, 1.04). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196676.811033807] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.28, -2.95) to (-2.29, 1.04). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196676.911021333] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.30, -2.97) to (-2.31, 1.01). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196677.011001416] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.33, -2.97) to (-2.34, 1.01). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196677.111012035] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.35, -3.00) to (-2.36, 0.99). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196677.211011741] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.38, -3.00) to (-2.39, 0.99). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196677.311029114] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.40, -3.02) to (-2.41, 0.96). The costmap cannot raytrace for it.
+[controller_server-6] [INFO] [1787196677.334011058] [controller_server]: Passing new path to controller.
+[controller_server-6] [WARN] [1787196677.411024137] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.43, -3.02) to (-2.44, 0.96). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196677.511020180] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.45, -3.05) to (-2.46, 0.94). The costmap cannot raytrace for it.
+[planner_server-8] [INFO] [1787196677.518051450] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 490 X 321 at 0.050000 m/pix
+[controller_server-6] [WARN] [1787196677.611002245] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.45, -3.05) to (-2.46, 0.94). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196677.711006026] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.48, -3.07) to (-2.49, 0.91). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196677.811011902] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.50, -3.07) to (-2.51, 0.91). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196677.911021575] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.53, -3.10) to (-2.54, 0.89). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196678.011014981] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.55, -3.10) to (-2.56, 0.89). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196678.111032645] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.58, -3.12) to (-2.59, 0.86). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196678.211013932] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.60, -3.12) to (-2.61, 0.86). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196678.311012834] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.63, -3.15) to (-2.64, 0.84). The costmap cannot raytrace for it.
+[controller_server-6] [INFO] [1787196678.400675708] [controller_server]: Passing new path to controller.
+[controller_server-6] [WARN] [1787196678.431602905] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.65, -3.15) to (-2.66, 0.84). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196678.511023290] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.68, -3.17) to (-2.69, 0.81). The costmap cannot raytrace for it.
+[planner_server-8] [INFO] [1787196678.518037150] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 490 X 321 at 0.050000 m/pix
+[controller_server-6] [WARN] [1787196678.611008793] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.70, -3.17) to (-2.71, 0.81). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196678.711016620] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.73, -3.20) to (-2.74, 0.79). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196678.811011170] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.75, -3.20) to (-2.76, 0.79). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196678.911017200] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.78, -3.22) to (-2.79, 0.76). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196679.011005600] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.78, -3.25) to (-2.79, 0.74). The costmap cannot raytrace for it.
+[planner_server-8] [INFO] [1787196679.018034895] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 490 X 321 at 0.050000 m/pix
+[controller_server-6] [WARN] [1787196679.111011876] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.80, -3.25) to (-2.81, 0.74). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196679.211024329] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.83, -3.27) to (-2.84, 0.71). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196679.311024265] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.85, -3.27) to (-2.86, 0.71). The costmap cannot raytrace for it.
+[controller_server-6] [INFO] [1787196679.400676308] [controller_server]: Passing new path to controller.
+[controller_server-6] [WARN] [1787196679.432341807] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.88, -3.30) to (-2.89, 0.69). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196679.511048901] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.90, -3.32) to (-2.91, 0.66). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196679.611021544] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.93, -3.32) to (-2.94, 0.66). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196679.711025687] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.95, -3.35) to (-2.96, 0.64). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196679.811008831] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.95, -3.35) to (-2.96, 0.64). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196679.911013580] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-6.98, -3.37) to (-2.99, 0.61). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196680.011017464] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.00, -3.40) to (-3.01, 0.59). The costmap cannot raytrace for it.
+[planner_server-8] [INFO] [1787196680.018035441] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 490 X 321 at 0.050000 m/pix
+[controller_server-6] [WARN] [1787196680.111028044] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.03, -3.40) to (-3.04, 0.59). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196680.211011030] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.05, -3.42) to (-3.06, 0.56). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196680.311025619] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.05, -3.45) to (-3.06, 0.54). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196680.411052555] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.08, -3.47) to (-3.09, 0.51). The costmap cannot raytrace for it.
+[controller_server-6] [INFO] [1787196680.467384641] [controller_server]: Passing new path to controller.
+[controller_server-6] [WARN] [1787196680.511027665] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.10, -3.50) to (-3.11, 0.49). The costmap cannot raytrace for it.
+[planner_server-8] [INFO] [1787196680.518035184] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 491 X 321 at 0.050000 m/pix
+[controller_server-6] [WARN] [1787196680.610997936] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.13, -3.50) to (-3.14, 0.49). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196680.711005528] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.13, -3.52) to (-3.14, 0.46). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196680.811000255] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.15, -3.55) to (-3.16, 0.44). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196680.911013318] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.18, -3.57) to (-3.19, 0.41). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196681.011037941] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.18, -3.60) to (-3.19, 0.39). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196681.111017842] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.20, -3.60) to (-3.21, 0.39). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196681.211007779] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.23, -3.62) to (-3.24, 0.36). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196681.311023520] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.23, -3.65) to (-3.24, 0.34). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196681.411020436] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.25, -3.67) to (-3.26, 0.31). The costmap cannot raytrace for it.
+[controller_server-6] [INFO] [1787196681.467346721] [controller_server]: Passing new path to controller.
+[controller_server-6] [WARN] [1787196681.511026113] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.28, -3.70) to (-3.29, 0.29). The costmap cannot raytrace for it.
+[planner_server-8] [INFO] [1787196681.518041106] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 491 X 321 at 0.050000 m/pix
+[controller_server-6] [WARN] [1787196681.611030290] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.28, -3.72) to (-3.29, 0.26). The costmap cannot raytrace for it.
+[bt_navigator-10] [INFO] [1787196681.679815192] [bt_navigator]: Received goal preemption request
+[bt_navigator-10] [INFO] [1787196681.680383952] [bt_navigator]: Begin navigating from current location (-6.33, -1.01) to (-2.60, -6.14)
+[controller_server-6] [WARN] [1787196681.711036891] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.30, -3.72) to (-3.31, 0.26). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196681.811025050] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.33, -3.75) to (-3.34, 0.24). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196681.911011225] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.33, -3.77) to (-3.34, 0.21). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196682.011018387] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.35, -3.80) to (-3.36, 0.19). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196682.111065448] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.35, -3.82) to (-3.36, 0.16). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196682.211013499] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.38, -3.85) to (-3.39, 0.14). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196682.311011737] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.38, -3.87) to (-3.39, 0.11). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196682.411038368] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.40, -3.90) to (-3.41, 0.09). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196682.511013160] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.40, -3.92) to (-3.41, 0.06). The costmap cannot raytrace for it.
+[planner_server-8] [INFO] [1787196682.518040645] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 491 X 321 at 0.050000 m/pix
+[controller_server-6] [INFO] [1787196682.534005296] [controller_server]: Passing new path to controller.
+[controller_server-6] [WARN] [1787196682.631164477] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.43, -3.95) to (-3.44, 0.04). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196682.711029035] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.43, -3.97) to (-3.44, 0.01). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196682.831160721] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.45, -3.97) to (-3.46, 0.01). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196682.911025547] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.45, -4.00) to (-3.46, -0.01). The costmap cannot raytrace for it.
+[planner_server-8] [INFO] [1787196683.018041529] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 492 X 321 at 0.050000 m/pix
+[controller_server-6] [WARN] [1787196683.031164271] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.48, -4.02) to (-3.49, -0.04). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196683.111041798] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.48, -4.02) to (-3.49, -0.04). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196683.231187170] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.48, -4.05) to (-3.49, -0.06). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196683.311018858] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.48, -4.05) to (-3.49, -0.06). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196683.431192169] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.48, -4.07) to (-3.49, -0.09). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196683.511024976] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.50, -4.07) to (-3.51, -0.09). The costmap cannot raytrace for it.
+[controller_server-6] [INFO] [1787196683.534003955] [controller_server]: Passing new path to controller.
+[controller_server-6] [WARN] [1787196683.631175273] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.50, -4.07) to (-3.51, -0.09). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196683.711033530] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.50, -4.07) to (-3.51, -0.09). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196683.831152027] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.50, -4.07) to (-3.51, -0.09). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196683.911017993] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.50, -4.07) to (-3.51, -0.09). The costmap cannot raytrace for it.
+[planner_server-8] [INFO] [1787196684.018036030] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 492 X 321 at 0.050000 m/pix
+[controller_server-6] [WARN] [1787196684.031144324] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.50, -4.07) to (-3.51, -0.09). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196684.111036825] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.50, -4.07) to (-3.51, -0.09). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196684.231159792] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.50, -4.07) to (-3.51, -0.09). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196684.311015188] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.50, -4.07) to (-3.51, -0.09). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196684.431161619] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.50, -4.07) to (-3.51, -0.09). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196684.511023465] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.50, -4.07) to (-3.51, -0.09). The costmap cannot raytrace for it.
+[controller_server-6] [INFO] [1787196684.534001098] [controller_server]: Passing new path to controller.
+[controller_server-6] [WARN] [1787196684.631177438] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.50, -4.07) to (-3.51, -0.09). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196684.711030854] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.50, -4.07) to (-3.51, -0.09). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196684.831156548] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.50, -4.07) to (-3.51, -0.09). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196684.911033048] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.50, -4.07) to (-3.51, -0.09). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196685.031169266] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.50, -4.07) to (-3.51, -0.09). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196685.111037970] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.50, -4.07) to (-3.51, -0.09). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196685.231143077] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.50, -4.07) to (-3.51, -0.09). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196685.311030579] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.50, -4.07) to (-3.51, -0.09). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196685.431176548] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.50, -4.07) to (-3.51, -0.09). The costmap cannot raytrace for it.
+[controller_server-6] [WARN] [1787196685.511066065] [local_costmap.local_costmap]: Sensor origin at (0.25, 0.00) is out of map bounds (-7.50, -4.07) to (-3.51, -0.09). The costmap cannot raytrace for it.
+[ERROR] [scan_to_scan_filter_chain-1]: process has died [pid 125794, exit code -9, cmd '/opt/ros/humble/lib/laser_filters/scan_to_scan_filter_chain --ros-args --log-level info --ros-args -r __node:=scan_to_scan_filter_chain --params-file /home/smirn/leo_ws/install/leo_nav2_exploration/share/leo_nav2_exploration/config/sim/scan_filter.yaml -r scan:=/leo1/scan -r scan_filtered:=/leo1/scan_filtered'].
+[ERROR] [lifecycle_manager-5]: process has died [pid 125802, exit code -9, cmd '/opt/ros/humble/lib/nav2_lifecycle_manager/lifecycle_manager --ros-args --log-level info --ros-args -r __node:=lifecycle_manager_collision_monitor --params-file /tmp/launch_params_qy05o9iq --params-file /tmp/launch_params_z1ad52g6 --params-file /tmp/launch_params_k00wf8ot --params-file /tmp/launch_params_qttf82qw'].

@@ -1,0 +1,86 @@
+# Candidate D -- candidate C's loop-closure REACH, with C's weakened acceptance
+# criteria put back.
+#
+# C scored 0.77 on one seed and 0.25 on another with everything else identical.
+# The failing map is bowed and compressed with a duplicated pillar: the pose
+# graph was pulled into a warped configuration by FALSE loop closures. C caused
+# that itself -- it widened loop_search_maximum_distance 3 -> 10 while also
+# dropping loop_match_minimum_chain_size 10 -> 6, so the matcher searched a much
+# larger neighbourhood on weaker evidence, in a world with repeating corridor
+# structure.
+#
+# D keeps the reach (which is needed: drift exceeds 3 m early) and raises the
+# bar for accepting a candidate loop.
+slam_toolbox:
+  ros__parameters:
+    use_sim_time: true
+    odom_frame: "leo1/odom"
+    base_frame: "leo1/base_link"
+    map_frame: "map"
+    scan_topic: "/leo1/scan_real_selffiltered"
+
+    solver_plugin: solver_plugins::CeresSolver
+    ceres_linear_solver: SPARSE_NORMAL_CHOLESKY
+    ceres_preconditioner: SCHUR_JACOBI
+    ceres_trust_strategy: LEVENBERG_MARQUARDT
+    ceres_dogleg_type: TRADITIONAL_DOGLEG
+    ceres_loss_function: None
+
+    use_map_saver: true
+    mode: mapping
+
+    debug_logging: false
+    throttle_scans: 1
+    transform_publish_period: 0.02
+    map_update_interval: 1.0
+    resolution: 0.05
+    min_laser_range: 0.25
+    max_laser_range: 11.0
+    minimum_time_interval: 0.2
+    transform_timeout: 0.5
+    tf_buffer_duration: 30.0
+    stack_size_to_use: 40000000
+    enable_interactive_mode: true
+
+    use_scan_matching: true
+    use_scan_barycenter: true
+    minimum_travel_distance: 0.05
+    minimum_travel_heading: 0.05
+    scan_buffer_size: 30
+    scan_buffer_maximum_scan_distance: 12.0
+    link_match_minimum_response_fine: 0.12
+    link_scan_maximum_distance: 2.5
+
+    do_loop_closing: true
+    # Kept from C: drift passes 3 m early, so the reach is genuinely needed.
+    loop_search_maximum_distance: 10.0
+    loop_search_space_dimension: 12.0
+    loop_search_space_resolution: 0.05
+    loop_search_space_smear_deviation: 0.03
+
+    # --- the corrections relative to C ---
+    # C: 6 -> back to 10. A longer contiguous chain has to agree before a loop
+    # is even considered, which is the main defence against matching one
+    # corridor onto a similar-looking one.
+    loop_match_minimum_chain_size: 10
+    # C: 3.0 -> 1.5. Reject coarse candidates the matcher is not confident in.
+    loop_match_maximum_variance_coarse: 1.5
+    # C: 0.35 -> 0.40 and 0.45 -> 0.50. Raise the correlation response a
+    # candidate must reach before it becomes a graph constraint.
+    loop_match_minimum_response_coarse: 0.40
+    loop_match_minimum_response_fine: 0.50
+
+    correlation_search_space_dimension: 0.7
+    correlation_search_space_resolution: 0.01
+    correlation_search_space_smear_deviation: 0.1
+
+    distance_variance_penalty: 0.5
+    angle_variance_penalty: 1.0
+    fine_search_angle_offset: 0.00349
+    coarse_search_angle_offset: 0.44
+    coarse_angle_resolution: 0.0349
+    minimum_angle_penalty: 0.9
+    minimum_distance_penalty: 0.5
+    use_response_expansion: true
+    min_pass_through: 2
+    occupancy_threshold: 0.1

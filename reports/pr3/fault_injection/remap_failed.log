@@ -1,0 +1,35 @@
+[INFO] [1781282231.967677842] [frontier_explorer]: Frontier explorer up for "leo1" (base_frame=leo1/base_link)
+[WARN] [1781282232.255657602] [frontier_explorer]: Watchdog: work exists but no goal active and robot stationary - clearing costmaps
+[INFO] [1781282235.877724947] [frontier_explorer]: Initial pose recorded: (-6.28, 2.38)
+[INFO] [1781282236.057567980] [frontier_explorer]: New frontier goal: (-1.71, 8.05)
+[INFO] [1781282265.209489080] [frontier_explorer]: No path to frontier goal (-0.01, 8.10), skipping
+[INFO] [1781282270.325958449] [frontier_explorer]: New frontier goal: (-7.61, 8.15)
+[INFO] [1781282285.901921398] [frontier_explorer]: No path to frontier goal (2.49, 7.55), skipping
+[INFO] [1781282290.987171600] [frontier_explorer]: New frontier goal: (-8.67, 8.80)
+Traceback (most recent call last):
+  File "/ros2_ws/install/leo_rover_exploration/lib/python3.10/site-packages/leo_rover_exploration/frontier_explorer.py", line 1016, in main
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 229, in spin
+    executor.spin_once()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 808, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 797, in _spin_once_impl
+    handler, entity, node = self.wait_for_ready_callbacks(timeout_sec=timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 780, in wait_for_ready_callbacks
+    return next(self._cb_iter)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 681, in _wait_for_ready_callbacks
+    raise ExternalShutdownException()
+rclpy.executors.ExternalShutdownException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/ros2_ws/install/leo_rover_exploration/lib/leo_rover_exploration/frontier_explorer", line 33, in <module>
+    sys.exit(load_entry_point('leo-rover-exploration', 'console_scripts', 'frontier_explorer')())
+  File "/ros2_ws/install/leo_rover_exploration/lib/python3.10/site-packages/leo_rover_exploration/frontier_explorer.py", line 1021, in main
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 130, in shutdown
+    _shutdown(context=context)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/utilities.py", line 58, in shutdown
+    return context.shutdown()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/context.py", line 102, in shutdown
+    self.__context.shutdown()
+rclpy._rclpy_pybind11.RCLError: failed to shutdown: rcl_shutdown already called on the given context, at ./src/rcl/init.c:241

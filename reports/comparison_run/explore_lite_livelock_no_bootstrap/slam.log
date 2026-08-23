@@ -1,0 +1,9 @@
+[INFO] [launch]: All log files can be found below /root/.ros/log/2026-07-05-15-06-31-104971-79b0dabde075-206
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [async_slam_toolbox_node-1]: process started with pid [484]
+[async_slam_toolbox_node-1] [INFO] [1783263991.460766054] [slam_toolbox]: Node using stack size 40000000
+[async_slam_toolbox_node-1] [INFO] [1783263992.046670294] [slam_toolbox]: Using solver plugin solver_plugins::CeresSolver
+[async_slam_toolbox_node-1] [INFO] [1783263992.047548291] [slam_toolbox]: CeresSolver: Using SCHUR_JACOBI preconditioner.
+[async_slam_toolbox_node-1] [INFO] [1783263992.055822362] [slam_toolbox]: Message Filter dropping message: frame 'leo1/sensor_lidar_link' at time 5.980 for reason 'discarding message because the queue is full'
+[async_slam_toolbox_node-1] [WARN] [1783263992.481981000] [slam_toolbox]: minimum laser range setting (0.0 m) exceeds the capabilities of the used Lidar (0.1 m)
+[async_slam_toolbox_node-1] Registering sensor: [Custom Described Lidar]

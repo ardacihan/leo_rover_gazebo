@@ -1,0 +1,30 @@
+[INFO] [launch]: All log files can be found below /root/.ros/log/2026-07-06-14-53-23-858274-ec85d3189e15-252
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [async_slam_toolbox_node-1]: process started with pid [469]
+[INFO] [async_slam_toolbox_node-2]: process started with pid [471]
+[async_slam_toolbox_node-1] [INFO] [1783349605.744000949] [leo1.slam_toolbox]: Using solver plugin solver_plugins::CeresSolver
+[async_slam_toolbox_node-2] [INFO] [1783349605.758156801] [leo2.slam_toolbox]: Using solver plugin solver_plugins::CeresSolver
+[async_slam_toolbox_node-1] [INFO] [1783349605.774487209] [leo1.slam_toolbox]: Message Filter dropping message: frame 'leo1/sensor_lidar_link' at time 6.800 for reason 'discarding message because the queue is full'
+[async_slam_toolbox_node-1] [WARN] [1783349605.775125843] [leo1.slam_toolbox]: minimum laser range setting (0.0 m) exceeds the capabilities of the used Lidar (0.1 m)
+[async_slam_toolbox_node-1] [WARN] [1783349605.775476373] [leo1.slam_toolbox]: maximum laser range setting (25.0 m) exceeds the capabilities of the used Lidar (20.0 m)
+[async_slam_toolbox_node-1] Registering sensor: [Custom Described Lidar]
+[async_slam_toolbox_node-2] [INFO] [1783349605.787516565] [leo2.slam_toolbox]: Message Filter dropping message: frame 'leo2/sensor_lidar_link' at time 6.800 for reason 'discarding message because the queue is full'
+[async_slam_toolbox_node-2] [WARN] [1783349605.788147997] [leo2.slam_toolbox]: minimum laser range setting (0.0 m) exceeds the capabilities of the used Lidar (0.1 m)
+[async_slam_toolbox_node-2] [WARN] [1783349605.788543802] [leo2.slam_toolbox]: maximum laser range setting (25.0 m) exceeds the capabilities of the used Lidar (20.0 m)
+[async_slam_toolbox_node-2] Registering sensor: [Custom Described Lidar]
+[async_slam_toolbox_node-2] WARNING: Logging before InitGoogleLogging() is written to STDERR
+[async_slam_toolbox_node-2] W0706 14:56:48.834024   471 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-2] W0706 14:58:21.019930   471 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-1] WARNING: Logging before InitGoogleLogging() is written to STDERR
+[async_slam_toolbox_node-1] W0706 14:59:16.711978   469 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-2] W0706 15:00:24.578248   471 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-1] [INFO] [1783350093.535572825] [leo1.slam_toolbox]: Message Filter dropping message: frame 'leo1/sensor_lidar_link' at time 366.600 for reason 'discarding message because the queue is full'
+[async_slam_toolbox_node-1] W0706 15:02:01.910425   469 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-2] W0706 15:02:48.393304   471 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-2] W0706 15:03:53.543088   471 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-2] W0706 15:04:14.049679   471 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-2] W0706 15:05:45.952754   471 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-2] W0706 15:09:08.008265   471 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-2] W0706 15:09:29.155074   471 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-1] W0706 15:13:56.448474   469 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-1] W0706 15:14:12.115392   469 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.

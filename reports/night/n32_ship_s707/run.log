@@ -1,0 +1,26 @@
+[wsl-exp 07:11:29] backend=wsl:Ubuntu stack=hybrid world=office_world profile=realistic cap=25min out=reports/night/n32_ship_s707
+[wsl-exp 07:11:29] syncing src/ and scripts/ into /home/smirn/leo_ws
+[wsl-exp 07:11:30] colcon build (leo_nav2_exploration, leo_rover_gazebo)
+Summary: 1 package finished [1.93s]
+  1 package failed: leo_rover_gazebo
+  1 package had stderr output: leo_rover_gazebo
+[wsl-exp 07:11:33] killing any previous sim
+[wsl-exp 07:11:37] cleanup: 0 ROS processes still alive
+[wsl-exp 07:11:42] starting simulator (GPU, headless)
+[wsl-exp 07:11:43] waiting for /leo1/scan
+[wsl-exp 07:11:55] scan: average rate: 58.220
+[wsl-exp 07:11:55] renderer: 07:11:51: GL_RENDERER = D3D12 (NVIDIA GeForce RTX 4060 Ti)
+[wsl-exp 07:11:58] wheel-odometry model (message only) + gyro + EKF
+[wsl-exp 07:12:13] overlay stack: sim_navigation.launch.py
+[wsl-exp 07:12:14] waiting for Nav2 planner action
+[wsl-exp 07:12:36] camera/points (with stack up): average rate: 4.987
+[wsl-exp 07:12:40] scan_filtered: average rate: 10.037
+[wsl-exp 07:12:40] starting recorders
+[wsl-exp 07:12:42] starting ArUco detector
+[wsl-exp 07:12:48] bootstrap jog
+[wsl-exp 07:13:06] explorer launched; polling (cap 25 min)
+[wsl-exp 07:21:08] explorer reports completion
+[wsl-exp 07:21:14] saving map
+[wsl-exp 07:21:15] flushing recorders
+[wsl-exp 07:21:35] cleanup: 0 ROS processes still alive
+[wsl-exp 07:21:37] done -> reports/night/n32_ship_s707

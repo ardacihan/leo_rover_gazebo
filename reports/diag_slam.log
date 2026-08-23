@@ -1,0 +1,14 @@
+[INFO] [launch]: All log files can be found below /root/.ros/log/2026-07-06-08-35-55-955453-5cb3545c437a-252
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [async_slam_toolbox_node-1]: process started with pid [354]
+[INFO] [async_slam_toolbox_node-2]: process started with pid [356]
+[async_slam_toolbox_node-1] [INFO] [1783326956.777415550] [leo1.slam_toolbox]: Using solver plugin solver_plugins::CeresSolver
+[async_slam_toolbox_node-2] [INFO] [1783326956.777609698] [leo2.slam_toolbox]: Using solver plugin solver_plugins::CeresSolver
+[async_slam_toolbox_node-1] [INFO] [1783326958.194066951] [leo1.slam_toolbox]: Message Filter dropping message: frame 'leo1/sensor_lidar_link' at time 5.978 for reason 'discarding message because the queue is full'
+[async_slam_toolbox_node-1] [WARN] [1783326958.194366378] [leo1.slam_toolbox]: minimum laser range setting (0.0 m) exceeds the capabilities of the used Lidar (0.1 m)
+[async_slam_toolbox_node-1] [WARN] [1783326958.194507679] [leo1.slam_toolbox]: maximum laser range setting (25.0 m) exceeds the capabilities of the used Lidar (20.0 m)
+[async_slam_toolbox_node-1] Registering sensor: [Custom Described Lidar]
+[async_slam_toolbox_node-2] [INFO] [1783326958.213729471] [leo2.slam_toolbox]: Message Filter dropping message: frame 'leo2/sensor_lidar_link' at time 5.978 for reason 'discarding message because the queue is full'
+[async_slam_toolbox_node-2] [WARN] [1783326958.385883173] [leo2.slam_toolbox]: minimum laser range setting (0.0 m) exceeds the capabilities of the used Lidar (0.1 m)
+[async_slam_toolbox_node-2] [WARN] [1783326958.386070196] [leo2.slam_toolbox]: maximum laser range setting (25.0 m) exceeds the capabilities of the used Lidar (20.0 m)
+[async_slam_toolbox_node-2] Registering sensor: [Custom Described Lidar]

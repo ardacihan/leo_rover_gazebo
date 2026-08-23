@@ -1,0 +1,20 @@
+[INFO] [launch]: All log files can be found below /root/.ros/log/2026-07-06-10-12-11-311130-24a54e4b5e27-1061
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [frontier_explorer-1]: process started with pid [1153]
+[INFO] [frontier_explorer-2]: process started with pid [1155]
+[frontier_explorer-2] [INFO] [1783332734.305094581] [leo2.frontier_explorer]: Frontier explorer up for "leo2" (base_frame=leo2/base_link); coordination=coordinated, peers=['leo1']
+[frontier_explorer-1] [INFO] [1783332734.306497268] [leo1.frontier_explorer]: Frontier explorer up for "leo1" (base_frame=leo1/base_link); coordination=coordinated, peers=['leo2']
+[frontier_explorer-1] [WARN] [1783332734.524248695] [leo1.frontier_explorer]: Watchdog: work exists but no goal active and robot stationary - clearing costmaps
+[frontier_explorer-2] [WARN] [1783332734.525481433] [leo2.frontier_explorer]: Watchdog: work exists but no goal active and robot stationary - clearing costmaps
+[frontier_explorer-1] [INFO] [1783332738.462013314] [leo1.frontier_explorer]: Initial pose recorded: (0.81, -0.00)
+[frontier_explorer-2] [INFO] [1783332738.462889664] [leo2.frontier_explorer]: Initial pose recorded: (4.14, -0.00)
+[frontier_explorer-1] [INFO] [1783332738.526926874] [leo1.frontier_explorer]: New frontier goal: (0.17, -0.47)
+[frontier_explorer-2] [INFO] [1783332738.528030592] [leo2.frontier_explorer]: New frontier goal: (0.17, -0.47)
+[frontier_explorer-1] [WARN] [1783332750.336873252] [leo1.frontier_explorer]: Frontier goal done but frontier survived at (0.17, -0.47) - striking it
+[frontier_explorer-1] [INFO] [1783332761.818949816] [leo1.frontier_explorer]: Exploration + sweep complete: camera coverage 91% (10/11 wall cells), items found: [] (0 confirmed, 0 seen)
+[frontier_explorer-1] [INFO] [1783332761.860144031] [leo1.frontier_explorer]: Exploration finished.
+[frontier_explorer-1] [INFO] [1783332768.500319229] [leo1.frontier_explorer]: Map saved to /ros2_ws/maps/leo1_map
+[frontier_explorer-2] [WARN] [1783332786.011486433] [leo2.frontier_explorer]: frontier goal failed (status 6), blacklisted (0.17, -0.47)
+[frontier_explorer-2] [INFO] [1783332801.839154151] [leo2.frontier_explorer]: Exploration + sweep complete: camera coverage 73% (8/11 wall cells), items found: [] (0 confirmed, 0 seen)
+[frontier_explorer-2] [INFO] [1783332801.885475515] [leo2.frontier_explorer]: Exploration finished.
+[frontier_explorer-2] [INFO] [1783332808.419773118] [leo2.frontier_explorer]: Map saved to /ros2_ws/maps/leo2_map

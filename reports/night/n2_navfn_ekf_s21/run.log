@@ -1,0 +1,20 @@
+[exp 22:29:56] stack=hybrid world=office_world profile=realistic cap=30min out=reports/night/n2_navfn_ekf_s21
+Using patched Ogre GPU renderer from docker/patched/
+leo_sim
+leo_sim
+d501e6652ab899ba591f007e7a1b9fb1a98ba7f096c9ad802bcd0bbc14031099
+Leo sim started (container: leo_sim)
+Logs: docker logs -f leo_sim
+[exp 22:29:59] waiting for /leo1/scan
+[exp 22:30:20] scan: average rate: 10.113
+[exp 22:30:23] starting wheel-odometry model (message only) + gyro + EKF
+[exp 22:30:37] starting overlay stack: sim_navigation.launch.py (slam + nav2 + guard + collision monitor)
+[exp 22:30:37] waiting for Nav2 planner action
+[exp 22:31:10] camera/points (with stack up): average rate: 5.061
+[exp 22:31:15] camera/points endpoints: 4
+[exp 22:31:24] scan_filtered: average rate: 9.978
+[exp 22:31:24] starting recorders
+[exp 22:31:25] starting ArUco detector
+[exp 22:31:30] bootstrap jog
+[exp 22:31:53] explorer launched; polling (cap 30 min)
+[exp 23:00:04] FATAL: container died mid-run

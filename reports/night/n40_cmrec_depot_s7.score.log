@@ -1,0 +1,65 @@
+===== MAP QUALITY =====
+label                  n40_cmrec_depot_s7
+iou@2_aligned          0.7943
+precision@2_aligned    0.9985
+recall@2_aligned       0.8277
+rmse_m_aligned         0.0373
+phantom_frac           0.0000
+align_shift_m          0.0500
+align_deg              -0.5000
+iou@2                  0.7467
+phantom_frac_raw       0.0015
+rmse_m                 0.0465
+slam_ate_rmse_m        0.0692
+slam_final_err_m       0.1140
+odom_ate_rmse_m        2.6509
+odom_final_err_m       1.1399
+free_area_m2           176.7500
+gt_free_area_m2        180.5850
+free_area_ratio        0.9788
+known_area_m2          189.9050
+map_extent_m           14.25, 14.20
+world_extent_m         14.20, 14.20
+extent_excess_m        0.05, 0.00
+wrote /ros2_ws/reports/night/n40_cmrec_depot_s7/map_vs_world.png
+wrote /ros2_ws/reports/night/n40_cmrec_depot_s7/map_score.json
+
+===== DRIVING SAFETY =====
+samples                1271
+duration_s             635.0
+path_len_m             73.36
+min_clearance_m        0.335
+p05_clearance_m        0.4
+contacts               0
+contact_events         0
+near_misses            0
+doorway_passes         24
+stuck_events           6
+stuck_time_s           209.5
+stuck_frac             0.33
+mean_speed_mps         0.116
+visited_area_m2        1.56
+
+wrote /ros2_ws/reports/night/n40_cmrec_depot_s7/safety_score.json
+
+artefacts in reports/night/n40_cmrec_depot_s7:
+  888  explorer.log
+  161  imu.log
+  81240  map.pgm
+  120  map.yaml
+  1345  map_saver.log
+  1444  map_score.json
+  126782  map_vs_world.png
+  7891  odom.log
+  1162008  overlay.log
+  93846  pose_error.csv
+  0  pose_rec.log
+  1436  run.log
+  327  safety_score.json
+  5736  sim.log
+  1669  timelapse.log
+  90461  timelapse.mp4
+  7410  timelapse_final.png
+  939  timelapse_path.csv
+  15057  traj.csv
+  0  traj.log

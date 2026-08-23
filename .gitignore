@@ -1,72 +1,113 @@
-# Prerequisites
+# Build artifacts
 *.d
-
-# Compiled Object files
-*.slo
-*.lo
 *.o
 *.obj
-
-# Generated ROS maps and media
-artifacts/
-*.pdf
-
-# ChatGPT / Repomix context exports (may contain lab details)
-chatgpt_context/
-reports/
-bags/
-*.pdf
-
-# Precompiled Headers
+*.slo
+*.lo
 *.gch
 *.pch
-
-# Compiled Dynamic libraries
 *.so
 *.dylib
 *.dll
-
-# Fortran module files
 *.mod
 *.smod
-
-# Compiled Static libraries
 *.lai
 *.la
 *.a
 *.lib
-
-# Executables
 *.exe
 *.out
 *.app
 
-#ros2
-build/*
-install/*
-log/*
-
-src/build/*
-src/install/*
-src/log/*
-
-src/husarion_gz_worlds/*
-
-src/**/build/
-src/**/install/
-src/**/log/
-/src/leo_rover_semantic_vision/build/
-/src/leo_rover_semantic_vision/install/
-/src/leo_rover_semantic_vision/log/
-
-# Generated ROS maps
-maps/
-*.pyc
-__pycache__/
+# ROS 2 workspace
 build/
 install/
 log/
+src/build/
+src/install/
+src/log/
+
+# Third-party world assets (clone locally, see README)
+src/husarion_gz_worlds/*
+!src/husarion_gz_worlds/.gitkeep
+
+# WSL GPU Ogre binaries (build: ./scripts/build_ogre_wsl_gpu.sh)
+docker/patched/*
+!docker/patched/.gitkeep
+
+# Abandoned native-WSL extraction tarballs
+*.tar
+.ros-runtime/
+.ros-runtime.tar
+.syslibs.tar
+.gz-runtime.tar
+.ruby.tar
+.rubylibs.tar
+.ruby-stdlib.tar
+.spdlog.tar
+install/setup_wsl.bash
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*~
+
+# Python
+**/__pycache__/
+*.pyc
+
+# Large local run artifacts (keep on disk; too big for git)
+*.mp4
+*.mkv
+*.posegraph
+maps/*.data
+reports/**/*.data
+report_package/**/*.data
+
+# --- Third-party clones (nested git repos; fetch, do not vendor) ---
+# frontier_exploration_ros2 is pinned in bundle_ref/dependencies.repos:
+#   vcs import src < bundle_ref/dependencies.repos
+src/frontier_exploration_ros2/
+src/m-explore-ros2/
+src/husarion_gz_worlds/
+
+# --- Overnight experiment run outputs (2026-08-17) ---
+# ~36 MB of maps, time-lapses, pose CSVs and stack logs. The written findings
+# and the self-contained dashboard are tracked; the raw runs stay on disk.
+# Regenerate: scripts/exp_run.sh -> scripts/exp_score.sh -> scripts/exp_compare.py
+reports/exp/**
+!reports/exp/FINDINGS.md
+!reports/exp/BUNDLE_BUGS.md
+!reports/exp/comparison.md
+!reports/exp/dashboard.html
+
+# Older local run artifacts
+reports/slam_bench*/
+reports/slam_smoke/
+reports/slam_verify/
+reports/sim_run_*/
+reports/*.log
+reports/*.png
+reports/*.json
+
+# --- merged in from fix/real-rover-mapping (2026-08-23) ---
+# Generated ROS maps and media
+artifacts/
+maps/
+*.pdf
+
+# ChatGPT / Repomix context exports (may contain lab details)
+chatgpt_context/
 
 # Local rosbag recordings (multi-GB) and deploy bundles
 bags/
 src/leo_real_mapping_bundle.zip
+
+# Colcon output, including the vendored semantic-vision tree
+src/**/build/
+src/**/install/
+src/**/log/
+build/
+install/
+log/

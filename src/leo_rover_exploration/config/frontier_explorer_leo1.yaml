@@ -1,0 +1,42 @@
+frontier_explorer:
+  ros__parameters:
+    use_sim_time: true
+    robot_name: leo1
+    robot_base_frame: leo1/base_link
+    map_topic: /map
+    map_frame: map
+    planner_frequency: 0.25
+    min_frontier_size: 0.5
+    potential_scale: 3.0
+    gain_scale: 1.0
+    progress_timeout: 30.0
+    blacklist_radius: 0.6
+    blacklist_ttl: 90.0
+    blacklist_long_ttl: 900.0
+    blacklist_max_strikes: 3
+    replan_distance: 0.7
+    goal_commit_time: 10.0
+    switch_margin: 1.25
+    validate_goals: true
+    planner_action_name: compute_path_to_pose
+    skip_ttl: 20.0
+    claim_radius: 1.5
+    idle_cycles_to_finish: 3
+    watchdog_period: 10.0
+    return_to_init: true
+    map_save_path: /ros2_ws/maps/explored_map
+    # --- camera coverage / item search ---
+    camera_frame: leo1/sensor_camera_link
+    camera_fov: 1.047
+    detection_range: 3.0
+    camera_coverage_target: 0.90
+    sweep_min_cluster: 5
+    sweep_max_cluster: 60
+    sweep_heading_weight: 0.75
+    coverage_update_period: 0.5
+    detections_topic: /leo1/aruco_detections
+    verify_min_views: 2
+    verify_max_attempts: 2
+    verify_min_view_distance: 0.5
+    verify_min_view_interval: 5.0
+    verify_min_yaw_delta: 0.35

@@ -1,0 +1,749 @@
+[INFO] [launch]: All log files can be found below /root/.ros/log/2026-07-06-10-19-00-797650-6e238736cd6c-600
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [controller_server-1]: process started with pid [668]
+[INFO] [planner_server-2]: process started with pid [670]
+[INFO] [behavior_server-3]: process started with pid [672]
+[INFO] [bt_navigator-4]: process started with pid [674]
+[INFO] [waypoint_follower-5]: process started with pid [676]
+[INFO] [lifecycle_manager-6]: process started with pid [678]
+[INFO] [controller_server-7]: process started with pid [680]
+[INFO] [planner_server-8]: process started with pid [682]
+[INFO] [behavior_server-9]: process started with pid [684]
+[INFO] [bt_navigator-10]: process started with pid [686]
+[INFO] [waypoint_follower-11]: process started with pid [688]
+[INFO] [lifecycle_manager-12]: process started with pid [690]
+[lifecycle_manager-6] [INFO] [1783333142.146768841] [leo1.lifecycle_manager_navigation]: Creating
+[lifecycle_manager-12] [INFO] [1783333142.149739888] [leo2.lifecycle_manager_navigation]: Creating
+[waypoint_follower-5] [INFO] [1783333142.169057841] [leo1.waypoint_follower]: 
+[waypoint_follower-5] 	waypoint_follower lifecycle node launched. 
+[waypoint_follower-5] 	Waiting on external lifecycle transitions to activate
+[waypoint_follower-5] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[lifecycle_manager-6] [INFO] [1783333142.182091265] [leo1.lifecycle_manager_navigation]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[waypoint_follower-11] [INFO] [1783333142.185816267] [leo2.waypoint_follower]: 
+[waypoint_follower-11] 	waypoint_follower lifecycle node launched. 
+[waypoint_follower-11] 	Waiting on external lifecycle transitions to activate
+[waypoint_follower-11] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[lifecycle_manager-12] [INFO] [1783333142.194257383] [leo2.lifecycle_manager_navigation]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[planner_server-2] [INFO] [1783333142.201617414] [leo1.planner_server]: 
+[planner_server-2] 	planner_server lifecycle node launched. 
+[planner_server-2] 	Waiting on external lifecycle transitions to activate
+[planner_server-2] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-7] [INFO] [1783333142.204936747] [leo2.controller_server]: 
+[controller_server-7] 	controller_server lifecycle node launched. 
+[controller_server-7] 	Waiting on external lifecycle transitions to activate
+[controller_server-7] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-8] [INFO] [1783333142.212349666] [leo2.planner_server]: 
+[planner_server-8] 	planner_server lifecycle node launched. 
+[planner_server-8] 	Waiting on external lifecycle transitions to activate
+[planner_server-8] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-1] [INFO] [1783333142.226444188] [leo1.controller_server]: 
+[controller_server-1] 	controller_server lifecycle node launched. 
+[controller_server-1] 	Waiting on external lifecycle transitions to activate
+[controller_server-1] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[bt_navigator-4] [INFO] [1783333142.290628358] [leo1.bt_navigator]: 
+[bt_navigator-4] 	bt_navigator lifecycle node launched. 
+[bt_navigator-4] 	Waiting on external lifecycle transitions to activate
+[bt_navigator-4] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[bt_navigator-4] [INFO] [1783333142.290745219] [leo1.bt_navigator]: Creating
+[behavior_server-3] [INFO] [1783333142.328587325] [leo1.behavior_server]: 
+[behavior_server-3] 	behavior_server lifecycle node launched. 
+[behavior_server-3] 	Waiting on external lifecycle transitions to activate
+[behavior_server-3] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[behavior_server-9] [INFO] [1783333142.334313861] [leo2.behavior_server]: 
+[behavior_server-9] 	behavior_server lifecycle node launched. 
+[behavior_server-9] 	Waiting on external lifecycle transitions to activate
+[behavior_server-9] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[bt_navigator-10] [INFO] [1783333142.362956864] [leo2.bt_navigator]: 
+[bt_navigator-10] 	bt_navigator lifecycle node launched. 
+[bt_navigator-10] 	Waiting on external lifecycle transitions to activate
+[bt_navigator-10] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[bt_navigator-10] [INFO] [1783333142.363091162] [leo2.bt_navigator]: Creating
+[waypoint_follower-5] [INFO] [1783333142.387432265] [leo1.waypoint_follower]: Creating
+[waypoint_follower-11] [INFO] [1783333142.387731069] [leo2.waypoint_follower]: Creating
+[lifecycle_manager-12] [INFO] [1783333142.415940761] [leo2.lifecycle_manager_navigation]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-12] [INFO] [1783333142.415989631] [leo2.lifecycle_manager_navigation]: [34m[1mConfiguring controller_server[0m[0m
+[lifecycle_manager-6] [INFO] [1783333142.428934872] [leo1.lifecycle_manager_navigation]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-6] [INFO] [1783333142.429071992] [leo1.lifecycle_manager_navigation]: [34m[1mConfiguring controller_server[0m[0m
+[planner_server-2] [INFO] [1783333142.810662813] [leo1.planner_server]: Creating
+[planner_server-8] [INFO] [1783333142.814819036] [leo2.planner_server]: Creating
+[planner_server-2] [INFO] [1783333142.827177885] [leo1.global_costmap.global_costmap]: 
+[planner_server-2] 	global_costmap lifecycle node launched. 
+[planner_server-2] 	Waiting on external lifecycle transitions to activate
+[planner_server-2] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-8] [INFO] [1783333142.829685580] [leo2.global_costmap.global_costmap]: 
+[planner_server-8] 	global_costmap lifecycle node launched. 
+[planner_server-8] 	Waiting on external lifecycle transitions to activate
+[planner_server-8] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-8] [INFO] [1783333142.933419196] [leo2.global_costmap.global_costmap]: Creating Costmap
+[planner_server-2] [INFO] [1783333142.934020912] [leo1.global_costmap.global_costmap]: Creating Costmap
+[controller_server-1] [INFO] [1783333143.649426078] [leo1.controller_server]: Creating controller server
+[controller_server-7] [INFO] [1783333143.650016868] [leo2.controller_server]: Creating controller server
+[controller_server-1] [INFO] [1783333143.659946784] [leo1.local_costmap.local_costmap]: 
+[controller_server-1] 	local_costmap lifecycle node launched. 
+[controller_server-1] 	Waiting on external lifecycle transitions to activate
+[controller_server-1] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-7] [INFO] [1783333143.667071421] [leo2.local_costmap.local_costmap]: 
+[controller_server-7] 	local_costmap lifecycle node launched. 
+[controller_server-7] 	Waiting on external lifecycle transitions to activate
+[controller_server-7] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-1] [INFO] [1783333143.772001301] [leo1.local_costmap.local_costmap]: Creating Costmap
+[controller_server-7] [INFO] [1783333143.772690100] [leo2.local_costmap.local_costmap]: Creating Costmap
+[controller_server-1] [INFO] [1783333143.777219781] [leo1.controller_server]: Configuring controller interface
+[controller_server-1] [INFO] [1783333143.777412223] [leo1.controller_server]: getting goal checker plugins..
+[controller_server-1] [INFO] [1783333143.777466036] [leo1.controller_server]: Controller frequency set to 20.0000Hz
+[controller_server-1] [INFO] [1783333143.777489599] [leo1.local_costmap.local_costmap]: Configuring
+[controller_server-7] [INFO] [1783333143.777976381] [leo2.controller_server]: Configuring controller interface
+[controller_server-7] [INFO] [1783333143.778189646] [leo2.controller_server]: getting goal checker plugins..
+[controller_server-7] [INFO] [1783333143.778274848] [leo2.controller_server]: Controller frequency set to 20.0000Hz
+[controller_server-7] [INFO] [1783333143.778302755] [leo2.local_costmap.local_costmap]: Configuring
+[controller_server-7] [INFO] [1783333143.794468811] [leo2.local_costmap.local_costmap]: Using plugin "obstacle_layer"
+[controller_server-1] [INFO] [1783333143.794981930] [leo1.local_costmap.local_costmap]: Using plugin "obstacle_layer"
+[controller_server-7] [INFO] [1783333143.845707362] [leo2.local_costmap.local_costmap]: Subscribed to Topics: scan camera
+[controller_server-1] [INFO] [1783333143.845710056] [leo1.local_costmap.local_costmap]: Subscribed to Topics: scan camera
+[controller_server-1] [INFO] [1783333143.858830914] [leo1.local_costmap.local_costmap]: Initialized plugin "obstacle_layer"
+[controller_server-1] [INFO] [1783333143.858876319] [leo1.local_costmap.local_costmap]: Using plugin "inflation_layer"
+[controller_server-7] [INFO] [1783333143.859941003] [leo2.local_costmap.local_costmap]: Initialized plugin "obstacle_layer"
+[controller_server-7] [INFO] [1783333143.859968732] [leo2.local_costmap.local_costmap]: Using plugin "inflation_layer"
+[controller_server-1] [INFO] [1783333143.860249589] [leo1.local_costmap.local_costmap]: Initialized plugin "inflation_layer"
+[controller_server-7] [INFO] [1783333143.861123219] [leo2.local_costmap.local_costmap]: Initialized plugin "inflation_layer"
+[controller_server-7] [INFO] [1783333143.928863807] [leo2.controller_server]: Created progress_checker : progress_checker of type nav2_controller::PoseProgressChecker
+[controller_server-1] [INFO] [1783333143.929285919] [leo1.controller_server]: Created progress_checker : progress_checker of type nav2_controller::PoseProgressChecker
+[controller_server-1] [INFO] [1783333143.968713845] [leo1.controller_server]: Created goal checker : general_goal_checker of type nav2_controller::SimpleGoalChecker
+[controller_server-7] [INFO] [1783333143.969378061] [leo2.controller_server]: Created goal checker : general_goal_checker of type nav2_controller::SimpleGoalChecker
+[controller_server-1] [INFO] [1783333143.969670437] [leo1.controller_server]: Controller Server has general_goal_checker  goal checkers available.
+[controller_server-7] [INFO] [1783333143.970262751] [leo2.controller_server]: Controller Server has general_goal_checker  goal checkers available.
+[controller_server-7] [INFO] [1783333144.479162347] [leo2.controller_server]: Created controller : FollowPath of type nav2_rotation_shim_controller::RotationShimController
+[controller_server-1] [INFO] [1783333144.479799435] [leo1.controller_server]: Created controller : FollowPath of type nav2_rotation_shim_controller::RotationShimController
+[controller_server-1] [INFO] [1783333144.523519026] [leo1.controller_server]: Created internal controller for rotation shimming: FollowPath of type nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-7] [INFO] [1783333144.524177030] [leo2.controller_server]: Created internal controller for rotation shimming: FollowPath of type nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-1] [INFO] [1783333144.531877944] [leo1.controller_server]: Controller Server has FollowPath  controllers available.
+[controller_server-7] [INFO] [1783333144.532293410] [leo2.controller_server]: Controller Server has FollowPath  controllers available.
+[lifecycle_manager-12] [INFO] [1783333144.541610538] [leo2.lifecycle_manager_navigation]: [34m[1mConfiguring planner_server[0m[0m
+[lifecycle_manager-6] [INFO] [1783333144.541630390] [leo1.lifecycle_manager_navigation]: [34m[1mConfiguring planner_server[0m[0m
+[planner_server-2] [INFO] [1783333144.541805554] [leo1.planner_server]: Configuring
+[planner_server-2] [INFO] [1783333144.541832425] [leo1.global_costmap.global_costmap]: Configuring
+[planner_server-8] [INFO] [1783333144.541861433] [leo2.planner_server]: Configuring
+[planner_server-8] [INFO] [1783333144.541886462] [leo2.global_costmap.global_costmap]: Configuring
+[planner_server-8] [INFO] [1783333144.558916347] [leo2.global_costmap.global_costmap]: Using plugin "static_layer"
+[planner_server-2] [INFO] [1783333144.558925809] [leo1.global_costmap.global_costmap]: Using plugin "static_layer"
+[planner_server-8] [INFO] [1783333144.618616854] [leo2.global_costmap.global_costmap]: Subscribing to the map topic (/map) with transient local durability
+[planner_server-2] [INFO] [1783333144.618933632] [leo1.global_costmap.global_costmap]: Subscribing to the map topic (/map) with transient local durability
+[planner_server-2] [INFO] [1783333144.623532844] [leo1.global_costmap.global_costmap]: Subscribing to updates
+[planner_server-8] [INFO] [1783333144.624124430] [leo2.global_costmap.global_costmap]: Subscribing to updates
+[planner_server-8] [INFO] [1783333144.632516928] [leo2.global_costmap.global_costmap]: Initialized plugin "static_layer"
+[planner_server-8] [INFO] [1783333144.632563071] [leo2.global_costmap.global_costmap]: Using plugin "obstacle_layer"
+[planner_server-2] [INFO] [1783333144.633254088] [leo1.global_costmap.global_costmap]: Initialized plugin "static_layer"
+[planner_server-2] [INFO] [1783333144.633285848] [leo1.global_costmap.global_costmap]: Using plugin "obstacle_layer"
+[planner_server-2] [INFO] [1783333144.635438071] [leo1.global_costmap.global_costmap]: Subscribed to Topics: scan camera
+[planner_server-8] [INFO] [1783333144.633741688] [leo2.global_costmap.global_costmap]: Subscribed to Topics: scan camera
+[planner_server-8] [INFO] [1783333144.643792634] [leo2.global_costmap.global_costmap]: Initialized plugin "obstacle_layer"
+[planner_server-8] [INFO] [1783333144.643864101] [leo2.global_costmap.global_costmap]: Using plugin "inflation_layer"
+[planner_server-8] [INFO] [1783333144.645545905] [leo2.global_costmap.global_costmap]: Initialized plugin "inflation_layer"
+[planner_server-2] [INFO] [1783333144.646781131] [leo1.global_costmap.global_costmap]: Initialized plugin "obstacle_layer"
+[planner_server-2] [INFO] [1783333144.646832496] [leo1.global_costmap.global_costmap]: Using plugin "inflation_layer"
+[planner_server-2] [INFO] [1783333144.648610613] [leo1.global_costmap.global_costmap]: Initialized plugin "inflation_layer"
+[planner_server-8] [INFO] [1783333144.658929197] [leo2.global_costmap.global_costmap]: StaticLayer: Resizing costmap to 476 X 206 at 0.050000 m/pix
+[planner_server-2] [INFO] [1783333144.662105056] [leo1.global_costmap.global_costmap]: StaticLayer: Resizing costmap to 476 X 206 at 0.050000 m/pix
+[planner_server-8] [INFO] [1783333144.704469694] [leo2.planner_server]: Created global planner plugin GridBased of type nav2_navfn_planner/NavfnPlanner
+[planner_server-8] [INFO] [1783333144.704574400] [leo2.planner_server]: Configuring plugin GridBased of type NavfnPlanner
+[planner_server-2] [INFO] [1783333144.705391818] [leo1.planner_server]: Created global planner plugin GridBased of type nav2_navfn_planner/NavfnPlanner
+[planner_server-2] [INFO] [1783333144.705431655] [leo1.planner_server]: Configuring plugin GridBased of type NavfnPlanner
+[planner_server-8] [INFO] [1783333144.706026692] [leo2.planner_server]: Planner Server has GridBased  planners available.
+[planner_server-2] [INFO] [1783333144.706593110] [leo1.planner_server]: Planner Server has GridBased  planners available.
+[lifecycle_manager-6] [INFO] [1783333144.718240168] [leo1.lifecycle_manager_navigation]: [34m[1mConfiguring behavior_server[0m[0m
+[lifecycle_manager-12] [INFO] [1783333144.718308240] [leo2.lifecycle_manager_navigation]: [34m[1mConfiguring behavior_server[0m[0m
+[behavior_server-3] [INFO] [1783333144.718458605] [leo1.behavior_server]: Configuring
+[behavior_server-9] [INFO] [1783333144.718582338] [leo2.behavior_server]: Configuring
+[behavior_server-9] [INFO] [1783333144.746778429] [leo2.behavior_server]: Creating behavior plugin spin of type nav2_behaviors/Spin
+[behavior_server-3] [INFO] [1783333144.755095131] [leo1.behavior_server]: Creating behavior plugin spin of type nav2_behaviors/Spin
+[behavior_server-9] [INFO] [1783333144.802609016] [leo2.behavior_server]: Configuring spin
+[behavior_server-3] [INFO] [1783333144.810366858] [leo1.behavior_server]: Configuring spin
+[behavior_server-9] [INFO] [1783333144.811046018] [leo2.behavior_server]: Creating behavior plugin backup of type nav2_behaviors/BackUp
+[behavior_server-3] [INFO] [1783333144.818872088] [leo1.behavior_server]: Creating behavior plugin backup of type nav2_behaviors/BackUp
+[behavior_server-9] [INFO] [1783333144.854963593] [leo2.behavior_server]: Configuring backup
+[behavior_server-9] [INFO] [1783333144.858169024] [leo2.behavior_server]: Creating behavior plugin drive_on_heading of type nav2_behaviors/DriveOnHeading
+[behavior_server-3] [INFO] [1783333144.863038148] [leo1.behavior_server]: Configuring backup
+[behavior_server-3] [INFO] [1783333144.867366404] [leo1.behavior_server]: Creating behavior plugin drive_on_heading of type nav2_behaviors/DriveOnHeading
+[behavior_server-9] [INFO] [1783333144.909379475] [leo2.behavior_server]: Configuring drive_on_heading
+[behavior_server-9] [INFO] [1783333144.913916598] [leo2.behavior_server]: Creating behavior plugin wait of type nav2_behaviors/Wait
+[behavior_server-3] [INFO] [1783333144.916312763] [leo1.behavior_server]: Configuring drive_on_heading
+[behavior_server-3] [INFO] [1783333144.920702301] [leo1.behavior_server]: Creating behavior plugin wait of type nav2_behaviors/Wait
+[behavior_server-9] [INFO] [1783333144.960860813] [leo2.behavior_server]: Configuring wait
+[lifecycle_manager-12] [INFO] [1783333144.964172262] [leo2.lifecycle_manager_navigation]: [34m[1mConfiguring bt_navigator[0m[0m
+[bt_navigator-10] [INFO] [1783333144.964367680] [leo2.bt_navigator]: Configuring
+[behavior_server-3] [INFO] [1783333144.965963009] [leo1.behavior_server]: Configuring wait
+[lifecycle_manager-6] [INFO] [1783333144.969682145] [leo1.lifecycle_manager_navigation]: [34m[1mConfiguring bt_navigator[0m[0m
+[bt_navigator-4] [INFO] [1783333144.969974942] [leo1.bt_navigator]: Configuring
+[lifecycle_manager-12] [INFO] [1783333145.383098134] [leo2.lifecycle_manager_navigation]: [34m[1mConfiguring waypoint_follower[0m[0m
+[lifecycle_manager-6] [INFO] [1783333145.383197020] [leo1.lifecycle_manager_navigation]: [34m[1mConfiguring waypoint_follower[0m[0m
+[waypoint_follower-11] [INFO] [1783333145.383369631] [leo2.waypoint_follower]: Configuring
+[waypoint_follower-5] [INFO] [1783333145.383496520] [leo1.waypoint_follower]: Configuring
+[waypoint_follower-5] [INFO] [1783333145.443781832] [leo1.waypoint_follower]: Created waypoint_task_executor : wait_at_waypoint of type nav2_waypoint_follower::WaitAtWaypoint
+[waypoint_follower-11] [INFO] [1783333145.444394990] [leo2.waypoint_follower]: Created waypoint_task_executor : wait_at_waypoint of type nav2_waypoint_follower::WaitAtWaypoint
+[waypoint_follower-5] [INFO] [1783333145.444490554] [leo1.waypoint_follower]: Waypoint pause duration is set to zero, disabling task executor plugin.
+[waypoint_follower-11] [INFO] [1783333145.445079794] [leo2.waypoint_follower]: Waypoint pause duration is set to zero, disabling task executor plugin.
+[lifecycle_manager-6] [INFO] [1783333145.445168986] [leo1.lifecycle_manager_navigation]: [34m[1mActivating controller_server[0m[0m
+[controller_server-1] [INFO] [1783333145.445371141] [leo1.controller_server]: Activating
+[controller_server-1] [INFO] [1783333145.445429952] [leo1.local_costmap.local_costmap]: Activating
+[controller_server-1] [INFO] [1783333145.445438991] [leo1.local_costmap.local_costmap]: Checking transform
+[controller_server-1] [INFO] [1783333145.445541436] [leo1.local_costmap.local_costmap]: start
+[lifecycle_manager-12] [INFO] [1783333145.445450751] [leo2.lifecycle_manager_navigation]: [34m[1mActivating controller_server[0m[0m
+[controller_server-7] [INFO] [1783333145.445612921] [leo2.controller_server]: Activating
+[controller_server-7] [INFO] [1783333145.445656624] [leo2.local_costmap.local_costmap]: Activating
+[controller_server-7] [INFO] [1783333145.445673088] [leo2.local_costmap.local_costmap]: Checking transform
+[controller_server-7] [INFO] [1783333145.445808069] [leo2.local_costmap.local_costmap]: start
+[controller_server-1] [INFO] [1783333145.646769699] [leo1.controller_server]: Activating controller: FollowPath of type nav2_rotation_shim_controller::RotationShimController
+[controller_server-1] [INFO] [1783333145.646810534] [leo1.controller_server]: Activating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-1] [INFO] [1783333145.646828004] [leo1.controller_server]: Creating bond (controller_server) to lifecycle manager.
+[controller_server-7] [INFO] [1783333145.647325152] [leo2.controller_server]: Activating controller: FollowPath of type nav2_rotation_shim_controller::RotationShimController
+[controller_server-7] [INFO] [1783333145.647346809] [leo2.controller_server]: Activating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-7] [INFO] [1783333145.647361153] [leo2.controller_server]: Creating bond (controller_server) to lifecycle manager.
+[lifecycle_manager-12] [INFO] [1783333145.759364752] [leo2.lifecycle_manager_navigation]: Server controller_server connected with bond.
+[lifecycle_manager-12] [INFO] [1783333145.759400588] [leo2.lifecycle_manager_navigation]: [34m[1mActivating planner_server[0m[0m
+[lifecycle_manager-6] [INFO] [1783333145.759512112] [leo1.lifecycle_manager_navigation]: Server controller_server connected with bond.
+[lifecycle_manager-6] [INFO] [1783333145.759537339] [leo1.lifecycle_manager_navigation]: [34m[1mActivating planner_server[0m[0m
+[planner_server-8] [INFO] [1783333145.759595933] [leo2.planner_server]: Activating
+[planner_server-8] [INFO] [1783333145.759640841] [leo2.global_costmap.global_costmap]: Activating
+[planner_server-8] [INFO] [1783333145.759657706] [leo2.global_costmap.global_costmap]: Checking transform
+[planner_server-8] [INFO] [1783333145.759847705] [leo2.global_costmap.global_costmap]: start
+[planner_server-2] [INFO] [1783333145.759719991] [leo1.planner_server]: Activating
+[planner_server-2] [INFO] [1783333145.759762643] [leo1.global_costmap.global_costmap]: Activating
+[planner_server-2] [INFO] [1783333145.759773798] [leo1.global_costmap.global_costmap]: Checking transform
+[planner_server-2] [INFO] [1783333145.759927468] [leo1.global_costmap.global_costmap]: start
+[planner_server-8] [INFO] [1783333145.961224450] [leo2.planner_server]: Activating plugin GridBased of type NavfnPlanner
+[planner_server-2] [INFO] [1783333145.961590685] [leo1.planner_server]: Activating plugin GridBased of type NavfnPlanner
+[planner_server-2] [INFO] [1783333145.962241389] [leo1.planner_server]: Creating bond (planner_server) to lifecycle manager.
+[planner_server-8] [INFO] [1783333145.961976571] [leo2.planner_server]: Creating bond (planner_server) to lifecycle manager.
+[lifecycle_manager-6] [INFO] [1783333146.068748062] [leo1.lifecycle_manager_navigation]: Server planner_server connected with bond.
+[lifecycle_manager-6] [INFO] [1783333146.068805299] [leo1.lifecycle_manager_navigation]: [34m[1mActivating behavior_server[0m[0m
+[behavior_server-3] [INFO] [1783333146.069096236] [leo1.behavior_server]: Activating
+[behavior_server-3] [INFO] [1783333146.069161173] [leo1.behavior_server]: Activating spin
+[behavior_server-3] [INFO] [1783333146.069224754] [leo1.behavior_server]: Activating backup
+[behavior_server-3] [INFO] [1783333146.069247619] [leo1.behavior_server]: Activating drive_on_heading
+[behavior_server-3] [INFO] [1783333146.069257331] [leo1.behavior_server]: Activating wait
+[behavior_server-3] [INFO] [1783333146.069270012] [leo1.behavior_server]: Creating bond (behavior_server) to lifecycle manager.
+[lifecycle_manager-12] [INFO] [1783333146.069767883] [leo2.lifecycle_manager_navigation]: Server planner_server connected with bond.
+[lifecycle_manager-12] [INFO] [1783333146.069802287] [leo2.lifecycle_manager_navigation]: [34m[1mActivating behavior_server[0m[0m
+[behavior_server-9] [INFO] [1783333146.070130072] [leo2.behavior_server]: Activating
+[behavior_server-9] [INFO] [1783333146.070164561] [leo2.behavior_server]: Activating spin
+[behavior_server-9] [INFO] [1783333146.070188296] [leo2.behavior_server]: Activating backup
+[behavior_server-9] [INFO] [1783333146.070203332] [leo2.behavior_server]: Activating drive_on_heading
+[behavior_server-9] [INFO] [1783333146.070217160] [leo2.behavior_server]: Activating wait
+[behavior_server-9] [INFO] [1783333146.070234389] [leo2.behavior_server]: Creating bond (behavior_server) to lifecycle manager.
+[lifecycle_manager-12] [INFO] [1783333146.176187578] [leo2.lifecycle_manager_navigation]: Server behavior_server connected with bond.
+[lifecycle_manager-12] [INFO] [1783333146.176233288] [leo2.lifecycle_manager_navigation]: [34m[1mActivating bt_navigator[0m[0m
+[bt_navigator-10] [INFO] [1783333146.176475891] [leo2.bt_navigator]: Activating
+[lifecycle_manager-6] [INFO] [1783333146.177529386] [leo1.lifecycle_manager_navigation]: Server behavior_server connected with bond.
+[lifecycle_manager-6] [INFO] [1783333146.177563695] [leo1.lifecycle_manager_navigation]: [34m[1mActivating bt_navigator[0m[0m
+[bt_navigator-4] [INFO] [1783333146.177954221] [leo1.bt_navigator]: Activating
+[bt_navigator-10] [INFO] [1783333146.220842207] [leo2.bt_navigator]: Creating bond (bt_navigator) to lifecycle manager.
+[bt_navigator-4] [INFO] [1783333146.223952876] [leo1.bt_navigator]: Creating bond (bt_navigator) to lifecycle manager.
+[lifecycle_manager-12] [INFO] [1783333146.332273942] [leo2.lifecycle_manager_navigation]: Server bt_navigator connected with bond.
+[lifecycle_manager-12] [INFO] [1783333146.332320513] [leo2.lifecycle_manager_navigation]: [34m[1mActivating waypoint_follower[0m[0m
+[waypoint_follower-11] [INFO] [1783333146.332566746] [leo2.waypoint_follower]: Activating
+[waypoint_follower-11] [INFO] [1783333146.332599664] [leo2.waypoint_follower]: Creating bond (waypoint_follower) to lifecycle manager.
+[lifecycle_manager-6] [INFO] [1783333146.332861444] [leo1.lifecycle_manager_navigation]: Server bt_navigator connected with bond.
+[lifecycle_manager-6] [INFO] [1783333146.332892411] [leo1.lifecycle_manager_navigation]: [34m[1mActivating waypoint_follower[0m[0m
+[waypoint_follower-5] [INFO] [1783333146.333130270] [leo1.waypoint_follower]: Activating
+[waypoint_follower-5] [INFO] [1783333146.333159612] [leo1.waypoint_follower]: Creating bond (waypoint_follower) to lifecycle manager.
+[lifecycle_manager-12] [INFO] [1783333146.439932453] [leo2.lifecycle_manager_navigation]: Server waypoint_follower connected with bond.
+[lifecycle_manager-12] [INFO] [1783333146.439976017] [leo2.lifecycle_manager_navigation]: [34m[1mManaged nodes are active[0m[0m
+[lifecycle_manager-12] [INFO] [1783333146.439983979] [leo2.lifecycle_manager_navigation]: [34m[1mCreating bond timer...[0m[0m
+[lifecycle_manager-6] [INFO] [1783333146.440858699] [leo1.lifecycle_manager_navigation]: Server waypoint_follower connected with bond.
+[lifecycle_manager-6] [INFO] [1783333146.440885991] [leo1.lifecycle_manager_navigation]: [34m[1mManaged nodes are active[0m[0m
+[lifecycle_manager-6] [INFO] [1783333146.440893302] [leo1.lifecycle_manager_navigation]: [34m[1mCreating bond timer...[0m[0m
+[controller_server-7] [INFO] [1783333191.874769311] [leo2.local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[planner_server-8] [INFO] [1783333191.874867554] [leo2.global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[controller_server-1] [INFO] [1783333191.876133622] [leo1.local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[planner_server-2] [INFO] [1783333191.876253371] [leo1.global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-2] [WARN] [1783333195.125496813] [leo1.planner_server]: No planners specified in action call. Server will use only plugin GridBased  in server. This warning will appear once.
+[planner_server-8] [WARN] [1783333195.126996383] [leo2.planner_server]: No planners specified in action call. Server will use only plugin GridBased  in server. This warning will appear once.
+[bt_navigator-4] [INFO] [1783333195.160738995] [leo1.bt_navigator]: Begin navigating from current location (0.81, -0.00) to (0.17, -0.47)
+[bt_navigator-10] [INFO] [1783333195.174986685] [leo2.bt_navigator]: Begin navigating from current location (4.14, -0.00) to (0.17, -0.47)
+[controller_server-1] [INFO] [1783333195.181726800] [leo1.controller_server]: Received a goal, begin computing control effort.
+[controller_server-1] [WARN] [1783333195.181839154] [leo1.controller_server]: No goal checker was specified in parameter 'current_goal_checker'. Server will use only plugin loaded general_goal_checker . This warning will appear once.
+[controller_server-7] [INFO] [1783333195.196534794] [leo2.controller_server]: Received a goal, begin computing control effort.
+[controller_server-7] [WARN] [1783333195.196607552] [leo2.controller_server]: No goal checker was specified in parameter 'current_goal_checker'. Server will use only plugin loaded general_goal_checker . This warning will appear once.
+[controller_server-1] [WARN] [1783333195.374502699] [leo1.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [ERROR] [1783333195.400064724] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 44.100000 but the latest data is at time 44.098000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333195.400933543] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783333195.690757997] [leo1.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783333195.995906330] [leo1.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333196.267359898] [leo2.controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783333196.319515505] [leo1.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783333196.319579284] [leo1.controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1783333196.358758254] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783333196.656857851] [leo1.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [WARN] [1783333196.693865843] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783333197.002314670] [leo1.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [WARN] [1783333197.048096235] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783333197.358072114] [leo1.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783333197.358118429] [leo1.controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1783333197.388383102] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 45.300000 but the latest data is at time 45.298000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333197.389494807] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333197.389522309] [leo2.controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783333197.683626937] [leo1.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [ERROR] [1783333197.732458985] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 45.500000 but the latest data is at time 45.498000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333197.735024239] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783333198.020255460] [leo1.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333198.298750525] [leo2.controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783333198.376014235] [leo1.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783333198.376061656] [leo1.controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1783333198.440848077] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783333198.694069632] [leo1.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [WARN] [1783333198.755023411] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783333199.029097521] [leo1.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [WARN] [1783333199.071513196] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783333199.314131668] [leo1.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783333199.314209996] [leo1.controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1783333199.379316085] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333199.379361165] [leo2.controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783333199.645267640] [leo1.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [WARN] [1783333199.714906882] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783333199.991231733] [leo1.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [ERROR] [1783333200.040361686] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 46.895000 but the latest data is at time 46.878000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333200.041423427] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783333200.323718509] [leo1.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333200.347620795] [leo2.controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783333200.395725393] [leo1.controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783333200.628524336] [leo1.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [ERROR] [1783333200.672260741] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 47.300000 but the latest data is at time 47.278000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333200.673494185] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783333200.921750078] [leo1.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783333201.227503013] [leo1.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783333201.368631277] [leo1.controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1783333201.386829206] [leo2.controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783333201.530854045] [leo1.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [ERROR] [1783333201.579212062] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 47.900000 but the latest data is at time 47.898000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333201.580081861] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783333201.826368371] [leo1.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783333202.149967538] [leo1.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783333202.384504669] [leo1.controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1783333202.451236179] [leo2.controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783333202.455836007] [leo1.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [ERROR] [1783333202.802361340] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 48.700000 but the latest data is at time 48.678000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333202.803734067] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783333203.450100963] [leo1.controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1783333203.469831323] [leo2.controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783333203.642826870] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 49.241000 but the latest data is at time 49.237000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783333203.643276421] [leo1.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [WARN] [1783333203.712533565] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[planner_server-8] [ERROR] [1783333204.447598420] [leo2.planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1783333204.447696360] [leo2.planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-8] [WARN] [1783333204.447713703] [leo2.planner_server]: Planning algorithm GridBased failed to generate a valid path to (0.17, -0.47)
+[planner_server-8] [WARN] [1783333204.447726801] [leo2.planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[controller_server-1] [INFO] [1783333204.449993224] [leo1.controller_server]: Passing new path to controller.
+[planner_server-8] [INFO] [1783333204.465324349] [leo2.global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-8] [ERROR] [1783333204.567862179] [leo2.planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1783333204.567942070] [leo2.planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-8] [WARN] [1783333204.567958032] [leo2.planner_server]: Planning algorithm GridBased failed to generate a valid path to (0.17, -0.47)
+[planner_server-8] [WARN] [1783333204.567969958] [leo2.planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[controller_server-1] [WARN] [1783333204.582024127] [leo1.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333204.600729525] [leo2.controller_server]: Goal was canceled. Stopping the robot.
+[controller_server-7] [INFO] [1783333204.600783864] [leo2.controller_server]: [follow_path] [ActionServer] Client requested to cancel the goal. Cancelling.
+[controller_server-7] [INFO] [1783333204.601049455] [leo2.local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[planner_server-8] [INFO] [1783333204.601485428] [leo2.global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[bt_navigator-10] [WARN] [1783333204.602810364] [BehaviorTreeEngine]: Behavior Tree tick rate 100.00 was exceeded!
+[controller_server-7] [INFO] [1783333204.775726664] [leo2.controller_server]: Received a goal, begin computing control effort.
+[controller_server-1] [INFO] [1783333205.492777948] [leo1.controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783333205.746662517] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 50.418000 but the latest data is at time 50.417000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783333205.747092237] [leo1.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[planner_server-8] [ERROR] [1783333205.786343466] [leo2.planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1783333205.786445000] [leo2.planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-8] [WARN] [1783333205.786459313] [leo2.planner_server]: Planning algorithm GridBased failed to generate a valid path to (0.17, -0.47)
+[planner_server-8] [WARN] [1783333205.786468211] [leo2.planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-8] [INFO] [1783333205.804755897] [leo2.global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[controller_server-7] [INFO] [1783333206.025269169] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1783333206.198656160] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783333206.505248061] [leo1.controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1783333207.015529908] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1783333207.167789214] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 51.300000 but the latest data is at time 51.298000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333207.169190335] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783333207.563426136] [leo1.controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1783333208.092519500] [leo2.controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783333208.569658332] [leo1.controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783333208.771392152] [leo1.controller_server]: Reached the goal!
+[bt_navigator-4] [INFO] [1783333208.811219072] [leo1.bt_navigator]: Goal succeeded
+[controller_server-7] [INFO] [1783333209.119281679] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1783333210.119274976] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1783333211.169281438] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1783333212.169273400] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1783333212.351612135] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 54.500000 but the latest data is at time 54.498000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333212.352491053] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[planner_server-8] [ERROR] [1783333213.176312348] [leo2.planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1783333213.176436246] [leo2.planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-8] [WARN] [1783333213.176459363] [leo2.planner_server]: Planning algorithm GridBased failed to generate a valid path to (0.17, -0.47)
+[planner_server-8] [WARN] [1783333213.176475734] [leo2.planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-8] [INFO] [1783333213.194687144] [leo2.global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-8] [ERROR] [1783333213.366254395] [leo2.planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1783333213.366332095] [leo2.planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-8] [WARN] [1783333213.366341323] [leo2.planner_server]: Planning algorithm GridBased failed to generate a valid path to (0.17, -0.47)
+[planner_server-8] [WARN] [1783333213.366349524] [leo2.planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-10] [ERROR] [1783333213.405033989] [leo2.bt_navigator_navigate_to_pose_rclcpp_node]: Failed to get result for follow_path in node halt!
+[behavior_server-9] [INFO] [1783333213.405684204] [leo2.behavior_server]: Running spin
+[behavior_server-9] [INFO] [1783333213.405801864] [leo2.behavior_server]: Turning 1.57 for spin behavior.
+[bt_navigator-10] [WARN] [1783333213.406048209] [BehaviorTreeEngine]: Behavior Tree tick rate 100.00 was exceeded!
+[controller_server-7] [INFO] [1783333213.424974471] [leo2.controller_server]: Goal was canceled. Stopping the robot.
+[controller_server-7] [INFO] [1783333213.425031442] [leo2.controller_server]: [follow_path] [ActionServer] Client requested to cancel the goal. Cancelling.
+[behavior_server-9] [INFO] [1783333216.206015268] [leo2.behavior_server]: spin completed successfully
+[controller_server-7] [INFO] [1783333216.246753347] [leo2.controller_server]: Received a goal, begin computing control effort.
+[controller_server-7] [ERROR] [1783333216.448856056] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 57.100000 but the latest data is at time 57.098000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333216.449396444] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333217.315492457] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1783333217.407136735] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [ERROR] [1783333217.712344959] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 57.888000 but the latest data is at time 57.878000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333217.712947505] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333218.325778697] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1783333218.716087436] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [WARN] [1783333219.021396309] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [ERROR] [1783333219.324969221] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 58.900000 but the latest data is at time 58.898000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333219.325503488] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333219.378041328] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1783333219.631028155] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 59.100000 but the latest data is at time 59.098000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333219.631560592] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[planner_server-8] [ERROR] [1783333220.348263642] [leo2.planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1783333220.348377661] [leo2.planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-8] [WARN] [1783333220.348401259] [leo2.planner_server]: Planning algorithm GridBased failed to generate a valid path to (0.17, -0.47)
+[planner_server-8] [WARN] [1783333220.348417422] [leo2.planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-8] [INFO] [1783333220.366309547] [leo2.global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[controller_server-7] [INFO] [1783333220.595315383] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1783333221.631638549] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1783333222.681658510] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1783333222.823586950] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 61.100000 but the latest data is at time 61.098000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333222.824046598] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333223.686358535] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1783333223.798435483] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333224.724344602] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1783333225.774149498] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1783333225.947198425] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333226.809064770] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1783333227.797305571] [leo2.controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783333228.591047336] [leo1.global_costmap.global_costmap]: Message Filter dropping message: frame 'leo1/sensor_lidar_link' at time 64.400 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1783333228.847310255] [leo2.controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783333228.924811035] [leo1.global_costmap.global_costmap]: Message Filter dropping message: frame 'leo1/sensor_camera_link' at time 64.600 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1783333229.897339469] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1783333229.949056672] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333230.897315868] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1783333231.947308985] [leo2.controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783333232.832736565] [leo1.global_costmap.global_costmap]: Message Filter dropping message: frame 'leo1/sensor_lidar_link' at time 67.000 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1783333232.947297583] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1783333233.069452015] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[planner_server-2] [INFO] [1783333233.117774072] [leo1.global_costmap.global_costmap]: Message Filter dropping message: frame 'leo1/sensor_camera_link' at time 67.200 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1783333233.982126946] [leo2.controller_server]: Passing new path to controller.
+[planner_server-8] [INFO] [1783333234.741849895] [leo2.global_costmap.global_costmap]: Message Filter dropping message: frame 'leo2/sensor_lidar_link' at time 68.300 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[controller_server-7] [INFO] [1783333235.008008593] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1783333235.139798149] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 68.900000 but the latest data is at time 68.878000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333235.140674498] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333236.057713318] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1783333237.090792250] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1783333237.192861430] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333238.107785765] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1783333239.142572230] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1783333239.284628781] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 71.700000 but the latest data is at time 71.678000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333239.285393403] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333240.198469249] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1783333241.234410964] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1783333241.386622394] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 73.100000 but the latest data is at time 73.078000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333241.387337012] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333242.250203634] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1783333243.287476835] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1783333243.449726371] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 74.500000 but the latest data is at time 74.478000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333243.450135847] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333244.313282322] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1783333245.350295801] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1783333246.350274907] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1783333246.482873398] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333247.395617790] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1783333247.709930750] [leo2.controller_server]: Failed to make progress
+[controller_server-7] [WARN] [1783333247.710031641] [leo2.controller_server]: [follow_path] [ActionServer] Aborting handle.
+[controller_server-7] [INFO] [1783333247.725986069] [leo2.local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[controller_server-7] [INFO] [1783333247.726771528] [leo2.controller_server]: Received a goal, begin computing control effort.
+[controller_server-7] [WARN] [1783333247.968937696] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333248.425915243] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1783333248.553137032] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333249.469052790] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1783333250.469083707] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1783333250.590924827] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 79.300000 but the latest data is at time 79.278000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333250.591359486] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333251.503382168] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1783333252.541469075] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1783333252.713989140] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 80.695000 but the latest data is at time 80.678000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333252.714449963] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333253.575785780] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1783333254.614580222] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1783333255.614566198] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1783333255.746564003] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 82.700000 but the latest data is at time 82.678000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333255.747057695] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333256.659889245] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1783333257.692664873] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1783333257.814784296] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333258.727158099] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1783333259.761009990] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1783333259.893340965] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333260.757345813] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1783333261.793417650] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1783333261.915387751] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 86.901000 but the latest data is at time 86.878000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333261.915870840] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333262.828892446] [leo2.controller_server]: Passing new path to controller.
+[planner_server-8] [INFO] [1783333263.158466564] [leo2.global_costmap.global_costmap]: StaticLayer: Resizing costmap to 477 X 232 at 0.050000 m/pix
+[bt_navigator-10] [INFO] [1783333263.675837486] [leo2.bt_navigator]: Received goal preemption request
+[bt_navigator-10] [INFO] [1783333263.676800837] [leo2.bt_navigator]: Begin navigating from current location (2.10, -0.40) to (6.00, 0.00)
+[controller_server-7] [INFO] [1783333263.862544468] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1783333264.025127833] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 88.300000 but the latest data is at time 88.278000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333264.026017113] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333264.895788307] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1783333264.987487679] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [ERROR] [1783333265.248490853] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 89.083000 but the latest data is at time 89.078000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333265.249764134] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333265.914364884] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1783333266.227727385] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 89.679000 but the latest data is at time 89.678000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333266.229071573] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333266.946373125] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1783333267.261564793] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 90.283000 but the latest data is at time 90.278000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333267.262515259] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333267.978321689] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1783333268.231431138] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 90.872000 but the latest data is at time 90.858000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333268.232211499] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333268.995613712] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1783333269.259342018] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [WARN] [1783333269.602010251] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [WARN] [1783333269.965412558] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333270.027626490] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1783333270.311017507] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [WARN] [1783333270.678359452] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [WARN] [1783333270.993454445] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333271.055508210] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1783333271.339194439] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [ERROR] [1783333271.643815631] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 92.881000 but the latest data is at time 92.878000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333271.644662568] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333272.102976982] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1783333272.285683696] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [ERROR] [1783333272.601665780] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 93.494000 but the latest data is at time 93.478000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333272.603125566] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333273.117407988] [leo2.controller_server]: Passing new path to controller.
+[planner_server-8] [INFO] [1783333273.158735718] [leo2.global_costmap.global_costmap]: StaticLayer: Resizing costmap to 476 X 206 at 0.050000 m/pix
+[controller_server-7] [WARN] [1783333273.219079338] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [WARN] [1783333273.535640502] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [WARN] [1783333273.837778539] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [WARN] [1783333274.139841849] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333274.139897610] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1783333274.452060139] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [WARN] [1783333274.754096958] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [WARN] [1783333275.056181955] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333275.190062095] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1783333275.362755143] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [WARN] [1783333275.679425355] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [WARN] [1783333275.991545087] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [WARN] [1783333276.293688717] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333276.293734361] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1783333276.598220397] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 96.091000 but the latest data is at time 96.078000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333276.598956124] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333277.210747368] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1783333277.531426952] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [WARN] [1783333277.843838560] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [WARN] [1783333278.146014483] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333278.296133927] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1783333278.448470732] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [WARN] [1783333278.750395955] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [WARN] [1783333279.065795345] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [ERROR] [1783333279.412636460] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 97.886000 but the latest data is at time 97.878000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333279.413306011] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333279.413326495] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1783333279.749799325] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [ERROR] [1783333280.065723960] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 98.291000 but the latest data is at time 98.278000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333280.066867227] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333280.326527657] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1783333280.699337000] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [WARN] [1783333281.014236498] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [WARN] [1783333281.330028546] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333281.330106939] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1783333281.642359891] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [WARN] [1783333281.955629315] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [ERROR] [1783333282.262517002] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 99.700000 but the latest data is at time 99.698000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333282.263434262] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333282.369972087] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1783333282.562859800] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 99.890000 but the latest data is at time 99.878000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333282.563747957] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333283.430920368] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1783333283.522537545] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [ERROR] [1783333283.805584082] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 100.700000 but the latest data is at time 100.698000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333283.806186631] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333284.467211408] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1783333284.700014593] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 101.300000 but the latest data is at time 101.278000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333284.700813756] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333285.466545729] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1783333285.608636246] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 101.900000 but the latest data is at time 101.898000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333285.610089601] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333286.527392626] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1783333287.510203645] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [INFO] [1783333288.560196247] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1783333288.672845607] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[bt_navigator-10] [INFO] [1783333288.786159763] [leo2.bt_navigator]: Received goal preemption request
+[bt_navigator-10] [INFO] [1783333288.786999130] [leo2.bt_navigator]: Begin navigating from current location (2.53, -0.21) to (0.17, -0.47)
+[controller_server-7] [INFO] [1783333289.589670806] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1783333289.873332095] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 104.681000 but the latest data is at time 104.678000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333289.874006274] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333290.635964533] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1783333290.798489012] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 105.300000 but the latest data is at time 105.278000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333290.799018448] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333291.662780503] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1783333291.991587077] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 106.097000 but the latest data is at time 106.078000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333291.992571394] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333292.705386802] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1783333292.918053794] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 106.700000 but the latest data is at time 106.698000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333292.918735928] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333293.734453649] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1783333293.846367949] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [ERROR] [1783333294.171477322] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 107.484000 but the latest data is at time 107.478000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333294.172024045] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333294.733448597] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1783333294.855836817] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [WARN] [1783333294.880354978] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [ERROR] [1783333295.154635910] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 108.096000 but the latest data is at time 108.078000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333295.157114415] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333295.766517749] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1783333296.069177208] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 108.700000 but the latest data is at time 108.698000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333296.070166641] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333296.781379512] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1783333297.055439540] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [WARN] [1783333297.415063521] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [ERROR] [1783333297.824964309] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 109.683000 but the latest data is at time 109.678000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333297.825919135] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333297.825944971] [leo2.controller_server]: Passing new path to controller.
+[planner_server-8] [ERROR] [1783333298.808101217] [leo2.planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1783333298.808217891] [leo2.planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-8] [WARN] [1783333298.808240516] [leo2.planner_server]: Planning algorithm GridBased failed to generate a valid path to (0.17, -0.47)
+[planner_server-8] [WARN] [1783333298.808257073] [leo2.planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-8] [INFO] [1783333298.826437450] [leo2.global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[controller_server-7] [INFO] [1783333299.026049441] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1783333299.168112132] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 110.500000 but the latest data is at time 110.498000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333299.168693210] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333300.035093140] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [WARN] [1783333300.147336745] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[planner_server-8] [ERROR] [1783333301.028230120] [leo2.planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1783333301.028342404] [leo2.planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-8] [WARN] [1783333301.028382597] [leo2.planner_server]: Planning algorithm GridBased failed to generate a valid path to (0.17, -0.47)
+[planner_server-8] [WARN] [1783333301.028401179] [leo2.planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-8] [INFO] [1783333301.046470815] [leo2.global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[controller_server-7] [INFO] [1783333301.218792390] [leo2.controller_server]: Passing new path to controller.
+[controller_server-7] [ERROR] [1783333301.371054503] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 111.900000 but the latest data is at time 111.898000, when looking up transform from frame [map] to frame [leo2/base_link]
+[controller_server-7] 
+[controller_server-7] [WARN] [1783333301.372233042] [leo2.controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-7] [INFO] [1783333302.241427712] [leo2.controller_server]: Passing new path to controller.
+[planner_server-8] [ERROR] [1783333303.228078769] [leo2.planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1783333303.228194858] [leo2.planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-8] [WARN] [1783333303.228216601] [leo2.planner_server]: Planning algorithm GridBased failed to generate a valid path to (0.17, -0.47)
+[planner_server-8] [WARN] [1783333303.228232140] [leo2.planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-8] [INFO] [1783333303.246476731] [leo2.global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-8] [ERROR] [1783333303.368276217] [leo2.planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1783333303.368352181] [leo2.planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-8] [WARN] [1783333303.368361936] [leo2.planner_server]: Planning algorithm GridBased failed to generate a valid path to (0.17, -0.47)
+[planner_server-8] [WARN] [1783333303.368370629] [leo2.planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-10] [ERROR] [1783333303.406958171] [leo2.bt_navigator_navigate_to_pose_rclcpp_node]: Failed to get result for follow_path in node halt!
+[behavior_server-9] [INFO] [1783333303.407786792] [leo2.behavior_server]: Running wait
+[bt_navigator-10] [WARN] [1783333303.408156941] [BehaviorTreeEngine]: Behavior Tree tick rate 100.00 was exceeded!
+[controller_server-7] [INFO] [1783333303.422324847] [leo2.controller_server]: Goal was canceled. Stopping the robot.
+[controller_server-7] [INFO] [1783333303.422374446] [leo2.controller_server]: [follow_path] [ActionServer] Client requested to cancel the goal. Cancelling.
+[behavior_server-9] [INFO] [1783333310.707978304] [leo2.behavior_server]: wait completed successfully
+[planner_server-8] [ERROR] [1783333310.729713104] [leo2.planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1783333310.729841006] [leo2.planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-8] [WARN] [1783333310.729873329] [leo2.planner_server]: Planning algorithm GridBased failed to generate a valid path to (0.17, -0.47)
+[planner_server-8] [WARN] [1783333310.729884454] [leo2.planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-8] [INFO] [1783333310.748404835] [leo2.global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-8] [ERROR] [1783333310.770515402] [leo2.planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1783333310.770609577] [leo2.planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-8] [WARN] [1783333310.770625648] [leo2.planner_server]: Planning algorithm GridBased failed to generate a valid path to (0.17, -0.47)
+[planner_server-8] [WARN] [1783333310.770635376] [leo2.planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[behavior_server-9] [INFO] [1783333310.788930197] [leo2.behavior_server]: Running backup
+[behavior_server-9] [INFO] [1783333310.789155412] [leo2.behavior_server]: DriveOnHeading: no acceleration or deceleration limits set
+[behavior_server-9] [INFO] [1783333319.789313218] [leo2.behavior_server]: backup completed successfully
+[planner_server-8] [ERROR] [1783333319.820242334] [leo2.planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1783333319.820343774] [leo2.planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-8] [WARN] [1783333319.820361341] [leo2.planner_server]: Planning algorithm GridBased failed to generate a valid path to (0.17, -0.47)
+[planner_server-8] [WARN] [1783333319.820373715] [leo2.planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-8] [INFO] [1783333319.838436452] [leo2.global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-8] [ERROR] [1783333319.970920161] [leo2.planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1783333319.971038477] [leo2.planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-8] [WARN] [1783333319.971061518] [leo2.planner_server]: Planning algorithm GridBased failed to generate a valid path to (0.17, -0.47)
+[planner_server-8] [WARN] [1783333319.971079160] [leo2.planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[controller_server-7] [INFO] [1783333319.988466239] [leo2.local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[planner_server-8] [INFO] [1783333319.988940664] [leo2.global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-8] [ERROR] [1783333320.170951654] [leo2.planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1783333320.171038431] [leo2.planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-8] [WARN] [1783333320.171052643] [leo2.planner_server]: Planning algorithm GridBased failed to generate a valid path to (0.17, -0.47)
+[planner_server-8] [WARN] [1783333320.171064506] [leo2.planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-8] [INFO] [1783333320.188414576] [leo2.global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-8] [ERROR] [1783333320.370469769] [leo2.planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1783333320.370557002] [leo2.planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-8] [WARN] [1783333320.370571132] [leo2.planner_server]: Planning algorithm GridBased failed to generate a valid path to (0.17, -0.47)
+[planner_server-8] [WARN] [1783333320.370583478] [leo2.planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[behavior_server-9] [INFO] [1783333320.388661478] [leo2.behavior_server]: Running spin
+[behavior_server-9] [INFO] [1783333320.388822602] [leo2.behavior_server]: Turning 1.57 for spin behavior.
+[behavior_server-9] [INFO] [1783333323.191197164] [leo2.behavior_server]: spin completed successfully
+[planner_server-8] [ERROR] [1783333323.219669996] [leo2.planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1783333323.219749661] [leo2.planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-8] [WARN] [1783333323.219759181] [leo2.planner_server]: Planning algorithm GridBased failed to generate a valid path to (0.17, -0.47)
+[planner_server-8] [WARN] [1783333323.219766882] [leo2.planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-8] [INFO] [1783333323.238505171] [leo2.global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-8] [ERROR] [1783333323.370402826] [leo2.planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-8] [WARN] [1783333323.370476649] [leo2.planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-8] [WARN] [1783333323.370487983] [leo2.planner_server]: Planning algorithm GridBased failed to generate a valid path to (0.17, -0.47)
+[planner_server-8] [WARN] [1783333323.370497003] [leo2.planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-10] [WARN] [1783333323.398266879] [leo2.bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-10] [ERROR] [1783333323.399313930] [leo2.bt_navigator]: Goal failed
+[planner_server-8] [INFO] [1783333339.047770413] [leo2.global_costmap.global_costmap]: Message Filter dropping message: frame 'leo2/sensor_lidar_link' at time 136.400 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[planner_server-8] [INFO] [1783333339.352550042] [leo2.global_costmap.global_costmap]: Message Filter dropping message: frame 'leo2/sensor_camera_link' at time 136.600 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[planner_server-8] [INFO] [1783333343.056360506] [leo2.global_costmap.global_costmap]: Message Filter dropping message: frame 'leo2/sensor_lidar_link' at time 139.000 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[planner_server-8] [INFO] [1783333343.354480435] [leo2.global_costmap.global_costmap]: Message Filter dropping message: frame 'leo2/sensor_camera_link' at time 139.200 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[planner_server-8] [INFO] [1783333373.158046842] [leo2.global_costmap.global_costmap]: StaticLayer: Resizing costmap to 477 X 232 at 0.050000 m/pix
+[planner_server-2] [INFO] [1783333373.158080566] [leo1.global_costmap.global_costmap]: StaticLayer: Resizing costmap to 477 X 232 at 0.050000 m/pix
+[planner_server-8] [INFO] [1783333393.158219819] [leo2.global_costmap.global_costmap]: StaticLayer: Resizing costmap to 476 X 206 at 0.050000 m/pix
+[planner_server-2] [INFO] [1783333393.158298169] [leo1.global_costmap.global_costmap]: StaticLayer: Resizing costmap to 476 X 206 at 0.050000 m/pix

@@ -1,0 +1,21 @@
+[INFO] [launch]: All log files can be found below /root/.ros/log/2026-07-06-11-53-19-487674-24a22bea8472-251
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [async_slam_toolbox_node-1]: process started with pid [353]
+[INFO] [async_slam_toolbox_node-2]: process started with pid [355]
+[async_slam_toolbox_node-1] [INFO] [1783338800.289958996] [leo1.slam_toolbox]: Using solver plugin solver_plugins::CeresSolver
+[async_slam_toolbox_node-2] [INFO] [1783338800.290087771] [leo2.slam_toolbox]: Using solver plugin solver_plugins::CeresSolver
+[async_slam_toolbox_node-2] [INFO] [1783338801.332134832] [leo2.slam_toolbox]: Message Filter dropping message: frame 'leo2/sensor_lidar_link' at time 5.967 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[async_slam_toolbox_node-1] [INFO] [1783338801.332222426] [leo1.slam_toolbox]: Message Filter dropping message: frame 'leo1/sensor_lidar_link' at time 5.967 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[async_slam_toolbox_node-2] [WARN] [1783338801.737756411] [leo2.slam_toolbox]: minimum laser range setting (0.0 m) exceeds the capabilities of the used Lidar (0.1 m)
+[async_slam_toolbox_node-2] [WARN] [1783338801.737978443] [leo2.slam_toolbox]: maximum laser range setting (25.0 m) exceeds the capabilities of the used Lidar (20.0 m)
+[async_slam_toolbox_node-2] Registering sensor: [Custom Described Lidar]
+[async_slam_toolbox_node-1] [WARN] [1783338804.180447456] [leo1.slam_toolbox]: minimum laser range setting (0.0 m) exceeds the capabilities of the used Lidar (0.1 m)
+[async_slam_toolbox_node-1] [WARN] [1783338804.180685814] [leo1.slam_toolbox]: maximum laser range setting (25.0 m) exceeds the capabilities of the used Lidar (20.0 m)
+[async_slam_toolbox_node-1] Registering sensor: [Custom Described Lidar]
+[async_slam_toolbox_node-1] WARNING: Logging before InitGoogleLogging() is written to STDERR
+[async_slam_toolbox_node-1] W0706 12:01:43.768963   353 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-1] W0706 12:04:25.616695   353 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-2] WARNING: Logging before InitGoogleLogging() is written to STDERR
+[async_slam_toolbox_node-2] W0706 12:05:39.913300   355 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-1] W0706 12:06:27.342815   353 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.
+[async_slam_toolbox_node-1] W0706 12:09:15.177675   353 preprocessor.cc:62] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 28.  Bounding to maximum number available.

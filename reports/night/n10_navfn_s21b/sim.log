@@ -1,0 +1,55 @@
+[INFO] [launch]: All log files can be found below /home/smirn/.ros/log/2026-08-19-23-58-29-077029-Tornadosky-34993
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [ign-1]: process started with pid [34995]
+[INFO] [parameter_bridge-2]: process started with pid [34997]
+[INFO] [robot_state_publisher-3]: process started with pid [34999]
+[INFO] [parameter_bridge-4]: process started with pid [35001]
+[INFO] [static_transform_publisher-5]: process started with pid [35003]
+[static_transform_publisher-5] [WARN] [1787176709.196550300] []: Old-style arguments are deprecated; see --help for new-style arguments
+[static_transform_publisher-5] [INFO] [1787176709.204076415] [gpu_lidar_tf_leo1]: Spinning until stopped - publishing transform
+[static_transform_publisher-5] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-5] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-5] from 'leo1/sensor_lidar_link' to 'leo1/base_footprint/gpu_lidar'
+[robot_state_publisher-3] [INFO] [1787176709.225029155] [leo1.robot_state_publisher]: got segment leo1/antenna_link
+[robot_state_publisher-3] [INFO] [1787176709.225097379] [leo1.robot_state_publisher]: got segment leo1/base_footprint
+[robot_state_publisher-3] [INFO] [1787176709.225102670] [leo1.robot_state_publisher]: got segment leo1/base_link
+[robot_state_publisher-3] [INFO] [1787176709.225105813] [leo1.robot_state_publisher]: got segment leo1/camera_frame
+[robot_state_publisher-3] [INFO] [1787176709.225108482] [leo1.robot_state_publisher]: got segment leo1/camera_optical_frame
+[robot_state_publisher-3] [INFO] [1787176709.225111578] [leo1.robot_state_publisher]: got segment leo1/imu_frame
+[robot_state_publisher-3] [INFO] [1787176709.225114199] [leo1.robot_state_publisher]: got segment leo1/rocker_L_link
+[robot_state_publisher-3] [INFO] [1787176709.225116703] [leo1.robot_state_publisher]: got segment leo1/rocker_R_link
+[robot_state_publisher-3] [INFO] [1787176709.225119161] [leo1.robot_state_publisher]: got segment leo1/sensor_camera_link
+[robot_state_publisher-3] [INFO] [1787176709.225121980] [leo1.robot_state_publisher]: got segment leo1/sensor_imu_link
+[robot_state_publisher-3] [INFO] [1787176709.225124489] [leo1.robot_state_publisher]: got segment leo1/sensor_lidar_link
+[robot_state_publisher-3] [INFO] [1787176709.225126930] [leo1.robot_state_publisher]: got segment leo1/wheel_FL_link
+[robot_state_publisher-3] [INFO] [1787176709.225129483] [leo1.robot_state_publisher]: got segment leo1/wheel_FR_link
+[robot_state_publisher-3] [INFO] [1787176709.225131843] [leo1.robot_state_publisher]: got segment leo1/wheel_RL_link
+[robot_state_publisher-3] [INFO] [1787176709.225134173] [leo1.robot_state_publisher]: got segment leo1/wheel_RR_link
+[parameter_bridge-2] [INFO] [1787176709.229985558] [clock_bridge]: Creating GZ->ROS Bridge: [/clock (gz.msgs.Clock) -> /clock (rosgraph_msgs/msg/Clock)] (Lazy 0)
+[parameter_bridge-4] [INFO] [1787176709.230009895] [leo1.bridge_leo1]: Creating GZ->ROS Bridge: [/leo1/scan (gz.msgs.LaserScan) -> /leo1/scan (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[parameter_bridge-4] [INFO] [1787176709.232098320] [leo1.bridge_leo1]: Creating GZ->ROS Bridge: [/leo1/imu/data (gz.msgs.IMU) -> /leo1/imu/data (sensor_msgs/msg/Imu)] (Lazy 0)
+[parameter_bridge-4] [INFO] [1787176709.232601622] [leo1.bridge_leo1]: Creating GZ->ROS Bridge: [/leo1/odom (gz.msgs.Odometry) -> /leo1/odom (nav_msgs/msg/Odometry)] (Lazy 0)
+[parameter_bridge-4] [INFO] [1787176709.233363844] [leo1.bridge_leo1]: Creating ROS->GZ Bridge: [/leo1/cmd_vel (geometry_msgs/msg/Twist) -> /leo1/cmd_vel (gz.msgs.Twist)] (Lazy 0)
+[parameter_bridge-4] [INFO] [1787176709.233687723] [leo1.bridge_leo1]: Creating GZ->ROS Bridge: [/leo1/camera/image (gz.msgs.Image) -> /leo1/camera/image (sensor_msgs/msg/Image)] (Lazy 0)
+[parameter_bridge-4] [INFO] [1787176709.233865678] [leo1.bridge_leo1]: Creating GZ->ROS Bridge: [/leo1/camera/camera_info (gz.msgs.CameraInfo) -> /leo1/camera/camera_info (sensor_msgs/msg/CameraInfo)] (Lazy 0)
+[parameter_bridge-4] [INFO] [1787176709.234044264] [leo1.bridge_leo1]: Creating GZ->ROS Bridge: [/leo1/camera/points (gz.msgs.PointCloudPacked) -> /leo1/camera/points (sensor_msgs/msg/PointCloud2)] (Lazy 0)
+[parameter_bridge-4] [INFO] [1787176709.234256043] [leo1.bridge_leo1]: Creating GZ->ROS Bridge: [/model/leo1/pose (gz.msgs.Pose) -> /model/leo1/pose (geometry_msgs/msg/Pose)] (Lazy 0)
+[parameter_bridge-4] [INFO] [1787176709.234424438] [leo1.bridge_leo1]: Creating GZ->ROS Bridge: [/model/leo1/tf (gz.msgs.Pose_V) -> /model/leo1/tf (tf2_msgs/msg/TFMessage)] (Lazy 0)
+[parameter_bridge-4] [INFO] [1787176709.234805919] [leo1.bridge_leo1]: Creating GZ->ROS Bridge: [/leo1/joint_states (gz.msgs.Model) -> /leo1/joint_states (sensor_msgs/msg/JointState)] (Lazy 0)
+[INFO] [create-6]: process started with pid [35262]
+[create-6] [INFO] [1787176717.207140531] [spawn_leo1]: Requesting list of world names.
+[create-6] [INFO] [1787176717.408698188] [spawn_leo1]: Waiting messages on topic [/leo1/robot_description].
+[create-6] [INFO] [1787176717.411763705] [spawn_leo1]: Requested creation of entity.
+[create-6] [INFO] [1787176717.411815315] [spawn_leo1]: OK creation of entity.
+[INFO] [create-6]: process has finished cleanly [pid 35262]
+[parameter_bridge-4] [INFO] [1787176740.213308145] [leo1.bridge_leo1]: Passing message from ROS geometry_msgs/msg/Twist to Gazebo gz.msgs.Twist (showing msg only once per type)
+[ign-1] NodeShared::Publish() Error: Interrupted system call
+[ign-1] NodeShared::Publish() Error: Interrupted system call
+[ign-1] NodeShared::Publish() Error: Interrupted system call
+[ign-1] NodeShared::Publish() Error: Interrupted system call
+[ign-1] NodeShared::Publish() Error: Interrupted system call
+[ign-1] NodeShared::Publish() Error: Interrupted system call
+[ign-1] NodeShared::Publish() Error: Interrupted system call
+[ign-1] NodeShared::Publish() Error: Interrupted system call
+[ERROR] [static_transform_publisher-5]: process has died [pid 35003, exit code -9, cmd '/opt/ros/humble/lib/tf2_ros/static_transform_publisher 0 0 0 0 0 0 leo1/sensor_lidar_link leo1/base_footprint/gpu_lidar --ros-args -r __node:=gpu_lidar_tf_leo1 --params-file /tmp/launch_params_z5c66czt'].
+[ERROR] [robot_state_publisher-3]: process has died [pid 34999, exit code -9, cmd '/opt/ros/humble/lib/robot_state_publisher/robot_state_publisher --ros-args -r __node:=robot_state_publisher -r __ns:=/leo1 --params-file /tmp/launch_params_fk9gcfwo -r /tf:=/tf -r tf_static:=/tf_static'].

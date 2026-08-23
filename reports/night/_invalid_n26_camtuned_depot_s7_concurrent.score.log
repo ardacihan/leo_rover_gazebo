@@ -1,0 +1,65 @@
+===== MAP QUALITY =====
+label                  n26_camtuned_depot_s7
+iou@2_aligned          0.0580
+precision@2_aligned    0.1926
+recall@2_aligned       0.1461
+rmse_m_aligned         0.7822
+phantom_frac           0.7784
+align_shift_m          0.7071
+align_deg              -3.0000
+iou@2                  0.0201
+phantom_frac_raw       0.9060
+rmse_m                 0.8145
+slam_ate_rmse_m        0.0372
+slam_final_err_m       0.0349
+odom_ate_rmse_m        0.2749
+odom_final_err_m       0.3760
+free_area_m2           116.4425
+gt_free_area_m2        180.5850
+free_area_ratio        0.6448
+known_area_m2          122.3225
+map_extent_m           23.85, 12.80
+world_extent_m         14.20, 14.20
+extent_excess_m        9.65, -1.40
+wrote /ros2_ws/reports/night/n26_camtuned_depot_s7/map_vs_world.png
+wrote /ros2_ws/reports/night/n26_camtuned_depot_s7/map_score.json
+
+===== DRIVING SAFETY =====
+samples                300
+duration_s             149.5
+path_len_m             9.17
+min_clearance_m        0.403
+p05_clearance_m        0.45
+contacts               0
+contact_events         0
+near_misses            0
+doorway_passes         1
+stuck_events           1
+stuck_time_s           44.0
+stuck_frac             0.294
+mean_speed_mps         0.061
+visited_area_m2        0.24
+
+wrote /ros2_ws/reports/night/n26_camtuned_depot_s7/safety_score.json
+
+artefacts in reports/night/n26_camtuned_depot_s7:
+  625  explorer.log
+  161  imu.log
+  124295  map.pgm
+  121  map.yaml
+  1354  map_saver.log
+  1544  map_score.json
+  110357  map_vs_world.png
+  2351  odom.log
+  163560  overlay.log
+  21846  pose_error.csv
+  0  pose_rec.log
+  1427  run.log
+  325  safety_score.json
+  5472  sim.log
+  254  timelapse.log
+  30342  timelapse.mp4
+  5454  timelapse_final.png
+  219  timelapse_path.csv
+  3422  traj.csv
+  0  traj.log

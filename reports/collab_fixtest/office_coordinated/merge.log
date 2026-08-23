@@ -1,0 +1,21 @@
+[INFO] [launch]: All log files can be found below /root/.ros/log/2026-07-05-22-19-45-444902-b0e419c7d595-269
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [map_merge-1]: process started with pid [478]
+[INFO] [static_transform_publisher-2]: process started with pid [480]
+[INFO] [static_transform_publisher-3]: process started with pid [482]
+[static_transform_publisher-3] [INFO] [1783289985.766551840] [map_to_leo2_map]: Spinning until stopped - publishing transform
+[static_transform_publisher-3] translation: ('1.500000', '0.000000', '0.000000')
+[static_transform_publisher-3] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-3] from 'map' to 'leo2/map'
+[static_transform_publisher-2] [INFO] [1783289985.772008335] [map_to_leo1_map]: Spinning until stopped - publishing transform
+[static_transform_publisher-2] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-2] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-2] from 'map' to 'leo1/map'
+[map_merge-1] [INFO] [1783289986.185246474] [map_merge]: Map merging started.
+[map_merge-1] [INFO] [1783289987.185782760] [map_merge]: Robot discovery started.
+[map_merge-1] [INFO] [1783290006.180139809] [map_merge]: adding robot [/leo1] to system
+[map_merge-1] [INFO] [1783290006.186957417] [map_merge]: Subscribing to MAP topic: /leo1/map.
+[map_merge-1] [INFO] [1783290006.189350174] [map_merge]: Subscribing to MAP updates topic: /leo1/map_updates.
+[map_merge-1] [INFO] [1783290006.201874650] [map_merge]: adding robot [/leo2] to system
+[map_merge-1] [INFO] [1783290006.201918758] [map_merge]: Subscribing to MAP topic: /leo2/map.
+[map_merge-1] [INFO] [1783290006.202434777] [map_merge]: Subscribing to MAP updates topic: /leo2/map_updates.

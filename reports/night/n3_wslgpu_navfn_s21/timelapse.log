@@ -1,0 +1,21 @@
+path written: /mnt/c/Users/smirn/Desktop/leo_rover_gazebo/reports/night/n3_wslgpu_navfn_s21/timelapse_path.csv (50 poses)
+video written: /mnt/c/Users/smirn/Desktop/leo_rover_gazebo/reports/night/n3_wslgpu_navfn_s21/timelapse.mp4 (50 frames, 491x323)
+autosaved at 50 frames
+path written: /mnt/c/Users/smirn/Desktop/leo_rover_gazebo/reports/night/n3_wslgpu_navfn_s21/timelapse_path.csv (99 poses)
+video written: /mnt/c/Users/smirn/Desktop/leo_rover_gazebo/reports/night/n3_wslgpu_navfn_s21/timelapse.mp4 (99 frames, 492x325)
+Traceback (most recent call last):
+  File "/home/smirn/leo_ws/scripts/map_recorder.py", line 160, in <module>
+    main()
+  File "/home/smirn/leo_ws/scripts/map_recorder.py", line 149, in main
+    rclpy.spin(node)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 229, in spin
+    executor.spin_once()
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 808, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 797, in _spin_once_impl
+    handler, entity, node = self.wait_for_ready_callbacks(timeout_sec=timeout_sec)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 780, in wait_for_ready_callbacks
+    return next(self._cb_iter)
+  File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 653, in _wait_for_ready_callbacks
+    wait_set = _rclpy.WaitSet(
+rclpy._rclpy_pybind11.RCLError: failed to initialize wait set: the given context is not valid, either rcl_init() was not called or rcl_shutdown() was called., at ./src/rcl/wait.c:130

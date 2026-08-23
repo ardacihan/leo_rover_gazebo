@@ -1,0 +1,1235 @@
+[INFO] [launch]: All log files can be found below /root/.ros/log/2026-07-05-17-24-12-275687-c23582176ef6-224
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [controller_server-1]: process started with pid [499]
+[INFO] [planner_server-2]: process started with pid [501]
+[INFO] [behavior_server-3]: process started with pid [503]
+[INFO] [bt_navigator-4]: process started with pid [505]
+[INFO] [waypoint_follower-5]: process started with pid [507]
+[INFO] [lifecycle_manager-6]: process started with pid [509]
+[planner_server-2] [INFO] [1783272252.873439095] [planner_server]: 
+[planner_server-2] 	planner_server lifecycle node launched. 
+[planner_server-2] 	Waiting on external lifecycle transitions to activate
+[planner_server-2] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-1] [INFO] [1783272252.873440842] [controller_server]: 
+[controller_server-1] 	controller_server lifecycle node launched. 
+[controller_server-1] 	Waiting on external lifecycle transitions to activate
+[controller_server-1] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[waypoint_follower-5] [INFO] [1783272252.883831783] [waypoint_follower]: 
+[waypoint_follower-5] 	waypoint_follower lifecycle node launched. 
+[waypoint_follower-5] 	Waiting on external lifecycle transitions to activate
+[waypoint_follower-5] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[lifecycle_manager-6] [INFO] [1783272252.898665815] [lifecycle_manager_navigation]: Creating
+[lifecycle_manager-6] [INFO] [1783272252.920847614] [lifecycle_manager_navigation]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[bt_navigator-4] [INFO] [1783272252.945741882] [bt_navigator]: 
+[bt_navigator-4] 	bt_navigator lifecycle node launched. 
+[bt_navigator-4] 	Waiting on external lifecycle transitions to activate
+[bt_navigator-4] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[bt_navigator-4] [INFO] [1783272252.945840472] [bt_navigator]: Creating
+[behavior_server-3] [INFO] [1783272252.955104052] [behavior_server]: 
+[behavior_server-3] 	behavior_server lifecycle node launched. 
+[behavior_server-3] 	Waiting on external lifecycle transitions to activate
+[behavior_server-3] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[lifecycle_manager-6] [INFO] [1783272252.956136071] [lifecycle_manager_navigation]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-6] [INFO] [1783272252.956181661] [lifecycle_manager_navigation]: [34m[1mConfiguring controller_server[0m[0m
+[waypoint_follower-5] [INFO] [1783272253.004042708] [waypoint_follower]: Creating
+[planner_server-2] [INFO] [1783272253.293337900] [planner_server]: Creating
+[planner_server-2] [INFO] [1783272253.301258592] [global_costmap.global_costmap]: 
+[planner_server-2] 	global_costmap lifecycle node launched. 
+[planner_server-2] 	Waiting on external lifecycle transitions to activate
+[planner_server-2] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-2] [INFO] [1783272253.409911369] [global_costmap.global_costmap]: Creating Costmap
+[controller_server-1] [INFO] [1783272254.276355329] [controller_server]: Creating controller server
+[controller_server-1] [INFO] [1783272254.284669175] [local_costmap.local_costmap]: 
+[controller_server-1] 	local_costmap lifecycle node launched. 
+[controller_server-1] 	Waiting on external lifecycle transitions to activate
+[controller_server-1] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-1] [INFO] [1783272254.393402645] [local_costmap.local_costmap]: Creating Costmap
+[controller_server-1] [INFO] [1783272254.396885643] [controller_server]: Configuring controller interface
+[controller_server-1] [INFO] [1783272254.397080409] [controller_server]: getting goal checker plugins..
+[controller_server-1] [INFO] [1783272254.397255602] [controller_server]: Controller frequency set to 20.0000Hz
+[controller_server-1] [INFO] [1783272254.397275071] [local_costmap.local_costmap]: Configuring
+[controller_server-1] [INFO] [1783272254.413651288] [local_costmap.local_costmap]: Using plugin "obstacle_layer"
+[controller_server-1] [INFO] [1783272254.467860244] [local_costmap.local_costmap]: Subscribed to Topics: scan camera
+[controller_server-1] [INFO] [1783272254.476627595] [local_costmap.local_costmap]: Initialized plugin "obstacle_layer"
+[controller_server-1] [INFO] [1783272254.476660916] [local_costmap.local_costmap]: Using plugin "inflation_layer"
+[controller_server-1] [INFO] [1783272254.477457657] [local_costmap.local_costmap]: Initialized plugin "inflation_layer"
+[controller_server-1] [INFO] [1783272254.539636197] [controller_server]: Created progress_checker : progress_checker of type nav2_controller::PoseProgressChecker
+[controller_server-1] [INFO] [1783272254.583294967] [controller_server]: Created goal checker : general_goal_checker of type nav2_controller::SimpleGoalChecker
+[controller_server-1] [INFO] [1783272254.583838992] [controller_server]: Controller Server has general_goal_checker  goal checkers available.
+[controller_server-1] [INFO] [1783272255.118444047] [controller_server]: Created controller : FollowPath of type nav2_rotation_shim_controller::RotationShimController
+[controller_server-1] [INFO] [1783272255.160750018] [controller_server]: Created internal controller for rotation shimming: FollowPath of type nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-1] [INFO] [1783272255.165209803] [controller_server]: Controller Server has FollowPath  controllers available.
+[lifecycle_manager-6] [INFO] [1783272255.172209388] [lifecycle_manager_navigation]: [34m[1mConfiguring planner_server[0m[0m
+[planner_server-2] [INFO] [1783272255.172428466] [planner_server]: Configuring
+[planner_server-2] [INFO] [1783272255.172454492] [global_costmap.global_costmap]: Configuring
+[planner_server-2] [INFO] [1783272255.192475276] [global_costmap.global_costmap]: Using plugin "static_layer"
+[planner_server-2] [INFO] [1783272255.250517788] [global_costmap.global_costmap]: Subscribing to the map topic (/map) with transient local durability
+[planner_server-2] [INFO] [1783272255.254681972] [global_costmap.global_costmap]: Subscribing to updates
+[planner_server-2] [INFO] [1783272255.262177072] [global_costmap.global_costmap]: Initialized plugin "static_layer"
+[planner_server-2] [INFO] [1783272255.262201152] [global_costmap.global_costmap]: Using plugin "obstacle_layer"
+[planner_server-2] [INFO] [1783272255.263055280] [global_costmap.global_costmap]: Subscribed to Topics: scan camera
+[planner_server-2] [INFO] [1783272255.268117221] [global_costmap.global_costmap]: Initialized plugin "obstacle_layer"
+[planner_server-2] [INFO] [1783272255.268151368] [global_costmap.global_costmap]: Using plugin "inflation_layer"
+[planner_server-2] [INFO] [1783272255.269008662] [global_costmap.global_costmap]: Initialized plugin "inflation_layer"
+[planner_server-2] [INFO] [1783272255.277755895] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 277 X 277 at 0.050000 m/pix
+[planner_server-2] [INFO] [1783272255.328478154] [planner_server]: Created global planner plugin GridBased of type nav2_navfn_planner/NavfnPlanner
+[planner_server-2] [INFO] [1783272255.328523498] [planner_server]: Configuring plugin GridBased of type NavfnPlanner
+[planner_server-2] [INFO] [1783272255.329247816] [planner_server]: Planner Server has GridBased  planners available.
+[lifecycle_manager-6] [INFO] [1783272255.337682532] [lifecycle_manager_navigation]: [34m[1mConfiguring behavior_server[0m[0m
+[behavior_server-3] [INFO] [1783272255.337888814] [behavior_server]: Configuring
+[behavior_server-3] [INFO] [1783272255.365025208] [behavior_server]: Creating behavior plugin spin of type nav2_behaviors/Spin
+[behavior_server-3] [INFO] [1783272255.408997927] [behavior_server]: Configuring spin
+[behavior_server-3] [INFO] [1783272255.414770576] [behavior_server]: Creating behavior plugin backup of type nav2_behaviors/BackUp
+[behavior_server-3] [INFO] [1783272255.454733844] [behavior_server]: Configuring backup
+[behavior_server-3] [INFO] [1783272255.456649100] [behavior_server]: Creating behavior plugin drive_on_heading of type nav2_behaviors/DriveOnHeading
+[behavior_server-3] [INFO] [1783272255.499259547] [behavior_server]: Configuring drive_on_heading
+[behavior_server-3] [INFO] [1783272255.501771406] [behavior_server]: Creating behavior plugin wait of type nav2_behaviors/Wait
+[behavior_server-3] [INFO] [1783272255.546718662] [behavior_server]: Configuring wait
+[lifecycle_manager-6] [INFO] [1783272255.548680495] [lifecycle_manager_navigation]: [34m[1mConfiguring bt_navigator[0m[0m
+[bt_navigator-4] [INFO] [1783272255.548866463] [bt_navigator]: Configuring
+[lifecycle_manager-6] [INFO] [1783272255.892754114] [lifecycle_manager_navigation]: [34m[1mConfiguring waypoint_follower[0m[0m
+[waypoint_follower-5] [INFO] [1783272255.892930883] [waypoint_follower]: Configuring
+[waypoint_follower-5] [INFO] [1783272255.969255339] [waypoint_follower]: Created waypoint_task_executor : wait_at_waypoint of type nav2_waypoint_follower::WaitAtWaypoint
+[waypoint_follower-5] [INFO] [1783272255.969632338] [waypoint_follower]: Waypoint pause duration is set to zero, disabling task executor plugin.
+[lifecycle_manager-6] [INFO] [1783272255.969949413] [lifecycle_manager_navigation]: [34m[1mActivating controller_server[0m[0m
+[controller_server-1] [INFO] [1783272255.970083140] [controller_server]: Activating
+[controller_server-1] [INFO] [1783272255.970108200] [local_costmap.local_costmap]: Activating
+[controller_server-1] [INFO] [1783272255.970115658] [local_costmap.local_costmap]: Checking transform
+[controller_server-1] [INFO] [1783272255.970219006] [local_costmap.local_costmap]: start
+[controller_server-1] [INFO] [1783272256.170988624] [controller_server]: Activating controller: FollowPath of type nav2_rotation_shim_controller::RotationShimController
+[controller_server-1] [INFO] [1783272256.171023014] [controller_server]: Activating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-1] [INFO] [1783272256.171037441] [controller_server]: Creating bond (controller_server) to lifecycle manager.
+[lifecycle_manager-6] [INFO] [1783272256.280836381] [lifecycle_manager_navigation]: Server controller_server connected with bond.
+[lifecycle_manager-6] [INFO] [1783272256.280899621] [lifecycle_manager_navigation]: [34m[1mActivating planner_server[0m[0m
+[planner_server-2] [INFO] [1783272256.281101959] [planner_server]: Activating
+[planner_server-2] [INFO] [1783272256.281129392] [global_costmap.global_costmap]: Activating
+[planner_server-2] [INFO] [1783272256.281136535] [global_costmap.global_costmap]: Checking transform
+[planner_server-2] [INFO] [1783272256.281229818] [global_costmap.global_costmap]: start
+[planner_server-2] [INFO] [1783272256.531935601] [planner_server]: Activating plugin GridBased of type NavfnPlanner
+[planner_server-2] [INFO] [1783272256.532409511] [planner_server]: Creating bond (planner_server) to lifecycle manager.
+[lifecycle_manager-6] [INFO] [1783272256.640655666] [lifecycle_manager_navigation]: Server planner_server connected with bond.
+[lifecycle_manager-6] [INFO] [1783272256.640698639] [lifecycle_manager_navigation]: [34m[1mActivating behavior_server[0m[0m
+[behavior_server-3] [INFO] [1783272256.640874134] [behavior_server]: Activating
+[behavior_server-3] [INFO] [1783272256.640895863] [behavior_server]: Activating spin
+[behavior_server-3] [INFO] [1783272256.640903842] [behavior_server]: Activating backup
+[behavior_server-3] [INFO] [1783272256.640910108] [behavior_server]: Activating drive_on_heading
+[behavior_server-3] [INFO] [1783272256.640916716] [behavior_server]: Activating wait
+[behavior_server-3] [INFO] [1783272256.640924905] [behavior_server]: Creating bond (behavior_server) to lifecycle manager.
+[lifecycle_manager-6] [INFO] [1783272256.747496484] [lifecycle_manager_navigation]: Server behavior_server connected with bond.
+[lifecycle_manager-6] [INFO] [1783272256.747549403] [lifecycle_manager_navigation]: [34m[1mActivating bt_navigator[0m[0m
+[bt_navigator-4] [INFO] [1783272256.747811955] [bt_navigator]: Activating
+[bt_navigator-4] [INFO] [1783272256.774005566] [bt_navigator]: Creating bond (bt_navigator) to lifecycle manager.
+[lifecycle_manager-6] [INFO] [1783272256.882065474] [lifecycle_manager_navigation]: Server bt_navigator connected with bond.
+[lifecycle_manager-6] [INFO] [1783272256.882112148] [lifecycle_manager_navigation]: [34m[1mActivating waypoint_follower[0m[0m
+[waypoint_follower-5] [INFO] [1783272256.882375833] [waypoint_follower]: Activating
+[waypoint_follower-5] [INFO] [1783272256.882419495] [waypoint_follower]: Creating bond (waypoint_follower) to lifecycle manager.
+[lifecycle_manager-6] [INFO] [1783272256.989533666] [lifecycle_manager_navigation]: Server waypoint_follower connected with bond.
+[lifecycle_manager-6] [INFO] [1783272256.989585673] [lifecycle_manager_navigation]: [34m[1mManaged nodes are active[0m[0m
+[lifecycle_manager-6] [INFO] [1783272256.989608881] [lifecycle_manager_navigation]: [34m[1mCreating bond timer...[0m[0m
+[planner_server-2] [INFO] [1783272278.293837410] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 277 X 277 at 0.050000 m/pix
+[planner_server-2] [INFO] [1783272279.293820490] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 277 X 277 at 0.050000 m/pix
+[planner_server-2] [INFO] [1783272281.293818824] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 277 X 277 at 0.050000 m/pix
+[planner_server-2] [INFO] [1783272283.293830419] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 277 X 277 at 0.050000 m/pix
+[planner_server-2] [INFO] [1783272286.293825883] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 277 X 277 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783272297.920134759] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[planner_server-2] [INFO] [1783272297.920255183] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[controller_server-1] [INFO] [1783272298.991558517] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[planner_server-2] [INFO] [1783272298.991622136] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-2] [WARN] [1783272301.114264240] [planner_server]: No planners specified in action call. Server will use only plugin GridBased  in server. This warning will appear once.
+[bt_navigator-4] [INFO] [1783272301.168932673] [bt_navigator]: Begin navigating from current location (1.23, -0.01) to (-4.70, -2.97)
+[controller_server-1] [INFO] [1783272301.190022585] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-1] [WARN] [1783272301.190079895] [controller_server]: No goal checker was specified in parameter 'current_goal_checker'. Server will use only plugin loaded general_goal_checker . This warning will appear once.
+[controller_server-1] [WARN] [1783272301.341375947] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272301.542983227] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272301.742668171] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272301.944355390] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272302.143993425] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[planner_server-2] [ERROR] [1783272302.200543441] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-2] [WARN] [1783272302.200643915] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272302.200662608] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-4.70, -2.97)
+[planner_server-2] [WARN] [1783272302.200675387] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [INFO] [1783272302.219243509] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-2] [ERROR] [1783272302.300778181] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-2] [WARN] [1783272302.300855535] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272302.300864707] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-4.70, -2.97)
+[planner_server-2] [WARN] [1783272302.300872060] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-4] [ERROR] [1783272302.339585269] [bt_navigator_navigate_to_pose_rclcpp_node]: Failed to get result for follow_path in node halt!
+[controller_server-1] [INFO] [1783272302.339810012] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[bt_navigator-4] [WARN] [1783272302.345191491] [BehaviorTreeEngine]: Behavior Tree tick rate 100.00 was exceeded!
+[controller_server-1] [WARN] [1783272302.345644486] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272302.345664504] [controller_server]: Goal was canceled. Stopping the robot.
+[controller_server-1] [INFO] [1783272302.345669981] [controller_server]: [follow_path] [ActionServer] Client requested to cancel the goal. Cancelling.
+[planner_server-2] [INFO] [1783272302.345926120] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-2] [ERROR] [1783272302.517868659] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-2] [WARN] [1783272302.517972647] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272302.517992546] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-4.70, -2.97)
+[planner_server-2] [WARN] [1783272302.518007879] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [INFO] [1783272302.536368752] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-2] [ERROR] [1783272302.718251655] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-2] [WARN] [1783272302.718385859] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272302.718407286] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-4.70, -2.97)
+[planner_server-2] [WARN] [1783272302.718428498] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[behavior_server-3] [INFO] [1783272302.738133256] [behavior_server]: Running spin
+[behavior_server-3] [INFO] [1783272302.738389507] [behavior_server]: Turning 1.57 for spin behavior.
+[behavior_server-3] [INFO] [1783272304.438581498] [behavior_server]: spin completed successfully
+[planner_server-2] [ERROR] [1783272304.469737566] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-2] [WARN] [1783272304.469835032] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272304.469854365] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-4.70, -2.97)
+[planner_server-2] [WARN] [1783272304.469865496] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [INFO] [1783272304.487805474] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-2] [ERROR] [1783272304.509693707] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-2] [WARN] [1783272304.509813751] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272304.509827018] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-4.70, -2.97)
+[planner_server-2] [WARN] [1783272304.509837137] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[behavior_server-3] [INFO] [1783272304.528288010] [behavior_server]: Running wait
+[behavior_server-3] [INFO] [1783272309.628621727] [behavior_server]: wait completed successfully
+[planner_server-2] [ERROR] [1783272309.659098322] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-2] [WARN] [1783272309.659172780] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272309.659186653] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-4.70, -2.97)
+[planner_server-2] [WARN] [1783272309.659196135] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [INFO] [1783272309.677737600] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-2] [ERROR] [1783272309.709729882] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-2] [WARN] [1783272309.709800400] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272309.709810985] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-4.70, -2.97)
+[planner_server-2] [WARN] [1783272309.709818819] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[behavior_server-3] [INFO] [1783272309.728059546] [behavior_server]: Running backup
+[behavior_server-3] [INFO] [1783272309.728167838] [behavior_server]: DriveOnHeading: no acceleration or deceleration limits set
+[planner_server-2] [INFO] [1783272312.306213189] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 277 X 277 at 0.050000 m/pix
+[planner_server-2] [INFO] [1783272315.306208281] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 278 X 277 at 0.050000 m/pix
+[behavior_server-3] [INFO] [1783272315.928390467] [behavior_server]: backup completed successfully
+[controller_server-1] [INFO] [1783272315.978428207] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-1] [WARN] [1783272316.069775137] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272316.081762379] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272316.269809201] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272316.281775510] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272316.480027114] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272316.871291894] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272316.893822339] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272317.081277065] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272317.081316412] [controller_server]: Passing new path to controller.
+[bt_navigator-4] [INFO] [1783272317.237772609] [bt_navigator]: Received goal preemption request
+[bt_navigator-4] [INFO] [1783272317.238899598] [bt_navigator]: Begin navigating from current location (1.16, -0.32) to (-5.51, -3.52)
+[controller_server-1] [WARN] [1783272317.285047128] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272317.482652147] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272317.697710486] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272317.884007539] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272318.088625206] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272318.088666899] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272318.285309590] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272318.489359090] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272318.686545424] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272318.890511936] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272319.087903496] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272319.087981224] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272319.294350561] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [ERROR] [1783272319.489401749] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 70.255000 but the latest data is at time 70.227000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272319.490461957] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272320.103742983] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272320.305747846] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [ERROR] [1783272320.491659470] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 71.244000 but the latest data is at time 71.227000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272320.492469483] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272321.157017821] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272321.318662070] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [ERROR] [1783272321.493842113] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 72.233000 but the latest data is at time 72.227000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272321.496706855] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272322.207801879] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272322.309017998] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 73.035000 but the latest data is at time 73.027000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272322.309691340] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272323.196787641] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272323.337824672] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272323.358238626] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272323.537790140] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272323.558637059] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272324.246792603] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272324.338818260] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272325.296779694] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272325.348095683] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272326.296819862] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272326.348868653] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272327.346799088] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272328.346791479] [controller_server]: Passing new path to controller.
+[bt_navigator-4] [INFO] [1783272329.277803589] [bt_navigator]: Received goal preemption request
+[bt_navigator-4] [INFO] [1783272329.278409051] [bt_navigator]: Begin navigating from current location (-0.10, -0.53) to (5.49, 2.97)
+[planner_server-2] [INFO] [1783272329.306203242] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 278 X 278 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783272329.396805983] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272329.548190582] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 80.236000 but the latest data is at time 80.227000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272329.548837640] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272330.411708864] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272330.573277405] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [ERROR] [1783272330.750058774] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 81.432000 but the latest data is at time 81.427000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272330.750618432] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272331.459799655] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272331.561245548] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 82.237000 but the latest data is at time 82.227000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272331.561804258] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272332.512071743] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272332.593357841] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272332.613853531] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272332.792982003] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272332.813304333] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272332.993109134] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272333.013511926] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272333.193057737] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272333.403099543] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272333.413335342] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272333.512044912] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272333.603242796] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272333.623595568] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272333.803076445] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272333.823480904] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272334.003122914] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272334.023452622] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272334.203210129] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272334.223596599] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272334.403159888] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272334.423548313] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272334.613242294] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272334.613280736] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272335.014460052] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272335.227062407] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [ERROR] [1783272335.415743175] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 86.052000 but the latest data is at time 86.027000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272335.416322124] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272335.569013100] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272335.817606515] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272336.020602571] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [ERROR] [1783272336.218789839] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 86.848000 but the latest data is at time 86.827000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272336.219913940] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272336.627210157] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272336.839065177] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [ERROR] [1783272337.021109565] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 87.643000 but the latest data is at time 87.627000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272337.021733607] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272337.631429543] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272337.843308070] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [ERROR] [1783272338.022912466] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 88.635000 but the latest data is at time 88.627000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272338.023664775] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272338.683448570] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272338.855269354] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272339.054808036] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272339.264846559] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272339.286589199] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [ERROR] [1783272339.475014643] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 90.076000 but the latest data is at time 90.067000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272339.476141910] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272339.683073550] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272339.844566445] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 90.440000 but the latest data is at time 90.427000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272339.845143405] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272340.726226168] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272340.867235138] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272340.889490873] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272341.067399858] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272341.091438990] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272341.267358135] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272341.290409918] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272341.477968047] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272341.784522734] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272342.778053588] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272342.880444064] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272343.846539520] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783272344.317548534] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 278 X 278 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783272344.830542185] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272344.892306602] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272345.880523389] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783272346.317532932] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 278 X 278 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783272346.930525392] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783272347.317534990] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 278 X 278 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783272347.930526019] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783272348.317550799] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 278 X 278 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783272348.980527307] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783272349.317549665] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 278 X 278 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783272349.980524705] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783272350.317544341] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 278 X 278 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783272351.030541226] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272351.131836248] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 101.650000 but the latest data is at time 101.627000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272351.132441582] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[planner_server-2] [INFO] [1783272351.317542727] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 278 X 278 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783272352.045462793] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272352.147267869] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[planner_server-2] [INFO] [1783272352.317545208] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 278 X 278 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783272353.082520111] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272353.154056473] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[planner_server-2] [INFO] [1783272353.317529976] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 278 X 278 at 0.050000 m/pix
+[bt_navigator-4] [INFO] [1783272353.459112392] [bt_navigator]: Received goal preemption request
+[bt_navigator-4] [INFO] [1783272353.459633708] [bt_navigator]: Begin navigating from current location (1.97, 1.31) to (5.72, 1.85)
+[controller_server-1] [INFO] [1783272354.132517392] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783272354.317545422] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 279 X 278 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783272355.132527721] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783272355.317549983] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 279 X 278 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783272356.182526112] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272357.232520371] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272358.232525228] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783272358.317537247] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 279 X 278 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783272359.282530192] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272359.383751088] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 109.844000 but the latest data is at time 109.827000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272359.384525181] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272360.293594953] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272360.395020593] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 110.849000 but the latest data is at time 110.827000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272360.395386455] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[planner_server-2] [INFO] [1783272361.317579470] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 279 X 279 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783272361.334599118] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272361.406075297] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272362.384603378] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272363.393970144] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272364.443959267] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272365.443953652] [controller_server]: Passing new path to controller.
+[bt_navigator-4] [INFO] [1783272365.568416945] [bt_navigator]: Received goal preemption request
+[bt_navigator-4] [INFO] [1783272365.568934536] [bt_navigator]: Begin navigating from current location (4.93, 1.93) to (-2.26, 5.80)
+[controller_server-1] [INFO] [1783272366.493952417] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272366.645155111] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 117.043000 but the latest data is at time 117.027000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272366.646507783] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272367.510612584] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272367.662417921] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [ERROR] [1783272367.847664964] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 118.236000 but the latest data is at time 118.227000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272367.848347961] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272368.560148645] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272368.661455455] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 119.041000 but the latest data is at time 119.027000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272368.662128769] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272369.598457957] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272369.689931757] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272369.879359802] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272369.900871901] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272370.079542467] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272370.100739276] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272370.279581683] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272370.302375597] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272370.489499207] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272370.500926642] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272370.598432420] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272370.689672801] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272370.701677474] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272370.889429635] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272370.900630205] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272371.089762553] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272371.102074317] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272371.299608519] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272371.502456664] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [ERROR] [1783272371.700858276] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 122.060000 but the latest data is at time 122.027000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272371.701601707] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272371.701620806] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272371.914856255] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [ERROR] [1783272372.103056440] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 122.458000 but the latest data is at time 122.427000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272372.104370559] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272372.665094840] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272372.905632731] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 123.252000 but the latest data is at time 123.247000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272372.906367924] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272373.673449178] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272373.907569818] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 124.247000 but the latest data is at time 124.227000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272373.908253334] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272374.724231661] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272374.926046572] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [ERROR] [1783272375.109394605] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 125.437000 but the latest data is at time 125.427000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272375.110061186] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272375.773730896] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272375.935515624] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [ERROR] [1783272376.111316572] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 126.434000 but the latest data is at time 126.427000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272376.112612708] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272376.774083903] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272376.935783674] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272377.143744205] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272377.343637326] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272377.543686132] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272377.564048203] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272377.743655577] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272377.764058213] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272377.812701804] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272377.953779528] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272377.964078737] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272378.153762575] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272378.164528821] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272378.862689943] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272378.954582647] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272379.862697818] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272379.965212708] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272380.880589316] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783272381.326896400] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 279 X 280 at 0.050000 m/pix
+[bt_navigator-4] [INFO] [1783272381.678370634] [bt_navigator]: Received goal preemption request
+[bt_navigator-4] [INFO] [1783272381.679044008] [bt_navigator]: Begin navigating from current location (4.65, 2.26) to (6.09, 4.65)
+[controller_server-1] [INFO] [1783272381.915299797] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272381.976311110] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272382.206359911] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272382.216603902] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [ERROR] [1783272382.366431190] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 132.642000 but the latest data is at time 132.627000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272382.367120639] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272382.973535413] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272383.185471126] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [ERROR] [1783272383.368420670] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 133.637000 but the latest data is at time 133.627000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272383.368914598] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272383.976912959] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272384.199217398] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [ERROR] [1783272384.370238720] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 134.632000 but the latest data is at time 134.627000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272384.371163847] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272385.028984257] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272385.200859822] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [ERROR] [1783272385.372438911] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 135.629000 but the latest data is at time 135.627000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272385.373223911] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272386.031949465] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272386.203646114] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [ERROR] [1783272386.374383590] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 136.629000 but the latest data is at time 136.627000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272386.375022184] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272387.082383551] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272387.183667888] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 137.435000 but the latest data is at time 137.427000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272387.184144410] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272388.125103929] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272388.216399344] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272388.228567249] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272388.406055872] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272388.426380489] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272388.606059528] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272388.816314087] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272388.828260141] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272389.016125677] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272389.037937844] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272389.125094936] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272389.216322880] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272389.238485733] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272389.426509593] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272389.640597011] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272390.176609094] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272390.227950864] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272391.226580588] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272392.226634088] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272393.238059740] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272394.288041585] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783272394.340729759] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 280 X 280 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783272395.338068493] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783272395.338347864] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 280 X 281 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783272396.338083410] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783272397.338396911] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 280 X 281 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783272397.388093303] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272397.489649275] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 147.645000 but the latest data is at time 147.627000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272397.489976119] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[bt_navigator-4] [INFO] [1783272397.809778436] [bt_navigator]: Received goal preemption request
+[bt_navigator-4] [INFO] [1783272397.810297127] [bt_navigator]: Begin navigating from current location (6.03, 3.41) to (-4.41, 4.20)
+[controller_server-1] [INFO] [1783272398.397976866] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272398.499680693] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 148.650000 but the latest data is at time 148.627000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272398.500443391] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272399.440096379] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272399.541830299] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 149.681000 but the latest data is at time 149.627000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272399.543017803] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272400.457689233] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272400.724037594] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272400.744376146] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272400.934249431] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272400.944504730] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272401.124192773] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272401.144552018] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272401.334202775] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272401.344451445] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272401.534202839] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272401.534242947] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272401.544576427] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272401.734237270] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272401.754580665] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272401.934184456] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272401.954600787] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272402.134202297] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272402.154574864] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272402.334137511] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272402.354463973] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272402.544405850] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272402.544443943] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272402.746160842] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272402.945737724] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272403.157597241] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [ERROR] [1783272403.347072950] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 153.454000 but the latest data is at time 153.427000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272403.347896536] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[planner_server-2] [ERROR] [1783272403.500939942] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-2] [WARN] [1783272403.501012469] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272403.501021511] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-4.41, 4.20)
+[planner_server-2] [WARN] [1783272403.501028545] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [INFO] [1783272403.519899518] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-2] [ERROR] [1783272403.551307909] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-2] [WARN] [1783272403.551376365] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272403.551385021] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-4.41, 4.20)
+[planner_server-2] [WARN] [1783272403.551392797] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-4] [ERROR] [1783272403.590149004] [bt_navigator_navigate_to_pose_rclcpp_node]: Failed to get result for follow_path in node halt!
+[controller_server-1] [INFO] [1783272403.590415612] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[planner_server-2] [INFO] [1783272403.590925578] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[bt_navigator-4] [WARN] [1783272403.591998316] [BehaviorTreeEngine]: Behavior Tree tick rate 100.00 was exceeded!
+[controller_server-1] [INFO] [1783272403.601661420] [controller_server]: Goal was canceled. Stopping the robot.
+[controller_server-1] [INFO] [1783272403.601724218] [controller_server]: [follow_path] [ActionServer] Client requested to cancel the goal. Cancelling.
+[planner_server-2] [ERROR] [1783272403.742672771] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-2] [WARN] [1783272403.742737329] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272403.742747266] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-4.41, 4.20)
+[planner_server-2] [WARN] [1783272403.742755128] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [INFO] [1783272403.760710396] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-2] [ERROR] [1783272403.942070677] [planner_server]: Failed to create a plan from potential when a legal potential was found. This shouldn't happen.
+[planner_server-2] [WARN] [1783272403.942158548] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272403.942169808] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-4.41, 4.20)
+[planner_server-2] [WARN] [1783272403.942178266] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[behavior_server-3] [INFO] [1783272403.962492408] [behavior_server]: Running spin
+[behavior_server-3] [INFO] [1783272403.962609846] [behavior_server]: Turning 1.57 for spin behavior.
+[behavior_server-3] [INFO] [1783272405.662885992] [behavior_server]: spin completed successfully
+[controller_server-1] [INFO] [1783272405.712966833] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-1] [WARN] [1783272405.764258755] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272406.763149566] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272407.813124668] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272408.813126620] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272409.863128591] [controller_server]: Passing new path to controller.
+[bt_navigator-4] [INFO] [1783272409.912182434] [bt_navigator]: Received goal preemption request
+[bt_navigator-4] [INFO] [1783272409.912685408] [bt_navigator]: Begin navigating from current location (5.52, 3.17) to (-5.36, 4.15)
+[controller_server-1] [ERROR] [1783272409.964473215] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 160.031000 but the latest data is at time 160.027000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272409.965263213] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272410.879848254] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272410.981252870] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 161.045000 but the latest data is at time 161.027000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272410.981937537] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272411.915348093] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272411.997141677] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272412.965365317] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272413.965347063] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272415.015349371] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272416.015415129] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272417.065335435] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272418.115355943] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272418.216776106] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 168.240000 but the latest data is at time 168.227000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272418.217427346] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272419.132213323] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272419.235688715] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272420.167509499] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272420.239421109] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272421.167579317] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272421.249340608] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[bt_navigator-4] [INFO] [1783272421.962239876] [bt_navigator]: Received goal preemption request
+[bt_navigator-4] [INFO] [1783272421.963412501] [bt_navigator]: Begin navigating from current location (2.45, 3.56) to (2.59, 6.35)
+[controller_server-1] [INFO] [1783272422.217520130] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272422.448585428] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272422.471173728] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272422.662178278] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272422.683822372] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272422.862117014] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272422.883570216] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272423.062212238] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272423.084116121] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272423.272389807] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272423.272462890] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272423.283650337] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272423.472293364] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272423.483615714] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272423.662201511] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272423.684299983] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272423.862410905] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272423.884850488] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272424.062233720] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272424.083986781] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272424.272299091] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272424.272339893] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272424.283872190] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272424.472288136] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272424.487074795] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272424.682430465] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272424.885493196] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272425.083708898] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272425.283795712] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272425.474965620] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272425.489813575] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272425.674877197] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272425.696735311] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272425.874882689] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272425.896989444] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272426.074930169] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272426.089807407] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272426.274929658] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272426.299156592] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272426.333805395] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272426.485081974] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272426.876239623] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272426.898272458] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272427.086492753] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272427.289808695] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272427.336577218] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272427.487740303] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272427.690824436] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [ERROR] [1783272427.888946088] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 177.855000 but the latest data is at time 177.827000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272427.889576898] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272428.398169919] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272428.499861217] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272428.690772001] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272428.894078687] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272429.092153495] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272429.307889842] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [ERROR] [1783272429.493482860] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 179.443000 but the latest data is at time 179.427000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272429.494593589] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272429.494629599] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272429.688039857] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 179.635000 but the latest data is at time 179.627000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272429.688949306] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272430.444675871] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272430.516608851] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272431.494693340] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272431.567257434] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272432.494700699] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272432.546306040] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272433.544687053] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272434.594671468] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272435.594667618] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272436.644687864] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272436.746245927] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 186.638000 but the latest data is at time 186.627000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272436.746729983] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272437.657393235] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272437.758699550] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 187.644000 but the latest data is at time 187.627000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272437.759147042] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272438.696812936] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272438.778712989] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272439.696810888] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272439.798428572] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272440.756475961] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272441.798508650] [controller_server]: Passing new path to controller.
+[bt_navigator-4] [INFO] [1783272442.115816690] [bt_navigator]: Received goal preemption request
+[bt_navigator-4] [INFO] [1783272442.116343672] [bt_navigator]: Begin navigating from current location (3.95, 5.58) to (1.84, 6.45)
+[controller_server-1] [INFO] [1783272442.798515706] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272443.848523569] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272444.848503418] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272445.898511133] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272446.948520915] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272447.050161842] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272447.957592965] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272449.000227782] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272449.072663145] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272450.000255062] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272450.071714396] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272451.050249719] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272452.100249252] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272452.510980076] [controller_server]: Reached the goal!
+[bt_navigator-4] [INFO] [1783272452.546880154] [bt_navigator]: Goal succeeded
+[bt_navigator-4] [INFO] [1783272454.234926777] [bt_navigator]: Begin navigating from current location (2.08, 6.48) to (-4.26, 5.30)
+[controller_server-1] [INFO] [1783272454.255668541] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-1] [WARN] [1783272454.327285921] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272455.305843601] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272456.355829244] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272457.355826518] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272458.405827824] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272459.405824822] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272460.455827605] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272460.557082165] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 210.240000 but the latest data is at time 210.227000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272460.557767544] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272461.472291325] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272461.573978632] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 211.252000 but the latest data is at time 211.227000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272461.574660921] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272462.507857862] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272462.609920111] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272463.574444805] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272464.558970594] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272464.611003521] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272465.610001872] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272466.659996581] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272467.660021284] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783272468.362663942] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 280 X 280 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783272468.709994815] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272469.710009712] [controller_server]: Passing new path to controller.
+[bt_navigator-4] [INFO] [1783272470.385188773] [bt_navigator]: Received goal preemption request
+[bt_navigator-4] [INFO] [1783272470.385627379] [bt_navigator]: Begin navigating from current location (-1.81, 6.17) to (-3.69, 4.71)
+[controller_server-1] [INFO] [1783272470.759998276] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272471.810010663] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272471.911852253] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272472.823965347] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272472.915534936] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272473.861928821] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272473.923201373] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272474.861958891] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272474.923189169] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272475.911934953] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272476.961928758] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272477.961927546] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272479.011929549] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272480.011925701] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272481.061967246] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272482.111934725] [controller_server]: Passing new path to controller.
+[bt_navigator-4] [INFO] [1783272482.495158412] [bt_navigator]: Received goal preemption request
+[bt_navigator-4] [INFO] [1783272482.495672299] [bt_navigator]: Begin navigating from current location (-4.05, 4.96) to (-2.24, 2.16)
+[controller_server-1] [INFO] [1783272483.123554575] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272483.195316917] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272484.123578499] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272484.215662891] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272485.173572407] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272485.225545638] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272486.223585854] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272487.223559924] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272488.273553957] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272489.273556032] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272490.323577073] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272491.373566565] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272491.475106545] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 240.845000 but the latest data is at time 240.827000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272491.475833041] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272492.394728303] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272492.496150375] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 241.849000 but the latest data is at time 241.827000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272492.496852617] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272493.425935005] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272493.527427575] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 242.852000 but the latest data is at time 242.827000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272493.529012814] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272494.464712778] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272494.557166351] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272495.479145437] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272495.581857629] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272496.509917509] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272496.593715703] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272497.531948671] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272497.604076867] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272498.581941540] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272499.581965787] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272499.644633934] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272500.631944301] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272501.631960172] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272502.681937107] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272503.731937709] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272503.834302263] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[planner_server-2] [INFO] [1783272504.374276639] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 280 X 280 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783272504.754658412] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272504.847755434] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272505.784386245] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272505.856611398] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272506.784386525] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272506.866964152] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272507.834424053] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272508.884396985] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272509.884388973] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272510.934402093] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272511.934400761] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272512.996152141] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272513.097614529] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 262.234000 but the latest data is at time 262.227000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272513.098386533] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[planner_server-2] [INFO] [1783272513.386050543] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 281 X 280 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783272514.014802528] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272514.116439426] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 263.242000 but the latest data is at time 263.227000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272514.117194566] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[bt_navigator-4] [INFO] [1783272514.848569025] [bt_navigator]: Received goal preemption request
+[bt_navigator-4] [INFO] [1783272514.849188204] [bt_navigator]: Begin navigating from current location (2.71, 2.94) to (3.32, -0.34)
+[controller_server-1] [INFO] [1783272515.048490499] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272515.140473498] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272516.048483249] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272516.151158213] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272517.115958474] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272518.101249301] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272518.163236272] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272519.151247409] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272520.201255274] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272521.201237478] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272522.251259358] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272523.251244131] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272524.301237567] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272524.402593715] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 273.435000 but the latest data is at time 273.427000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272524.403120595] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272525.312387958] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783272525.386100947] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 281 X 280 at 0.050000 m/pix
+[controller_server-1] [ERROR] [1783272525.413748529] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 274.433000 but the latest data is at time 274.427000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272525.414487550] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272526.353202089] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272526.444826502] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272527.403198622] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272527.454744022] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272528.403197440] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272528.464394813] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272529.453206370] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272530.503205879] [controller_server]: Passing new path to controller.
+[bt_navigator-4] [INFO] [1783272530.998537409] [bt_navigator]: Received goal preemption request
+[bt_navigator-4] [INFO] [1783272530.999163405] [bt_navigator]: Begin navigating from current location (4.40, -0.08) to (-2.32, 2.15)
+[controller_server-1] [INFO] [1783272531.503205741] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272532.553234804] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272533.553203890] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272534.603207916] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272534.705593362] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272535.622728870] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272535.714934858] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272536.655670545] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272536.727338041] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272537.705718534] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272538.705673632] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272539.755671111] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272540.805679287] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272541.805669066] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272542.818532296] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272543.868547949] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272543.970163124] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 292.846000 but the latest data is at time 292.827000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272543.971086816] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272544.889178657] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272544.981660953] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272545.921180129] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272545.993419421] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272546.971167994] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272547.971164230] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783272548.398909208] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 281 X 280 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783272549.021176374] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272550.071173079] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783272550.398903230] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 281 X 280 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783272551.071159339] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783272551.398913048] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 281 X 280 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783272552.121175579] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783272552.398897480] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 281 X 280 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783272553.121198667] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783272553.398923479] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 281 X 280 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783272554.171184411] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272554.272572485] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 303.037000 but the latest data is at time 303.027000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272554.273074110] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[planner_server-2] [INFO] [1783272554.398883211] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 281 X 280 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783272555.183486577] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272555.285120483] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 304.031000 but the latest data is at time 304.027000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272555.285826490] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[planner_server-2] [INFO] [1783272555.398914330] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 281 X 280 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783272556.223176391] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272556.325726475] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[planner_server-2] [INFO] [1783272556.398932284] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 281 X 280 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783272557.242185420] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272557.343712444] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 306.052000 but the latest data is at time 306.027000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272557.344111088] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[planner_server-2] [INFO] [1783272557.398900500] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 281 X 280 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783272558.275804796] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272558.367661877] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272559.325816432] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272559.387585656] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272560.325799139] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272560.399225470] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272561.375875863] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272562.425812971] [controller_server]: Passing new path to controller.
+[bt_navigator-4] [INFO] [1783272563.361479444] [bt_navigator]: Received goal preemption request
+[bt_navigator-4] [INFO] [1783272563.361959445] [bt_navigator]: Begin navigating from current location (-2.78, 1.43) to (-4.87, -1.14)
+[controller_server-1] [INFO] [1783272563.425812421] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272563.626949213] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 312.233000 but the latest data is at time 312.227000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272563.627497572] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272564.487702229] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272564.649935266] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 313.243000 but the latest data is at time 313.227000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272564.650475257] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272565.477573681] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272565.678753931] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272565.880443978] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272566.079942572] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272566.281655398] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272566.481338013] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272566.551926769] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272566.693635034] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [ERROR] [1783272566.882552743] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 315.449000 but the latest data is at time 315.427000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272566.883695601] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272567.544034346] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272567.705888127] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [ERROR] [1783272567.884976936] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 316.440000 but the latest data is at time 316.427000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272567.886062002] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272568.595974697] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272568.697467602] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 317.245000 but the latest data is at time 317.227000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272568.698053917] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272569.636138358] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272569.737784489] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [ERROR] [1783272569.900357600] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 318.436000 but the latest data is at time 318.427000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272569.900980873] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272570.637864946] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272570.719353020] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272570.743144363] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272570.929024313] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272570.940570562] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272571.128877881] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272571.140924384] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272571.328922400] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272571.343673526] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272571.529043210] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272571.554282566] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272571.729063624] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272571.729133376] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272571.753299484] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272571.939122277] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272572.729474386] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272573.747161286] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272574.747174582] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272575.797214538] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272576.847167518] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272577.847190057] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783272578.406867974] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 321 X 332 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783272578.897174818] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272578.998846658] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 327.433000 but the latest data is at time 327.427000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272578.999646868] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[bt_navigator-4] [INFO] [1783272579.619333422] [bt_navigator]: Received goal preemption request
+[bt_navigator-4] [INFO] [1783272579.619948679] [bt_navigator]: Begin navigating from current location (-4.09, 1.32) to (-4.28, -7.70)
+[controller_server-1] [INFO] [1783272579.918037468] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272580.019438851] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 328.446000 but the latest data is at time 328.427000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272580.020186972] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272580.949726633] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272581.031157090] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272581.051498915] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272581.240840068] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272581.251171402] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272581.440785648] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272581.451135081] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272581.650937341] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272581.950992056] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272582.042631646] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272582.062985864] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272582.252224462] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272582.453924118] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272582.643507413] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272582.663981286] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272582.853405691] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272582.984242953] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272583.055577496] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272583.254782372] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [WARN] [1783272583.456478699] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [ERROR] [1783272583.655972727] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 332.053000 but the latest data is at time 332.027000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272583.656646981] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272584.012997872] [controller_server]: Passing new path to controller.
+[controller_server-1] [ERROR] [1783272584.257729474] [transformPoseInTargetFrame]: Extrapolation Error looking up target frame: Lookup would require extrapolation into the future.  Requested time 332.648000 but the latest data is at time 332.627000, when looking up transform from frame [map] to frame [leo1/base_link]
+[controller_server-1] 
+[controller_server-1] [WARN] [1783272584.258506402] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[controller_server-1] [INFO] [1783272585.072987763] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272586.108591520] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272587.108627321] [controller_server]: Passing new path to controller.
+[controller_server-1] [INFO] [1783272588.158585407] [controller_server]: Passing new path to controller.
+[planner_server-2] [INFO] [1783272588.406866176] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 321 X 355 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783272589.208600828] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272589.310706285] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[planner_server-2] [INFO] [1783272589.406893425] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 321 X 365 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783272590.229151412] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272590.331708912] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[planner_server-2] [INFO] [1783272590.406873796] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 321 X 369 at 0.050000 m/pix
+[controller_server-1] [INFO] [1783272591.260810177] [controller_server]: Passing new path to controller.
+[controller_server-1] [WARN] [1783272591.342793969] [controller_server]: Control loop missed its desired rate of 20.0000Hz
+[planner_server-2] [INFO] [1783272591.406874730] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 321 X 377 at 0.050000 m/pix
+[planner_server-2] [WARN] [1783272592.232387347] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272592.232449242] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-4.28, -7.70)
+[planner_server-2] [WARN] [1783272592.232458762] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [INFO] [1783272592.249438207] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-2] [INFO] [1783272592.406862504] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 321 X 378 at 0.050000 m/pix
+[planner_server-2] [WARN] [1783272592.412942558] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272592.413040564] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-4.28, -7.70)
+[planner_server-2] [WARN] [1783272592.413082118] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-4] [ERROR] [1783272592.450000421] [bt_navigator_navigate_to_pose_rclcpp_node]: Failed to get result for follow_path in node halt!
+[behavior_server-3] [INFO] [1783272592.450364180] [behavior_server]: Running wait
+[bt_navigator-4] [WARN] [1783272592.450623255] [BehaviorTreeEngine]: Behavior Tree tick rate 100.00 was exceeded!
+[controller_server-1] [INFO] [1783272592.460785420] [controller_server]: Goal was canceled. Stopping the robot.
+[controller_server-1] [INFO] [1783272592.460829127] [controller_server]: [follow_path] [ActionServer] Client requested to cancel the goal. Cancelling.
+[behavior_server-3] [INFO] [1783272597.550529246] [behavior_server]: wait completed successfully
+[planner_server-2] [WARN] [1783272597.573324379] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272597.573434200] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-4.28, -7.70)
+[planner_server-2] [WARN] [1783272597.573446512] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [INFO] [1783272597.590806783] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-2] [WARN] [1783272597.613681568] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272597.613743927] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-4.28, -7.70)
+[planner_server-2] [WARN] [1783272597.613753489] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[behavior_server-3] [INFO] [1783272597.631048313] [behavior_server]: Running backup
+[behavior_server-3] [INFO] [1783272603.742433472] [behavior_server]: backup completed successfully
+[planner_server-2] [WARN] [1783272603.774951379] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272603.775007828] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-4.28, -7.70)
+[planner_server-2] [WARN] [1783272603.775016775] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [INFO] [1783272603.792024110] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-2] [WARN] [1783272603.825043511] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272603.825116069] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-4.28, -7.70)
+[planner_server-2] [WARN] [1783272603.825125522] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[controller_server-1] [INFO] [1783272603.842034735] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[planner_server-2] [INFO] [1783272603.842474325] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-2] [WARN] [1783272604.025295781] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272604.025365877] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-4.28, -7.70)
+[planner_server-2] [WARN] [1783272604.025379062] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [INFO] [1783272604.041980717] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-2] [WARN] [1783272604.225906269] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272604.225969925] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-4.28, -7.70)
+[planner_server-2] [WARN] [1783272604.225979635] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[behavior_server-3] [INFO] [1783272604.242222539] [behavior_server]: Running spin
+[behavior_server-3] [INFO] [1783272604.242302048] [behavior_server]: Turning 1.57 for spin behavior.
+[behavior_server-3] [INFO] [1783272605.942527392] [behavior_server]: spin completed successfully
+[planner_server-2] [WARN] [1783272605.974852820] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272605.974910011] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-4.28, -7.70)
+[planner_server-2] [WARN] [1783272605.974918730] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [INFO] [1783272605.991983138] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-2] [WARN] [1783272606.025390418] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272606.025458848] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-4.28, -7.70)
+[planner_server-2] [WARN] [1783272606.025469527] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[behavior_server-3] [INFO] [1783272606.042283523] [behavior_server]: Running wait
+[behavior_server-3] [INFO] [1783272611.142485059] [behavior_server]: wait completed successfully
+[planner_server-2] [WARN] [1783272611.174994251] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272611.175059612] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-4.28, -7.70)
+[planner_server-2] [WARN] [1783272611.175068728] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [INFO] [1783272611.192025047] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-2] [WARN] [1783272611.225798588] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272611.225864234] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-4.28, -7.70)
+[planner_server-2] [WARN] [1783272611.225875196] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[behavior_server-3] [INFO] [1783272611.242278919] [behavior_server]: Running backup
+[behavior_server-3] [INFO] [1783272617.442572919] [behavior_server]: backup completed successfully
+[planner_server-2] [WARN] [1783272617.475836469] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272617.475927213] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-4.28, -7.70)
+[planner_server-2] [WARN] [1783272617.475941518] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [INFO] [1783272617.492064132] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-2] [WARN] [1783272617.625209328] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272617.625273860] [planner_server]: Planning algorithm GridBased failed to generate a valid path to (-4.28, -7.70)
+[planner_server-2] [WARN] [1783272617.625284029] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-4] [WARN] [1783272617.651895416] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-4] [ERROR] [1783272617.652416354] [bt_navigator]: Goal failed
+[planner_server-2] [WARN] [1783272619.801275567] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272619.801336920] [planner_server]: Planning algorithm  failed to generate a valid path to (-6.18, 5.05)
+[planner_server-2] [WARN] [1783272619.801345920] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[controller_server-1] [INFO] [1783272621.812468005] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[planner_server-2] [INFO] [1783272621.812531960] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-2] [WARN] [1783272623.831930610] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272623.832009919] [planner_server]: Planning algorithm  failed to generate a valid path to (-4.28, -7.70)
+[planner_server-2] [WARN] [1783272623.832024521] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [WARN] [1783272627.843691884] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272627.843758655] [planner_server]: Planning algorithm  failed to generate a valid path to (-6.18, 5.05)
+[planner_server-2] [WARN] [1783272627.843768759] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [WARN] [1783272631.886830549] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272631.886911749] [planner_server]: Planning algorithm  failed to generate a valid path to (-5.63, 4.45)
+[planner_server-2] [WARN] [1783272631.886923312] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [WARN] [1783272635.904568187] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272635.904668629] [planner_server]: Planning algorithm  failed to generate a valid path to (-6.73, 4.30)
+[planner_server-2] [WARN] [1783272635.904681846] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [WARN] [1783272639.921035495] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272639.921109533] [planner_server]: Planning algorithm  failed to generate a valid path to (2.72, -3.60)
+[planner_server-2] [WARN] [1783272639.921119492] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [WARN] [1783272643.952609607] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272643.952673794] [planner_server]: Planning algorithm  failed to generate a valid path to (-2.93, -6.10)
+[planner_server-2] [WARN] [1783272643.952684724] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[controller_server-1] [INFO] [1783272645.726124286] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[planner_server-2] [INFO] [1783272645.726181492] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-2] [WARN] [1783272647.975944264] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272647.976050733] [planner_server]: Planning algorithm  failed to generate a valid path to (-4.28, -7.70)
+[planner_server-2] [WARN] [1783272647.976066947] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [WARN] [1783272652.010428538] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272652.010492651] [planner_server]: Planning algorithm  failed to generate a valid path to (-6.18, 5.05)
+[planner_server-2] [WARN] [1783272652.010501527] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [WARN] [1783272656.049785157] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272656.049937786] [planner_server]: Planning algorithm  failed to generate a valid path to (-6.73, 4.30)
+[planner_server-2] [WARN] [1783272656.049956101] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [WARN] [1783272660.087894803] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272660.087963038] [planner_server]: Planning algorithm  failed to generate a valid path to (-5.63, 4.45)
+[planner_server-2] [WARN] [1783272660.087972105] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[controller_server-1] [INFO] [1783272662.125543737] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[planner_server-2] [INFO] [1783272662.125619700] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-2] [WARN] [1783272664.141292614] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272664.141407804] [planner_server]: Planning algorithm  failed to generate a valid path to (-2.93, -6.10)
+[planner_server-2] [WARN] [1783272664.141440339] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [WARN] [1783272668.165331538] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272668.165480645] [planner_server]: Planning algorithm  failed to generate a valid path to (0.72, -4.95)
+[planner_server-2] [WARN] [1783272668.165501018] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [WARN] [1783272672.195411933] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272672.195515483] [planner_server]: Planning algorithm  failed to generate a valid path to (-4.28, -7.70)
+[planner_server-2] [WARN] [1783272672.195536265] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [WARN] [1783272676.220207312] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272676.220280247] [planner_server]: Planning algorithm  failed to generate a valid path to (-1.18, -5.95)
+[planner_server-2] [WARN] [1783272676.220289769] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [WARN] [1783272680.244461978] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272680.244568724] [planner_server]: Planning algorithm  failed to generate a valid path to (-6.73, 4.30)
+[planner_server-2] [WARN] [1783272680.244592040] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [WARN] [1783272684.276042522] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272684.276112525] [planner_server]: Planning algorithm  failed to generate a valid path to (-5.63, 4.45)
+[planner_server-2] [WARN] [1783272684.276122619] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[controller_server-1] [INFO] [1783272686.051734380] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[planner_server-2] [INFO] [1783272686.051801552] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-2] [WARN] [1783272688.330458413] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272688.330543922] [planner_server]: Planning algorithm  failed to generate a valid path to (-2.93, -6.10)
+[planner_server-2] [WARN] [1783272688.330555280] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [WARN] [1783272692.386019293] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272692.386096874] [planner_server]: Planning algorithm  failed to generate a valid path to (2.72, -3.60)
+[planner_server-2] [WARN] [1783272692.386107517] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [WARN] [1783272696.446793989] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272696.446870708] [planner_server]: Planning algorithm  failed to generate a valid path to (0.72, -4.95)
+[planner_server-2] [WARN] [1783272696.446881589] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [WARN] [1783272700.505912464] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272700.505989843] [planner_server]: Planning algorithm  failed to generate a valid path to (4.22, 7.30)
+[planner_server-2] [WARN] [1783272700.506003937] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[controller_server-1] [INFO] [1783272702.530820524] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[planner_server-2] [INFO] [1783272702.530864353] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-2] [WARN] [1783272704.564400963] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272704.564471026] [planner_server]: Planning algorithm  failed to generate a valid path to (-1.18, -5.95)
+[planner_server-2] [WARN] [1783272704.564481247] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [WARN] [1783272708.611044856] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272708.611127708] [planner_server]: Planning algorithm  failed to generate a valid path to (-3.18, -7.65)
+[planner_server-2] [WARN] [1783272708.611139459] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [WARN] [1783272712.672214619] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272712.672333810] [planner_server]: Planning algorithm  failed to generate a valid path to (-6.03, -7.65)
+[planner_server-2] [WARN] [1783272712.672349770] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [WARN] [1783272716.718701056] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272716.718774537] [planner_server]: Planning algorithm  failed to generate a valid path to (2.72, -3.60)
+[planner_server-2] [WARN] [1783272716.718785284] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [WARN] [1783272720.769681376] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272720.769791478] [planner_server]: Planning algorithm  failed to generate a valid path to (0.72, -4.95)
+[planner_server-2] [WARN] [1783272720.769816197] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [WARN] [1783272724.842753978] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272724.842909431] [planner_server]: Planning algorithm  failed to generate a valid path to (4.92, 7.75)
+[planner_server-2] [WARN] [1783272724.842939369] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[controller_server-1] [INFO] [1783272726.613553884] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[planner_server-2] [INFO] [1783272726.613656496] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-2] [WARN] [1783272728.870898165] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272728.871056183] [planner_server]: Planning algorithm  failed to generate a valid path to (-1.18, -5.95)
+[planner_server-2] [WARN] [1783272728.871079587] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [WARN] [1783272732.957343968] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272732.957458152] [planner_server]: Planning algorithm  failed to generate a valid path to (-3.18, -7.65)
+[planner_server-2] [WARN] [1783272732.957478829] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [WARN] [1783272736.965220040] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272736.965296002] [planner_server]: Planning algorithm  failed to generate a valid path to (4.92, 7.75)
+[planner_server-2] [WARN] [1783272736.965306880] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [WARN] [1783272740.990651032] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272740.990733982] [planner_server]: Planning algorithm  failed to generate a valid path to (-6.03, -7.65)
+[planner_server-2] [WARN] [1783272740.990748202] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[controller_server-1] [INFO] [1783272743.013246145] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[planner_server-2] [INFO] [1783272743.013340771] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[planner_server-2] [WARN] [1783272745.026780889] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272745.026859752] [planner_server]: Planning algorithm  failed to generate a valid path to (-3.18, -7.65)
+[planner_server-2] [WARN] [1783272745.026869973] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [WARN] [1783272749.058676473] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272749.058752196] [planner_server]: Planning algorithm  failed to generate a valid path to (4.92, 7.75)
+[planner_server-2] [WARN] [1783272749.058765171] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [WARN] [1783272753.090895799] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272753.090967224] [planner_server]: Planning algorithm  failed to generate a valid path to (-6.03, -7.65)
+[planner_server-2] [WARN] [1783272753.090977543] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [WARN] [1783272757.113175369] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272757.113247993] [planner_server]: Planning algorithm  failed to generate a valid path to (5.22, 6.70)
+[planner_server-2] [WARN] [1783272757.113257947] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [WARN] [1783272763.328191373] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272763.328254666] [planner_server]: Planning algorithm  failed to generate a valid path to (-4.48, 1.35)
+[planner_server-2] [WARN] [1783272763.328263035] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.
+[planner_server-2] [WARN] [1783272766.652878873] [planner_server]: GridBased: failed to create plan with tolerance 0.50.
+[planner_server-2] [WARN] [1783272766.652961236] [planner_server]: Planning algorithm  failed to generate a valid path to (-3.73, -1.99)
+[planner_server-2] [WARN] [1783272766.652972878] [planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.

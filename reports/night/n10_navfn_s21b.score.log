@@ -1,0 +1,65 @@
+===== MAP QUALITY =====
+label                  n10_navfn_s21b
+iou@2_aligned          0.7290
+precision@2_aligned    0.8872
+recall@2_aligned       0.8321
+rmse_m_aligned         0.2869
+phantom_frac           0.1036
+align_shift_m          0.4000
+align_deg              0.5000
+iou@2                  0.4201
+phantom_frac_raw       0.3317
+rmse_m                 0.3435
+slam_ate_rmse_m        0.4368
+slam_final_err_m       0.3406
+odom_ate_rmse_m        7.1936
+odom_final_err_m       10.0113
+free_area_m2           352.0850
+gt_free_area_m2        359.6100
+free_area_ratio        0.9791
+known_area_m2          372.3925
+map_extent_m           24.25, 16.05
+world_extent_m         24.20, 16.20
+extent_excess_m        0.05, -0.15
+wrote /ros2_ws/reports/night/n10_navfn_s21b/map_vs_world.png
+wrote /ros2_ws/reports/night/n10_navfn_s21b/map_score.json
+
+===== DRIVING SAFETY =====
+samples                1991
+duration_s             995.0
+path_len_m             108.97
+min_clearance_m        0.391
+p05_clearance_m        0.447
+contacts               0
+contact_events         0
+near_misses            0
+doorway_passes         33
+stuck_events           11
+stuck_time_s           391.0
+stuck_frac             0.393
+mean_speed_mps         0.11
+visited_area_m2        2.28
+
+wrote /ros2_ws/reports/night/n10_navfn_s21b/safety_score.json
+
+artefacts in reports/night/n10_navfn_s21b:
+  875  explorer.log
+  161  imu.log
+  156021  map.pgm
+  121  map.yaml
+  1333  map_saver.log
+  1482  map_score.json
+  75522  map_vs_world.png
+  12026  odom.log
+  174532  overlay.log
+  148443  pose_error.csv
+  0  pose_rec.log
+  1427  run.log
+  331  safety_score.json
+  6533  sim.log
+  503  timelapse.log
+  190610  timelapse.mp4
+  8562  timelapse_final.png
+  1485  timelapse_path.csv
+  23828  traj.csv
+  0  traj.log

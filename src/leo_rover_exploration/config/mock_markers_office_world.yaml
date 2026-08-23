@@ -1,0 +1,11 @@
+# Ground-truth ArUco marker poses for office_world (mock detector input).
+# yaw = outward normal of the wall face the marker is mounted on.
+markers:
+  - {id: 1, x: -11.88, y: 0.0, z: 0.3, yaw: 0.0}       # west outer wall, corridor west end
+  - {id: 2, x: 11.88, y: 0.5, z: 0.3, yaw: 3.1416}     # east outer wall, corridor east end
+  - {id: 3, x: -8.0, y: 7.88, z: 0.3, yaw: -1.5708}    # north outer wall, office N1
+  - {id: 4, x: -3.88, y: 5.0, z: 0.3, yaw: 0.0}        # west partition east face, office N2
+  - {id: 5, x: 11.88, y: 5.0, z: 0.3, yaw: 3.1416}     # east outer wall, office N3
+  - {id: 6, x: -11.88, y: -5.0, z: 0.3, yaw: 0.0}      # west outer wall, office S1
+  - {id: 7, x: 4.0, y: -7.88, z: 0.3, yaw: 1.5708}     # south outer wall, office S2
+  - {id: 8, x: -3.0, y: -1.32, z: 0.3, yaw: -1.5708}   # corridor wall south face, office S1

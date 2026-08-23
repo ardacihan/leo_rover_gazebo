@@ -17,14 +17,15 @@ fi
 # ── 4. Environment Variables ──────────────────────────────────────────────────
 export GZ_VERSION=harmonic
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
-export GZ_SIM_RESOURCE_PATH="${GZ_SIM_RESOURCE_PATH}:/ros2_ws/install/leo_rover_description/share"
+export ROS2_WS="${ROS2_WS:-/ros2_ws}"
+export GZ_SIM_RESOURCE_PATH="${GZ_SIM_RESOURCE_PATH}:${ROS2_WS}/install/leo_rover_description/share"
 # Default ROS Domain ID
 export ROS_DOMAIN_ID="${ROS_DOMAIN_ID:-0}"
 
 # Export gz resources for office map
-export GZ_SIM_RESOURCE_PATH=$GZ_SIM_RESOURCE_PATH:/ros2_ws/src/husarion_gz_worlds/models
-export GZ_SIM_RESOURCE_PATH=$GZ_SIM_RESOURCE_PATH:/ros2_ws/src/leo_rover_gazebo/models
-export IGN_GAZEBO_RESOURCE_PATH=$IGN_GAZEBO_RESOURCE_PATH:/ros2_ws/src/leo_rover_gazebo/models
-export IGN_GAZEBO_RESOURCE_PATH=$IGN_GAZEBO_RESOURCE_PATH:/ros2_ws/src/husarion_gz_worlds/models
+export GZ_SIM_RESOURCE_PATH=$GZ_SIM_RESOURCE_PATH:${ROS2_WS}/src/husarion_gz_worlds/models
+export GZ_SIM_RESOURCE_PATH=$GZ_SIM_RESOURCE_PATH:${ROS2_WS}/src/leo_rover_gazebo/models
+export IGN_GAZEBO_RESOURCE_PATH=$IGN_GAZEBO_RESOURCE_PATH:${ROS2_WS}/src/leo_rover_gazebo/models
+export IGN_GAZEBO_RESOURCE_PATH=$IGN_GAZEBO_RESOURCE_PATH:${ROS2_WS}/src/husarion_gz_worlds/models
 
 exec "$@"

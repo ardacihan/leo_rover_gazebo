@@ -1,0 +1,74 @@
+[INFO] [launch]: All log files can be found below /root/.ros/log/2026-07-06-10-11-16-525779-24a54e4b5e27-252
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [async_slam_toolbox_node-1]: process started with pid [475]
+[INFO] [async_slam_toolbox_node-2]: process started with pid [477]
+[async_slam_toolbox_node-2] [INFO] [1783332677.409399104] [leo2.slam_toolbox]: Using solver plugin solver_plugins::CeresSolver
+[async_slam_toolbox_node-1] [INFO] [1783332677.412779387] [leo1.slam_toolbox]: Using solver plugin solver_plugins::CeresSolver
+[async_slam_toolbox_node-2] [INFO] [1783332678.274905789] [leo2.slam_toolbox]: Message Filter dropping message: frame 'leo2/sensor_lidar_link' at time 5.954 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[async_slam_toolbox_node-1] [INFO] [1783332678.274906823] [leo1.slam_toolbox]: Message Filter dropping message: frame 'leo1/sensor_lidar_link' at time 5.954 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[async_slam_toolbox_node-2] [WARN] [1783332678.706034122] [leo2.slam_toolbox]: minimum laser range setting (0.0 m) exceeds the capabilities of the used Lidar (0.1 m)
+[async_slam_toolbox_node-2] [WARN] [1783332678.706209925] [leo2.slam_toolbox]: maximum laser range setting (25.0 m) exceeds the capabilities of the used Lidar (20.0 m)
+[async_slam_toolbox_node-2] Registering sensor: [Custom Described Lidar]
+[async_slam_toolbox_node-1] [WARN] [1783332681.334373445] [leo1.slam_toolbox]: minimum laser range setting (0.0 m) exceeds the capabilities of the used Lidar (0.1 m)
+[async_slam_toolbox_node-1] [WARN] [1783332681.334544504] [leo1.slam_toolbox]: maximum laser range setting (25.0 m) exceeds the capabilities of the used Lidar (20.0 m)
+[async_slam_toolbox_node-1] Registering sensor: [Custom Described Lidar]
+[async_slam_toolbox_node-1] [INFO] [1783332761.820068619] [leo1.slam_toolbox]: SlamToolbox: Saving map as /ros2_ws/maps/leo1_map.
+[async_slam_toolbox_node-1] [INFO] [1783332765.146442539] [leo1.map_saver]: 
+[async_slam_toolbox_node-1] 	map_saver lifecycle node launched. 
+[async_slam_toolbox_node-1] 	Waiting on external lifecycle transitions to activate
+[async_slam_toolbox_node-1] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[async_slam_toolbox_node-1] [INFO] [1783332765.147112974] [leo1.map_saver]: Creating
+[async_slam_toolbox_node-1] [INFO] [1783332765.148932772] [leo1.map_saver]: Configuring
+[async_slam_toolbox_node-1] [INFO] [1783332765.195589150] [leo1.map_saver]: Saving map from 'map' topic to '/ros2_ws/maps/leo1_map' file
+[async_slam_toolbox_node-1] [WARN] [1783332765.195650919] [leo1.map_saver]: Free threshold unspecified. Setting it to default value: 0.250000
+[async_slam_toolbox_node-1] [WARN] [1783332765.195671096] [leo1.map_saver]: Occupied threshold unspecified. Setting it to default value: 0.650000
+[async_slam_toolbox_node-1] [ERROR] [1783332767.197481629] [leo1.map_saver]: Failed to spin map subscription
+[async_slam_toolbox_node-1] [INFO] [1783332767.200691069] [leo1.map_saver]: Destroying
+[async_slam_toolbox_node-1] [ros2run]: Process exited with failure 1
+[async_slam_toolbox_node-1] Save To File /ros2_ws/maps/leo1_map.posegraph 
+[async_slam_toolbox_node-1] Mapper <- Module
+[async_slam_toolbox_node-1] Mapper <- m_pSequentialScanMatcher
+[async_slam_toolbox_node-1] Mapper <- m_pGraph
+[async_slam_toolbox_node-1] MapperGraph <- Graph; Graph <- m_Edges; Graph <- m_Vertices
+[async_slam_toolbox_node-1] MapperGraph <- m_pMapper; MapperGraph <- m_pLoopScanMatcher; MapperGraph <- m_pTraversal
+[async_slam_toolbox_node-1] Mapper <- m_pMapperSensorManager
+[async_slam_toolbox_node-1] MapperSensorManager <- m_ScanManagers; MapperSensorManager <- m_Scans
+[async_slam_toolbox_node-1] Mapper <- m_Listeners
+[async_slam_toolbox_node-1] **Finished serializing Mapper**
+[async_slam_toolbox_node-1] Save To File
+[async_slam_toolbox_node-1] **Serializing Dataset**
+[async_slam_toolbox_node-1] Dataset <- m_SensorNameLookup
+[async_slam_toolbox_node-1] Dataset <- m_Data
+[async_slam_toolbox_node-1] Dataset <- m_Lasers
+[async_slam_toolbox_node-1] Dataset <- m_pDatasetInfo
+[async_slam_toolbox_node-1] **Finished serializing Dataset**
+[async_slam_toolbox_node-2] [INFO] [1783332801.839985898] [leo2.slam_toolbox]: SlamToolbox: Saving map as /ros2_ws/maps/leo2_map.
+[async_slam_toolbox_node-2] [INFO] [1783332805.111569934] [leo2.map_saver]: 
+[async_slam_toolbox_node-2] 	map_saver lifecycle node launched. 
+[async_slam_toolbox_node-2] 	Waiting on external lifecycle transitions to activate
+[async_slam_toolbox_node-2] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[async_slam_toolbox_node-2] [INFO] [1783332805.111688543] [leo2.map_saver]: Creating
+[async_slam_toolbox_node-2] [INFO] [1783332805.113268984] [leo2.map_saver]: Configuring
+[async_slam_toolbox_node-2] [INFO] [1783332805.147238021] [leo2.map_saver]: Saving map from 'map' topic to '/ros2_ws/maps/leo2_map' file
+[async_slam_toolbox_node-2] [WARN] [1783332805.147289020] [leo2.map_saver]: Free threshold unspecified. Setting it to default value: 0.250000
+[async_slam_toolbox_node-2] [WARN] [1783332805.147302990] [leo2.map_saver]: Occupied threshold unspecified. Setting it to default value: 0.650000
+[async_slam_toolbox_node-2] [ERROR] [1783332807.148786691] [leo2.map_saver]: Failed to spin map subscription
+[async_slam_toolbox_node-2] [INFO] [1783332807.152069805] [leo2.map_saver]: Destroying
+[async_slam_toolbox_node-2] [ros2run]: Process exited with failure 1
+[async_slam_toolbox_node-2] Save To File /ros2_ws/maps/leo2_map.posegraph 
+[async_slam_toolbox_node-2] Mapper <- Module
+[async_slam_toolbox_node-2] Mapper <- m_pSequentialScanMatcher
+[async_slam_toolbox_node-2] Mapper <- m_pGraph
+[async_slam_toolbox_node-2] MapperGraph <- Graph; Graph <- m_Edges; Graph <- m_Vertices
+[async_slam_toolbox_node-2] MapperGraph <- m_pMapper; MapperGraph <- m_pLoopScanMatcher; MapperGraph <- m_pTraversal
+[async_slam_toolbox_node-2] Mapper <- m_pMapperSensorManager
+[async_slam_toolbox_node-2] MapperSensorManager <- m_ScanManagers; MapperSensorManager <- m_Scans
+[async_slam_toolbox_node-2] Mapper <- m_Listeners
+[async_slam_toolbox_node-2] **Finished serializing Mapper**
+[async_slam_toolbox_node-2] Save To File
+[async_slam_toolbox_node-2] **Serializing Dataset**
+[async_slam_toolbox_node-2] Dataset <- m_SensorNameLookup
+[async_slam_toolbox_node-2] Dataset <- m_Data
+[async_slam_toolbox_node-2] Dataset <- m_Lasers
+[async_slam_toolbox_node-2] Dataset <- m_pDatasetInfo
+[async_slam_toolbox_node-2] **Finished serializing Dataset**

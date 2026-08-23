@@ -1,0 +1,65 @@
+===== MAP QUALITY =====
+label                  n9_navfn_noekf_s21
+iou@2_aligned          0.5635
+precision@2_aligned    0.9960
+recall@2_aligned       0.6048
+rmse_m_aligned         0.0410
+phantom_frac           0.0002
+align_shift_m          0.5500
+align_deg              0.0000
+iou@2                  0.2751
+phantom_frac_raw       0.3960
+rmse_m                 0.3173
+slam_ate_rmse_m        0.6499
+slam_final_err_m       0.6323
+odom_ate_rmse_m        5.3045
+odom_final_err_m       7.5246
+free_area_m2           229.4775
+gt_free_area_m2        359.6100
+free_area_ratio        0.6381
+known_area_m2          242.0275
+map_extent_m           24.15, 15.95
+world_extent_m         24.20, 16.20
+extent_excess_m        -0.05, -0.25
+wrote /ros2_ws/reports/night/n9_navfn_noekf_s21/map_vs_world.png
+wrote /ros2_ws/reports/night/n9_navfn_noekf_s21/map_score.json
+
+===== DRIVING SAFETY =====
+samples                1029
+duration_s             514.0
+path_len_m             26.73
+min_clearance_m        0.3
+p05_clearance_m        0.3
+contacts               0
+contact_events         0
+near_misses            0
+doorway_passes         15
+stuck_events           7
+stuck_time_s           319.0
+stuck_frac             0.621
+mean_speed_mps         0.052
+visited_area_m2        0.61
+
+wrote /ros2_ws/reports/night/n9_navfn_noekf_s21/safety_score.json
+
+artefacts in reports/night/n9_navfn_noekf_s21:
+  1964  aruco_registry.json
+  890  explorer.log
+  154092  map.pgm
+  121  map.yaml
+  1345  map_saver.log
+  1526  map_score.json
+  106133  map_vs_world.png
+  6355  odom.log
+  91585  overlay.log
+  74381  pose_error.csv
+  0  pose_rec.log
+  1444  run.log
+  326  safety_score.json
+  5952  sim.log
+  519  timelapse.log
+  98619  timelapse.mp4
+  8204  timelapse_final.png
+  761  timelapse_path.csv
+  12051  traj.csv
+  0  traj.log

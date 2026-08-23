@@ -1,0 +1,16 @@
+ground-truth markers : 8
+detected correctly   : 3/8
+missed               : 2
+false positives      : 3
+frames processed     : 4119 (427 contained a marker)
+position error       : mean 1.157 m, median 1.157 m, max 1.481 m
+
+ id  status        err_m   detected (x, y)      truth (x, y)
+  1  ok            1.481   (-10.44, -0.35)   (-11.88,  0.00)
+  2  GROSS         2.359   (  9.52,  0.42)   ( 11.88,  0.50)
+  3  MISSED            -           --           ( -8.00,  7.88)
+  4  GROSS         1.613   ( -3.24,  3.52)   ( -3.88,  5.00)
+  5  GROSS         2.115   ( 10.01,  4.00)   ( 11.88,  5.00)
+  6  ok            1.157   (-10.91, -4.37)   (-11.88, -5.00)
+  7  ok            0.835   (  3.81, -7.07)   (  4.00, -7.88)
+  8  MISSED            -           --           ( -3.00, -1.32)

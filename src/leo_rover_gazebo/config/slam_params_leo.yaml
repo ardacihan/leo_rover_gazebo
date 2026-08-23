@@ -1,46 +1,92 @@
+# Simulation slam_toolbox configuration.
+#
+# These are the same mapper parameters as the hardware config in
+# src/leo_rover_real_bringup/config/slam_params.yaml (branch
+# fix/real-rover-mapping) -- only the frames, topic and clock differ. Keeping
+# the two in step is the point. The previous sim values were tuned against
+# Gazebo's ground-truth odometry, which is a perfect prior no physical rover
+# can supply, so they scored well here and badly on the robot.
+#
+# IMPORTANT: scoring a SLAM change on the default sim is meaningless. The URDF's
+# OdometryPublisher hands slam_toolbox the true pose, so the scan matcher never
+# has to correct anything and every configuration looks good. Use the realistic
+# profile, which substitutes a skid-steer wheel-odometry error model and a
+# C1-like lidar:
+#
+#     scripts/slam_bench_run.sh <name> realistic <params.yaml> <outdir>
+#
+# See reports/slam_bench/ for the run matrix and reports/slam_bench/recommended/
+# for what to deploy on hardware.
+#
+# A larger retune was tried (scripts/slam_candidates/C_robust.yaml) and scored
+# 0.77 wall IoU on one seed but only 0.25 on another -- false loop closures.
+# Do not adopt loop-closure changes without a multi-seed check.
 slam_toolbox:
   ros__parameters:
-    # --- ROS Parameters ---
     use_sim_time: true
     odom_frame: "leo1/odom"
     base_frame: "leo1/base_link"
     map_frame: "map"
     scan_topic: "/leo1/scan"
 
-    # --- Mapping Mode ---
+    solver_plugin: solver_plugins::CeresSolver
+    ceres_linear_solver: SPARSE_NORMAL_CHOLESKY
+    ceres_preconditioner: SCHUR_JACOBI
+    ceres_trust_strategy: LEVENBERG_MARQUARDT
+    ceres_dogleg_type: TRADITIONAL_DOGLEG
+    ceres_loss_function: None
+
+    use_map_saver: true
     mode: mapping
 
-    # --- Scan Matching ---
+    debug_logging: false
+    throttle_scans: 1
+    transform_publish_period: 0.02
+    map_update_interval: 1.0
+    resolution: 0.05
+    min_laser_range: 0.20
+    max_laser_range: 12.0
+    minimum_time_interval: 0.2
+    transform_timeout: 0.5
+    tf_buffer_duration: 30.0
+    stack_size_to_use: 40000000
+    enable_interactive_mode: true
+
     use_scan_matching: true
     use_scan_barycenter: true
-    minimum_time_interval: 0.3
-
-    # --- Map Parameters ---
-    resolution: 0.03
-    max_laser_range: 20.0
-    map_update_interval: 1.0
-    transform_publish_period: 0.03
-
-    # --- Performance & Optimization ---
-    solver_plugin: "solver_plugins::CeresSolver"
-    ceres_linear_solver: "SPARSE_NORMAL_CHOLESKY"
-    ceres_preconditioner: "SCHUR_JACOBI"
-    ceres_trust_strategy: "LEVENBERG_MARQUARDT"
+    minimum_travel_distance: 0.05
+    minimum_travel_heading: 0.05
+    scan_buffer_size: 10
+    scan_buffer_maximum_scan_distance: 10.0
+    link_match_minimum_response_fine: 0.1
+    link_scan_maximum_distance: 1.5
 
     do_loop_closing: true
-    loop_search_maximum_distance: 5.0
-    loop_match_minimum_chain_size: 3
+    # Small relative to the drift wheel odometry accumulates on hardware, so
+    # loop closure stops firing once the estimate is more than 3 m out. Raising
+    # this is under evaluation (reports/slam_bench_seeds/); if raised, keep
+    # loop_match_minimum_chain_size at 10 -- relaxing both together is what
+    # produced false loop closures and bowed, duplicated maps.
+    loop_search_maximum_distance: 3.0
+    loop_match_minimum_chain_size: 10
     loop_match_maximum_variance_coarse: 3.0
     loop_match_minimum_response_coarse: 0.35
     loop_match_minimum_response_fine: 0.45
 
-    minimum_travel_distance: 0.05
-    minimum_travel_heading: 0.05
+    correlation_search_space_dimension: 0.5
+    correlation_search_space_resolution: 0.01
+    correlation_search_space_smear_deviation: 0.1
+    loop_search_space_dimension: 8.0
+    loop_search_space_resolution: 0.05
+    loop_search_space_smear_deviation: 0.03
 
-    # --- Buffers and Limits ---
-    tf_buffer_duration: 30.0
-    transform_timeout: 0.5
-    stack_size_to_use: 40000000
-
-    # --- Interactive Mode ---
-    enable_interactive_mode: true
+    distance_variance_penalty: 0.5
+    angle_variance_penalty: 1.0
+    fine_search_angle_offset: 0.00349
+    coarse_search_angle_offset: 0.349
+    coarse_angle_resolution: 0.0349
+    minimum_angle_penalty: 0.9
+    minimum_distance_penalty: 0.5
+    use_response_expansion: true
+    min_pass_through: 2
+    occupancy_threshold: 0.1

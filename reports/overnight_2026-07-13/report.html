@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Overnight 2026-07-13: report-ready collaborative maps + item-search benchmark</title>
+<style>
+  body { font-family: Georgia, serif; max-width: 1060px; margin: 2em auto; padding: 0 1em;
+         color: #222; line-height: 1.55; }
+  h1 { font-size: 1.6em; border-bottom: 2px solid #444; padding-bottom: .3em; }
+  h2 { font-size: 1.25em; margin-top: 1.8em; border-bottom: 1px solid #bbb; padding-bottom: .2em; }
+  img { max-width: 100%; border: 1px solid #ccc; margin: .6em 0; }
+  table { border-collapse: collapse; margin: 1em 0; font-size: .95em; }
+  th, td { border: 1px solid #999; padding: .35em .7em; text-align: center; }
+  th { background: #eee; }
+  .hl { background: #eaf6ec; }
+  .box { background: #f7f4ea; border: 1px solid #d8cfae; padding: .8em 1em; margin: 1em 0; }
+  code { background: #f2f2f2; padding: 0 .25em; font-size: .92em; }
+  .cap { color: #555; font-size: .9em; margin-top: -0.4em; }
+</style>
+</head>
+<body>
+
+<h1>Two-robot collaborative SLAM: clean merged maps &amp; item-search benchmark</h1>
+<p class="cap">Overnight autonomous session 2026-07-13 &rarr; 07-14 &middot; office_world / depot_world &middot;
+8 sim runs (RTF capped 1.0, GPU-rendered sensors, headless), zero explorer errors.</p>
+
+<div class="box">
+<b>Headline findings</b>
+<ol>
+<li><b>The doubled walls in every earlier merged map were not SLAM drift.</b> The rovers'
+<code>/odom</code> comes from Gazebo's world-frame <code>OdometryPublisher</code>, so each robot's
+SLAM frame is already world-anchored &mdash; the hard-coded (1.5&nbsp;m, 0) spawn-offset in the
+static TFs and compositor double-shifted leo2's submap. Occupancy-grid registration exposed
+this: seeded at (1.5,&nbsp;0) it converged to (&minus;0.055,&nbsp;0.000,&nbsp;0.35&deg;).</li>
+<li><b>Merged maps are now report-ready</b>: wall IoU@10cm 0.78&ndash;0.80, precision &asymp;0.99,
+RMSE-to-true-wall &asymp;4&ndash;5&nbsp;cm on both worlds &mdash; matching single-robot map quality.</li>
+<li><b>Coordinated 2-robot item search decisively beats both baselines</b>: 15/16 markers found
+across two layouts vs 9/16 (independent) and 8/16 (single); 2&ndash;4&times; faster to 4 items.</li>
+</ol>
+</div>
+
+<h2>1&nbsp;&middot;&nbsp;Report-ready merged maps (Priority 1)</h2>
+<p>New offline pipeline (<code>scripts/map_fusion.py</code>, also run live by the compositor):
+multi-resolution correlative registration on a likelihood field of occupied cells &rarr;
+per-cell log-odds fusion (with weak free votes beside a map's own walls, so sub-cell wall edges
+cannot punch holes in the other map's walls) &rarr; small-component despeckle, unknown-hole fill,
+world-bound clip. Scored against the world SDF rasterized at the lidar plane
+(<code>scripts/world_ground_truth.py</code>).</p>
+
+<img src="p1_fusion/office_before_after.png" alt="office before/after">
+<img src="p1_fusion/depot_before_after.png" alt="depot before/after">
+<p class="cap">Before = the old fixed-offset overwrite merge (doubled partitions, ghost desks and
+barrels 1.5&nbsp;m apart). After = registered + fused + cleaned, from the same per-robot maps.</p>
+
+<table>
+<tr><th>world</th><th>pipeline</th><th>wall IoU@10cm</th><th>precision@10cm</th><th>recall@10cm</th><th>RMSE to true wall</th></tr>
+<tr><td>office</td><td>before</td><td>0.638</td><td>0.735</td><td>0.854</td><td>44.4 cm</td></tr>
+<tr class="hl"><td>office</td><td><b>after</b></td><td><b>0.775</b></td><td><b>0.988</b></td><td>0.830</td><td><b>5.3 cm</b></td></tr>
+<tr><td>depot</td><td>before</td><td>0.484</td><td>0.603</td><td>0.799</td><td>52.5 cm</td></tr>
+<tr class="hl"><td>depot</td><td><b>after</b></td><td><b>0.779</b></td><td><b>0.992</b></td><td>0.826</td><td><b>4.7 cm</b></td></tr>
+<tr class="hl"><td>office (cameras-on run)</td><td><b>after</b></td><td><b>0.804</b></td><td>0.988</td><td>0.845</td><td><b>3.9 cm</b></td></tr>
+</table>
+<p class="cap">Reference: a good single-robot office map scores IoU@10cm &asymp; 0.70 (recall is
+bounded by what the lidar can reach), so &ldquo;after&rdquo; meets the visually-indistinguishable bar.
+Registration corrections vs identity: office (&minus;0.055&nbsp;m, 0.000&nbsp;m, +0.35&deg;),
+depot (&minus;0.010&nbsp;m, &minus;0.010&nbsp;m, +0.05&deg;).</p>
+
+<h2>2&nbsp;&middot;&nbsp;Registration &amp; the relaxed prior (Priorities 1&nbsp;+&nbsp;3)</h2>
+<img src="p1_fusion/registration_recovery.png" alt="registration recovery">
+<p>Synthetic ground truth (a real office map split into two overlapping halves, one displaced by a
+known transform): with an <b>exact prior</b> (seed &le;0.3&nbsp;m/3&deg; off) recovery error is
+0.011&nbsp;m / 0.10&deg; mean; with a <b>coarse prior</b> (seed up to 1.14&nbsp;m / 11.6&deg; off,
+the Priority-3 assumption) it is 0.015&nbsp;m / 0.11&deg; mean, 0.061&nbsp;m / 0.34&deg; max (n=8
+each). On the <b>real pair</b>, 5/5 random coarse seeds (&plusmn;1&nbsp;m, &plusmn;15&deg;) converge to
+within 0.01&nbsp;m / 0.15&deg; of the exact-window answer &mdash; the known-spawn assumption is not
+needed, only overlapping coverage and a rough prior.</p>
+
+<h2>3&nbsp;&middot;&nbsp;Item-search benchmark (Priority 2)</h2>
+<p>Multi-robot port of the PR4 item search: per-robot mock ArUco detectors (own-frame, LOS on the
+robot's own map, markers shifted common&rarr;own via TF), a <b>shared item registry</b> on
+<code>/item_claims</code> (peers adopt confirmed items and skip redundant verification detours), and
+<b>shared camera-coverage claims</b> every 3&nbsp;s (no wall is swept twice; sweep targets near a
+peer's active claim are skipped). Conditions: <code>1robot</code>, <code>2indep</code> (no sharing,
+no coordination), <code>2coord</code> (allocation + sharing). office_world, 8 wall markers,
+two layouts (seed A/B), 20-minute sim cap, cameras on.</p>
+
+<img src="item_search/time_to_items.png" alt="time to items">
+<table>
+<tr><th>condition</th><th>seed A found</th><th>seed B found</th><th>time to 4 items (A / B)</th></tr>
+<tr class="hl"><td><b>2coord</b></td><td><b>8/8</b></td><td><b>7/8</b></td><td><b>279 s / 261 s</b></td></tr>
+<tr><td>2indep</td><td>4/8</td><td>5/8</td><td>894 s / 532 s</td></tr>
+<tr><td>1robot</td><td>5/8</td><td>3/8</td><td>1082 s / &mdash;</td></tr>
+</table>
+
+<img src="item_search/items_overlay_2coord_seedA.png" alt="found items overlay">
+<p class="cap">All 8 ground-truth markers (red diamonds) confirmed (green), annotated with the
+discovering rover and sim time, drawn on that run's own fused merged map (IoU@10cm 0.804).
+leo1 cleared the west rooms, leo2 the east &mdash; the division of labour the allocation is
+designed to produce.</p>
+
+<h2>Honest limitations</h2>
+<ul>
+<li>n=2 marker layouts per condition; sim run-to-run variance is ~&plusmn;30% for coverage-style
+metrics. The coordinated gap exceeds 2&times; on both seeds, but two seeds cannot fully rule out
+layout luck.</li>
+<li>Independent and single runs hit the cap with items missing &mdash; their times are
+right-censored lower bounds; found-counts are counts-at-cap. The cap applies equally to all
+conditions.</li>
+<li>Mock geometric ArUco detector (range/FOV/incidence/LOS gating), not real perception.</li>
+<li>Registration assumes zero relative yaw between map frames (true for this stack) and
+overlapping coverage; seeds vary marker layout only, spawns fixed.</li>
+<li>RTF cap changed 2.0&rarr;1.0 this session for control fidelity; absolute times are not
+comparable with earlier reports.</li>
+</ul>
+
+<h2>Artifacts</h2>
+<ul>
+<li><code>summary.md</code> &mdash; this report in markdown, plus per-priority detail</li>
+<li><code>p1_fusion/</code> &mdash; fused maps, before/after figures, ground truths, registration
+validation JSONs</li>
+<li><code>item_search/</code> &mdash; six benchmark run dirs (items.jsonl, per-robot + merged maps,
+logs, trajectories), <code>summary.json</code>, figures</li>
+<li><code>runs/</code> &mdash; the two P1 map-collection runs + smoke test</li>
+<li>Code: <code>scripts/map_fusion.py</code>, <code>world_ground_truth.py</code>,
+<code>validate_registration.py</code>, <code>map_compositor.py</code> (live fusion),
+<code>item_recorder.py</code>, <code>analyze_item_search.py</code>, <code>auto_item_run.sh</code>,
+<code>run_item_benchmark.sh</code>; explorer/detector changes in
+<code>src/leo_rover_exploration/</code>.</li>
+</ul>
+
+</body>
+</html>

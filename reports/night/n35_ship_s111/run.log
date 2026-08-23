@@ -1,0 +1,10 @@
+[wsl-exp 07:35:40] backend=wsl:Ubuntu stack=hybrid world=office_world profile=realistic cap=22min out=reports/night/n35_ship_s111
+[wsl-exp 07:35:40] syncing src/ and scripts/ into /home/smirn/leo_ws
+[wsl-exp 07:35:41] colcon build (leo_nav2_exploration, leo_rover_gazebo)
+Summary: 1 package finished [1.81s]
+  1 package failed: leo_rover_gazebo
+  1 package had stderr output: leo_rover_gazebo
+[wsl-exp 07:35:44] killing any previous sim
+[wsl-exp 07:35:48] cleanup: 0 ROS processes still alive
+[wsl-exp 07:35:53] starting simulator (GPU, headless)
+[wsl-exp 07:35:53] waiting for /leo1/scan

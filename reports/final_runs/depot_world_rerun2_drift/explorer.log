@@ -1,0 +1,60 @@
+[INFO] [launch]: All log files can be found below /root/.ros/log/2026-07-05-17-24-54-727241-c23582176ef6-759
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [frontier_explorer-1]: process started with pid [865]
+[INFO] [mock_aruco_detector-2]: process started with pid [867]
+[mock_aruco_detector-2] [INFO] [1783272297.364832534] [mock_aruco_detector]: Mock detector: 4 ground-truth markers
+[frontier_explorer-1] [INFO] [1783272297.678145833] [frontier_explorer]: Frontier explorer up for "leo1" (base_frame=leo1/base_link)
+[frontier_explorer-1] [WARN] [1783272297.919871357] [frontier_explorer]: Watchdog: work exists but no goal active and robot stationary - clearing costmaps
+[frontier_explorer-1] [WARN] [1783272298.991300867] [frontier_explorer]: Watchdog: work exists but no goal active and robot stationary - clearing costmaps
+[frontier_explorer-1] [INFO] [1783272301.013200965] [frontier_explorer]: Initial pose recorded: (1.23, -0.01)
+[frontier_explorer-1] [INFO] [1783272301.167487937] [frontier_explorer]: New frontier goal: (-4.70, -2.97)
+[frontier_explorer-1] [INFO] [1783272317.228645490] [frontier_explorer]: New frontier goal: (-5.51, -3.52)
+[frontier_explorer-1] [INFO] [1783272329.274700198] [frontier_explorer]: New frontier goal: (5.49, 2.97)
+[frontier_explorer-1] [INFO] [1783272353.453755482] [frontier_explorer]: New frontier goal: (5.72, 1.85)
+[frontier_explorer-1] [INFO] [1783272365.567360095] [frontier_explorer]: New frontier goal: (-2.26, 5.80)
+[frontier_explorer-1] [INFO] [1783272381.676842744] [frontier_explorer]: New frontier goal: (6.09, 4.65)
+[frontier_explorer-1] [INFO] [1783272397.807191250] [frontier_explorer]: New frontier goal: (-4.41, 4.20)
+[frontier_explorer-1] [INFO] [1783272409.905537912] [frontier_explorer]: New frontier goal: (-5.36, 4.15)
+[frontier_explorer-1] [INFO] [1783272421.956933392] [frontier_explorer]: New frontier goal: (2.59, 6.35)
+[frontier_explorer-1] [INFO] [1783272442.112822435] [frontier_explorer]: New frontier goal: (1.84, 6.45)
+[frontier_explorer-1] [INFO] [1783272454.233773561] [frontier_explorer]: New frontier goal: (-4.26, 5.30)
+[frontier_explorer-1] [INFO] [1783272470.379588652] [frontier_explorer]: New frontier goal: (-3.69, 4.71)
+[frontier_explorer-1] [INFO] [1783272482.489772041] [frontier_explorer]: New frontier goal: (-2.24, 2.16)
+[frontier_explorer-1] [INFO] [1783272514.838460799] [frontier_explorer]: New frontier goal: (3.32, -0.34)
+[frontier_explorer-1] [INFO] [1783272530.993807302] [frontier_explorer]: New frontier goal: (-2.32, 2.15)
+[frontier_explorer-1] [INFO] [1783272557.737025997] [frontier_explorer]: Item candidate id=3 at (-4.03, 2.90) - queued for verification
+[frontier_explorer-1] [INFO] [1783272559.798723918] [frontier_explorer]: Item id=3 CONFIRMED at (-4.01, 2.89) after 2 views
+[frontier_explorer-1] [INFO] [1783272563.359145633] [frontier_explorer]: New frontier goal: (-4.87, -1.14)
+[frontier_explorer-1] [INFO] [1783272579.616364643] [frontier_explorer]: New frontier goal: (-4.28, -7.70)
+[frontier_explorer-1] [WARN] [1783272617.692786778] [frontier_explorer]: frontier goal failed (status 6), blacklisted (-4.28, -7.70)
+[frontier_explorer-1] [INFO] [1783272619.849313726] [frontier_explorer]: No path to frontier goal (-6.18, 5.05), skipping
+[frontier_explorer-1] [WARN] [1783272621.812082663] [frontier_explorer]: Watchdog: work exists but no goal active and robot stationary - clearing costmaps
+[frontier_explorer-1] [WARN] [1783272621.857806925] [frontier_explorer]: Watchdog: resetting blacklist
+[frontier_explorer-1] [INFO] [1783272639.969936223] [frontier_explorer]: No path to frontier goal (2.72, -3.60), skipping
+[frontier_explorer-1] [WARN] [1783272641.924156957] [frontier_explorer]: Watchdog: all goals planner-rejected (6 skips) - blind reverse escape
+[frontier_explorer-1] [WARN] [1783272652.073495322] [frontier_explorer]: Goal (-6.18, 5.05) planner-rejected 3 times - long-banning
+[frontier_explorer-1] [INFO] [1783272660.141599805] [frontier_explorer]: No path to frontier goal (-5.63, 4.45), skipping
+[frontier_explorer-1] [WARN] [1783272662.125297276] [frontier_explorer]: Watchdog: work exists but no goal active and robot stationary - clearing costmaps
+[frontier_explorer-1] [WARN] [1783272672.248548462] [frontier_explorer]: Goal (-4.28, -7.70) planner-rejected 3 times - long-banning
+[frontier_explorer-1] [WARN] [1783272680.292012056] [frontier_explorer]: Goal (-6.73, 4.30) planner-rejected 3 times - long-banning
+[frontier_explorer-1] [INFO] [1783272680.333087509] [frontier_explorer]: No path to frontier goal (-6.73, 4.30), skipping
+[frontier_explorer-1] [WARN] [1783272682.259368602] [frontier_explorer]: Watchdog: all goals planner-rejected (9 skips) - blind rotate escape
+[frontier_explorer-1] [WARN] [1783272684.329629935] [frontier_explorer]: Goal (-5.63, 4.45) planner-rejected 3 times - long-banning
+[frontier_explorer-1] [WARN] [1783272688.381940260] [frontier_explorer]: Goal (-2.93, -6.10) planner-rejected 3 times - long-banning
+[frontier_explorer-1] [INFO] [1783272700.563131545] [frontier_explorer]: No path to frontier goal (4.22, 7.30), skipping
+[frontier_explorer-1] [WARN] [1783272702.530531616] [frontier_explorer]: Watchdog: work exists but no goal active and robot stationary - clearing costmaps
+[frontier_explorer-1] [WARN] [1783272716.768733055] [frontier_explorer]: Goal (2.72, -3.60) planner-rejected 3 times - long-banning
+[frontier_explorer-1] [WARN] [1783272720.819177111] [frontier_explorer]: Goal (0.72, -4.95) planner-rejected 3 times - long-banning
+[frontier_explorer-1] [INFO] [1783272720.861480252] [frontier_explorer]: No path to frontier goal (0.72, -4.95), skipping
+[frontier_explorer-1] [WARN] [1783272722.810129582] [frontier_explorer]: Watchdog: all goals planner-rejected (9 skips) - blind reverse escape
+[frontier_explorer-1] [WARN] [1783272728.923820521] [frontier_explorer]: Goal (-1.18, -5.95) planner-rejected 3 times - long-banning
+[frontier_explorer-1] [INFO] [1783272741.037248134] [frontier_explorer]: No path to frontier goal (-6.03, -7.65), skipping
+[frontier_explorer-1] [WARN] [1783272743.013009890] [frontier_explorer]: Watchdog: work exists but no goal active and robot stationary - clearing costmaps
+[frontier_explorer-1] [WARN] [1783272743.051691562] [frontier_explorer]: Watchdog: resetting blacklist
+[frontier_explorer-1] [WARN] [1783272745.076807896] [frontier_explorer]: Goal (-3.18, -7.65) planner-rejected 3 times - long-banning
+[frontier_explorer-1] [WARN] [1783272749.106427593] [frontier_explorer]: Goal (4.92, 7.75) planner-rejected 3 times - long-banning
+[frontier_explorer-1] [WARN] [1783272753.137002467] [frontier_explorer]: Goal (-6.03, -7.65) planner-rejected 3 times - long-banning
+[frontier_explorer-1] [INFO] [1783272761.219327240] [frontier_explorer]: Frontiers done - SWEEPING for camera coverage (9% of walls observed)
+[frontier_explorer-1] [INFO] [1783272763.326798743] [frontier_explorer]: Sweep selection: gain=50 distance=1.4m turn=1.86rad utility=13.03
+[frontier_explorer-1] [INFO] [1783272763.417685060] [frontier_explorer]: No path to sweep goal (-4.48, 1.35), skipping
+[frontier_explorer-1] [INFO] [1783272766.650999708] [frontier_explorer]: Sweep selection: gain=49 distance=2.0m turn=1.39rad utility=12.05

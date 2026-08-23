@@ -1,0 +1,17 @@
+[exp 22:16:07] stack=hybrid world=office_world profile=realistic cap=30min out=reports/night/n1_ekf_s21
+Using patched Ogre GPU renderer from docker/patched/
+7a1efcb260c1510e45bc2fa1354726379f7275d44752602c3fcbac165b11feda
+Leo sim started (container: leo_sim)
+Logs: docker logs -f leo_sim
+[exp 22:16:09] waiting for /leo1/scan
+[exp 22:16:30] scan: average rate: 9.882
+[exp 22:16:33] starting wheel-odometry model (message only) + gyro + EKF
+[exp 22:16:47] starting overlay stack: sim_navigation.launch.py (slam + nav2 + guard + collision monitor)
+[exp 22:16:47] waiting for Nav2 planner action
+[exp 22:17:19] camera/points (with stack up): average rate: 5.051
+[exp 22:17:24] camera/points endpoints: 4
+[exp 22:17:32] scan_filtered: average rate: 10.168
+[exp 22:17:32] starting recorders
+[exp 22:17:38] bootstrap jog
+[exp 22:18:01] explorer launched; polling (cap 30 min)
+[exp 22:26:04] explorer reports completion

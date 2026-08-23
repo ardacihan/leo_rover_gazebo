@@ -1,0 +1,16 @@
+[INFO] [1783338610.293247660] [map_saver]: 
+	map_saver lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1783338610.293403483] [map_saver]: Creating
+[INFO] [1783338610.294457290] [map_saver]: Configuring
+[INFO] [1783338610.334205488] [map_saver]: Saving map from 'map' topic to '/ros2_ws/reports/collab_v2/office_coordinated/merged_map' file
+[WARN] [1783338610.334404153] [map_saver]: Free threshold unspecified. Setting it to default value: 0.250000
+[WARN] [1783338610.334443198] [map_saver]: Occupied threshold unspecified. Setting it to default value: 0.650000
+[WARN] [1783338610.339457078] [map_io]: Image format unspecified. Setting it to: pgm
+[INFO] [1783338610.339643476] [map_io]: Received a 510 X 320 map @ 0.05 m/pix
+[INFO] [1783338610.425456653] [map_io]: Writing map occupancy data to /ros2_ws/reports/collab_v2/office_coordinated/merged_map.pgm
+[INFO] [1783338610.456541838] [map_io]: Writing map metadata to /ros2_ws/reports/collab_v2/office_coordinated/merged_map.yaml
+[INFO] [1783338610.459054420] [map_io]: Map saved
+[INFO] [1783338610.459113654] [map_saver]: Map saved successfully
+[INFO] [1783338610.461857585] [map_saver]: Destroying

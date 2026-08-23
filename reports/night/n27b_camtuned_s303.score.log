@@ -1,0 +1,65 @@
+===== MAP QUALITY =====
+label                  n27b_ship_s303
+iou@2_aligned          0.6961
+precision@2_aligned    0.9281
+recall@2_aligned       0.7810
+rmse_m_aligned         0.2357
+phantom_frac           0.0695
+align_shift_m          0.5500
+align_deg              -1.5000
+iou@2                  0.2297
+phantom_frac_raw       0.5159
+rmse_m                 0.3725
+slam_ate_rmse_m        0.5971
+slam_final_err_m       0.4914
+odom_ate_rmse_m        8.8608
+odom_final_err_m       14.2639
+free_area_m2           347.1150
+gt_free_area_m2        359.6100
+free_area_ratio        0.9653
+known_area_m2          366.8225
+map_extent_m           24.60, 16.45
+world_extent_m         24.20, 16.20
+extent_excess_m        0.40, 0.25
+wrote /ros2_ws/reports/night/n27b_ship_s303/map_vs_world.png
+wrote /ros2_ws/reports/night/n27b_ship_s303/map_score.json
+
+===== DRIVING SAFETY =====
+samples                1991
+duration_s             995.0
+path_len_m             90.64
+min_clearance_m        0.361
+p05_clearance_m        0.361
+contacts               0
+contact_events         0
+near_misses            0
+doorway_passes         27
+stuck_events           10
+stuck_time_s           464.5
+stuck_frac             0.467
+mean_speed_mps         0.091
+visited_area_m2        1.96
+
+wrote /ros2_ws/reports/night/n27b_ship_s303/safety_score.json
+
+artefacts in reports/night/n27b_ship_s303:
+  888  explorer.log
+  162  imu.log
+  161883  map.pgm
+  121  map.yaml
+  1333  map_saver.log
+  1485  map_score.json
+  122804  map_vs_world.png
+  11802  odom.log
+  1877374  overlay.log
+  147324  pose_error.csv
+  0  pose_rec.log
+  1745  run.log
+  331  safety_score.json
+  6798  sim.log
+  503  timelapse.log
+  147941  timelapse.mp4
+  9489  timelapse_final.png
+  1491  timelapse_path.csv
+  23893  traj.csv
+  0  traj.log

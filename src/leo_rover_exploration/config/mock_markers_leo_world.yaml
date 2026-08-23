@@ -1,0 +1,9 @@
+# Ground-truth ArUco marker poses for leo_world (mock detector input).
+# yaw = outward normal of the wall face the marker is mounted on.
+markers:
+  - {id: 1, x: -9.88, y: -6.0, z: 0.3, yaw: 0.0}        # west outer wall, SW room
+  - {id: 2, x: -7.0, y: 9.88, z: 0.3, yaw: -1.5708}     # north outer wall, NW room
+  - {id: 3, x: -4.12, y: 2.0, z: 0.3, yaw: 3.1416}      # interior wall, west side
+  - {id: 4, x: 0.0, y: 3.88, z: 0.3, yaw: -1.5708}      # interior wall, south side
+  - {id: 5, x: 9.88, y: -7.0, z: 0.3, yaw: 3.1416}      # east outer wall, SE room
+  - {id: 6, x: 5.0, y: -3.88, z: 0.3, yaw: 1.5708}      # interior wall, north side

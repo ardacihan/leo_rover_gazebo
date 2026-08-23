@@ -1,0 +1,69 @@
+[INFO] [launch]: All log files can be found below /root/.ros/log/2026-07-13-22-13-31-358454-894aafb411d7-745
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [frontier_explorer-1]: process started with pid [849]
+[INFO] [mock_aruco_detector-2]: process started with pid [851]
+[mock_aruco_detector-2] [INFO] [1783980813.592361433] [leo1.mock_aruco_detector]: Mock detector: 8 ground-truth markers
+[mock_aruco_detector-2] [INFO] [1783980813.939928153] [leo1.mock_aruco_detector]: Markers shifted into leo1/map (common->own offset (0.00, 0.00))
+[frontier_explorer-1] [INFO] [1783980813.967674709] [leo1.frontier_explorer]: Frontier explorer up for "leo1" (base_frame=leo1/base_link); coordination=independent, peers=['leo2']
+[frontier_explorer-1] [WARN] [1783980814.200755657] [leo1.frontier_explorer]: Watchdog: work exists but no goal active and robot stationary - clearing costmaps
+[frontier_explorer-1] [INFO] [1783980816.462407862] [leo1.frontier_explorer]: Initial pose recorded: (1.09, -0.00)
+[frontier_explorer-1] [INFO] [1783980816.597582282] [leo1.frontier_explorer]: New frontier goal: (-1.73, 0.03)
+[frontier_explorer-1] [INFO] [1783980832.774078366] [leo1.frontier_explorer]: New frontier goal: (-4.55, 0.10)
+[frontier_explorer-1] [INFO] [1783980846.464114884] [leo1.frontier_explorer]: New frontier goal: (-8.61, -0.33)
+[frontier_explorer-1] [INFO] [1783980868.258991587] [leo1.frontier_explorer]: New frontier goal: (9.08, 0.20)
+[frontier_explorer-1] [INFO] [1783980935.716362326] [leo1.frontier_explorer]: New frontier goal: (0.00, 4.35)
+[frontier_explorer-1] [INFO] [1783980985.551191921] [leo1.frontier_explorer]: New frontier goal: (2.80, 5.35)
+[frontier_explorer-1] [INFO] [1783981003.123413231] [leo1.frontier_explorer]: New frontier goal: (-6.05, -3.45)
+[frontier_explorer-1] [INFO] [1783981066.149000308] [leo1.frontier_explorer]: New frontier goal: (-3.55, -4.86)
+[frontier_explorer-1] [WARN] [1783981082.094970237] [leo1.frontier_explorer]: Frontier goal done but frontier survived at (-3.60, -4.91) - striking it
+[frontier_explorer-1] [WARN] [1783981082.127283127] [leo1.frontier_explorer]: Frontier goal done but frontier survived at (-3.90, -4.51) - striking it
+[frontier_explorer-1] [INFO] [1783981082.184635436] [leo1.frontier_explorer]: New frontier goal: (-2.85, -5.51)
+[frontier_explorer-1] [WARN] [1783981091.857667811] [leo1.frontier_explorer]: Frontier goal done but frontier survived at (-2.62, -5.61) - striking it
+[frontier_explorer-1] [INFO] [1783981091.907433942] [leo1.frontier_explorer]: New frontier goal: (-1.17, -6.36)
+[frontier_explorer-1] [INFO] [1783981103.859052741] [leo1.frontier_explorer]: New frontier goal: (-10.12, -5.87)
+[frontier_explorer-1] [INFO] [1783981115.852857233] [leo1.frontier_explorer]: No path to frontier goal (-9.42, -6.37), skipping
+[frontier_explorer-1] [INFO] [1783981121.540156061] [leo1.frontier_explorer]: New frontier goal: (-10.22, 3.78)
+[frontier_explorer-1] [INFO] [1783981145.484598789] [leo1.frontier_explorer]: No path to frontier goal (-9.72, -6.22), skipping
+[frontier_explorer-1] [INFO] [1783981149.511841563] [leo1.frontier_explorer]: New frontier goal: (-10.77, 4.23)
+[frontier_explorer-1] [INFO] [1783981184.809913712] [leo1.frontier_explorer]: No path to frontier goal (-5.88, 4.87), skipping
+[frontier_explorer-1] [INFO] [1783981188.805999131] [leo1.frontier_explorer]: New frontier goal: (6.57, -3.43)
+[frontier_explorer-1] [INFO] [1783981285.562731489] [leo1.frontier_explorer]: New frontier goal: (4.02, -5.25)
+[frontier_explorer-1] [INFO] [1783981297.533557289] [leo1.frontier_explorer]: No path to frontier goal (2.62, -5.25), skipping
+[frontier_explorer-1] [INFO] [1783981301.567294515] [leo1.frontier_explorer]: New frontier goal: (10.17, -4.90)
+[frontier_explorer-1] [INFO] [1783981302.831717536] [leo1.frontier_explorer]: Item candidate id=7 at (3.97, -7.87) - queued for verification
+[frontier_explorer-1] [INFO] [1783981303.860295299] [leo1.frontier_explorer]: Item id=7 CONFIRMED at (3.99, -7.88) after 2 views
+[frontier_explorer-1] [INFO] [1783981335.124457746] [leo1.frontier_explorer]: New frontier goal: (9.67, 2.85)
+[frontier_explorer-1] [WARN] [1783981383.645316756] [leo1.frontier_explorer]: frontier goal failed (status 6), blacklisted (9.67, 2.85)
+[frontier_explorer-1] [INFO] [1783981386.488910641] [leo1.frontier_explorer]: New frontier goal: (-5.33, 6.70)
+[frontier_explorer-1] [INFO] [1783981483.537105555] [leo1.frontier_explorer]: New frontier goal: (10.17, 3.09)
+[frontier_explorer-1] [WARN] [1783981525.003524196] [leo1.frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (10.17, 3.09)
+[frontier_explorer-1] [INFO] [1783981592.278985217] [leo1.frontier_explorer]: Item candidate id=5 at (11.89, 5.03) - queued for verification
+[frontier_explorer-1] [INFO] [1783981598.248662127] [leo1.frontier_explorer]: New frontier goal: (6.22, 3.69)
+[frontier_explorer-1] [INFO] [1783981599.532987675] [leo1.frontier_explorer]: Item id=5 CONFIRMED at (11.87, 5.02) after 2 views
+[frontier_explorer-1] [INFO] [1783981614.160707826] [leo1.frontier_explorer]: New frontier goal: (5.72, 4.89)
+[frontier_explorer-1] [INFO] [1783981627.603801042] [leo1.frontier_explorer]: New frontier goal: (9.07, 7.34)
+[frontier_explorer-1] [INFO] [1783981655.608240821] [leo1.frontier_explorer]: No path to frontier goal (-8.08, -6.81), skipping
+[frontier_explorer-1] [INFO] [1783981661.166355563] [leo1.frontier_explorer]: New frontier goal: (-9.23, 5.94)
+[frontier_explorer-1] [INFO] [1783981778.770311285] [leo1.frontier_explorer]: Item candidate id=3 at (-7.99, 7.86) - queued for verification
+[frontier_explorer-1] [INFO] [1783981780.733765591] [leo1.frontier_explorer]: Item id=3 CONFIRMED at (-7.98, 7.86) after 2 views
+[frontier_explorer-1] [INFO] [1783981795.832053096] [leo1.frontier_explorer]: New frontier goal: (-8.08, -6.75)
+[frontier_explorer-1] [INFO] [1783981863.344870368] [leo1.frontier_explorer]: New frontier goal: (-7.13, -5.66)
+[frontier_explorer-1] [INFO] [1783981875.378380085] [leo1.frontier_explorer]: New frontier goal: (11.62, 1.19)
+[frontier_explorer-1] [WARN] [1783981880.825824964] [leo1.frontier_explorer]: Frontier goal done but frontier survived at (11.62, 1.19) - striking it
+[frontier_explorer-1] [INFO] [1783981880.901734691] [leo1.frontier_explorer]: Frontiers done - SWEEPING for camera coverage (47% of walls observed)
+[frontier_explorer-1] [INFO] [1783981884.137027197] [leo1.frontier_explorer]: Sweep selection: gain=54 distance=2.3m turn=2.99rad utility=9.68
+[frontier_explorer-1] [INFO] [1783981884.202745396] [leo1.frontier_explorer]: New sweep goal: (-9.68, -5.86)
+[frontier_explorer-1] [INFO] [1783981896.324827472] [leo1.frontier_explorer]: Item candidate id=6 at (-11.89, -4.98) - queued for verification
+[frontier_explorer-1] [INFO] [1783981898.825366600] [leo1.frontier_explorer]: Item id=6 CONFIRMED at (-11.89, -5.00) after 2 views
+[frontier_explorer-1] [INFO] [1783981903.635408686] [leo1.frontier_explorer]: Sweep selection: gain=43 distance=0.7m turn=0.72rad utility=19.28
+[frontier_explorer-1] [INFO] [1783981903.699865672] [leo1.frontier_explorer]: New sweep goal: (-10.13, -5.95)
+[frontier_explorer-1] [INFO] [1783981913.235767123] [leo1.frontier_explorer]: Sweep selection: gain=55 distance=2.6m turn=2.93rad utility=9.45
+[frontier_explorer-1] [INFO] [1783981913.296259264] [leo1.frontier_explorer]: New sweep goal: (-9.03, -3.46)
+[frontier_explorer-1] [INFO] [1783981922.385683097] [leo1.frontier_explorer]: New frontiers - back to EXPLORING
+[frontier_explorer-1] [INFO] [1783981930.423811136] [leo1.frontier_explorer]: New frontier goal: (0.37, -6.82)
+[frontier_explorer-1] [INFO] [1783981977.874532579] [leo1.frontier_explorer]: New frontier goal: (11.62, 1.19)
+[frontier_explorer-1] [INFO] [1783982013.821476826] [leo1.frontier_explorer]: Item candidate id=2 at (11.87, 0.53) - queued for verification
+[frontier_explorer-1] [INFO] [1783982015.818543670] [leo1.frontier_explorer]: Item id=2 CONFIRMED at (11.87, 0.51) after 2 views
+[frontier_explorer-1] [INFO] [1783982031.395885515] [leo1.frontier_explorer]: Frontiers done - SWEEPING for camera coverage (53% of walls observed)
+[frontier_explorer-1] [INFO] [1783982034.375919946] [leo1.frontier_explorer]: Sweep selection: gain=39 distance=1.6m turn=2.47rad utility=8.76
+[frontier_explorer-1] [INFO] [1783982034.453133566] [leo1.frontier_explorer]: New sweep goal: (11.67, 2.21)

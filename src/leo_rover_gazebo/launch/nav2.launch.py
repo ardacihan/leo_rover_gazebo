@@ -34,7 +34,7 @@ def generate_launch_description():
         parameters=[params_file, {'use_sim_time': use_sim_time}],
     )
 
-    # Behavior server
+    # Behavior server – recoveries (backup/spin) publish cmd_vel too
     behavior_server = LifecycleNode(
         package='nav2_behaviors',
         executable='behavior_server',
@@ -42,6 +42,7 @@ def generate_launch_description():
         namespace='',
         output='screen',
         parameters=[params_file, {'use_sim_time': use_sim_time}],
+        remappings=[('/cmd_vel', '/leo1/cmd_vel')],
     )
 
     # BT navigator

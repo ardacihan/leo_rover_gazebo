@@ -1,0 +1,13 @@
+# Ground-truth ArUco marker poses for office_world - seed B layout.
+# Same 8 ids as seed A (mock_markers_office_world.yaml) but mounted on
+# different walls/rooms, so the two benchmark seeds pose different search
+# tasks. yaw = outward normal of the wall face the marker is mounted on.
+markers:
+  - {id: 1, x: -11.88, y: 5.0, z: 0.3, yaw: 0.0}       # west outer wall, office N1
+  - {id: 2, x: 1.5, y: 7.88, z: 0.3, yaw: -1.5708}     # north outer wall, office N2
+  - {id: 3, x: 4.12, y: 6.0, z: 0.3, yaw: 0.0}         # east partition east face... office N3
+  - {id: 4, x: 6.0, y: 1.08, z: 0.3, yaw: -1.5708}     # corridor north wall south face
+  - {id: 5, x: 11.88, y: -5.0, z: 0.3, yaw: 3.1416}    # east outer wall, office S2
+  - {id: 6, x: -9.0, y: -7.88, z: 0.3, yaw: 1.5708}    # south outer wall, office S1
+  - {id: 7, x: 0.12, y: -5.5, z: 0.3, yaw: 0.0}        # south partition east face, office S2
+  - {id: 8, x: -9.0, y: -1.08, z: 0.3, yaw: 1.5708}    # corridor south wall north face, corridor

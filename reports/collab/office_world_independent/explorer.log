@@ -1,0 +1,85 @@
+[INFO] [launch]: All log files can be found below /root/.ros/log/2026-07-06-09-54-19-910969-10053b3a2637-1058
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [frontier_explorer-1]: process started with pid [1152]
+[INFO] [frontier_explorer-2]: process started with pid [1154]
+[frontier_explorer-1] [INFO] [1783331663.282141087] [leo1.frontier_explorer]: Frontier explorer up for "leo1" (base_frame=leo1/base_link); coordination=independent, peers=['leo2']
+[frontier_explorer-2] [INFO] [1783331663.283258243] [leo2.frontier_explorer]: Frontier explorer up for "leo2" (base_frame=leo2/base_link); coordination=independent, peers=['leo1']
+[frontier_explorer-2] [WARN] [1783331663.500738183] [leo2.frontier_explorer]: Watchdog: work exists but no goal active and robot stationary - clearing costmaps
+[frontier_explorer-1] [WARN] [1783331663.501832252] [leo1.frontier_explorer]: Watchdog: work exists but no goal active and robot stationary - clearing costmaps
+[frontier_explorer-2] [INFO] [1783331664.744741308] [leo2.frontier_explorer]: Initial pose recorded: (4.17, -0.00)
+[frontier_explorer-1] [INFO] [1783331664.745888677] [leo1.frontier_explorer]: Initial pose recorded: (0.82, -0.00)
+[frontier_explorer-2] [INFO] [1783331664.810776999] [leo2.frontier_explorer]: New frontier goal: (0.17, -0.47)
+[frontier_explorer-1] [INFO] [1783331664.812289203] [leo1.frontier_explorer]: New frontier goal: (0.17, -0.47)
+[frontier_explorer-2] [INFO] [1783331684.026104711] [leo2.frontier_explorer]: New frontier goal: (-1.73, 0.00)
+[frontier_explorer-1] [INFO] [1783331684.027289152] [leo1.frontier_explorer]: New frontier goal: (-1.73, 0.00)
+[frontier_explorer-2] [INFO] [1783331702.759264418] [leo2.frontier_explorer]: New frontier goal: (7.65, -0.10)
+[frontier_explorer-1] [INFO] [1783331702.760925711] [leo1.frontier_explorer]: New frontier goal: (-4.80, 0.00)
+[frontier_explorer-1] [INFO] [1783331720.306686768] [leo1.frontier_explorer]: New frontier goal: (-8.41, 0.01)
+[frontier_explorer-1] [WARN] [1783331743.035624597] [leo1.frontier_explorer]: Frontier goal done but frontier survived at (-8.60, 0.55) - striking it
+[frontier_explorer-1] [INFO] [1783331743.115812214] [leo1.frontier_explorer]: New frontier goal: (-7.40, 0.05)
+[frontier_explorer-1] [INFO] [1783331761.083466112] [leo1.frontier_explorer]: New frontier goal: (7.92, -0.05)
+[frontier_explorer-2] [INFO] [1783331767.776214952] [leo2.frontier_explorer]: New frontier goal: (-0.55, 3.54)
+[frontier_explorer-1] [INFO] [1783331788.180754644] [leo1.frontier_explorer]: New frontier goal: (-6.08, -3.51)
+[frontier_explorer-2] [INFO] [1783331788.198286082] [leo2.frontier_explorer]: New frontier goal: (9.07, -0.06)
+[frontier_explorer-2] [WARN] [1783331819.490008536] [leo2.frontier_explorer]: Frontier goal done but frontier survived at (9.57, 0.19) - striking it
+[frontier_explorer-1] [INFO] [1783331819.494681422] [leo1.frontier_explorer]: New frontier goal: (-6.78, -3.56)
+[frontier_explorer-2] [WARN] [1783331819.539153029] [leo2.frontier_explorer]: Frontier goal done but frontier survived at (8.97, -0.51) - striking it
+[frontier_explorer-2] [INFO] [1783331819.624519398] [leo2.frontier_explorer]: New frontier goal: (-6.78, -3.56)
+[frontier_explorer-1] [INFO] [1783331837.979537570] [leo1.frontier_explorer]: New frontier goal: (-2.93, -5.47)
+[frontier_explorer-2] [INFO] [1783331837.998460992] [leo2.frontier_explorer]: New frontier goal: (-2.93, -5.47)
+[frontier_explorer-1] [INFO] [1783331858.102016534] [leo1.frontier_explorer]: New frontier goal: (-2.18, -5.27)
+[frontier_explorer-2] [INFO] [1783331858.114731887] [leo2.frontier_explorer]: No path to frontier goal (-2.18, -5.27), skipping
+[frontier_explorer-2] [INFO] [1783331864.899715036] [leo2.frontier_explorer]: New frontier goal: (-10.48, -4.62)
+[frontier_explorer-2] [INFO] [1783331891.147516805] [leo2.frontier_explorer]: No path to frontier goal (-0.56, 4.82), skipping
+[frontier_explorer-1] [INFO] [1783331891.168819311] [leo1.frontier_explorer]: New frontier goal: (-0.56, 4.82)
+[frontier_explorer-2] [INFO] [1783331896.940327391] [leo2.frontier_explorer]: New frontier goal: (-10.03, 3.88)
+[frontier_explorer-1] [WARN] [1783331898.216590589] [leo1.frontier_explorer]: frontier goal failed (status 6), blacklisted (-0.56, 4.82)
+[frontier_explorer-1] [INFO] [1783331902.977342666] [leo1.frontier_explorer]: New frontier goal: (-10.33, -5.92)
+[frontier_explorer-2] [INFO] [1783331927.493356444] [leo2.frontier_explorer]: New frontier goal: (-0.43, 4.97)
+[frontier_explorer-1] [INFO] [1783331927.526984671] [leo1.frontier_explorer]: New frontier goal: (6.57, -3.43)
+[frontier_explorer-2] [INFO] [1783331967.525471923] [leo2.frontier_explorer]: New frontier goal: (-10.03, 3.88)
+[frontier_explorer-1] [INFO] [1783331967.536493327] [leo1.frontier_explorer]: New frontier goal: (-10.03, 3.88)
+[frontier_explorer-2] [WARN] [1783331978.263522266] [leo2.frontier_explorer]: frontier goal failed (status 6), blacklisted (-10.03, 3.88)
+[frontier_explorer-2] [INFO] [1783331979.801069361] [leo2.frontier_explorer]: New frontier goal: (-10.28, -6.27)
+[frontier_explorer-2] [INFO] [1783332006.440383842] [leo2.frontier_explorer]: New frontier goal: (-0.43, 4.97)
+[frontier_explorer-1] [INFO] [1783332018.387438813] [leo1.frontier_explorer]: New frontier goal: (-11.03, 4.38)
+[frontier_explorer-2] [INFO] [1783332024.242136077] [leo2.frontier_explorer]: New frontier goal: (-11.03, 4.38)
+[frontier_explorer-1] [INFO] [1783332035.942324310] [leo1.frontier_explorer]: New frontier goal: (-5.73, 4.86)
+[frontier_explorer-2] [INFO] [1783332041.987415667] [leo2.frontier_explorer]: New frontier goal: (-5.73, 4.86)
+[frontier_explorer-2] [WARN] [1783332073.030415137] [leo2.frontier_explorer]: frontier goal failed (status 6), blacklisted (-5.73, 4.86)
+[frontier_explorer-2] [INFO] [1783332078.797966991] [leo2.frontier_explorer]: No path to frontier goal (-6.08, 7.06), skipping
+[frontier_explorer-2] [WARN] [1783332081.668481322] [leo2.frontier_explorer]: Watchdog: work exists but no goal active and robot stationary - clearing costmaps
+[frontier_explorer-2] [INFO] [1783332084.860679647] [leo2.frontier_explorer]: New frontier goal: (1.02, 2.26)
+[frontier_explorer-1] [INFO] [1783332090.941510262] [leo1.frontier_explorer]: New frontier goal: (1.02, 2.26)
+[frontier_explorer-1] [WARN] [1783332116.396841411] [leo1.frontier_explorer]: frontier goal failed (status 6), blacklisted (1.02, 2.26)
+[frontier_explorer-1] [INFO] [1783332120.111070648] [leo1.frontier_explorer]: New frontier goal: (-10.18, 7.16)
+[frontier_explorer-2] [INFO] [1783332137.866922897] [leo2.frontier_explorer]: No path to frontier goal (-0.09, 4.77), skipping
+[frontier_explorer-1] [INFO] [1783332137.915604504] [leo1.frontier_explorer]: New frontier goal: (-0.09, 4.77)
+[frontier_explorer-2] [INFO] [1783332143.812636027] [leo2.frontier_explorer]: New frontier goal: (-3.89, -5.48)
+[frontier_explorer-1] [INFO] [1783332156.522464860] [leo1.frontier_explorer]: New frontier goal: (-10.13, 6.86)
+[frontier_explorer-2] [INFO] [1783332163.100649936] [leo2.frontier_explorer]: New frontier goal: (1.02, 2.26)
+[frontier_explorer-1] [INFO] [1783332175.859155586] [leo1.frontier_explorer]: New frontier goal: (-0.09, 4.77)
+[frontier_explorer-2] [INFO] [1783332181.613752926] [leo2.frontier_explorer]: New frontier goal: (-0.09, 4.77)
+[frontier_explorer-1] [INFO] [1783332206.510168686] [leo1.frontier_explorer]: New frontier goal: (-10.13, 6.86)
+[frontier_explorer-2] [INFO] [1783332206.512578912] [leo2.frontier_explorer]: New frontier goal: (1.02, 2.26)
+[frontier_explorer-2] [WARN] [1783332268.341213405] [leo2.frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (1.02, 2.26)
+[frontier_explorer-1] [INFO] [1783332268.384576305] [leo1.frontier_explorer]: New frontier goal: (-10.38, -6.81)
+[frontier_explorer-2] [INFO] [1783332276.328541398] [leo2.frontier_explorer]: New frontier goal: (0.15, 5.68)
+[frontier_explorer-2] [INFO] [1783332295.020965823] [leo2.frontier_explorer]: New frontier goal: (0.97, 2.34)
+[frontier_explorer-2] [WARN] [1783332357.451062196] [leo2.frontier_explorer]: frontier goal failed (status 6), blacklisted (0.97, 2.34)
+[frontier_explorer-2] [INFO] [1783332359.700492647] [leo2.frontier_explorer]: New frontier goal: (0.17, 1.99)
+[frontier_explorer-1] [INFO] [1783332366.390769035] [leo1.frontier_explorer]: No path to frontier goal (-7.93, -6.76), skipping
+[frontier_explorer-1] [INFO] [1783332379.165705333] [leo1.frontier_explorer]: New frontier goal: (-7.48, -6.01)
+[frontier_explorer-1] [INFO] [1783332405.333692401] [leo1.frontier_explorer]: New frontier goal: (0.17, 1.99)
+[frontier_explorer-2] [WARN] [1783332418.464404342] [leo2.frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (0.17, 1.99)
+[frontier_explorer-2] [WARN] [1783332477.977295681] [leo2.frontier_explorer]: Still no progress after costmap clear, blacklisting goal (0.17, 1.99)
+[frontier_explorer-2] [INFO] [1783332484.685881367] [leo2.frontier_explorer]: New frontier goal: (1.67, 1.94)
+[frontier_explorer-2] [WARN] [1783332542.213667003] [leo2.frontier_explorer]: No progress for 32s - clearing costmaps and retrying goal (1.67, 1.94)
+[frontier_explorer-1] [INFO] [1783332555.321145141] [leo1.frontier_explorer]: New frontier goal: (1.27, 2.89)
+[frontier_explorer-2] [INFO] [1783332555.322358176] [leo2.frontier_explorer]: New frontier goal: (1.27, 2.89)
+[frontier_explorer-2] [WARN] [1783332611.427887196] [leo2.frontier_explorer]: frontier goal failed (status 6), blacklisted (1.27, 2.89)
+[frontier_explorer-2] [INFO] [1783332614.192257630] [leo2.frontier_explorer]: No path to frontier goal (1.37, 3.74), skipping
+[frontier_explorer-2] [WARN] [1783332623.998666815] [leo2.frontier_explorer]: Watchdog: work exists but no goal active and robot stationary - clearing costmaps
+[frontier_explorer-2] [WARN] [1783332624.056431571] [leo2.frontier_explorer]: Watchdog: resetting blacklist
+[frontier_explorer-2] [INFO] [1783332634.397277156] [leo2.frontier_explorer]: No path to frontier goal (0.92, 3.24), skipping
+[frontier_explorer-2] [WARN] [1783332647.707736797] [leo2.frontier_explorer]: Goal (-0.38, 5.04) planner-rejected 3 times - long-banning
