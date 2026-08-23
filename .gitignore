@@ -111,3 +111,12 @@ src/**/log/
 build/
 install/
 log/
+
+# Raw per-frame run capture: regenerable from the bags via scripts/render_run.py.
+# The committed figures, maps, events.jsonl and report.html are what matter.
+reports/**/*.npz
+reports/**/*.tar.gz
+reports/**/render/
+reports/**/video/
+reports/**/*.log
+reports/**/*.log.gz
