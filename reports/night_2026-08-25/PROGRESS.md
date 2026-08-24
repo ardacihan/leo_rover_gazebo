@@ -130,6 +130,99 @@ Read this ledger first on every tick. Never restart a phase marked COMPLETE.
   ALIGN_MODE=markerfree SKIP_ARUCO=1 → reports/night_2026-08-25/
   phase1_markerfree_office.** Success = aligner locks near (11,-10,180°)
   with markers fully off, or abstains honestly; media review after.
+### 2026-08-24 23:37 — tick 1 cont. — GPU CONFIRMED, Phase 2 code done, bridge bug found+fixed
+
+- **Phase 0 GPU line: `GL_RENDERER = D3D12 (NVIDIA GeForce RTX 4060 Ti)`**
+  (gpu_check.txt of the markerfree run — even camera-off renders lidar on
+  D3D12). **Phase 0 COMPLETE.**
+- In-flight run healthy at 23:36 (t=325s sim): coverage 35.6→82.8 m²
+  growing, traj rows growing, 0 tags (as designed), aligner abstaining
+  honestly (hit 0.52–0.58 < 0.80 while maps barely overlap — correct).
+- **BUG found live and fixed:** alignment_tf_bridge `require_tag_evidence`
+  (the defense against the old flip-prone matcher) withholds TF forever in
+  markerfree mode → lock could never propagate. shared_align.launch.py now
+  passes require_tag_evidence:=false iff alignment_mode==markerfree.
+  Current run predates the fix (snapshot) → it validates live-abstention +
+  camera-off stability only; **lock confirmation needs a re-run** (queued
+  next).
+- **Phase 2 code COMPLETE (offline):** frontier_explorer subscribes
+  shared_map_topic (VOLATILE QoS — TRANSIENT_LOCAL would never match),
+  unknown-cells-known-in-merged-map masked out before frontier detection
+  (mask the unknown side, NOT frontier cells — those are free in the merged
+  map by construction and masking them kills every frontier). Stale/absent
+  shared map or missing TF → seamless own-map fallback. 5 unit tests,
+  17/17 green. Coordinated-only wiring; independent baseline byte-identical.
+  Committed 794cc48.
+- Sim queue after current run finishes + media review:
+  1. phase1_markerfree_office_run2 (with bridge fix) — Phase 1 lock confirm
+     AND first Phase 2 coordinated-with-mask evidence in one run.
+  2. phase2_office_independent baseline.
+  3. Phase 3 partition run; 4. Phase 4 rehearsal.
+### 2026-08-25 00:0x — tick 2 — run 1 media review + the asymmetric-coverage finding
+
+- **phase1_markerfree_office finished CLEAN: self-terminated 2/2 at t=1035s,
+  saved maps + all media rendered.** Media verdict in words: leo2's map is
+  the whole office, beautiful single walls, all six rooms + corridor. leo1
+  mapped only its two western rooms + corridor speckle — its eastward
+  corridor goals aborted repeatedly (Nav2 status 6) until blacklisted, then
+  it finished at t≈580s (the known 1-in-4 stall flavor; n=1, not tonight's
+  scope). merged_map.png = leo1 passthrough only (no lock — expected, run
+  predates the bridge fix). No doubled walls anywhere. Zero explorer goal
+  failures for leo2.
+- **Live matcher behaved exactly as designed AND exposed a blind spot:**
+  64 abstains, 0 commits, 0 confident-wrong. But the final pair is visibly
+  mergeable (leo1's map is a subset of leo2's) and still scores only
+  fwd hit 0.295: the forward hit normalizes by ALL of map2's walls, so
+  asymmetric coverage caps a correct alignment at the overlap fraction.
+- **Fix: symmetric quality = max(fwd, rev)** — reverse_hit scores map1's
+  walls into map2 under the inverse transform, still all-points-normalized
+  (no fragment gaming). The smaller map gets to be the numerator.
+  Benchmark re-verification in flight; must stay ≥6/7 with 0 wrong.
+- **VIPER IS LIVE (subagent):** offline benchmark reproduced 0/10 there;
+  the actual sim image ported (apptainer .sif), real launch stack ran on an
+  APU node at RTF 0.95 lidar-only/llvmpipe (--contain hides /dev/dri, the
+  decisive fix). 8 slots idle. Agent now adapting auto_multirobot_run.sh
+  for apptainer and firing Phase 2 A/B office (then depot) runs there,
+  results sync back to reports/night_2026-08-25/phase2v_*. Local GPU stays
+  on the Phase 1 confirmation rerun.
+### 2026-08-24 ~23:58 — tick 2 cont. — root cause found: one-way candidate gate; bidirectional fix in
+
+- Symmetric quality (max of fwd/rev polish hit) verified: benchmark still
+  6/7, 3 abstain, 0 wrong. On tonight's pair the best mode rose 0.295→0.704
+  — but that mode is 11.8 m WRONG (periodic office rooms + small leo1 map);
+  margin machinery held it off. **Truth-seeded polish on the same pair:
+  q=0.987 (0.46 m drift)** — the true mode is excellent but was NEVER in the
+  candidate list: at truth most of leo2's map lies outside leo1's known
+  area and the coarse MIN_OVERLAP_FRAC gate kills it. Same root cause as
+  the husarion abstains.
+- **Fix: bidirectional coarse search** — also search map1-into-map2 (where
+  the true hypothesis passes the gate trivially), invert, pool, dedupe to
+  30 modes. Each direction keeps its own honest overlap gate → no fragment
+  gaming. MARGIN_MIN 0.30→0.25 (true 0.987 vs periodic-false 0.704 is
+  margin 0.286; measured commit margins elsewhere ≥0.6). Benchmark
+  re-validation in flight — required: no confident-wrong anywhere, else
+  revert margin.
+- **phase1_markerfree_office_run2 LAUNCHED** (bridge fix + Phase 2 masking
+  + bidirectional matcher — aligner imports post-sync by timing). If maps
+  end asymmetric again this run can STILL lock now.
+### 2026-08-25 00:1x — tick 3 — full mode table: truth crowded out at PEAK level; triage architecture
+
+- Bidirectional benchmark: 6/7, 3 abstain, 0 wrong — but 3.5–8.3 s (office
+  over the 5 s gate) and tonight's pair STILL abstains: full 30-mode table
+  shows **no mode near truth in either direction**. Root cause is the peak
+  extraction, not scoring: an office is a periodic room grid, and at
+  yaw≈180 the false room-shift placements fill all 4 peaks/yaw before truth
+  gets one. (Truth-seeded polish remains q=0.987.)
+- **Architecture fix:** 8 peaks/yaw, pool ≤120 modes from both directions,
+  cheap single-stage triage polish (~5 ms, n=1200, ±0.45 m/±1.6°) on ALL of
+  them (the polish quality is the only trustworthy ranking), full 3-stage
+  polish on the top 8 only. Should also bring office pairs back under ~5 s.
+  MARGIN_MIN 0.30→0.25 (true 0.987 vs periodic-false 0.704 = margin 0.286).
+  Benchmark validation in flight; required: 0 confident-wrong.
+- run2 (in flight, healthy, abstaining 0.65–0.76 on small maps) carries the
+  PREVIOUS matcher import — can still lock if coverage ends symmetric;
+  relaunch with triage version if it ends unmerged.
+- Commits pushed to origin: fd22748..794cc48.
 - **Viper identified:** Slurm cluster, ssh viper11 via WSL bridge
   (`wsl.exe -d Ubuntu -- bash -lc "ssh viper11 '<cmd>'"`), 8 shared APU
   (ROCm) slots, courtesy cap ~6 jobs. Recon+setup delegated to a subagent

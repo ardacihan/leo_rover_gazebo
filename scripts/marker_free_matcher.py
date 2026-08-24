@@ -52,20 +52,28 @@ MIN_OVERLAP_FRAC = 0.25  # occ2 cells that must land in map1's known space.
                          # hypotheses scoring near-perfect on a fragment and
                          # the true modes get crowded out -> 10/10 abstain.
 MIN_OVERLAP_CELLS = 40
-PEAKS_PER_YAW = 4        # translation peaks kept per yaw (NMS below)
+PEAKS_PER_YAW = 8        # translation peaks kept per yaw (NMS below). 4 was
+                         # too few: an office is a periodic grid of similar
+                         # rooms, and at yaw=180 the false room-shift
+                         # placements filled all 4 peaks -- the TRUE mode
+                         # (which polishes to 0.987) never even became a
+                         # candidate.
 NMS_M = 2.0              # metres masked around an accepted peak
 MODE_YAW_DEG = 12.0      # closer than this in yaw AND...
 MODE_TRANS_M = 2.0       # ...translation = same mode
-N_MODES = 30             # modes polished at full resolution: the coarse score
-                         # is only a candidate generator (measured: it ranked
-                         # the true depot mode 3rd-9th and once below 20th),
-                         # the polished hit is the discriminative signal
-                         # (true modes 0.87-0.998 vs best wrong mode <= 0.34)
+N_POOL = 120             # candidate modes kept after pooling both directions;
+                         # ALL get a cheap triage polish (~5 ms each)
+N_FULL = 8               # triage winners that get the full 3-stage polish.
+                         # The coarse score only proposes; the polished hit
+                         # decides (true modes 0.87-0.998 vs wrong <= 0.6)
 POLISH_HIT_MIN = 0.80    # polished wall-overlap floor -> abstain. 0.55 let a
                          # drift-poisoned office pair commit 1.9 m wrong at
                          # hit 0.764; every measured true mode scored >= 0.87
-MARGIN_MIN = 0.30        # (best - runner) / best on polished hits -> abstain
-                         # (measured: true-mode margins >= 0.6, flips ~ 0)
+MARGIN_MIN = 0.25        # (best - runner) / best on polished hits -> abstain.
+                         # Depot true-mode margins measured >= 0.6; the live
+                         # asymmetric office pair measured true 0.987 vs the
+                         # periodic-room false mode 0.704 -> margin 0.286, so
+                         # 0.30 would abstain on a correct, unambiguous best.
 
 DEBUG = bool(os.environ.get('MFM_DEBUG'))
 
@@ -95,7 +103,46 @@ def _raster(points, lo, cell, shape):
     return a
 
 
+def _invert(dx, dy, yaw):
+    """Invert an SE(2) transform: p1 = R p2 + t  ->  p2 = R' p1 + t'."""
+    c, s = math.cos(-yaw), math.sin(-yaw)
+    return (-(c * dx - s * dy), -(s * dx + c * dy), -yaw)
+
+
 def candidate_modes(g1, i1, g2, i2):
+    """Global search, BOTH directions pooled.
+
+    One-way search validates hypotheses by how much of map2 lands in map1's
+    known space -- correct in itself, but with asymmetric coverage (leo1
+    mapped two rooms, leo2 the whole office) the TRUE hypothesis places most
+    of map2 outside map1's coverage and dies at that gate: measured live, the
+    truth polished to q=0.987 yet was absent from the one-way candidate list.
+    Searching map1-into-map2 as well finds it (map1 lies inside map2's
+    coverage), and each direction keeps its own honest overlap gate, so the
+    tiny-fragment score inflation that broke gate-loosening cannot happen.
+    Returns modes sorted by coarse score: [(score, dx, dy, yaw_rad), ...]
+    (always in map2->map1 convention; swapped-direction candidates are
+    inverted before pooling)."""
+    fwd = _candidate_modes_oneway(g1, i1, g2, i2)
+    swp = [(sc,) + _invert(dx, dy, yaw)
+           for sc, dx, dy, yaw in _candidate_modes_oneway(g2, i2, g1, i1)]
+    pooled = sorted(fwd + swp, key=lambda r: -r[0])
+    modes = []
+    for scv, tx, ty, th in pooled:
+        dup = False
+        for _, mx, my, mth in modes:
+            dyaw = abs((math.degrees(th - mth) + 180) % 360 - 180)
+            if dyaw < MODE_YAW_DEG and math.hypot(tx - mx, ty - my) < MODE_TRANS_M:
+                dup = True
+                break
+        if not dup:
+            modes.append((scv, tx, ty, th))
+        if len(modes) >= N_POOL:
+            break
+    return modes
+
+
+def _candidate_modes_oneway(g1, i1, g2, i2):
     """Global search. Returns modes sorted by coarse score:
     [(coarse_score, dx, dy, yaw_rad), ...]  (world-frame map2->map1)."""
     occ1p = _world_points(g1, i1, lambda g: g >= 50)
@@ -179,12 +226,12 @@ def candidate_modes(g1, i1, g2, i2):
                 break
         if not dup:
             modes.append((scv, tx, ty, th))
-        if len(modes) >= N_MODES:
+        if len(modes) >= N_POOL:
             break
     return modes
 
 
-def polish(g1, i1, g2, i2, dx, dy, yaw, n_pts=4000):
+def polish(g1, i1, g2, i2, dx, dy, yaw, n_pts=4000, stages=None):
     """Full-res coarse-to-fine local polish.
 
     The hit fraction is normalized by ALL of map2's wall points, not by the
@@ -225,9 +272,10 @@ def polish(g1, i1, g2, i2, dx, dy, yaw, n_pts=4000):
     # stage-1 window must exceed the coarse stage's worst-case error: 0.25 m
     # cells plus real inter-map SLAM drift (measured ~1.9 m on the office
     # pair), so a slightly-off coarse peak can slide onto the true optimum.
-    stages = ((0.15, math.radians(1.0), 1.05, math.radians(4.0)),
-              (0.05, math.radians(0.25), 0.15, math.radians(1.2)),
-              (0.02, math.radians(0.10), 0.06, math.radians(0.4)))
+    if stages is None:
+        stages = ((0.15, math.radians(1.0), 1.05, math.radians(4.0)),
+                  (0.05, math.radians(0.25), 0.15, math.radians(1.2)),
+                  (0.02, math.radians(0.10), 0.06, math.radians(0.4)))
     for st, sy, wt, wy in stages:
         cx, cy, cth = best
         for th in np.arange(cth - wy, cth + wy + 1e-9, sy):
@@ -244,51 +292,105 @@ def match(g1, i1, g2, i2):
     return est
 
 
+def reverse_hit(g1, i1, g2, i2, dx, dy, yaw, n_pts=4000):
+    """Fraction of map1's walls landing on (dilated) map2 walls under the
+    INVERSE transform. The forward hit normalizes by all of map2's walls, so
+    with asymmetric coverage (one rover mapped the whole world, the other two
+    rooms) a visibly correct alignment caps at the overlap fraction --
+    measured 0.295 on a live office pair whose merge was right. Scoring the
+    smaller map into the bigger one is the fair direction, and it is still
+    all-points-normalized, so the tiny-fragment gaming that broke
+    overlap-normalized scoring cannot happen here."""
+    d2 = _binary_dilate(g2 >= 50, 1)
+    ys, xs = np.nonzero(g1 >= 50)
+    if len(xs) < 50:
+        return 0.0
+    if len(xs) > n_pts:
+        pick = np.random.RandomState(0).choice(len(xs), n_pts, replace=False)
+        ys, xs = ys[pick], xs[pick]
+    px = i1[0] + (xs + 0.5) * i1[2]
+    py = i1[1] + (ys + 0.5) * i1[2]
+    c, s = math.cos(yaw), math.sin(yaw)
+    ux = c * (px - dx) + s * (py - dy)
+    uy = -s * (px - dx) + c * (py - dy)
+    ci = ((ux - i2[0]) / i2[2]).astype(int)
+    ri = ((uy - i2[1]) / i2[2]).astype(int)
+    ok = (ci >= 0) & (ci < g2.shape[1]) & (ri >= 0) & (ri < g2.shape[0])
+    if not ok.any():
+        return 0.0
+    return float(d2[ri[ok], ci[ok]].sum()) / len(px)
+
+
 def match_diag(g1, i1, g2, i2):
     """Like match(), but also returns a diagnostics dict:
-    {reason, best_hit, margin, n_modes, runner_hit} (fields None when n/a)."""
+    {reason, best_hit, margin, n_modes, runner_hit, fwd_hit, rev_hit}.
+    Mode quality = max(forward hit, reverse hit): whichever map is the
+    smaller one gets to be the numerator, both all-points-normalized."""
     diag = {'reason': '', 'best_hit': None, 'margin': None,
-            'n_modes': 0, 'runner_hit': None}
+            'n_modes': 0, 'runner_hit': None, 'fwd_hit': None,
+            'rev_hit': None}
     modes = candidate_modes(g1, i1, g2, i2)
     diag['n_modes'] = len(modes)
     if not modes:
         diag['reason'] = 'no candidate modes (too little overlap or structure)'
         return None, diag
-    polished = []
+
+    # Triage: a cheap single-stage polish (~5 ms) over EVERY pooled mode,
+    # because the coarse score cannot be trusted to rank the true mode into
+    # any small head of the list (measured: absent from the top 30 on a
+    # periodic office). The polish quality is the trustworthy signal, so
+    # spend it broadly-but-cheaply first, then fully on the few survivors.
+    tri_stage = ((0.15, math.radians(0.8), 0.45, math.radians(1.6)),)
+    triaged = []
     for scv, tx, ty, th in modes:
-        est, hit = polish(g1, i1, g2, i2, tx, ty, th)
-        if est is not None:
-            polished.append((hit, est, scv))
+        est, fwd = polish(g1, i1, g2, i2, tx, ty, th,
+                          n_pts=1200, stages=tri_stage)
+        if est is None:
+            continue
+        rev = reverse_hit(g1, i1, g2, i2, *est, n_pts=1200)
+        triaged.append((max(fwd, rev), est, scv))
+    triaged.sort(key=lambda r: -r[0])
+
+    polished = []
+    for _, seed, scv in triaged[:N_FULL]:
+        est, fwd = polish(g1, i1, g2, i2, *seed)
+        if est is None:
+            continue
+        rev = reverse_hit(g1, i1, g2, i2, *est)
+        polished.append((max(fwd, rev), fwd, rev, est, scv))
     if not polished:
         diag['reason'] = 'no mode survived polish'
         return None, diag
     polished.sort(key=lambda r: -r[0])
-    best_hit, best_est, _ = polished[0]
-    diag['best_hit'] = best_hit
+    best_q, best_fwd, best_rev, best_est, _ = polished[0]
+    diag['best_hit'] = best_q
+    diag['fwd_hit'] = best_fwd
+    diag['rev_hit'] = best_rev
     if DEBUG:
-        for hit, est, scv in polished[:6]:
+        for q, fwd, rev, est, scv in polished[:6]:
             print(f'    mode yaw={math.degrees(est[2]):7.1f} '
-                  f't=({est[0]:7.2f},{est[1]:7.2f}) coarse={scv:.3f} hit={hit:.3f}')
-    if best_hit < POLISH_HIT_MIN:
-        diag['reason'] = f'best polished hit {best_hit:.3f} < {POLISH_HIT_MIN}'
+                  f't=({est[0]:7.2f},{est[1]:7.2f}) coarse={scv:.3f} '
+                  f'q={q:.3f} (fwd={fwd:.3f} rev={rev:.3f})')
+    if best_q < POLISH_HIT_MIN:
+        diag['reason'] = f'best polished hit {best_q:.3f} < {POLISH_HIT_MIN}'
         if DEBUG:
             print(f'    abstain: {diag["reason"]}')
         return None, diag
     # runner-up = best polished mode genuinely distinct from the winner
     # (several coarse peaks can slide into the same optimum during polish)
     runner_hit = None
-    for hit, est, _ in polished[1:]:
+    for q, fwd, rev, est, _ in polished[1:]:
         dyaw = abs((math.degrees(est[2] - best_est[2]) + 180) % 360 - 180)
         dt = math.hypot(est[0] - best_est[0], est[1] - best_est[1])
         if dyaw > MODE_YAW_DEG or dt > MODE_TRANS_M:
-            runner_hit = hit
+            runner_hit = q
             break
     diag['runner_hit'] = runner_hit
     if runner_hit is not None:
-        margin = (best_hit - runner_hit) / max(best_hit, 1e-6)
+        margin = (best_q - runner_hit) / max(best_q, 1e-6)
         diag['margin'] = margin
         if DEBUG:
-            print(f'    margin={margin:.3f} (runner hit={runner_hit:.3f})')
+            print(f'    margin={margin:.3f} (runner q={runner_hit:.3f})')
         if margin < MARGIN_MIN:
             diag['reason'] = (f'ambiguous: margin {margin:.3f} < {MARGIN_MIN} '
                               f'(runner-up hit {runner_hit:.3f})')
