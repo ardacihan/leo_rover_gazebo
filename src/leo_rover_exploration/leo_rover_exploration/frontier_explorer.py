@@ -119,6 +119,14 @@ class FrontierExplorer(Node):
         # looked up once and cached forever freezes coordination at the
         # first and worst transform. Re-resolve this often (seconds).
         self.declare_parameter('offset_refresh_sec', 5.0)
+        # Merged (shared) occupancy grid, published in the common frame once
+        # the alignment locks. When fresh, unknown cells of the OWN map that
+        # the shared map already knows are treated as covered, so frontier
+        # detection stops proposing space the peer has finished. Empty topic
+        # disables the feature; a stale shared map (no message for
+        # shared_map_max_age) silently degrades to own-map behaviour.
+        self.declare_parameter('shared_map_topic', '')
+        self.declare_parameter('shared_map_max_age', 20.0)
         self.declare_parameter('discount_radius', 3.0)      # meters
         self.declare_parameter('discount_strength', 1.0)    # 0..1
         # Don't declare exploration finished until we've actually driven this
@@ -273,6 +281,25 @@ class FrontierExplorer(Node):
         self.create_subscription(
             MarkerArray, gp('detections_topic'), self._detection_cb, 10)
 
+        # Shared (merged) map. The merger publishes VOLATILE; requesting
+        # TRANSIENT_LOCAL here would silently never match (same QoS mismatch
+        # class as the velocity_guard /wheel_odom bug).
+        self.shared_map_msg = None
+        self._shared_map_time = None
+        self._shared_mask_active = False
+        self._shared_masked_cells = 0
+        shared_topic = str(gp('shared_map_topic')).strip()
+        self.shared_map_max_age = float(gp('shared_map_max_age'))
+        if shared_topic:
+            shared_qos = QoSProfile(
+                depth=1,
+                history=QoSHistoryPolicy.KEEP_LAST,
+                reliability=QoSReliabilityPolicy.RELIABLE,
+                durability=QoSDurabilityPolicy.VOLATILE,
+            )
+            self.create_subscription(
+                OccupancyGrid, shared_topic, self._shared_map_cb, shared_qos)
+
         self.nav_client = ActionClient(self, NavigateToPose, 'navigate_to_pose')
         self.path_client = ActionClient(
             self, ComputePathToPose, gp('planner_action_name'))
@@ -329,6 +356,10 @@ class FrontierExplorer(Node):
 
     def _map_cb(self, msg):
         self.map_msg = msg
+
+    def _shared_map_cb(self, msg):
+        self.shared_map_msg = msg
+        self._shared_map_time = self._now_sec()
 
     def _claim_cb(self, msg):
         if msg.ns == self.robot_name:
@@ -587,6 +618,18 @@ class FrontierExplorer(Node):
         free = (grid >= 0) & (grid < FREE_MAX)
         unknown = grid == UNKNOWN
 
+        # Peer-covered space is covered space: unknown cells of OUR map that
+        # the merged map already knows stop generating frontiers, so the
+        # rover does not drive across a room the peer finished. Applied to
+        # the unknown mask, NOT the frontier cells -- a frontier cell itself
+        # is free in the merged map by construction (our own map is merged
+        # in), so masking frontier cells would erase every frontier.
+        # Degrades seamlessly: no shared map, stale shared map, or no
+        # alignment TF -> mask is None -> own-map behaviour, no stalling.
+        peer_known = self._peer_known_mask(info, unknown)
+        if peer_known is not None:
+            unknown &= ~peer_known
+
         near_unknown = np.zeros_like(unknown)
         near_unknown[1:, :] |= unknown[:-1, :]
         near_unknown[:-1, :] |= unknown[1:, :]
@@ -659,6 +702,56 @@ class FrontierExplorer(Node):
                 'goal': (ox + (gc + 0.5) * res, oy + (gr + 0.5) * res),
             })
         return clusters
+
+    def _peer_known_mask(self, info, unknown):
+        """Bool array marking OUR unknown cells the shared map knows, or None.
+
+        None (= no masking) whenever the shared map is absent or stale, or
+        the own-frame -> common-frame offset is unavailable (alignment not
+        locked). The mask is recomputed per planning cycle because both the
+        shared map and the alignment estimate move.
+        """
+        msg = self.shared_map_msg
+        if msg is None or self._shared_map_time is None:
+            return None
+        age = self._now_sec() - self._shared_map_time
+        if age > self.shared_map_max_age:
+            if self._shared_mask_active:
+                self._shared_mask_active = False
+                self.get_logger().info(
+                    f'shared-map mask OFF (stale by {age:.0f}s); '
+                    'falling back to own map')
+            return None
+        off = self._get_common_offset()
+        if off is None:
+            return None
+        rows, cols = np.nonzero(unknown)
+        if rows.size == 0:
+            return None
+        res = info.resolution
+        wx = info.origin.position.x + (cols + 0.5) * res
+        wy = info.origin.position.y + (rows + 0.5) * res
+        c, s = math.cos(off[2]), math.sin(off[2])
+        gx = off[0] + c * wx - s * wy
+        gy = off[1] + s * wx + c * wy
+        sinfo = msg.info
+        sgrid = np.asarray(msg.data, dtype=np.int8).reshape(
+            sinfo.height, sinfo.width)
+        ci = ((gx - sinfo.origin.position.x) / sinfo.resolution).astype(int)
+        ri = ((gy - sinfo.origin.position.y) / sinfo.resolution).astype(int)
+        ok = ((ci >= 0) & (ci < sinfo.width) & (ri >= 0) & (ri < sinfo.height))
+        known = np.zeros(rows.size, dtype=bool)
+        known[ok] = sgrid[ri[ok], ci[ok]] != UNKNOWN
+        mask = np.zeros_like(unknown)
+        mask[rows[known], cols[known]] = True
+        n = int(known.sum())
+        self._shared_masked_cells = n
+        if n > 0 and not self._shared_mask_active:
+            self._shared_mask_active = True
+            self.get_logger().info(
+                f'shared-map mask ON: {n} unknown cells already covered '
+                'by the merged map')
+        return mask
 
     @staticmethod
     def _snap_goal(free, r, c, radius=8):

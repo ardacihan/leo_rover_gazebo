@@ -38,6 +38,17 @@ set -eo pipefail
 MODE="$1"; WORLD="$2"; OUT="$3"; CAP_MIN="${4:-25}"
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
+# Overridable for the marker-free confirmation runs (Phase 1, night 2026-08-25):
+#   ALIGN_MODE=markerfree SKIP_ARUCO=1  -> no detectors, no tag aligner; the
+#   grid matcher with margin abstention is the only alignment source.
+ALIGN_MODE="${ALIGN_MODE:-hybrid}"
+TAG_ALIGN="true"
+[[ -n "${SKIP_ARUCO:-}" || "$ALIGN_MODE" == "markerfree" ]] && TAG_ALIGN="false"
+# Cameras exist for ArUco; a marker-free run does not need them, and two-camera
+# rendering is what triggers the D3D12 segfault at 9-13 min (4/4 runs).
+ENABLE_CAMERA="${ENABLE_CAMERA:-true}"
+[[ -n "${SKIP_ARUCO:-}" ]] && ENABLE_CAMERA="${CAMERA_OVERRIDE:-false}"
+
 if [[ -z "$MODE" || -z "$WORLD" || -z "$OUT" ]]; then
   echo "usage: $0 <coordinated|independent|single> <world> <outdir> [cap_min]" >&2
   exit 2
@@ -99,9 +110,9 @@ docker stop leo_sim >/dev/null 2>&1 || true
 docker rm leo_sim >/dev/null 2>&1 || true
 
 # ---------- 1. sim ----------
-LOG "starting sim: world=$WORLD robots=$NUM_ROBOTS cameras=on gt_odom_tf=FALSE"
-CMD "sim: WORLD=$WORLD GUI=false NUM_ROBOTS=$NUM_ROBOTS ENABLE_CAMERA=true GT_ODOM_TF=false scripts/sim_gpu_wsl.sh"
-WORLD="$WORLD" GUI=false NUM_ROBOTS="$NUM_ROBOTS" ENABLE_CAMERA=true \
+LOG "starting sim: world=$WORLD robots=$NUM_ROBOTS cameras=$ENABLE_CAMERA gt_odom_tf=FALSE"
+CMD "sim: WORLD=$WORLD GUI=false NUM_ROBOTS=$NUM_ROBOTS ENABLE_CAMERA=$ENABLE_CAMERA GT_ODOM_TF=false scripts/sim_gpu_wsl.sh"
+WORLD="$WORLD" GUI=false NUM_ROBOTS="$NUM_ROBOTS" ENABLE_CAMERA="$ENABLE_CAMERA" \
   GT_ODOM_TF=false "$ROOT/scripts/sim_gpu_wsl.sh" >>"$ROOT/$OUT/run.log" 2>&1
 
 LAST_NS="leo${NUM_ROBOTS}"
@@ -202,8 +213,13 @@ done
 # yaw estimate moved, while 2.1 m detections were stable to a few cm. A
 # landmark placed badly is worse than one not placed at all, because it is
 # persistent and anchors the outlier gate.
+if [[ -n "${SKIP_ARUCO:-}" ]]; then
+  LOG "SKIP_ARUCO set: no ArUco detectors this run (marker-free confirmation)"
+  echo "aruco: SKIPPED (SKIP_ARUCO=1)" >> "$ROOT/$OUT/cmdlines.txt"
+fi
 LOG "starting ArUco detectors (marker_length=0.20, frame_is_optical=false)"
 for i in $(seq 1 "$NUM_ROBOTS"); do
+  [[ -n "${SKIP_ARUCO:-}" ]] && break
   ns="leo$i"
   CMD "aruco($ns): ros2 launch leo_nav2_exploration aruco.launch.py profile:=sim robot_ns:=$ns marker_length:=0.20 allowed_ids:=0,1,2,3,4,5,6,7,8,9 detection_topic:=/$ns/tag_detections"
   in_sim_bg "exec ros2 launch leo_nav2_exploration aruco.launch.py \
@@ -222,11 +238,11 @@ sleep 8
 
 # ---------- 6. alignment + shared map ----------
 if [[ "$NUM_ROBOTS" -eq 2 ]]; then
-  LOG "starting alignment + shared map merger (alignment_mode=hybrid, NOT fixed)"
-  CMD "align: ros2 launch multi_robot_shared_mapping shared_align.launch.py alignment_mode:=hybrid enable_tag_alignment:=true enable_map_alignment:=true compare_to_ground_truth:=true ground_truth_x:=$GT_X ground_truth_y:=$GT_Y ground_truth_yaw:=$GT_YAW"
+  LOG "starting alignment + shared map merger (alignment_mode=$ALIGN_MODE, tag_alignment=$TAG_ALIGN, NOT fixed)"
+  CMD "align: ros2 launch multi_robot_shared_mapping shared_align.launch.py alignment_mode:=$ALIGN_MODE enable_tag_alignment:=$TAG_ALIGN enable_map_alignment:=true compare_to_ground_truth:=true ground_truth_x:=$GT_X ground_truth_y:=$GT_Y ground_truth_yaw:=$GT_YAW"
   in_sim_bg "exec ros2 launch multi_robot_shared_mapping shared_align.launch.py \
-    use_sim_time:=true alignment_mode:=hybrid \
-    enable_tag_alignment:=true enable_map_alignment:=true \
+    use_sim_time:=true alignment_mode:=$ALIGN_MODE \
+    enable_tag_alignment:=$TAG_ALIGN enable_map_alignment:=true \
     enable_alignment_tf:=true min_tags:=2 \
     compare_to_ground_truth:=true \
     ground_truth_x:=$GT_X ground_truth_y:=$GT_Y ground_truth_yaw:=$GT_YAW \
@@ -288,6 +304,7 @@ fi
 # Camera frames across the whole run (a frame grabbed at teardown is whatever
 # wall the rover stopped facing). Prefers frames with markers drawn on them.
 for i in $(seq 1 "$NUM_ROBOTS"); do
+  [[ "$ENABLE_CAMERA" == "true" ]] || break
   ns="leo$i"
   in_sim_bg "exec python3 /ros2_ws/scripts/frame_grabber.py /ros2_ws/$OUT/frames_$ns /$ns/camera/image /$ns/aruco/debug_image 25 16 > /ros2_ws/$OUT/frames_$ns.log 2>&1"
 done
@@ -295,7 +312,12 @@ done
 # ---------- 10. explorers ----------
 EXPLORE_MODE="$MODE"; [[ "$MODE" == "single" ]] && EXPLORE_MODE="independent"
 LOG "launching explorers (mode=$EXPLORE_MODE, common_frame=leo1/map)"
-CMD "explore: ros2 launch leo_rover_exploration collab_explore.launch.py num_robots:=$NUM_ROBOTS coordination_mode:=$EXPLORE_MODE common_frame:=leo1/map"
+# Coordinated rovers consume the merged map: unknown cells the merged map
+# already knows stop generating frontiers (Phase 2). Independent stays blind
+# to it, so the baseline is untouched.
+SHARED_TOPIC=""
+[[ "$EXPLORE_MODE" == "coordinated" && "$NUM_ROBOTS" -eq 2 ]] && SHARED_TOPIC="/shared_map"
+CMD "explore: ros2 launch leo_rover_exploration collab_explore.launch.py num_robots:=$NUM_ROBOTS coordination_mode:=$EXPLORE_MODE common_frame:=leo1/map shared_map_topic:=$SHARED_TOPIC"
 # Per-rover world extent, so frontier detection stops chasing cells outside
 # the building. Same source as the spawn poses, so they cannot drift apart.
 L1B="$("$PYBIN" "$ROOT/src/leo_rover_gazebo/launch/spawn_poses.py" "$WORLD" leo1 2>/dev/null || true)"
@@ -304,6 +326,7 @@ LOG "  frontier bounds: leo1 [$L1B] leo2 [$L2B]"
 in_sim_bg "exec ros2 launch leo_rover_exploration collab_explore.launch.py \
   num_robots:=$NUM_ROBOTS coordination_mode:=$EXPLORE_MODE \
   common_frame:=leo1/map leo1_bounds:=$L1B leo2_bounds:=$L2B \
+  shared_map_topic:=$SHARED_TOPIC \
   > /ros2_ws/$OUT/explorer.log 2>&1"
 
 # ---------- 11. wait ----------

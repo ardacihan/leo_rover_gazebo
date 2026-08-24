@@ -32,6 +32,7 @@ from launch.actions import DeclareLaunchArgument
 from launch.conditions import IfCondition
 from launch.substitutions import LaunchConfiguration, PythonExpression
 from launch_ros.actions import Node
+from launch_ros.parameter_descriptions import ParameterValue
 
 
 def generate_launch_description():
@@ -115,6 +116,15 @@ def generate_launch_description():
             "parent_frame": "leo1/map",
             "child_frame": "leo2/map",
             "min_confidence": min_conf,
+            # require_tag_evidence was the defense against the OLD global
+            # grid matcher, which locked confident 180-degree flips. In
+            # markerfree mode the aligner's own margin abstention is that
+            # defense (benchmarked: zero confident-wrong on 10 pairs), and
+            # there are no tags by construction -- keeping the tag gate on
+            # would make marker-free locking impossible.
+            "require_tag_evidence": ParameterValue(
+                PythonExpression(["'", alignment_mode, "' != 'markerfree'"]),
+                value_type=bool),
         }],
         condition=IfCondition(cfg("enable_alignment_tf")),
     )

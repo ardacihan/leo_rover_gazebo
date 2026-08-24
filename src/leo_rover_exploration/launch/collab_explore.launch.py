@@ -44,6 +44,11 @@ def launch_setup(context, *args, **kwargs):
     # was the global 'map'; with tag alignment it is leo1/map, reached via
     # the transform alignment_tf_bridge publishes once alignment locks.
     common_frame = LaunchConfiguration('common_frame').perform(context)
+    # Merged-map topic for frontier masking (Phase 2, night 2026-08-25):
+    # empty = feature off. Only the coordinated condition consumes it, so the
+    # independent baseline stays byte-identical.
+    shared_map_topic = LaunchConfiguration(
+        'shared_map_topic').perform(context).strip()
 
     nodes = []
     for i in range(num_robots):
@@ -52,6 +57,8 @@ def launch_setup(context, *args, **kwargs):
         overrides = {'coordination_mode': mode,
                      'share_claims': share_claims,
                      'common_frame': common_frame}
+        if shared_map_topic and mode == 'coordinated':
+            overrides['shared_map_topic'] = shared_map_topic
         # Per-rover, because each rover's map is anchored on its own spawn, so
         # the shared world box lands somewhere different in each frame.
         bounds = LaunchConfiguration(f'{ns}_bounds').perform(context).strip()
@@ -110,6 +117,9 @@ def generate_launch_description():
         DeclareLaunchArgument(
             'coordination_mode', default_value='coordinated',
             description='coordinated | independent'),
+        DeclareLaunchArgument(
+            'shared_map_topic', default_value='',
+            description='merged map topic for frontier masking; empty = off'),
         DeclareLaunchArgument(
             'item_search', default_value='false',
             description='Enable camera sweep + mock detectors + item registry'),
