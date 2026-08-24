@@ -22,8 +22,10 @@ from launch_ros.actions import Node
 
 PROFILES = {
     'sim': {
-        'image_topic': '/leo1/camera/image',
-        'camera_info_topic': '/leo1/camera/camera_info',
+        # `{ns}` is substituted with the robot_ns argument, so two rovers each
+        # get a detector without a second launch file.
+        'image_topic': '/{ns}/camera/image',
+        'camera_info_topic': '/{ns}/camera/camera_info',
         'frame_is_optical': False,
         # Gazebo renders this camera at 5 Hz already.
         'rate_limit_hz': 0.0,
@@ -48,22 +50,36 @@ def _launch_setup(context, *_args, **_kwargs):
             f'unknown profile {profile!r}; expected one of {sorted(PROFILES)}')
     preset = PROFILES[profile]
 
+    # Empty robot_ns keeps the single-robot topic names the rover uses.
+    ns = cfg('robot_ns').perform(context).strip('/')
+    def _ns(value):
+        return value.format(ns=ns) if ns else value.replace('/{ns}', '')
+
+    map_frame = cfg('map_frame').perform(context)
+    if ns and map_frame == 'map':
+        # Each rover's SLAM publishes in its own map frame, and the detector
+        # must resolve tag poses there or the aligner compares landmarks
+        # expressed in two different frames as if they shared one.
+        map_frame = f'{ns}/map'
+
     params = {
         'use_sim_time': cfg('use_sim_time').perform(context).lower() == 'true',
-        'image_topic': preset['image_topic'],
-        'camera_info_topic': preset['camera_info_topic'],
+        'image_topic': _ns(preset['image_topic']),
+        'camera_info_topic': _ns(preset['camera_info_topic']),
         'frame_is_optical': preset['frame_is_optical'],
         'rate_limit_hz': preset['rate_limit_hz'],
-        'map_frame': cfg('map_frame').perform(context),
+        'map_frame': map_frame,
         'dictionary': cfg('dictionary').perform(context),
         'marker_length': float(cfg('marker_length').perform(context)),
         'max_range': float(cfg('max_range').perform(context)),
         'min_hits': int(cfg('min_hits').perform(context)),
         'allowed_ids': [int(v) for v in
                         cfg('allowed_ids').perform(context).split(',') if v.strip()],
-        'detection_topic': cfg('detection_topic').perform(context),
-        'markers_topic': cfg('markers_topic').perform(context),
+        'detection_topic': _ns(cfg('detection_topic').perform(context)),
+        'markers_topic': _ns(cfg('markers_topic').perform(context)),
+        'tag_frame_prefix': f'{ns}/' if ns else '',
         'publish_debug_image': cfg('publish_debug_image').perform(context).lower() == 'true',
+        'debug_image_topic': _ns(cfg('debug_image_topic').perform(context)),
         'publish_tf': cfg('publish_tf').perform(context).lower() == 'true',
         'registry_file': cfg('registry_file').perform(context),
         'samples_file': cfg('samples_file').perform(context),
@@ -72,6 +88,7 @@ def _launch_setup(context, *_args, **_kwargs):
         package='leo_nav2_exploration',
         executable='aruco_detector',
         name='aruco_detector',
+        namespace=ns or None,
         output='screen',
         parameters=[params],
     )]
@@ -80,9 +97,14 @@ def _launch_setup(context, *_args, **_kwargs):
 def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument('profile', default_value='real'),
+        # e.g. 'leo1'. Namespaces the node and substitutes {ns} in
+        # the sim profile's topics; empty keeps the rover's names.
+        DeclareLaunchArgument('robot_ns', default_value=''),
         DeclareLaunchArgument('use_sim_time', default_value='false'),
         DeclareLaunchArgument('map_frame', default_value='map'),
         DeclareLaunchArgument('dictionary', default_value='DICT_4X4_50'),
+        # Side of the black square. The sim plates are 0.20 m edge to edge
+        # (their textures carry no quiet zone -- the world geometry does).
         DeclareLaunchArgument('marker_length', default_value='0.15'),
         DeclareLaunchArgument('max_range', default_value='6.0'),
         DeclareLaunchArgument('min_hits', default_value='3'),
@@ -93,6 +115,10 @@ def generate_launch_description():
         # The debug image is a full uncompressed RGB stream; leave it off on
         # the rover unless someone is actually looking at it.
         DeclareLaunchArgument('publish_debug_image', default_value='false'),
+        # Absolute, so two rovers would collide on one topic unless it
+        # carries {ns} (substituted with robot_ns).
+        DeclareLaunchArgument('debug_image_topic',
+                              default_value='/aruco/debug_image'),
         DeclareLaunchArgument('publish_tf', default_value='true'),
         # Non-empty: periodically write the confirmed registry as JSON for
         # offline scoring against the world's ground-truth marker poses.

@@ -113,6 +113,14 @@ def _launch_setup(context):
     profile = LaunchConfiguration('profile').perform(context)
     start_slam = _as_bool(LaunchConfiguration('start_slam').perform(context))
     enable_voxel = _as_bool(LaunchConfiguration('enable_voxel').perform(context))
+    # Which rover's depth cloud the voxel layer filters. `robot_ns` is the
+    # deployment-facing knob (rob_a / rob_b / rob_4); `cloud_input_topic`
+    # overrides the whole topic when a rig does not follow that convention.
+    robot_ns = LaunchConfiguration('robot_ns').perform(context).strip('/')
+    cloud_input_topic = LaunchConfiguration('cloud_input_topic').perform(context)
+    if not cloud_input_topic:
+        cloud_input_topic = (f'/{robot_ns}/camera/depth/color/points'
+                             if robot_ns else '/camera/depth/color/points')
     autostart = _as_bool(LaunchConfiguration('autostart').perform(context))
     use_respawn = _as_bool(LaunchConfiguration('use_respawn').perform(context))
     log_level = LaunchConfiguration('log_level').perform(context)
@@ -185,11 +193,13 @@ def _launch_setup(context):
                 executable='cloud_filter',
                 name='cloud_filter',
                 # The node's default input topic matches the replay bridge
-                # (/camera/camera/...); rover 4's RealSense publishes under
-                # the /rob_4 namespace, so the live profile must say so
-                # explicitly or the filter subscribes to a dead topic.
+                # (/camera/camera/...); a live rover's RealSense publishes
+                # under that rover's namespace, so the live profile must say
+                # so explicitly or the filter subscribes to a dead topic.
+                # Hardcoding /rob_4 here was fine for one rover; with two it
+                # points both filters at the same machine's camera.
                 parameters=[{
-                    'input_topic': '/rob_4/camera/depth/color/points',
+                    'input_topic': cloud_input_topic,
                 }],
                 **common,
             )
@@ -352,6 +362,13 @@ def generate_launch_description():
                 description='Select simulator or root-level real-rover topics and frames; '
                             'real_baseline is the frozen 2026-08-20 parameter snapshot.',
             ),
+            # Namespace of the rover this overlay is driving. Default keeps
+            # the single-rover behaviour that the 2026-08-20 field runs used.
+            DeclareLaunchArgument('robot_ns', default_value='rob_4'),
+            DeclareLaunchArgument(
+                'cloud_input_topic', default_value='',
+                description='Explicit depth-cloud topic for the voxel filter; '
+                            'empty derives it from robot_ns'),
             DeclareLaunchArgument('start_slam', default_value='true'),
             DeclareLaunchArgument('enable_voxel', default_value='true'),
             DeclareLaunchArgument('autostart', default_value='true'),

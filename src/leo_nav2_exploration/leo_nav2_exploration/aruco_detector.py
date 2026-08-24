@@ -183,6 +183,10 @@ class ArucoDetector(Node):
         # Empty list = accept every id in the dictionary.
         p('allowed_ids', [1, 2, 3, 4, 5, 6, 7, 8])
         p('publish_tf', True)
+        # Two rovers each running a detector would both broadcast `aruco_<id>`
+        # under different parents, which gives that frame two parents and
+        # corrupts the whole tree. Prefix it per robot (e.g. "leo1/").
+        p('tag_frame_prefix', '')
         p('frame_is_optical', True)       # RealSense: true. Gazebo link: false.
         p('camera_frame_override', '')    # non-empty replaces header.frame_id
         p('tf_timeout', 0.2)
@@ -205,6 +209,7 @@ class ArucoDetector(Node):
         self.min_hits = int(g('min_hits'))
         self.allowed_ids = set(int(v) for v in (g('allowed_ids') or []))
         self.publish_tf = bool(g('publish_tf'))
+        self.tag_frame_prefix = str(g('tag_frame_prefix'))
         self.frame_is_optical = bool(g('frame_is_optical'))
         self.frame_override = g('camera_frame_override')
         self.tf_timeout = float(g('tf_timeout'))
@@ -456,7 +461,7 @@ class ArucoDetector(Node):
                 tf = TransformStamped()
                 tf.header.frame_id = self.map_frame
                 tf.header.stamp = stamp
-                tf.child_frame_id = f'aruco_{mid}'
+                tf.child_frame_id = f'{self.tag_frame_prefix}aruco_{mid}'
                 tf.transform.translation.x = m.pose.position.x
                 tf.transform.translation.y = m.pose.position.y
                 tf.transform.translation.z = m.pose.position.z

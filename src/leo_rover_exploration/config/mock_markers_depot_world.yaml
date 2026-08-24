@@ -1,7 +1,12 @@
-# Ground-truth ArUco marker poses for depot_world (mock detector input).
-# yaw = outward normal of the wall face the marker is mounted on.
+# Ground-truth ArUco marker poses for depot_world.
+# yaw = outward normal of the wall face the marker is mounted on,
+# i.e. the face normal is (cos yaw, sin yaw). Kept in sync with the
+# marker_N models in worlds/depot_world.sdf by
+# scripts/upgrade_depot_markers.py.
 markers:
   - {id: 1, x: 0.0, y: 6.88, z: 0.3, yaw: -1.5708}     # north outer wall, north zone
-  - {id: 2, x: 3.0, y: -6.88, z: 0.3, yaw: 1.5708}     # south outer wall, south zone
-  - {id: 3, x: 1.88, y: 0.0, z: 0.3, yaw: 3.1416}      # east partition west face, central zone
-  - {id: 4, x: 6.88, y: 0.0, z: 0.3, yaw: 3.1416}      # east outer wall, middle zone
+  - {id: 2, x: 3.0, y: -6.88, z: 0.3, yaw: 1.5708}     # south outer wall, south-east room
+  - {id: 3, x: 1.88, y: 0.0, z: 0.3, yaw: 3.1416}     # x=2 partition west face, central column
+  - {id: 4, x: 6.88, y: 0.0, z: 0.3, yaw: 3.1416}     # east outer wall, middle-east room
+  - {id: 5, x: 1.88, y: -2.0, z: 0.3, yaw: 3.1416}     # x=2 partition west face, south-central (shared)
+  - {id: 6, x: 0.0, y: -6.88, z: 0.3, yaw: 1.5708}     # south outer wall, south-central (shared)

@@ -20,6 +20,11 @@ def generate_launch_description():
             'use_respawn': LaunchConfiguration('use_respawn'),
             'navigation_start_delay': LaunchConfiguration('navigation_start_delay'),
             'log_level': LaunchConfiguration('log_level'),
+            # Threaded through so the voxel filter subscribes to THIS rover's
+            # depth cloud. Hardcoding one rover's namespace inside the overlay
+            # pointed both filters at the same camera.
+            'robot_ns': LaunchConfiguration('robot_ns'),
+            'cloud_input_topic': LaunchConfiguration('cloud_input_topic'),
         }.items(),
     )
     sensor_tf = IncludeLaunchDescription(
@@ -30,6 +35,10 @@ def generate_launch_description():
     )
     return LaunchDescription(
         [
+            # Namespace of the rover this stack drives. `rob_4` keeps the
+            # 2026-08-20 field behaviour; set rob_a / rob_b for two rovers.
+            DeclareLaunchArgument('robot_ns', default_value='rob_4'),
+            DeclareLaunchArgument('cloud_input_topic', default_value=''),
             DeclareLaunchArgument('start_slam', default_value='true'),
             # enable_voxel:=true keeps the camera source in the local costmap
             # obstacle_layer (the flag name is historical). Enabled by default

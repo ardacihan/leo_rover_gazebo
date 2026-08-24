@@ -1,4 +1,6 @@
 import os
+import sys
+
 from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
@@ -9,6 +11,10 @@ from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 from launch.substitutions import Command
 from launch_ros.parameter_descriptions import ParameterValue
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from marker_spawn import marker_spawn_actions  # noqa: E402
+from spawn_poses import FALLBACK_SPAWNS, SPAWN_POSES  # noqa: E402
 
 
 def resolve_world(world):
@@ -36,18 +42,21 @@ def launch_setup(context, *args, **kwargs):
     gt_odom_tf = LaunchConfiguration('gt_odom_tf').perform(context).lower() \
         in ('true', '1', 'yes')
 
-    # Per-robot spawn poses (x, y). leo1 sits at the world origin (the
-    # single-robot spawn, verified free in every authored world); leo2 is
-    # offset alongside it. These offsets are the ground truth handed to
-    # multirobot_map_merge as the robots' known initial poses, so keep them
-    # in sync with map_merge_leo.launch.py.
-    default_spawns = [(0.0, 0.0), (1.5, 0.0), (0.0, 1.5), (1.5, 1.5)]
-
     pkg_description = get_package_share_directory('leo_rover_description')
 
     xacro_file = os.path.join(pkg_description, 'urdf', 'leo_rover_with_sensors.urdf.xacro')
     ws_root = os.environ.get('ROS2_WS', '/ros2_ws')
-    world_path = resolve_world(LaunchConfiguration('world').perform(context))
+    world_name = LaunchConfiguration('world').perform(context)
+    world_path = resolve_world(world_name)
+
+    # Per-robot spawn poses: explicit leo{i}_pose argument wins, then the
+    # per-room table for this world, then the legacy side-by-side fallback.
+    world_key = os.path.basename(world_name).replace('.sdf', '')
+    authored = SPAWN_POSES.get(world_key, {})
+    overrides = {
+        f'leo{i + 1}': LaunchConfiguration(f'leo{i + 1}_pose').perform(context)
+        for i in range(min(num_robots, 2))
+    }
 
     # Headless server: ign gazebo v6 matches ros_gz_bridge/create transport.
     # Calling ros_gz_sim/gz_sim.launch.py scans every package.xml to collect
@@ -104,9 +113,19 @@ def launch_setup(context, *args, **kwargs):
 
     for i in range(num_robots):
         robot_ns = f'leo{i + 1}'
-        sx, sy = default_spawns[i] if i < len(default_spawns) \
-            else (float(i) * 1.5, 0.0)
-        spawn_x, spawn_y = str(sx), str(sy)
+        if overrides.get(robot_ns):
+            pose = overrides[robot_ns].split(',')
+        elif robot_ns in authored:
+            pose = list(authored[robot_ns])
+        else:
+            sx, sy = FALLBACK_SPAWNS[i] if i < len(FALLBACK_SPAWNS) \
+                else (float(i) * 1.5, 0.0)
+            pose = [str(sx), str(sy), '0.2', '0.0', '0.0', '0.0']
+        if len(pose) != 6:
+            raise ValueError(
+                f'{robot_ns}_pose must be "x,y,z,R,P,Y"; got {pose!r}')
+        spawn_x, spawn_y, spawn_z, spawn_R, spawn_P, spawn_Y = \
+            (p.strip() for p in pose)
 
         robot_desc = Command([
             'xacro', ' ', xacro_file, ' ', 'robot_ns:=', robot_ns,
@@ -150,7 +169,8 @@ def launch_setup(context, *args, **kwargs):
                 arguments=[
                     '-name', robot_ns,
                     '-topic', f'/{robot_ns}/robot_description',
-                    '-x', spawn_x, '-y', spawn_y, '-z', '0.2',
+                    '-x', spawn_x, '-y', spawn_y, '-z', spawn_z,
+                    '-R', spawn_R, '-P', spawn_P, '-Y', spawn_Y,
                 ],
                 output='screen'
             )]
@@ -183,6 +203,31 @@ def launch_setup(context, *args, **kwargs):
 
         entities += [rsp, spawn, bridge, gpu_lidar_tf]
 
+    # Wall-mounted ArUco markers. office_world and depot_world carry textured
+    # markers in the .sdf already; husarion_office has none, so they are
+    # spawned here from the same ground-truth yaml the scoring reads. 'auto'
+    # spawns only when the world file has no ArUco texture of its own, so a
+    # world is never given two overlapping sets. Skipped with the cameras off,
+    # since nothing can then see them.
+    spawn_markers = LaunchConfiguration('spawn_markers').perform(context).lower()
+    cameras_on = LaunchConfiguration('enable_camera').perform(context).lower() \
+        in ('true', '1', 'yes')
+    if spawn_markers == 'auto':
+        try:
+            with open(world_path) as fh:
+                want_markers = 'aruco_markers/textures' not in fh.read()
+        except OSError:
+            want_markers = True
+    else:
+        want_markers = spawn_markers in ('true', '1', 'yes')
+    if want_markers and cameras_on:
+        actions = marker_spawn_actions(world_key, period=14.0)
+        print(f'[two_robots_gpu] spawning {len(actions)} ArUco markers '
+              f'for {world_key}')
+        entities += actions
+    elif cameras_on:
+        print(f'[two_robots_gpu] using the ArUco markers baked into {world_key}')
+
     return entities
 
 
@@ -202,6 +247,19 @@ def generate_launch_description():
             'enable_camera', default_value='true',
             description='Spawn the RGBD camera sensor (disable for fast '
                         'lidar-only exploration)'),
+        DeclareLaunchArgument(
+            'leo1_pose', default_value='',
+            description='Override leo1 spawn as "x,y,z,R,P,Y" (empty = the '
+                        'per-room pose authored for this world)'),
+        DeclareLaunchArgument(
+            'leo2_pose', default_value='',
+            description='Override leo2 spawn as "x,y,z,R,P,Y" (empty = the '
+                        'per-room pose authored for this world)'),
+        DeclareLaunchArgument(
+            'spawn_markers', default_value='auto',
+            description='Spawn wall ArUco markers from the world\'s '
+                        'mock_markers yaml. "auto" spawns only for worlds '
+                        'that have no markers baked into the .sdf'),
         DeclareLaunchArgument(
             'gt_odom_tf', default_value='true',
             description='Publish Gazebo ground-truth odom->base_link on /tf. '

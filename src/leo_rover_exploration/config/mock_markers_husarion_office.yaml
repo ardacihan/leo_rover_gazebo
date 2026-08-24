@@ -1,0 +1,33 @@
+# Ground-truth ArUco marker poses for husarion_office.
+#
+# Ported from the MARKER_POSES table in two_robots.launch.py, which was
+# authored against the standalone `models/aruco_N/` plates. Those are thin
+# along y, so their face normal is (-sin yaw, cos yaw); every other marker
+# in this tree (office_world.sdf, depot_world.sdf, and the inline plates the
+# GPU launch spawns) is thin along x, normal (cos yaw, sin yaw), which is the
+# convention these yaml files document as "yaw = outward wall normal".
+# The yaws below are therefore the originals + pi/2, so that one convention
+# holds everywhere. The evidence for reading the originals that way: markers
+# 2 and 3 sit at y=0 (open floor -- leo1 spawns at the origin) with yaw
+# -pi/2, which only yields an x-facing wall normal under the old convention,
+# and marker 5 at x=13.33 is against the east wall and must face west.
+markers:
+  - {id: 0, x: 6.51, y: -11.97, z: 0.3, yaw: 1.5508}   # was -0.02
+  - {id: 1, x: 9.39, y: -8.03, z: 0.3, yaw: 3.1408}   # was 1.57
+  - {id: 2, x: 1.79, y: 0.0, z: 0.3, yaw: 0.0008}   # was -1.57
+  - {id: 3, x: 9.31, y: 0.0, z: 0.3, yaw: 0.0008}   # was -1.57
+  - {id: 4, x: 12.5, y: -3.41, z: 0.3, yaw: -1.5724}   # was 3.14
+  - {id: 5, x: 13.33, y: -5.9, z: 0.3, yaw: -3.0124}   # was 1.7
+  - {id: 6, x: 1.47, y: -5.42, z: 0.3, yaw: 1.5708}   # was 0.0
+  - {id: 7, x: 4.01, y: -7.54, z: 0.3, yaw: 1.5708}   # re-aimed; was -3.0124
+    # Re-aimed to face north/south rather than west. The route between the
+    # two spawns runs north-south around x ~ 1.5-4, and the plates are
+    # textured on both faces, so a north/south normal is face-on to BOTH
+    # rovers. Measured in the husarion smoke: from leo2's spawn, marker 7
+    # at its old yaw was 59 deg off-normal (0.10 m apparent, ~14 px, under
+    # the 18 px floor) and marker 0 was 82 deg off-normal (~4 px) -- leo2
+    # saw nothing at all in 296 frames. With 6, 7 and 8 all normal to the
+    # shared corridor there are three tags both rovers can actually read,
+    # which is what min_tags:=2 needs.
+  - {id: 8, x: 6.28, y: -4.41, z: 0.3, yaw: 1.5708}   # was 0.0
+  - {id: 9, x: 8.52, y: -7.48, z: 0.3, yaw: 3.1408}   # was 1.57

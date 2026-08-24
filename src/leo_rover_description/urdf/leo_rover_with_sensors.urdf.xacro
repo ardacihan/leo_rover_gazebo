@@ -137,8 +137,15 @@
       <always_on>true</always_on>
       <!-- RGB-D point clouds dominate bridge/serialization cost in the
            headless validation container. 5 Hz still exceeds the explorer's
-           coverage update rate and is sufficient for ArUco confirmation. -->
-      <update_rate>5</update_rate>
+           coverage update rate and is sufficient for ArUco confirmation.
+           Lowered to 3 Hz for two-rover runs: `ign gazebo` segfaulted inside
+           the WSL D3D12 driver ("D3D12: Removing Device") after 9-13 min in
+           all four husarion two-camera runs on 2026-08-23, which looks like a
+           GPU timeout-detection reset under sustained render load. ArUco needs
+           only min_hits=3 sightings of a static wall marker, and at 3 Hz a
+           rover driving past one still gets plenty. -->
+      <xacro:arg name="camera_rate" default="3"/>
+      <update_rate>$(arg camera_rate)</update_rate>
       <topic>/$(arg robot_ns)/camera</topic>
       <gz_frame_id>$(arg robot_ns)/sensor_camera_link</gz_frame_id>
       <camera>

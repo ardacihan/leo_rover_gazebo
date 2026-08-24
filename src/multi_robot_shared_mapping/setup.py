@@ -31,6 +31,7 @@ setup(
             "apriltag_detection_node = multi_robot_shared_mapping.apriltag_detection_node:main",
             "tag_based_map_aligner = multi_robot_shared_mapping.tag_based_map_aligner:main",
             "map_based_aligner = multi_robot_shared_mapping.map_based_aligner:main",
+            "alignment_tf_bridge = multi_robot_shared_mapping.alignment_tf_bridge:main",
             "save_shared_outputs = multi_robot_shared_mapping.save_shared_outputs:main",
         ],
     },

@@ -70,6 +70,11 @@ class RealisticOdom(Node):
         self.declare_parameter('slip_per_metre', 0.01)   # rad / m travelled
         self.declare_parameter('yaw_bias', 0.0)          # rad/s constant drift
         self.declare_parameter('seed', 0)
+        # See on_odom(): false keeps the single-robot behaviour of
+        # seeding on the true pose; true starts at (0, 0, 0) as real
+        # wheel odometry does, which is required for an honest
+        # two-rover alignment test.
+        self.declare_parameter('zero_origin', False)
 
         self.output_topic = self.get_parameter('output_topic').value
         self.odom_frame = self.get_parameter('odom_frame').value
@@ -82,6 +87,7 @@ class RealisticOdom(Node):
         self.slip_per_metre = float(self.get_parameter('slip_per_metre').value)
         self.yaw_bias = float(self.get_parameter('yaw_bias').value)
         self.rng = random.Random(int(self.get_parameter('seed').value))
+        self.zero_origin = bool(self.get_parameter('zero_origin').value)
 
         self.prev = None          # (x, y, yaw, t) ground truth
         self.x = self.y = self.th = 0.0
@@ -107,8 +113,21 @@ class RealisticOdom(Node):
 
         if self.prev is None:
             self.prev = (gx, gy, gth, t)
-            # Start the estimate on the true pose so map and odom share an origin.
-            self.x, self.y, self.th = gx, gy, gth
+            if self.zero_origin:
+                # Wheel odometry on a real rover reads zero wherever it was
+                # switched on; it has no idea where in the world that is. With
+                # two rovers that distinction is the whole problem: seeding on
+                # the true pose puts BOTH SLAM maps in the world frame, so the
+                # leo2/map -> leo1/map transform the tag aligner is supposed to
+                # recover is identity by construction and the rovers secretly
+                # share a frame from the first scan. Starting at the origin
+                # anchors each map on its own rover's start pose, which makes
+                # the true transform the actual spawn offset.
+                self.x = self.y = self.th = 0.0
+            else:
+                # Single-robot default, kept: map and odom share an origin,
+                # which is what the pose-error tooling assumes.
+                self.x, self.y, self.th = gx, gy, gth
             return
 
         px, py, pth, pt = self.prev

@@ -40,13 +40,18 @@ def launch_setup(context, *args, **kwargs):
 
     # Shared registry/coverage claims only in the coordinated condition.
     share_claims = item_search and mode == 'coordinated'
+    # Frame both rovers' positions are compared in. Under map_merge this
+    # was the global 'map'; with tag alignment it is leo1/map, reached via
+    # the transform alignment_tf_bridge publishes once alignment locks.
+    common_frame = LaunchConfiguration('common_frame').perform(context)
 
     nodes = []
     for i in range(num_robots):
         ns = f'leo{i + 1}'
         params_file = os.path.join(cfg_dir, f'frontier_explorer_{ns}_multi.yaml')
         overrides = {'coordination_mode': mode,
-                     'share_claims': share_claims}
+                     'share_claims': share_claims,
+                     'common_frame': common_frame}
         if item_search:
             overrides['camera_coverage_target'] = coverage_target
         nodes.append(Node(
@@ -79,7 +84,7 @@ def launch_setup(context, *args, **kwargs):
                     'markers_file': markers_file,
                     'camera_frame': f'{ns}/sensor_camera_link',
                     'map_frame': f'{ns}/map',
-                    'common_frame': 'map',
+                    'common_frame': common_frame,
                     'map_topic': f'/{ns}/map',
                     'detection_topic': f'/{ns}/aruco_detections',
                 }],
@@ -104,6 +109,11 @@ def generate_launch_description():
             'item_search', default_value='false',
             description='Enable camera sweep + mock detectors + item registry'),
         DeclareLaunchArgument('markers_file', default_value=default_markers),
+        DeclareLaunchArgument(
+            'common_frame', default_value='map',
+            description="Frame peer poses are compared in. 'map' with "
+                        "multirobot_map_merge; 'leo1/map' under tag "
+                        'alignment, where no global map frame exists'),
         DeclareLaunchArgument(
             'camera_coverage_target', default_value='0.9',
             description='Wall fraction the camera must observe (item search)'),

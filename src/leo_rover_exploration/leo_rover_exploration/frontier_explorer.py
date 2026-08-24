@@ -87,6 +87,16 @@ class FrontierExplorer(Node):
         # 'independent' = uncoordinated baseline (ignore peers).
         self.declare_parameter('coordination_mode', 'coordinated')
         self.declare_parameter('peer_names', '')     # comma-sep, e.g. "leo2"
+        # The frame both rovers' positions are compared in. With
+        # multirobot_map_merge this was the global 'map'. Under tag
+        # alignment there is no global map frame -- leo1/map is the shared
+        # frame and alignment_tf_bridge connects leo2/map to it once the
+        # estimate is trusted.
+        self.declare_parameter('common_frame', 'map')
+        # The alignment estimate moves as it converges, so a peer offset
+        # looked up once and cached forever freezes coordination at the
+        # first and worst transform. Re-resolve this often (seconds).
+        self.declare_parameter('offset_refresh_sec', 5.0)
         self.declare_parameter('discount_radius', 3.0)      # meters
         self.declare_parameter('discount_strength', 1.0)    # 0..1
         # Don't declare exploration finished until we've actually driven this
@@ -146,6 +156,8 @@ class FrontierExplorer(Node):
         self.claim_radius = gp('claim_radius')
         self.coordination_mode = gp('coordination_mode')
         self.peer_names = [p for p in gp('peer_names').split(',') if p]
+        self.common_frame = gp('common_frame')
+        self.offset_refresh_sec = gp('offset_refresh_sec')
         self.discount_radius = gp('discount_radius')
         self.discount_strength = gp('discount_strength')
         self.min_explore_distance = gp('min_explore_distance')
@@ -163,14 +175,14 @@ class FrontierExplorer(Node):
         self.verify_min_yaw_delta = gp('verify_min_yaw_delta')
         self.sweep_heading_weight = gp('sweep_heading_weight')
         self.share_claims = gp('share_claims')
-        self._peer_offsets = {}      # peer -> its map frame origin in 'map'
+        self._peer_offsets = {}      # peer -> (offset, resolved_at_sec)
 
         self.map_msg = None
         self.state = STATE_EXPLORING
         self.blacklist = []          # [{'pos','expires','strikes'}]
         self.skip_list = []          # [{'pos','expires'}] planner said no path
         self.peer_claims = {}        # robot_name -> (x, y) in OUR map frame
-        self._common_offset = None   # our map frame origin in common 'map'
+        self._common_offset = None   # (offset, resolved_at_sec)
         self.init_pose = None
         self.idle_cycles = 0
 
@@ -337,18 +349,29 @@ class FrontierExplorer(Node):
     # ------------------------------------------- shared item/coverage claims
 
     def _get_peer_offset(self, peer):
-        """Peer's map frame origin in the common 'map' frame, cached."""
-        if peer in self._peer_offsets:
-            return self._peer_offsets[peer]
+        """Peer's map frame origin in the common frame.
+
+        Refreshed rather than cached for the life of the run: before the first
+        mutual tag sighting there is no such transform at all (we return None
+        and the caller degrades to working alone), and afterwards the estimate
+        keeps improving as more common landmarks are seen. Pinning the first
+        value would lock coordination to the worst transform of the run.
+        """
+        cached = self._peer_offsets.get(peer)
+        now = self._now_sec()
+        if cached is not None and now - cached[1] < self.offset_refresh_sec:
+            return cached[0]
         try:
             tf = self.tf_buffer.lookup_transform(
-                'map', f'{peer}/map', rclpy.time.Time(),
+                self.common_frame, f'{peer}/map', rclpy.time.Time(),
                 timeout=Duration(seconds=0.1))
         except Exception:
-            return None
-        self._peer_offsets[peer] = (tf.transform.translation.x,
-                                    tf.transform.translation.y)
-        return self._peer_offsets[peer]
+            # Keep serving the last good value until it ages out entirely, so
+            # a momentary lookup failure does not drop us out of coordination.
+            return cached[0] if cached is not None else None
+        offset = (tf.transform.translation.x, tf.transform.translation.y)
+        self._peer_offsets[peer] = (offset, now)
+        return offset
 
     def _publish_item_claims(self):
         """Broadcast the registry in the common frame for peers/recorders."""
@@ -753,23 +776,29 @@ class FrontierExplorer(Node):
             self._finish_exploration()
 
     def _get_common_offset(self):
-        """Our map frame's origin expressed in the common 'map' frame (x, y).
-        Zero when we already navigate in 'map'; the static map->leo{i}/map TF
-        otherwise. Cached (it is static)."""
-        if self._common_offset is not None:
-            return self._common_offset
-        if self.map_frame == 'map':
-            self._common_offset = (0.0, 0.0)
-            return self._common_offset
+        """Our map frame's origin expressed in the common frame (x, y).
+
+        Zero when we already navigate in the common frame -- which is the case
+        for leo1 when the common frame is leo1/map. For leo2 this is the
+        recovered alignment, so it is refreshed on the same schedule as
+        _get_peer_offset rather than treated as static; under tag alignment it
+        is not static, and it does not exist at all until the rovers have seen
+        common landmarks.
+        """
+        if self.map_frame == self.common_frame:
+            return (0.0, 0.0)
+        now = self._now_sec()
+        if self._common_offset is not None                 and now - self._common_offset[1] < self.offset_refresh_sec:
+            return self._common_offset[0]
         try:
             tf = self.tf_buffer.lookup_transform(
-                'map', self.map_frame, rclpy.time.Time(),
+                self.common_frame, self.map_frame, rclpy.time.Time(),
                 timeout=Duration(seconds=0.2))
-            self._common_offset = (tf.transform.translation.x,
-                                   tf.transform.translation.y)
         except Exception:
-            return None
-        return self._common_offset
+            return self._common_offset[0] if self._common_offset else None
+        offset = (tf.transform.translation.x, tf.transform.translation.y)
+        self._common_offset = (offset, now)
+        return offset
 
     def _peer_xy(self, peer):
         """Peer rover position from the shared (merged) TF tree, or None."""

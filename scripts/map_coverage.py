@@ -2,7 +2,11 @@
 """Print SLAM map coverage (known area in m^2) periodically.
 
 Usage (inside the container):
-    python3 /ros2_ws/scripts/map_coverage.py [interval_sec]
+    python3 /ros2_ws/scripts/map_coverage.py [interval_sec]         [xmin xmax ymin ymax] [topic]
+
+`topic` defaults to /map. Under tag-based alignment there is no global /map --
+the merged grid is /shared_map in the leo1/map frame -- so the topic has to be
+selectable or coverage silently reports "no map yet" for the whole run.
 """
 
 import sys
@@ -16,7 +20,7 @@ from rclpy.qos import (QoSDurabilityPolicy, QoSProfile, QoSReliabilityPolicy)
 
 
 class CoverageMonitor(Node):
-    def __init__(self, interval, bounds=None):
+    def __init__(self, interval, bounds=None, topic='/map'):
         super().__init__('map_coverage_monitor')
         self.set_parameters([rclpy.parameter.Parameter(
             'use_sim_time', rclpy.Parameter.Type.BOOL, True)])
@@ -25,12 +29,21 @@ class CoverageMonitor(Node):
         # when a rover's odometry drifts, so coverage can't exceed the true
         # reachable area and all conditions are measured on the same footprint.
         self.bounds = bounds
+        # VOLATILE, not TRANSIENT_LOCAL. slam_toolbox latches /leo{i}/map with
+        # TRANSIENT_LOCAL, but shared_map_merger publishes /shared_map
+        # VOLATILE, and a TRANSIENT_LOCAL *subscriber* is incompatible with a
+        # VOLATILE publisher -- rmw drops the match and logs only on the
+        # publisher side, so this monitor printed "no map yet" for a whole run
+        # while the merger was publishing happily. A VOLATILE subscriber
+        # matches both; the only thing given up is the latched first sample,
+        # which a periodic coverage monitor does not need.
         qos = QoSProfile(
             depth=1,
             reliability=QoSReliabilityPolicy.RELIABLE,
-            durability=QoSDurabilityPolicy.TRANSIENT_LOCAL,
+            durability=QoSDurabilityPolicy.VOLATILE,
         )
-        self.create_subscription(OccupancyGrid, '/map', self._cb, qos)
+        self.topic = topic
+        self.create_subscription(OccupancyGrid, topic, self._cb, qos)
         self.create_timer(interval, self._report)
         self.msg = None
 
@@ -54,7 +67,7 @@ class CoverageMonitor(Node):
 
     def _report(self):
         if self.msg is None:
-            print('coverage: no map yet', flush=True)
+            print(f'coverage: no map yet on {self.topic}', flush=True)
             return
         grid = self._grid()
         known = int((grid >= 0).sum())
@@ -71,10 +84,15 @@ class CoverageMonitor(Node):
 def main():
     interval = float(sys.argv[1]) if len(sys.argv) > 1 else 15.0
     bounds = None
-    if len(sys.argv) > 5:
-        bounds = tuple(float(a) for a in sys.argv[2:6])  # xmin xmax ymin ymax
+    topic = '/map'
+    rest = sys.argv[2:]
+    if len(rest) >= 4:
+        bounds = tuple(float(a) for a in rest[:4])  # xmin xmax ymin ymax
+        rest = rest[4:]
+    if rest:
+        topic = rest[0]
     rclpy.init()
-    node = CoverageMonitor(interval, bounds)
+    node = CoverageMonitor(interval, bounds, topic)
     try:
         rclpy.spin(node)
     except (KeyboardInterrupt, ExternalShutdownException, RuntimeError):

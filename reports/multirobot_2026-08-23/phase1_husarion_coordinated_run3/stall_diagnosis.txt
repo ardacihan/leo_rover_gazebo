@@ -1,0 +1,32 @@
+=== stall diagnosis 2026-08-24T00:43:08+02:00 ===
+--- gz processes ---
+root        3623  0.0  0.0   7700  3896 ?        Ss   22:43   0:00 bash -lc ps aux | grep -E "[i]gn gazebo|[g]z sim|ruby" | head -5
+root        3637  0.0  0.0   6940  2372 ?        S    22:43   0:00 grep -E [i]gn gazebo|[g]z sim|ruby
+--- container resource ---
+leo_sim cpu=75.19% mem=1.952GiB / 23.47GiB
+--- container log tail ---
+[create-19] [INFO] [1787523764.167818923] [spawn_aruco_8]: OK creation of entity.
+[INFO] [create-19]: process has finished cleanly [pid 484]
+[create-20] [INFO] [1787523764.365945439] [spawn_aruco_9]: Requesting list of world names.
+[create-20] [INFO] [1787523764.567103078] [spawn_aruco_9]: Requested creation of entity.
+[create-20] [INFO] [1787523764.567141345] [spawn_aruco_9]: OK creation of entity.
+[INFO] [create-20]: process has finished cleanly [pid 510]
+[parameter_bridge-4] [INFO] [1787523850.532859806] [leo1.bridge_leo1]: Passing message from ROS geometry_msgs/msg/Twist to Gazebo gz.msgs.Twist (showing msg only once per type)
+[parameter_bridge-7] [INFO] [1787523850.563782344] [leo2.bridge_leo2]: Passing message from ROS geometry_msgs/msg/Twist to Gazebo gz.msgs.Twist (showing msg only once per type)
+[ign-1] NodeShared::Publish() Error: Interrupted system call
+[ign-1] NodeShared::Publish() Error: Interrupted system call
+[ign-1] D3D12: Removing Device.
+[ign-1] Stack trace (most recent call last) in thread 564:
+[ign-1] #10   Object "[0xffffffffffffffff]", at 0xffffffffffffffff, in 
+[ign-1] #9    Object "/usr/lib/x86_64-linux-gnu/libc.so.6", at 0x711bed79ea83, in clone
+[ign-1] #8    Object "/usr/lib/x86_64-linux-gnu/libc.so.6", at 0x711bed70dac2, in 
+[ign-1] #7    Object "/usr/lib/x86_64-linux-gnu/dri/swrast_dri.so", at 0x711b9d83d45a, in 
+[ign-1] #6    Object "/usr/lib/x86_64-linux-gnu/dri/swrast_dri.so", at 0x711b9d7ed977, in 
+[ign-1] #5    Object "/usr/lib/x86_64-linux-gnu/dri/swrast_dri.so", at 0x711b9dd889a1, in 
+[ign-1] #4    Object "/usr/lib/x86_64-linux-gnu/dri/swrast_dri.so", at 0x711b9dd8d4a7, in 
+[ign-1] #3    Object "/usr/lib/x86_64-linux-gnu/dri/swrast_dri.so", at 0x711b9e2e35ea, in 
+[ign-1] #2    Object "/usr/lib/wsl/lib/libd3d12core.so", at 0x711b9c40c3af, in 
+[ign-1] #1    Object "/usr/lib/wsl/lib/libd3d12core.so", at 0x711b9c3f883a, in 
+[ign-1] #0    Object "/usr/lib/wsl/lib/libd3d12core.so", at 0x711b9c49ea60, in 
+[ign-1] Segmentation fault (Address not mapped to object [0x180])
+[ERROR] [ign-1]: process has died [pid 131, exit code -11, cmd 'ign gazebo -s -r /ros2_ws/src/husarion_gz_worlds/worlds/husarion_office.sdf --force-version 6'].

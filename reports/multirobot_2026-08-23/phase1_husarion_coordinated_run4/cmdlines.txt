@@ -1,0 +1,12 @@
+run: mode=coordinated world=husarion_office cap=25min started 2026-08-24T00:50:21+02:00
+sim: WORLD=husarion_office GUI=false NUM_ROBOTS=2 ENABLE_CAMERA=true GT_ODOM_TF=false scripts/sim_gpu_wsl.sh
+odom(leo1): sim_realism_odom.py (publish_tf=false, zero_origin=true) + sim_realism_imu.py + robot_localization ekf_node
+odom(leo2): sim_realism_odom.py (publish_tf=false, zero_origin=true) + sim_realism_imu.py + robot_localization ekf_node
+slam: ros2 launch leo_rover_gazebo slam_multi.launch.py num_robots:=2
+/leo1/map publishers=1
+/leo2/map publishers=1
+aruco(leo1): ros2 launch leo_nav2_exploration aruco.launch.py profile:=sim robot_ns:=leo1 marker_length:=0.20 allowed_ids:=0,1,2,3,4,5,6,7,8,9 detection_topic:=/leo1/tag_detections
+aruco(leo2): ros2 launch leo_nav2_exploration aruco.launch.py profile:=sim robot_ns:=leo2 marker_length:=0.20 allowed_ids:=0,1,2,3,4,5,6,7,8,9 detection_topic:=/leo2/tag_detections
+align: ros2 launch multi_robot_shared_mapping shared_align.launch.py alignment_mode:=hybrid enable_tag_alignment:=true enable_map_alignment:=true compare_to_ground_truth:=true ground_truth_x:=9.6000 ground_truth_y:=-9.9500 ground_truth_yaw:=-3.1416
+nav2: ros2 launch leo_rover_gazebo nav2_multi.launch.py num_robots:=2
+explore: ros2 launch leo_rover_exploration collab_explore.launch.py num_robots:=2 coordination_mode:=coordinated common_frame:=leo1/map
