@@ -338,9 +338,13 @@ class FrontierExplorer(Node):
         else:
             # Claims are shared in the common 'map' frame; convert into our own
             # map frame so the allocation compares them against our frontiers.
-            off = self._get_common_offset() or (0.0, 0.0)
-            self.peer_claims[msg.ns] = (msg.pose.position.x - off[0],
-                                        msg.pose.position.y - off[1])
+            mine = self._from_common((msg.pose.position.x, msg.pose.position.y))
+            if mine is None:
+                # No shared frame yet, so a peer claim cannot be placed on our
+                # map at all. Dropping it is right: before this, the raw
+                # coordinates were stored as if they were already ours.
+                return
+            self.peer_claims[msg.ns] = mine
 
     def _detection_cb(self, msg):
         view = self._camera_view()
@@ -410,13 +414,12 @@ class FrontierExplorer(Node):
 
     def _publish_item_claims(self):
         """Broadcast the registry in the common frame for peers/recorders."""
-        off = self._get_common_offset() or (0.0, 0.0)
         payload = {
             'robot': self.robot_name,
             'sim_time': round(self._now_sec(), 1),
             'items': [
-                {'id': mid, 'x': round(it['pos'][0] + off[0], 3),
-                 'y': round(it['pos'][1] + off[1], 3),
+                {'id': mid, 'x': round((self._to_common(it['pos']) or it['pos'])[0], 3),
+                 'y': round((self._to_common(it['pos']) or it['pos'])[1], 3),
                  'views': it['views'], 'confirmed': it['confirmed'],
                  'via_peer': it.get('via_peer', False)}
                 for mid, it in sorted(self.items.items())
@@ -446,7 +449,9 @@ class FrontierExplorer(Node):
                 continue
             mid = int(it['id'])
             own = self.items.get(mid)
-            pos_own = (it['x'] - off[0], it['y'] - off[1])
+            pos_own = self._from_common((it['x'], it['y']))
+            if pos_own is None:
+                continue
             if own is None:
                 self.items[mid] = {
                     'pos': pos_own, 'z': 0.3, 'views': it.get('views', 2),
@@ -478,10 +483,14 @@ class FrontierExplorer(Node):
         if not self.coverage.observed or self.map_msg is None:
             return
         res = self.map_msg.info.resolution
-        off = self._get_common_offset() or (0.0, 0.0)
-        di = int(round(off[0] / res))
-        dj = int(round(off[1] / res))
-        keys = [[i + di, j + dj] for i, j in self.coverage.observed]
+        # Camera-coverage cells are shared as common-frame grid indices, so
+        # each one has to be rotated, not just shifted.
+        keys = []
+        for i, j in self.coverage.observed:
+            pt = self._to_common((i * res, j * res))
+            if pt is None:
+                return
+            keys.append([int(round(pt[0] / res)), int(round(pt[1] / res))])
         msg = StringMsg()
         msg.data = json.dumps({'robot': self.robot_name, 'res': res,
                                'keys': keys})
@@ -500,13 +509,14 @@ class FrontierExplorer(Node):
         res = self.map_msg.info.resolution
         if abs(payload.get('res', res) - res) > 1e-6:
             return
-        off = self._get_common_offset()
-        if off is None:
+        if self._get_common_offset() is None:
             return
-        di = int(round(off[0] / res))
-        dj = int(round(off[1] / res))
-        self.coverage.observed.update(
-            (int(i) - di, int(j) - dj) for i, j in payload.get('keys', []))
+        for i, j in payload.get('keys', []):
+            pt = self._from_common((int(i) * res, int(j) * res))
+            if pt is None:
+                return
+            self.coverage.observed.add(
+                (int(round(pt[0] / res)), int(round(pt[1] / res))))
 
     # ----------------------------------------------------------- robot pose
 
@@ -858,7 +868,7 @@ class FrontierExplorer(Node):
         common landmarks.
         """
         if self.map_frame == self.common_frame:
-            return (0.0, 0.0)
+            return (0.0, 0.0, 0.0)
         now = self._now_sec()
         if self._common_offset is not None                 and now - self._common_offset[1] < self.offset_refresh_sec:
             return self._common_offset[0]
@@ -868,9 +878,30 @@ class FrontierExplorer(Node):
                 timeout=Duration(seconds=0.2))
         except Exception:
             return self._common_offset[0] if self._common_offset else None
-        offset = (tf.transform.translation.x, tf.transform.translation.y)
+        q = tf.transform.rotation
+        yaw = math.atan2(2.0 * (q.w * q.z + q.x * q.y),
+                         1.0 - 2.0 * (q.y * q.y + q.z * q.z))
+        offset = (tf.transform.translation.x, tf.transform.translation.y, yaw)
         self._common_offset = (offset, now)
         return offset
+
+    def _to_common(self, xy):
+        """A point in our own map frame -> the common frame."""
+        off = self._get_common_offset()
+        if off is None or xy is None:
+            return None
+        c, s = math.cos(off[2]), math.sin(off[2])
+        return (off[0] + c * xy[0] - s * xy[1],
+                off[1] + s * xy[0] + c * xy[1])
+
+    def _from_common(self, xy):
+        """A point in the common frame -> our own map frame."""
+        off = self._get_common_offset()
+        if off is None or xy is None:
+            return None
+        dx, dy = xy[0] - off[0], xy[1] - off[1]
+        c, s = math.cos(-off[2]), math.sin(-off[2])
+        return (c * dx - s * dy, s * dx + c * dy)
 
     def _peer_xy(self, peer):
         """Peer rover position from the shared (merged) TF tree, or None."""
@@ -1415,11 +1446,13 @@ class FrontierExplorer(Node):
         if xy is None:
             marker.action = Marker.DELETE
         else:
-            off = self._get_common_offset() or (0.0, 0.0)
+            shared = self._to_common(xy)
+            if shared is None:
+                return          # nothing to say until we share a frame
             marker.action = Marker.ADD
             marker.type = Marker.SPHERE
-            marker.pose.position.x = xy[0] + off[0]
-            marker.pose.position.y = xy[1] + off[1]
+            marker.pose.position.x = shared[0]
+            marker.pose.position.y = shared[1]
             marker.pose.orientation.w = 1.0
             marker.scale.x = marker.scale.y = marker.scale.z = 0.4
             marker.color.r = 1.0
