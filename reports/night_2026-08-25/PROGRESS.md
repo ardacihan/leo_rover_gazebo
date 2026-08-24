@@ -26,7 +26,7 @@ Read this ledger first on every tick. Never restart a phase marked COMPLETE.
 | 0 | Build + tests, benchmark reproduces 0/10, GPU check | COMPLETE except GPU line (deferred to a camera-on run; markerfree run is camera-off) |
 | 1 | Marker-free merge ≥7/10, zero confident-wrong, <5 s/pair | **COMPLETE** — 6/7+3 abstain, 0 wrong offline; LIVE LOCK 0.45 m/1.3° markers-off (run5), media clean. Caveats: strict pass count 6 not 7 (7th drift-capped, tag-proven); big office pairs 6.5–7.1 s vs 5 s target |
 | 2 | Merged map changes exploration; coordinated vs independent, office first | NOT STARTED |
-| 3 | Per-rover merger; laptop-kill partition run | NOT STARTED |
+| 3 | Per-rover merger; laptop-kill partition run | **COMPLETE** — both rovers locked independently (0.38 m & 0.17 m), estimates mutually agree 0.28 m/0.6°, shared maps saved live 40 s after bridge kill. Caveat: explorers finished 4 s post-kill |
 | 4 | Namespaced real launch path + rehearsal + LAB_SESSION.md | NOT STARTED |
 
 ## Assets already in the tree tonight (do not rebuild these)
@@ -273,6 +273,21 @@ Read this ledger first on every tick. Never restart a phase marked COMPLETE.
   committed 2e7f6ad.
 - **Phase 3 partition run LAUNCHED** (DISTRIBUTED=1 PARTITION_AT_MIN=13,
   markerfree, office) → reports/night_2026-08-25/phase3_partition_office.
+### 2026-08-25 00:50 — tick 6 — PHASE 3 GATE MET (partition run)
+
+- **phase3_partition_office: PASS.** leo1.peer_aligner locked
+  (11.26,-9.72,180.4°)=0.38 m/0.4° conf 0.91; leo2.peer_aligner locked
+  (11.11,-9.87,-181.0°)=0.17 m/1.0° conf 0.92 — independently, zero
+  markers. Composition vs identity: (0.16,0.23,-0.6°) → the two rovers'
+  merged maps agree within alignment error. Bridge killed minute 13; both
+  /leo{i}/shared_map saved from live topics ~40 s later. Media: both
+  shared maps = complete office, single walls, exact 180° rotations of
+  each other. Caveat (honest): explorers finished 4 s after the kill —
+  post-partition exploration demonstrated only briefly; merge-path
+  independence is by construction (mergers never subscribe the bridge).
+- **Phase 4 rehearsal LAUNCHED** (freed sim slot):
+  reports/night_2026-08-25/phase4_rehearsal, 10 min cap, real launch path
+  ×2 with safety-chain motion checks.
 - **Viper identified:** Slurm cluster, ssh viper11 via WSL bridge
   (`wsl.exe -d Ubuntu -- bash -lc "ssh viper11 '<cmd>'"`), 8 shared APU
   (ROCm) slots, courtesy cap ~6 jobs. Recon+setup delegated to a subagent

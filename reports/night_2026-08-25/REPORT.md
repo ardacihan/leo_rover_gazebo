@@ -128,8 +128,24 @@ optional coordination-TF bridge; the merge path has no shared dependency.
 Only `/leo{i}/map` crosses the network (d241087: our own DDS traffic starved
 the rover firmware).
 
-Partition run (`DISTRIBUTED=1 PARTITION_AT_MIN=n`, central bridge killed
-mid-run, both per-rover merged maps saved and compared): (PENDING)
+Partition run (`phase3_partition_office`, `DISTRIBUTED=1 PARTITION_AT_MIN=13`,
+office, markerfree, no cameras), n=1:
+
+- **Both per-rover aligners locked independently, no markers:** leo1's
+  estimate of leo2 (11.26, −9.72, 180.4°) = 0.38 m/0.4° from truth at
+  confidence 0.91; leo2's estimate of leo1 (11.11, −9.87, −181.0°) =
+  0.17 m/1.0° from truth at 0.92. Composing the two estimates gives
+  (0.16, 0.23, −0.6°) against identity — **the rovers' merged maps agree to
+  ~0.28 m / 0.6°, within the alignment error.** Media: each rover's
+  `shared_map` is the complete office, single walls, and they are exact
+  180°-rotations of each other (own frames), furniture matching.
+- The central bridge was killed at minute 13; both `/leo{i}/shared_map`
+  topics were alive and served the map saver **~40 s after the central node
+  died**. Honest caveat: the explorers finished 4 s after the kill, so
+  "keeps exploring after the partition" is only briefly demonstrated live —
+  it is architecturally guaranteed (the per-rover mergers never subscribe
+  to the bridge), but the run does not show minutes of post-partition
+  exploration. Both explorers self-terminated; the run was clean.
 
 ## Phase 4 — lab readiness
 
