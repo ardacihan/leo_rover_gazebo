@@ -58,7 +58,13 @@ def launch_setup(context, *args, **kwargs):
                      'share_claims': share_claims,
                      'common_frame': common_frame}
         if shared_map_topic and mode == 'coordinated':
-            overrides['shared_map_topic'] = shared_map_topic
+            # 'per_robot' -> each explorer consumes ITS OWN rover's merged
+            # map (/leo{i}/shared_map, published in that rover's own frame
+            # by the distributed per-rover merger). Anything else is a
+            # literal topic (the central merger's /shared_map).
+            overrides['shared_map_topic'] = (
+                f'/{ns}/shared_map' if shared_map_topic == 'per_robot'
+                else shared_map_topic)
         # Per-rover, because each rover's map is anchored on its own spawn, so
         # the shared world box lands somewhere different in each frame.
         bounds = LaunchConfiguration(f'{ns}_bounds').perform(context).strip()

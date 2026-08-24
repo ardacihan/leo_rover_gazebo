@@ -722,7 +722,15 @@ class FrontierExplorer(Node):
                     f'shared-map mask OFF (stale by {age:.0f}s); '
                     'falling back to own map')
             return None
-        off = self._get_common_offset()
+        # The grid says which frame it lives in. A per-rover merger (Phase 3)
+        # publishes in the rover's OWN map frame -> identity, no TF needed,
+        # so a dead laptop cannot take the mask down with it. The central
+        # merger publishes in the common frame -> alignment TF lookup.
+        frame = msg.header.frame_id or self.common_frame
+        if frame == self.map_frame:
+            off = (0.0, 0.0, 0.0)
+        else:
+            off = self._get_common_offset()
         if off is None:
             return None
         rows, cols = np.nonzero(unknown)

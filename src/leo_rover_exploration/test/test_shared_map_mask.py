@@ -17,13 +17,15 @@ from leo_rover_exploration.frontier_explorer import FrontierExplorer, UNKNOWN
 RES = 0.1
 
 
-def grid_msg(grid, ox=0.0, oy=0.0):
+def grid_msg(grid, ox=0.0, oy=0.0, frame='common'):
     h, w = grid.shape
     info = types.SimpleNamespace(
         height=h, width=w, resolution=RES,
         origin=types.SimpleNamespace(
             position=types.SimpleNamespace(x=ox, y=oy)))
-    return types.SimpleNamespace(info=info, data=grid.flatten().tolist())
+    return types.SimpleNamespace(
+        info=info, data=grid.flatten().tolist(),
+        header=types.SimpleNamespace(frame_id=frame))
 
 
 class _Logger:
@@ -33,6 +35,8 @@ class _Logger:
 
 class Stub:
     shared_map_max_age = 20.0
+    map_frame = 'own/map'
+    common_frame = 'common'
 
     def __init__(self, shared_msg, shared_time=95.0, offset=(0.0, 0.0, 0.0)):
         self.shared_map_msg = shared_msg
@@ -84,6 +88,18 @@ def test_missing_offset_disables_masking():
     unknown = np.ones((6, 6), bool)
     stub = Stub(grid_msg(shared), offset=None)
     assert call(stub, own_info(), unknown) is None
+
+
+def test_own_frame_shared_map_needs_no_offset():
+    # A per-rover merger (Phase 3) publishes in the rover's own map frame;
+    # the mask must work with NO alignment TF at all (offset None).
+    shared = np.zeros((6, 6), np.int8)          # fully known merged map
+    unknown = np.zeros((6, 6), bool)
+    unknown[2, 2] = True
+    stub = Stub(grid_msg(shared, frame='own/map'), offset=None)
+    mask = call(stub, own_info(), unknown)
+    assert mask is not None
+    assert mask[2, 2]
 
 
 def test_out_of_shared_bounds_cells_stay_unmasked():

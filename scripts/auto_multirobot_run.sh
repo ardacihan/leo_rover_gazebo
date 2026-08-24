@@ -238,6 +238,25 @@ sleep 8
 
 # ---------- 6. alignment + shared map ----------
 if [[ "$NUM_ROBOTS" -eq 2 ]]; then
+  if [[ -n "${DISTRIBUTED:-}" ]]; then
+    # Phase 3: per-rover aligner+merger pairs, each publishing its OWN
+    # /leo{i}/shared_map in its own frame. The only central piece is the
+    # coordination TF bridge fed from leo1's aligner -- that is "the
+    # laptop node" a partition test kills mid-run.
+    LOG "starting DISTRIBUTED per-rover shared mapping (alignment_mode=$ALIGN_MODE)"
+    CMD "align: ros2 launch multi_robot_shared_mapping distributed_shared_map.launch.py alignment_mode:=$ALIGN_MODE"
+    in_sim_bg "exec ros2 launch multi_robot_shared_mapping distributed_shared_map.launch.py \
+      use_sim_time:=true alignment_mode:=$ALIGN_MODE \
+      > /ros2_ws/$OUT/align.log 2>&1"
+    CMD "bridge(central, killable): ros2 run multi_robot_shared_mapping alignment_tf_bridge transform_topic:=/leo1/peer_transform"
+    in_sim_bg "exec ros2 run multi_robot_shared_mapping alignment_tf_bridge --ros-args \
+      -p use_sim_time:=true -p parent_frame:=leo1/map -p child_frame:=leo2/map \
+      -p transform_topic:=/leo1/peer_transform \
+      -p confidence_topic:=/leo1/alignment_confidence \
+      -p require_tag_evidence:=false -p use_fallback:=false \
+      > /ros2_ws/$OUT/bridge.log 2>&1"
+    sleep 6
+  else
   LOG "starting alignment + shared map merger (alignment_mode=$ALIGN_MODE, tag_alignment=$TAG_ALIGN, NOT fixed)"
   CMD "align: ros2 launch multi_robot_shared_mapping shared_align.launch.py alignment_mode:=$ALIGN_MODE enable_tag_alignment:=$TAG_ALIGN enable_map_alignment:=true compare_to_ground_truth:=true ground_truth_x:=$GT_X ground_truth_y:=$GT_Y ground_truth_yaw:=$GT_YAW"
   in_sim_bg "exec ros2 launch multi_robot_shared_mapping shared_align.launch.py \
@@ -248,6 +267,7 @@ if [[ "$NUM_ROBOTS" -eq 2 ]]; then
     ground_truth_x:=$GT_X ground_truth_y:=$GT_Y ground_truth_yaw:=$GT_YAW \
     > /ros2_ws/$OUT/align.log 2>&1"
   sleep 6
+  fi
 fi
 
 # ---------- 7. Nav2 ----------
@@ -277,6 +297,7 @@ sleep 4
 # ---------- 9. monitors ----------
 LOG "starting monitors (coverage, trajectories, alignment trace, time-lapse)"
 COV_TOPIC="/shared_map"; TRAJ_FRAME="leo1/map"
+[[ -n "${DISTRIBUTED:-}" ]] && COV_TOPIC="/leo1/shared_map"
 [[ "$NUM_ROBOTS" -eq 1 ]] && { COV_TOPIC="/leo1/map"; TRAJ_FRAME="leo1/map"; }
 ROBOTS=$(seq -s, 1 "$NUM_ROBOTS" | sed 's/\([0-9]\)/leo\1/g')
 
@@ -317,6 +338,8 @@ LOG "launching explorers (mode=$EXPLORE_MODE, common_frame=leo1/map)"
 # to it, so the baseline is untouched.
 SHARED_TOPIC=""
 [[ "$EXPLORE_MODE" == "coordinated" && "$NUM_ROBOTS" -eq 2 ]] && SHARED_TOPIC="/shared_map"
+# Distributed: every explorer consumes its OWN rover's merged map.
+[[ -n "${DISTRIBUTED:-}" && -n "$SHARED_TOPIC" ]] && SHARED_TOPIC="per_robot"
 CMD "explore: ros2 launch leo_rover_exploration collab_explore.launch.py num_robots:=$NUM_ROBOTS coordination_mode:=$EXPLORE_MODE common_frame:=leo1/map shared_map_topic:=$SHARED_TOPIC"
 # Per-rover world extent, so frontier detection stops chasing cells outside
 # the building. Same source as the spawn poses, so they cannot drift apart.
@@ -361,6 +384,18 @@ while [[ $(date +%s) -lt $deadline ]]; do
     stalls=0
   fi
   prev_sim_t="$sim_t"
+  # Phase 3 partition test: kill the only central piece (the coordination
+  # TF bridge) mid-run. Both rovers must keep exploring and merging on
+  # their own aligner+merger pairs afterwards.
+  if [[ -n "${PARTITION_AT_MIN:-}" && -z "${partition_done:-}" ]]; then
+    now_s=$(date +%s)
+    if [[ $(( deadline - now_s )) -le $(( (CAP_MIN - PARTITION_AT_MIN) * 60 )) ]]; then
+      partition_done=1
+      LOG "PARTITION: killing central alignment_tf_bridge (minute ${PARTITION_AT_MIN})"
+      in_sim "pkill -f 'alignment_tf[_]bridge'" || true
+      echo "partition: bridge killed at minute ${PARTITION_AT_MIN}" >> "$ROOT/$OUT/cmdlines.txt"
+    fi
+  fi
   done_n=$(grep -c 'Exploration finished\.' "$ROOT/$OUT/explorer.log" 2>/dev/null || true)
   done_n=${done_n//[^0-9]/}; done_n=${done_n:-0}
   cov=$(grep -oE 'known=[0-9.]+m2' "$ROOT/$OUT/coverage.log" 2>/dev/null | tail -1 || true)
@@ -380,9 +415,20 @@ if [[ "$NUM_ROBOTS" -eq 2 ]]; then
   # NOT map_saver_cli: it only ever subscribes TRANSIENT_LOCAL, and
   # shared_map_merger publishes VOLATILE, so the stock saver can never
   # receive /shared_map -- the one artifact the whole pipeline produces.
+  if [[ -n "${DISTRIBUTED:-}" ]]; then
+    LOG "saving BOTH per-rover merged maps (distributed mode)"
+    in_sim "python3 /ros2_ws/scripts/save_map_volatile.py /leo1/shared_map /ros2_ws/$OUT/leo1_shared_map 30" \
+      > "$ROOT/$OUT/map_saver.log" 2>&1 || LOG "leo1 shared map not saved"
+    in_sim "python3 /ros2_ws/scripts/save_map_volatile.py /leo2/shared_map /ros2_ws/$OUT/leo2_shared_map 30" \
+      >> "$ROOT/$OUT/map_saver.log" 2>&1 || LOG "leo2 shared map not saved"
+    # keep the canonical name pointing at leo1's copy for the media renderer
+    in_sim "python3 /ros2_ws/scripts/save_map_volatile.py /leo1/shared_map /ros2_ws/$OUT/merged_map 15" \
+      >> "$ROOT/$OUT/map_saver.log" 2>&1 || true
+  else
   LOG "saving merged map (/shared_map, VOLATILE-compatible saver)"
   in_sim "python3 /ros2_ws/scripts/save_map_volatile.py /shared_map /ros2_ws/$OUT/merged_map 30" \
     > "$ROOT/$OUT/map_saver.log" 2>&1 || LOG "merged map not saved (see map_saver.log)"
+  fi
 fi
 for i in $(seq 1 "$NUM_ROBOTS"); do
   ns="leo$i"

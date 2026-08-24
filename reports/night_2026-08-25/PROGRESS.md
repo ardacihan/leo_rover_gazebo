@@ -223,6 +223,39 @@ Read this ledger first on every tick. Never restart a phase marked COMPLETE.
   PREVIOUS matcher import — can still lock if coverage ends symmetric;
   relaunch with triage version if it ends unmerged.
 - Commits pushed to origin: fd22748..794cc48.
+### 2026-08-25 00:2x — tick 3 cont. — TRIAGE MATCHER VALIDATED, run3 launched
+
+- **Triage benchmark: 6/7 + 3 abstain + 0 confident-wrong preserved, AND
+  tonight's asymmetric pair now COMMITS at 0.47 m / 0.2° (q=0.989).**
+  Timing 4.0–7.1 s/pair: the two big office pairs exceed the 5 s gate by
+  ~2 s — reported honestly; live cadence is 15 s so it runs live fine.
+  Committed f7bdf48, pushed.
+- run2 killed at t≈365s (its aligner imported the pre-triage matcher; hits
+  were declining 0.65→0.36 with fwd-only normalization and it could not
+  have found the office truth under asymmetric coverage — superseded, its
+  partial dir kept for the record). **run3 LAUNCHED** with the final
+  matcher: reports/night_2026-08-25/phase1_markerfree_office_run3.
+- Viper agent told to re-sync the matcher before its coordinated jobs.
+### 2026-08-25 00:1x–00:2x — tick 4 — merger mode bug, run4 SIGKILL mystery, Phase 3 code written
+
+- **Third live-wiring bug caught by reading, not running:** shared_map_merger
+  subscribed the accepted transform only for modes (tag, map, hybrid) — in
+  markerfree it would NEVER merge, however good the lock. Fixed both mode
+  tuples, committed 3d01193. Full-chain audit of remaining "hybrid" tuples:
+  all others are in paths markerfree bypasses.
+- run3 killed (merger had the broken import), relaunched as run4 → **run4's
+  harness AND container both SIGKILLed (137) ~90 s after launch, cause
+  unknown** (WSL/docker blip; memory fine: 19G avail in WSL, 10.8G host).
+  run5 relaunched, passed the point where run4 died, healthy.
+- **Phase 3 code COMPLETE (offline):** distributed_shared_map.launch.py —
+  per-rover aligner+merger pairs, each publishing /leo{i}/shared_map in the
+  rover's OWN frame (mask needs no TF: explorer now reads the grid's
+  header.frame_id and uses identity when it's its own frame — new unit
+  test, 6 mask tests total). auto_multirobot_run.sh: DISTRIBUTED=1 switches
+  to per-rover stack + a killable central bridge fed from leo1's aligner;
+  PARTITION_AT_MIN=n kills that bridge mid-run; teardown saves BOTH
+  /leo{i}/shared_map maps for the agreement check; coverage monitor follows
+  /leo1/shared_map. The merge path has NO central dependency.
 - **Viper identified:** Slurm cluster, ssh viper11 via WSL bridge
   (`wsl.exe -d Ubuntu -- bash -lc "ssh viper11 '<cmd>'"`), 8 shared APU
   (ROCm) slots, courtesy cap ~6 jobs. Recon+setup delegated to a subagent
