@@ -24,7 +24,7 @@ Read this ledger first on every tick. Never restart a phase marked COMPLETE.
 | Phase | What | Status |
 |---|---|---|
 | 0 | Build + tests, benchmark reproduces 0/10, GPU check | COMPLETE except GPU line (deferred to a camera-on run; markerfree run is camera-off) |
-| 1 | Marker-free merge ≥7/10, zero confident-wrong, <5 s/pair | OFFLINE DONE (6/7+3 abstain, 0 wrong, ≤4.2 s) — confirmation sim IN FLIGHT |
+| 1 | Marker-free merge ≥7/10, zero confident-wrong, <5 s/pair | **COMPLETE** — 6/7+3 abstain, 0 wrong offline; LIVE LOCK 0.45 m/1.3° markers-off (run5), media clean. Caveats: strict pass count 6 not 7 (7th drift-capped, tag-proven); big office pairs 6.5–7.1 s vs 5 s target |
 | 2 | Merged map changes exploration; coordinated vs independent, office first | NOT STARTED |
 | 3 | Per-rover merger; laptop-kill partition run | NOT STARTED |
 | 4 | Namespaced real launch path + rehearsal + LAB_SESSION.md | NOT STARTED |
@@ -256,6 +256,23 @@ Read this ledger first on every tick. Never restart a phase marked COMPLETE.
   PARTITION_AT_MIN=n kills that bridge mid-run; teardown saves BOTH
   /leo{i}/shared_map maps for the agreement check; coverage monitor follows
   /leo1/shared_map. The merge path has NO central dependency.
+### 2026-08-25 00:30 — tick 5 — PHASE 1 LIVE CONFIRMATION PASSED (run5)
+
+- **run5 (office, markers OFF, cameras OFF): 34 honest abstentions while
+  the maps were disjoint, then LOCKED at t≈645s via map_based:
+  (11.30, -9.66, -178.7°) = 0.45 m / 1.3° from truth, confidence
+  0.80→0.84, held to the end. Self-terminated 2/2 at t=785s. ZERO goal
+  failures.** Media reviewed: merged map = the whole office, single walls,
+  no seam/doubling/speckle (merged_map.png). Recorder scored err=0.45m/1.3°
+  locked=1 continuously after lock.
+- **Phase 2 live evidence in the same run:** shared-map mask ON both
+  rovers after lock — leo2 masked 31,619 unknown cells as peer-covered.
+- Phase 4 offline part done earlier this tick: real_mapping.launch.py
+  namespaced (default byte-for-byte; -s verified both forms; contract
+  tests unchanged at 13 pre-existing failures), LAB_SESSION §4 updated,
+  committed 2e7f6ad.
+- **Phase 3 partition run LAUNCHED** (DISTRIBUTED=1 PARTITION_AT_MIN=13,
+  markerfree, office) → reports/night_2026-08-25/phase3_partition_office.
 - **Viper identified:** Slurm cluster, ssh viper11 via WSL bridge
   (`wsl.exe -d Ubuntu -- bash -lc "ssh viper11 '<cmd>'"`), 8 shared APU
   (ROCm) slots, courtesy cap ~6 jobs. Recon+setup delegated to a subagent

@@ -91,7 +91,15 @@ nodes launched, cameras off) and `alignment_mode:=markerfree`.
   never subscribed the accepted transform in markerfree mode — it could
   lock and still never merge; (3) forward-only scoring (fixed by the
   bidirectional/triage architecture above).
-- Run 5 (full chain): (RESULT PENDING)
+- Run 5 (full chain, `phase1_markerfree_office_run5`): **PASS.** 34 honest
+  abstentions while the maps were disjoint (best hit 0.36–0.76, always
+  under the floor), then **lock at t≈645 s: (11.30, −9.66, −178.7°) =
+  0.45 m / 1.3° from ground truth, confidence 0.80→0.84**, held to the end
+  of the run. Both explorers self-terminated (t=785 s), zero failed goals.
+  Media: the merged map is the complete office with single walls — no seam,
+  no doubling, no speckle (`merged_map.png`). In the same run the Phase 2
+  mask activated after the lock: leo2 suppressed 31,619 unknown cells as
+  peer-covered. n=1.
 
 ## Phase 2 — the merged map changes what the rovers do
 
