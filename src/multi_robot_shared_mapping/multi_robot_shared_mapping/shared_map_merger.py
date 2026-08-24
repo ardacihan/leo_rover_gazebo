@@ -98,7 +98,10 @@ class SharedMapMerger(Node):
         )
         self.timer = self.create_timer(1.0, self._publish_all)
 
-        if mode in ("tag", "map", "hybrid"):
+        # markerfree consumes the same accepted-transform contract as the
+        # other estimated modes; leaving it out of this tuple silently
+        # produces a merger that never merges (found live, run3 2026-08-25).
+        if mode in ("tag", "map", "hybrid", "markerfree"):
             topic = str(self.get_parameter("map_transform_topic").value)
             self.create_subscription(TransformStamped, topic, self._accepted_cb, 10)
             cand = str(self.get_parameter("candidate_transform_topic").value)
@@ -330,7 +333,7 @@ class SharedMapMerger(Node):
         output = cleaned if bool(self.get_parameter("use_cleaned_shared_map").value) else raw
         self.shared_pub.publish(output)
 
-        if self.candidate_valid and self._alignment_mode() in ("tag", "map", "hybrid"):
+        if self.candidate_valid and self._alignment_mode() in ("tag", "map", "hybrid", "markerfree"):
             cand_tf = self._transform(use_candidate=True)
             candidate_map = self._merge_maps(True, cand_tf)
             if candidate_map is not None:
