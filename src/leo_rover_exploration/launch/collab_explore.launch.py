@@ -52,6 +52,11 @@ def launch_setup(context, *args, **kwargs):
         overrides = {'coordination_mode': mode,
                      'share_claims': share_claims,
                      'common_frame': common_frame}
+        # Per-rover, because each rover's map is anchored on its own spawn, so
+        # the shared world box lands somewhere different in each frame.
+        bounds = LaunchConfiguration(f'{ns}_bounds').perform(context).strip()
+        if bounds:
+            overrides['world_bounds'] = bounds
         if item_search:
             overrides['camera_coverage_target'] = coverage_target
         nodes.append(Node(
@@ -114,6 +119,12 @@ def generate_launch_description():
             description="Frame peer poses are compared in. 'map' with "
                         "multirobot_map_merge; 'leo1/map' under tag "
                         'alignment, where no global map frame exists'),
+        # "xmin,xmax,ymin,ymax" in that rover's own map frame. Frontiers
+        # outside it are discarded: they are unreachable by construction, and
+        # chasing them wasted half of every run before this existed. Get them
+        # from src/leo_rover_gazebo/launch/spawn_poses.py <world> <robot>.
+        DeclareLaunchArgument('leo1_bounds', default_value=''),
+        DeclareLaunchArgument('leo2_bounds', default_value=''),
         DeclareLaunchArgument(
             'camera_coverage_target', default_value='0.9',
             description='Wall fraction the camera must observe (item search)'),

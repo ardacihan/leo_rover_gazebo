@@ -964,3 +964,82 @@ per-robot maps and the shared map side by side), goal selection (frontier
 candidates and the chosen goal per rover), and the rendezvous (which tags each
 rover has found and which are common). All scrubbable.
 
+
+### 2026-08-24 21:35–22:03 — phase4 office run + the offline-merge decision (next session)
+
+The office re-run (with the frontier world-bounds + growing-blacklist changes
+in the working tree) **finished on its own** — 2/2 explorers, exit 0, no
+Gazebo crash, all maps saved live. 6 tags per rover, 4 common. The *live*
+aligner locked 12.9 m wrong (again: gates + stale-estimate anchoring). The
+new `scripts/align_registries_offline.py` (ungated Kabsch + leave-one-out
+over the registries) on the same data: **0.56 m / 0.66°**, and 0.51 m / 0.8°
+with the leave-one-out-flagged tag 4 excluded — merged map passes the eye
+test (`phase4_office_fixed/offline_merged_ex4.png`), on the world that failed
+at 3.05 m / 37° in Phase 2.
+
+Benchmarked offline across all recorded runs: every EKF-era run ≤3° yaw,
+0.19–1.0 m translation; phase4 depot rescued from its bad live merge
+(0.63 → 0.24 m by excluding tag 5). Decision for the 2026-08-25 lab day is
+`TOMORROW_PLAN.md`: per-rover solo mapping on separate ROS domains, live
+projector merge via `scripts/live_merge_watch.py` (downstream-only, rsync
+pull), `align_registries_offline.py` for the final artifact, paced-offset
+`fuse_maps_offline.py` as the can't-fail fallback.
+---
+
+## Fix pass — 2026-08-24 20:00–22:05
+
+Three changes, then two runs to measure them.
+
+**Fix 1 — frontier detection is bounded.** `world_bounds` (per rover, from the
+same `spawn_poses.py` table the sim spawns from), plus a border margin and a
+minimum clearance from obstacles. Previously frontiers were generated *outside
+the building*, where a few lidar rays leak past a thin outer wall and leave
+unknown cells bordering free ones.
+
+**Fix 2 — the blacklist grows.** Banning a point with a fixed 0.6 m radius let
+an almost identical frontier reappear just outside it; repeat strikes now widen
+the banned region up to 3 m.
+
+**Fix 3 — marker orientation fusion: implemented, measured, and turned OFF.**
+Each marker's own yaw implies the rotation independently of the layout, which
+is exactly what collinear markers lack. Offline over four recorded runs it was
+strictly better or unchanged (depot 2.09 → 0.95°, office 7.08 → 5.40°, the good
+fits untouched), with RANSAC rejecting the planar-PnP flip outliers. **On the
+first fresh run it did the opposite**: the position-only yaw was exactly 180.0°
+and the orientation vote (−165.3°, 4/6 inliers) dragged it to −172.9°, a 7.1°
+error. The residual-based weight was tuned on four runs and does not
+generalise. Left in the code behind `use_tag_orientation`, defaulted **false**,
+and the reason written next to it. This is a negative result, reported as one.
+
+### Results, both runs coordinated, with the same config
+
+| | goals | wasted | explorers finished | leo1 | leo2 | merged | tag alignment |
+|---|---|---|---|---|---|---|---|
+| **office (fixed)** | 66 | **7 (11%)** | **2/2** | 179.7 m² | 213.4 m² | 187.4 m² | **0.63 m / 0.68°** |
+| office (before) | — | — | 1/2 (hit cap) | 189.2 m² | 214.4 m² | 192.6 m² | 3.05 m / 37.0° |
+| **depot (fixed)** | 42 | **2 (5%)** | **2/2** | 132.1 m² | 108.6 m² | 146.2 m² | 1.28 m / 19.2° |
+| depot (before) | 54 | **28 (52%)** | 0/2 (hit cap) | 132.7 m² | 109.7 m² | 143.5 m² | 0.31 m / 1.4° |
+
+**Exploration is fixed.** Goal waste 52% → 5%, and **all four explorers across
+the two runs terminated on their own** — before this, runs died on the cap with
+the last third of the time adding 1% of the map.
+
+**office is transformed.** 3.05 m / 37.0° → **0.63 m / 0.68°**, and the merged
+map is the office: corridor band, three north rooms, two south rooms,
+partitions where they belong, single-line walls. The previous office merge was
+two building outlines rotated 37° through each other.
+
+**depot is not, and that is the honest headline.** 1.28 m / 19.2° on this run
+against **0.19 m** on the run immediately before it — same code, same world,
+same everything. Two more samples of the variance already recorded (0.23 m and
+2.25 m earlier). The exploration fixes are real and repeatable; alignment
+quality is still a lottery, and nothing in this pass addressed that.
+
+**One more thing worth fixing next:** the tag aligner rejects any estimate whose
+mean landmark residual exceeds `max_mean_error` (0.35 m) and then **keeps
+publishing the stale one indefinitely** — on the depot run the published tag
+transform froze at t≈150 s and never updated as common landmarks went 3 → 6.
+Given measured landmark errors of 0.2–1.0 m, that gate rejects almost
+everything on a drifted map. It should either widen with the observed landmark
+uncertainty or withdraw the estimate rather than serve a stale one.
+

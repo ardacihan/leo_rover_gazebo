@@ -72,6 +72,14 @@ class FrontierExplorer(Node):
         self.declare_parameter('gain_scale', 1.0)           # size weight
         self.declare_parameter('progress_timeout', 30.0)    # seconds
         self.declare_parameter('blacklist_radius', 0.6)     # meters
+        # A banned frontier regrows. Ban a *point* with a 0.6 m radius and the
+        # next planning cycle finds an almost identical frontier just outside
+        # it, along the same unreachable wall -- on depot 2026-08-24, 11
+        # distinct frontiers produced 21 failed goals this way. Each repeat
+        # strike widens the banned region, so a wall that keeps failing is
+        # eventually excluded as an area rather than as a dot.
+        self.declare_parameter('blacklist_growth', 0.9)     # metres per strike
+        self.declare_parameter('blacklist_max_radius', 3.0)
         self.declare_parameter('blacklist_ttl', 90.0)       # seconds
         self.declare_parameter('blacklist_long_ttl', 900.0)
         self.declare_parameter('blacklist_max_strikes', 3)
@@ -82,6 +90,20 @@ class FrontierExplorer(Node):
         self.declare_parameter('planner_action_name', 'compute_path_to_pose')
         self.declare_parameter('skip_ttl', 20.0)            # no-path skip
         self.declare_parameter('claim_radius', 1.5)         # meters
+        # Frontiers outside the building are the single biggest waste in a run.
+        # A thin outer wall leaks a few lidar rays, leaving unknown cells beyond
+        # it that border free cells inside -- a textbook frontier that no path
+        # can ever reach. Measured on depot 2026-08-24: 52% of all goals failed,
+        # and 43% of leo2's failures were for frontiers at x>7 in a world that
+        # ends at x=7. "xmin,xmax,ymin,ymax" in the rover's own map frame;
+        # empty disables the check.
+        self.declare_parameter('world_bounds', '')
+        # Reject frontiers this close to the edge of the occupancy grid, where
+        # "unknown" means "the grid ran out", not "unexplored".
+        self.declare_parameter('frontier_border_margin', 3)   # cells
+        # A frontier hugging a wall is unreachable even when it is inside the
+        # world: the rover cannot put its centre within robot_radius of it.
+        self.declare_parameter('frontier_min_clearance', 0.30)  # metres
         # --- multi-robot coordination ---
         # 'coordinated' = distributed greedy allocation w/ proximity discount;
         # 'independent' = uncoordinated baseline (ignore peers).
@@ -145,6 +167,8 @@ class FrontierExplorer(Node):
         self.gain_scale = gp('gain_scale')
         self.progress_timeout = gp('progress_timeout')
         self.blacklist_radius = gp('blacklist_radius')
+        self.blacklist_growth = gp('blacklist_growth')
+        self.blacklist_max_radius = gp('blacklist_max_radius')
         self.blacklist_ttl = gp('blacklist_ttl')
         self.blacklist_long_ttl = gp('blacklist_long_ttl')
         self.blacklist_max_strikes = gp('blacklist_max_strikes')
@@ -154,6 +178,17 @@ class FrontierExplorer(Node):
         self.validate_goals = gp('validate_goals')
         self.skip_ttl = gp('skip_ttl')
         self.claim_radius = gp('claim_radius')
+        bounds_raw = str(gp('world_bounds') or '').strip()
+        self.world_bounds = None
+        if bounds_raw:
+            try:
+                vals = [float(v) for v in bounds_raw.replace(',', ' ').split()]
+                if len(vals) == 4:
+                    self.world_bounds = tuple(vals)
+            except ValueError:
+                pass
+        self.frontier_border_margin = int(gp('frontier_border_margin'))
+        self.frontier_min_clearance = float(gp('frontier_min_clearance'))
         self.coordination_mode = gp('coordination_mode')
         self.peer_names = [p for p in gp('peer_names').split(',') if p]
         self.common_frame = gp('common_frame')
@@ -549,6 +584,38 @@ class FrontierExplorer(Node):
         near_unknown[:, :-1] |= unknown[:, 1:]
         frontier = free & near_unknown
 
+        # Drop frontier cells at the very edge of the grid: there "unknown"
+        # means the array ran out, not that there is anything to go and see.
+        m = self.frontier_border_margin
+        if m > 0 and frontier.shape[0] > 2 * m and frontier.shape[1] > 2 * m:
+            edge = np.ones_like(frontier)
+            edge[m:-m, m:-m] = False
+            frontier &= ~edge
+
+        # Drop frontier cells that hug an obstacle. The rover's centre can
+        # never get within robot_radius of a wall, so a frontier pressed
+        # against one is unreachable however valid it looks on the grid.
+        clear_cells = int(round(self.frontier_min_clearance / info.resolution))
+        if clear_cells > 0:
+            occupied = grid >= FREE_MAX
+            near_occ = occupied.copy()
+            for _ in range(clear_cells):
+                grown = near_occ.copy()
+                grown[1:, :] |= near_occ[:-1, :]
+                grown[:-1, :] |= near_occ[1:, :]
+                grown[:, 1:] |= near_occ[:, :-1]
+                grown[:, :-1] |= near_occ[:, 1:]
+                near_occ = grown
+            frontier &= ~near_occ
+
+        # And drop anything outside the world we were told about.
+        if self.world_bounds is not None:
+            xmin, xmax, ymin, ymax = self.world_bounds
+            rows, cols = np.indices(frontier.shape)
+            wx = info.origin.position.x + (cols + 0.5) * info.resolution
+            wy = info.origin.position.y + (rows + 0.5) * info.resolution
+            frontier &= (wx >= xmin) & (wx <= xmax) & (wy >= ymin) & (wy <= ymax)
+
         cells = np.argwhere(frontier)
         if cells.size == 0:
             return []
@@ -620,11 +687,16 @@ class FrontierExplorer(Node):
         self.skip_list = [s for s in self.skip_list
                           if s['expires'] + 600.0 > now]
 
+    def _entry_radius(self, e):
+        """Banned radius for one entry: grows with repeat strikes."""
+        extra = self.blacklist_growth * max(0, int(e.get('strikes', 1)) - 1)
+        return min(self.blacklist_radius + extra, self.blacklist_max_radius)
+
     def _is_blocked(self, xy, entries):
         now = self._now_sec()
         return any(e.get('expires', 0) > now
                    and math.hypot(xy[0] - e['pos'][0], xy[1] - e['pos'][1])
-                   < self.blacklist_radius for e in entries)
+                   < self._entry_radius(e) for e in entries)
 
     def _add_blacklist(self, xy, strikes=1):
         now = self._now_sec()

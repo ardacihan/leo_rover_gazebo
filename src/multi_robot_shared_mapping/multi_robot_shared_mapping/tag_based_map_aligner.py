@@ -72,6 +72,19 @@ class TagBasedMapAligner(Node):
         self.declare_parameter("ground_truth_yaw", 0.0)
         self.declare_parameter("compare_to_ground_truth", False)
         self.declare_parameter("min_tags", 2)
+        # Fuse each marker's own orientation into the rotation estimate.
+        #
+        # OFF by default, on measurement rather than principle. Over four
+        # recorded runs it helped where the markers were nearly collinear
+        # (2.09 -> 0.95 deg on depot, 7.08 -> 5.40 deg on office) and left good
+        # fits alone. On the first fresh run afterwards it did the opposite:
+        # the position-only yaw was exactly 180.0 deg and the orientation vote
+        # (-165.3 deg, 4/6 inliers) dragged it to -172.9 deg -- turning a
+        # perfect answer into a 7.1 deg error. The residual-based weighting was
+        # tuned on those four runs and does not generalise, so the honest
+        # default is off. Left in place, and worth revisiting with a proper
+        # per-marker uncertainty rather than a hand-fitted weight.
+        self.declare_parameter("use_tag_orientation", False)
         self.declare_parameter("max_mean_error", 0.35)
 
         # Robustness gating: tags are only an initial guess, so bad estimates
@@ -357,12 +370,19 @@ class TagBasedMapAligner(Node):
                 message="Single-tag weak relocalization hint",
             )
         else:
+            # Pass the landmark orientations as well as the positions. Each
+            # marker's own yaw implies the map-to-map rotation independently of
+            # where the markers sit, which is the only thing that helps when
+            # they happen to fall in a line.
             estimate = estimate_2d_transform(
                 [(map2.landmarks[tid].x, map2.landmarks[tid].y) for tid in common_ids],
                 [(map1.landmarks[tid].x, map1.landmarks[tid].y) for tid in common_ids],
                 min_tags=min_tags,
                 max_mean_error=float(self.get_parameter("max_mean_error").value),
                 ground_truth=ground_truth,
+                source_yaws=[map2.landmarks[tid].yaw for tid in common_ids],
+                target_yaws=[map1.landmarks[tid].yaw for tid in common_ids],
+                use_orientation=bool(self.get_parameter("use_tag_orientation").value),
             )
 
         mean_residual, max_residual = self._residuals(common_ids, estimate)

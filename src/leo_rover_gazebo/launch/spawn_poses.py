@@ -68,9 +68,52 @@ def relative_offset(world_name):
     return (dx * c - dy * s, dx * s + dy * c, yaw)
 
 
+# Outer extent of each world, in world coordinates. Frontier detection needs
+# this: a thin outer wall leaks a few lidar rays, leaving unknown cells beyond
+# it that border free cells inside, and that is a perfectly valid frontier
+# which no path can ever reach. On depot 2026-08-24, 43% of one rover's failed
+# goals were for frontiers at x>7 in a world that ends at x=7.
+WORLD_BOUNDS = {
+    'depot_world': (-7.0, 7.0, -7.0, 7.0),
+    'office_world': (-12.0, 12.0, -8.0, 8.0),
+    'husarion_office': (-4.0, 27.0, -15.0, 4.0),
+}
+
+
+def bounds_in_robot_frame(world_name, robot):
+    """World extent expressed in one rover's own map frame.
+
+    Each rover's map is anchored on its own start pose, so the shared world
+    box has to be rotated into that frame. The axis-aligned box of the rotated
+    corners is used, which is exact for the 0 and 180 degree spawns in use and
+    conservative (slightly too generous) for anything else -- erring towards
+    letting a real frontier through rather than discarding one.
+    """
+    box = WORLD_BOUNDS.get(world_name)
+    poses = SPAWN_POSES.get(world_name)
+    if not box or not poses or robot not in poses:
+        return None
+    sx, sy, _, _, _, syaw = (float(v) for v in poses[robot])
+    c, s = math.cos(-syaw), math.sin(-syaw)
+    xs, ys = [], []
+    for wx in (box[0], box[1]):
+        for wy in (box[2], box[3]):
+            dx, dy = wx - sx, wy - sy
+            xs.append(c * dx - s * dy)
+            ys.append(s * dx + c * dy)
+    return (min(xs), max(xs), min(ys), max(ys))
+
+
 if __name__ == '__main__':
     # `spawn_poses.py <world>` prints "x y yaw" for the run harness to read.
     world = sys.argv[1] if len(sys.argv) > 1 else 'husarion_office'
+    if len(sys.argv) > 2 and sys.argv[2] in ('leo1', 'leo2'):
+        b = bounds_in_robot_frame(world, sys.argv[2])
+        if b is None:
+            sys.stderr.write('no bounds for ' + world + '/' + sys.argv[2] + chr(10))
+            sys.exit(1)
+        print(f'{b[0]:.3f},{b[1]:.3f},{b[2]:.3f},{b[3]:.3f}')
+        sys.exit(0)
     offset = relative_offset(world)
     if offset is None:
         sys.stderr.write(f'no authored spawn poses for world {world!r}\n')

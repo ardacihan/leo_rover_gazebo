@@ -458,6 +458,30 @@ RUNS = [
               'the lab card happening in front of you.',
          stats=[('leo1 mapped', '132.7 m2'), ('leo2 mapped', '109.7 m2'),
                 ('common tags', '4'), ('alignment', '0.31 m / 1.4 deg')]),
+    dict(key='p4office', dir='phase4_office_fixed', world='office_world',
+         label='office - after the fixes', phase='After fixes', verdict='pass',
+         showcase=True,
+         truth=(11.0, -10.0, 180.0), spawn1=(-7, 5, 0),
+         headline='0.63 m / 0.68 deg, where the same world used to give 37 deg',
+         note='Same world, same seed count, with frontier bounds and the '
+              'growing blacklist in place. Both explorers finished on their '
+              'own for the first time on office. The merged map is the office '
+              '- corridor, three north rooms, two south rooms, partitions '
+              'where they belong - against a previous run that produced two '
+              'building outlines rotated 37 degrees through each other.',
+         stats=[('leo1 mapped', '179.7 m2'), ('leo2 mapped', '213.4 m2'),
+                ('goals wasted', '7 of 66'), ('alignment', '0.63 m / 0.68 deg')]),
+    dict(key='p4depot', dir='phase4_depot_fixed', world='depot_world',
+         label='depot - after the fixes', phase='After fixes', verdict='fail',
+         truth=(3.0, -9.0, 180.0), spawn1=(0, 4.5, 0),
+         headline='exploration fixed, alignment still a lottery',
+         note='Goal waste fell from 52% to 5% and both explorers finished, but '
+              'the published transform came out 1.28 m and 19 deg off - where '
+              'the run immediately before it, same code, same world, reached '
+              '0.19 m. The exploration fixes hold; alignment variance does not '
+              'care about them.',
+         stats=[('leo1 mapped', '132.1 m2'), ('leo2 mapped', '108.6 m2'),
+                ('goals wasted', '2 of 42'), ('alignment', '1.28 m / 19.2 deg')]),
     dict(key='p2indep', dir='phase2_depot_independent', world='depot_world',
          label='depot · independent', phase='Phase 2', verdict='pass',
          truth=(3.0, -9.0, 180.0), spawn1=(0, 4.5, 0),
@@ -547,7 +571,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('root')
     ap.add_argument('-o', '--out', required=True)
-    ap.add_argument('--timelapse-dir', default='phase2_depot_showcase')
+    ap.add_argument('--timelapse-dir', default='phase4_office_fixed')
     args = ap.parse_args()
 
     data = build_data(args.root, args.timelapse_dir)

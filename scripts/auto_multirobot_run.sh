@@ -296,9 +296,15 @@ done
 EXPLORE_MODE="$MODE"; [[ "$MODE" == "single" ]] && EXPLORE_MODE="independent"
 LOG "launching explorers (mode=$EXPLORE_MODE, common_frame=leo1/map)"
 CMD "explore: ros2 launch leo_rover_exploration collab_explore.launch.py num_robots:=$NUM_ROBOTS coordination_mode:=$EXPLORE_MODE common_frame:=leo1/map"
+# Per-rover world extent, so frontier detection stops chasing cells outside
+# the building. Same source as the spawn poses, so they cannot drift apart.
+L1B="$("$PYBIN" "$ROOT/src/leo_rover_gazebo/launch/spawn_poses.py" "$WORLD" leo1 2>/dev/null || true)"
+L2B="$("$PYBIN" "$ROOT/src/leo_rover_gazebo/launch/spawn_poses.py" "$WORLD" leo2 2>/dev/null || true)"
+LOG "  frontier bounds: leo1 [$L1B] leo2 [$L2B]"
 in_sim_bg "exec ros2 launch leo_rover_exploration collab_explore.launch.py \
   num_robots:=$NUM_ROBOTS coordination_mode:=$EXPLORE_MODE \
-  common_frame:=leo1/map > /ros2_ws/$OUT/explorer.log 2>&1"
+  common_frame:=leo1/map leo1_bounds:=$L1B leo2_bounds:=$L2B \
+  > /ros2_ws/$OUT/explorer.log 2>&1"
 
 # ---------- 11. wait ----------
 LOG "polling for completion (cap ${CAP_MIN} min)"

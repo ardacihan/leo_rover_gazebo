@@ -44,6 +44,60 @@ def _as_array(points: Sequence[Point2D]) -> np.ndarray:
     return arr
 
 
+
+# Residual below which the position fit is trusted outright, and above which
+# the marker orientations carry their maximum share. Both in metres, chosen
+# from the four 2026-08-24 runs: residual 0.11-0.22 m went with sub-degree
+# position errors, 1.05 m went with a 7 deg one.
+_ORI_RESID_LO = 0.25
+_ORI_RESID_HI = 1.00
+_ORI_MAX_WEIGHT = 0.70
+
+
+def _circular_mean(angles):
+    """Mean of angles, done on the circle so 179 and -179 average to 180."""
+    if not len(angles):
+        return 0.0
+    s = sum(math.sin(a) for a in angles)
+    c = sum(math.cos(a) for a in angles)
+    return math.atan2(s, c)
+
+
+def yaw_from_orientations(source_yaws, target_yaws, inlier_tol_rad=0.35):
+    """Rotation implied by each marker's own orientation, outliers rejected.
+
+    Every matched marker is the same physical plate, so target_yaw - source_yaw
+    is the map-to-map rotation, once per marker and independent of where the
+    markers sit. Returns (yaw, sigma, n_inliers, n_total) or None.
+
+    The consensus step matters: a single marker whose pose flipped to the wrong
+    branch of the planar-PnP ambiguity is 100+ degrees out and would drag a
+    plain average with it.
+    """
+    if source_yaws is None or target_yaws is None:
+        return None
+    if len(source_yaws) != len(target_yaws) or not len(source_yaws):
+        return None
+    diffs = [_normalize_angle(t - s) for s, t in zip(source_yaws, target_yaws)]
+
+    best = None
+    for candidate in diffs:
+        inliers = [d for d in diffs
+                   if abs(_normalize_angle(d - candidate)) <= inlier_tol_rad]
+        if best is None or len(inliers) > len(best):
+            best = inliers
+    if not best:
+        return None
+
+    yaw = _circular_mean(best)
+    if len(best) > 1:
+        var = sum(_normalize_angle(d - yaw) ** 2 for d in best) / (len(best) - 1)
+        sigma = math.sqrt(var / len(best))
+    else:
+        # One marker agreeing with nothing is a weak vote, not a measurement.
+        sigma = inlier_tol_rad
+    return yaw, max(sigma, 0.01), len(best), len(diffs)
+
 def estimate_2d_transform(
     source_points: Sequence[Point2D],
     target_points: Sequence[Point2D],
@@ -52,6 +106,9 @@ def estimate_2d_transform(
     max_mean_error: float = 0.35,
     max_point_error: float = 0.50,
     ground_truth: Optional[Tuple[float, float, float]] = None,
+    source_yaws: Optional[Sequence[float]] = None,
+    target_yaws: Optional[Sequence[float]] = None,
+    use_orientation: bool = True,
 ) -> TransformEstimate:
     """
     Estimate planar transform mapping source_points -> target_points.
@@ -101,6 +158,46 @@ def estimate_2d_transform(
 
     yaw = math.atan2(r[1, 0], r[0, 0])
     t = tgt_centroid - r @ src_centroid
+
+    # --- fuse in the rotation the marker orientations imply -----------------
+    # How much to trust the angle the positions imply is decided by the fit
+    # RESIDUAL, not by any analytic sigma. Measured over four runs, the
+    # first-order sigma is simply not calibrated -- office had a small sigma
+    # and a 7.1 deg error, husarion a larger sigma and a 0.09 deg error --
+    # because a warped map partly absorbs into the rigid fit. The residual
+    # does track it: when the two landmark sets genuinely disagree about the
+    # shape they form, the rotation they imply is not worth much, and the
+    # per-marker orientations (which do not care about layout at all) are.
+    yaw_note = ""
+    if use_orientation:
+        ori = yaw_from_orientations(source_yaws, target_yaws)
+        resid = np.linalg.norm(((r @ src.T).T + t) - tgt, axis=1)
+        resid_mean = float(resid.mean())
+        if ori is not None:
+            yaw_ori, sigma_ori, n_in, n_tot = ori
+            enough = n_in >= 2 and n_in >= 0.5 * n_tot
+            w = (resid_mean - _ORI_RESID_LO) / (_ORI_RESID_HI - _ORI_RESID_LO)
+            w = max(0.0, min(w, _ORI_MAX_WEIGHT)) if enough else 0.0
+            if w > 0.0:
+                delta = _normalize_angle(yaw_ori - yaw)
+                fused = _normalize_angle(yaw + delta * w)
+                yaw_note = (
+                    f"; yaw pos={math.degrees(yaw):.1f} "
+                    f"ori={math.degrees(yaw_ori):.1f} "
+                    f"({n_in}/{n_tot} inliers) residual={resid_mean:.2f} m "
+                    f"-> weight {w:.2f} -> {math.degrees(fused):.1f} deg"
+                )
+                yaw = fused
+                # Re-derive the translation for the rotation actually chosen.
+                c, s = math.cos(yaw), math.sin(yaw)
+                r = np.array([[c, -s], [s, c]])
+                t = tgt_centroid - r @ src_centroid
+            else:
+                yaw_note = (
+                    f"; positions agree (residual={resid_mean:.2f} m), "
+                    f"orientation not needed"
+                )
+
     dx = float(t[0])
     dy = float(t[1])
 
@@ -133,7 +230,7 @@ def estimate_2d_transform(
             yaw_error=yaw_error,
             message=(
                 f"Rejected transform: mean error={mean_error:.3f} m, "
-                f"max error={max_error:.3f} m"
+                f"max error={max_error:.3f} m{yaw_note}"
             ),
         )
 

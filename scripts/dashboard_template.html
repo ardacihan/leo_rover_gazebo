@@ -241,7 +241,7 @@ footer{border-top:1px solid var(--line);padding:26px 0 44px;color:var(--faint);f
     <div class="sec-head">
       <div class="eyebrow">Section 02 · the films</div>
       <h2>Watch it happen</h2>
-      <p>Three recordings of the same depot run, each answering a different question.
+      <p>Three recordings of the same office run - the one after the fixes - each answering a different question.
         Maps were captured every 4 s of simulated time and the rovers are drawn from their
         2 s position logs, so you are watching them drive rather than teleport.</p>
       <div class="filmbar" id="filmbar" role="tablist" aria-label="Films"></div>
@@ -360,11 +360,11 @@ const DATA = /*__DATA__*/null;
 
 /* ---------- summary tiles ---------- */
 const TILES = [
-  {k:'0.12 m', l:'best offset recovered from markers alone (husarion, run 4)', c:'good'},
-  {k:'3 of 5', l:'merges that survived looking at them closely', c:''},
-  {k:'0.23 – 2.25 m', l:'same world, same code, two runs — how much it varies', c:'bad'},
-  {k:'1.015×', l:'coordinated vs working alone: a tie at n=1', c:''},
-  {k:'~3 m',   l:'map drift after 19 m of driving — what actually limits this', c:'bad'},
+  {k:'52% -> 5%', l:'exploration goals that ended in failure, before and after', c:'good'},
+  {k:'0.63 m', l:'office alignment after the fixes (it was 3.05 m)', c:'good'},
+  {k:'0.68°', l:'office rotation error (it was 37°)', c:'good'},
+  {k:'4 of 4', l:'explorers that finished on their own, across both fixed runs', c:'good'},
+  {k:'0.19 - 1.28 m', l:'two identical depot runs: alignment is still a lottery', c:'bad'},
 ];
 document.getElementById('tiles').innerHTML = TILES.map(t =>
   `<div class="tile ${t.c}"><div class="k">${t.k}</div><div class="l">${t.l}</div></div>`).join('');
