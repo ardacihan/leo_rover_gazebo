@@ -35,6 +35,15 @@ the topic.
 Save the map when done:
 
     ros2 run nav2_map_server map_saver_cli -f ~/office_map
+
+Two-rover use (night 2026-08-25): pass `robot_ns:=rob_a`. Every topic in the
+chain and every frame gains the prefix (`/rob_a/scan` -> ... ->
+`/rob_a/cmd_vel`, frames `rob_a/map`, `rob_a/odom`, `rob_a/base_footprint`),
+slam_toolbox keeps its load-bearing absolute-`/map` remap (now to
+`/rob_a/map`), and `/tf`, `/tf_static` stay global. **The default (empty)
+leaves single-rover behaviour byte-for-byte what the 2026-08-20 field runs
+used** -- the node list below is only assembled differently when the argument
+is non-empty.
 """
 
 import os
@@ -42,16 +51,33 @@ import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import (DeclareLaunchArgument, IncludeLaunchDescription,
-                            SetEnvironmentVariable)
+                            OpaqueFunction, SetEnvironmentVariable)
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
+# tf2 subscribes to *relative* tf topics, so a namespaced node silently reads
+# /rob_a/tf and loses map->base unless the topics are pinned back to global.
+TF_GLOBAL = [('tf', '/tf'), ('tf_static', '/tf_static'),
+             ('/tf', '/tf'), ('/tf_static', '/tf_static')]
 
-def generate_launch_description():
+
+def _launch_setup(context):
     share = get_package_share_directory('leo_nav2_exploration')
     cfg = os.path.join(share, 'config', 'real')
+
+    ns = LaunchConfiguration('robot_ns').perform(context).strip('/')
+    p = f'/{ns}' if ns else ''          # topic prefix
+    fp = f'{ns}/' if ns else ''         # frame prefix
+    nskw = {'namespace': ns} if ns else {}
+    tf = TF_GLOBAL if ns else []
+
+    scan_topic = LaunchConfiguration('scan_topic').perform(context)
+    if ns and scan_topic == '/scan':
+        # Untouched default under a namespace: the rover's drivers publish
+        # under the same prefix.
+        scan_topic = f'{p}/scan'
 
     common = {'output': 'screen', 'respawn': False}
 
@@ -60,18 +86,31 @@ def generate_launch_description():
         executable='scan_to_scan_filter_chain',
         name='scan_to_scan_filter_chain',
         parameters=[os.path.join(cfg, 'scan_filter.yaml')],
-        remappings=[('scan', LaunchConfiguration('scan_topic')),
-                    ('scan_filtered', '/scan_filtered')],
-        **common,
+        remappings=[('scan', scan_topic),
+                    ('scan_filtered', f'{p}/scan_filtered')] + tf,
+        **nskw, **common,
     )
 
+    slam_params = [os.path.join(cfg, 'slam.yaml')]
+    if ns:
+        slam_params.append({
+            'odom_frame': f'{fp}odom',
+            'map_frame': f'{fp}map',
+            'base_frame': f'{fp}base_footprint',
+            'scan_topic': f'{p}/scan_uniform',
+        })
     slam = Node(
         package='slam_toolbox',
         executable='async_slam_toolbox_node',
         name='slam_toolbox',
-        parameters=[os.path.join(cfg, 'slam.yaml')],
+        parameters=slam_params,
+        # The load-bearing remap: slam_toolbox publishes an ABSOLUTE /map,
+        # so two rovers on one domain clobber each other without it. Same
+        # pattern as slam_multi.launch.py in sim.
+        remappings=([('/map', f'{p}/map'),
+                     ('/map_metadata', f'{p}/map_metadata')] + tf) if ns else [],
         condition=IfCondition(LaunchConfiguration('start_slam')),
-        **common,
+        **nskw, **common,
     )
 
     # The smoother is worth keeping even under teleop: it bounds acceleration,
@@ -82,32 +121,52 @@ def generate_launch_description():
         executable='velocity_smoother',
         name='velocity_smoother',
         parameters=[os.path.join(cfg, 'nav2.yaml')],
-        remappings=[('cmd_vel', '/cmd_vel_nav'),
-                    ('cmd_vel_smoothed', '/cmd_vel_smoothed')],
-        **common,
+        remappings=[('cmd_vel', f'{p}/cmd_vel_nav'),
+                    ('cmd_vel_smoothed', f'{p}/cmd_vel_smoothed')] + tf,
+        **nskw, **common,
     )
 
+    guard_params = [os.path.join(cfg, 'velocity_guard.yaml')]
+    if ns:
+        guard_params.append({
+            'input_topic': f'{p}/cmd_vel_smoothed',
+            'output_topic': f'{p}/cmd_vel_guarded',
+            'scan_topic': f'{p}/scan_filtered',
+            'odom_topic': f'{p}/wheel_odom',
+            'battery_topic': f'{p}/battery_state',
+        })
     guard = Node(
         package='leo_nav2_exploration',
         executable='velocity_guard',
         name='velocity_guard',
-        parameters=[os.path.join(cfg, 'velocity_guard.yaml')],
-        **common,
+        parameters=guard_params,
+        remappings=tf,
+        **nskw, **common,
     )
 
+    cm_params = [
+        os.path.join(cfg, 'collision_monitor.yaml'),
+        # FootprintApproach subscribes to /local_costmap/published_footprint,
+        # which only Nav2's local costmap publishes. With no Nav2 running it
+        # would sit permanently unarmed while looking configured, so it is
+        # dropped here and the fixed StopZone and SlowdownZone do the work.
+        {'polygons': ['StopZone', 'SlowdownZone']},
+    ]
+    if ns:
+        cm_params.append({
+            'base_frame_id': f'{fp}base_footprint',
+            'odom_frame_id': f'{fp}odom',
+            'cmd_vel_in_topic': f'{p}/cmd_vel_guarded',
+            'cmd_vel_out_topic': f'{p}/cmd_vel',
+            'scan': {'topic': f'{p}/scan_filtered'},
+        })
     collision_monitor = Node(
         package='nav2_collision_monitor',
         executable='collision_monitor',
         name='collision_monitor',
-        parameters=[
-            os.path.join(cfg, 'collision_monitor.yaml'),
-            # FootprintApproach subscribes to /local_costmap/published_footprint,
-            # which only Nav2's local costmap publishes. With no Nav2 running it
-            # would sit permanently unarmed while looking configured, so it is
-            # dropped here and the fixed StopZone and SlowdownZone do the work.
-            {'polygons': ['StopZone', 'SlowdownZone']},
-        ],
-        **common,
+        parameters=cm_params,
+        remappings=tf,
+        **nskw, **common,
     )
 
     lifecycle = Node(
@@ -123,28 +182,50 @@ def generate_launch_description():
                     # the rover simply never moves and no node reports an error.
                     {'node_names': ['collision_monitor', 'velocity_smoother']}],
         output='screen',
+        **nskw,
     )
 
+    use_ekf = LaunchConfiguration('use_ekf').perform(context).lower() == 'true'
+    if ns and use_ekf:
+        # odometry_fusion.launch.py is not namespaced; under a robot_ns the
+        # EKF belongs to the rover's own bringup (real_bringup.launch.py
+        # robot_ns:=...). Failing loudly beats two EKFs fighting over
+        # odom -> base_footprint.
+        raise RuntimeError(
+            'use_ekf:=true is not supported together with robot_ns; '
+            'run the EKF from leo_rover_real_bringup instead')
     odometry_fusion = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(share, 'launch', 'odometry_fusion.launch.py')),
         condition=IfCondition(LaunchConfiguration('use_ekf')),
     )
 
+    aruco_args = {
+        'profile': 'real',
+        'use_sim_time': 'false',
+        'marker_length': LaunchConfiguration('marker_length'),
+        'allowed_ids': LaunchConfiguration('allowed_ids'),
+        'dictionary': LaunchConfiguration('dictionary'),
+    }
+    if ns:
+        aruco_args['robot_ns'] = ns
+        aruco_args['detection_topic'] = f'{p}/tag_detections'
     aruco = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(share, 'launch', 'aruco.launch.py')),
-        launch_arguments={
-            'profile': 'real',
-            'use_sim_time': 'false',
-            'marker_length': LaunchConfiguration('marker_length'),
-            'allowed_ids': LaunchConfiguration('allowed_ids'),
-            'dictionary': LaunchConfiguration('dictionary'),
-        }.items(),
+        launch_arguments=aruco_args.items(),
         condition=IfCondition(LaunchConfiguration('use_aruco')),
     )
 
+    return [scan_filter, slam, smoother, guard, collision_monitor,
+            lifecycle, odometry_fusion, aruco]
+
+
+def generate_launch_description():
     return LaunchDescription([
         SetEnvironmentVariable('RCUTILS_LOGGING_BUFFERED_STREAM', '1'),
+        # Namespace of the rover this stack drives (rob_a / rob_b). Default
+        # empty = the exact single-rover field configuration of 2026-08-20.
+        DeclareLaunchArgument('robot_ns', default_value=''),
         DeclareLaunchArgument('scan_topic', default_value='/scan'),
         DeclareLaunchArgument('start_slam', default_value='true'),
         # Off by default: the EKF takes ownership of odom -> base_footprint and
@@ -158,12 +239,5 @@ def generate_launch_description():
         # Comma-separated ids you physically placed; anything else is rejected.
         DeclareLaunchArgument('allowed_ids', default_value='1,2,3,4,5,6,7,8'),
         DeclareLaunchArgument('dictionary', default_value='DICT_4X4_50'),
-        scan_filter,
-        slam,
-        smoother,
-        guard,
-        collision_monitor,
-        lifecycle,
-        odometry_fusion,
-        aruco,
+        OpaqueFunction(function=_launch_setup),
     ])

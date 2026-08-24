@@ -181,21 +181,25 @@ transform, not the frontier allocation.
 | `navigation_overlay.launch.py` | **done** | plus `cloud_input_topic`; the hardcoded `/rob_4` depth cloud is now derived from `robot_ns` |
 | `real_navigation.launch.py` | **done** | threads `robot_ns` and `cloud_input_topic` into the overlay |
 | `real_exploration.launch.py` | **done** | namespaces `explore_node` and prefixes `robot_base_frame`; `costmap_topic: map` is relative so the namespace moves it for free |
-| `real_mapping.launch.py` | **NOT done** | the delicate one — see below |
+| `real_mapping.launch.py` | **done (2026-08-25 night)** | default `robot_ns` empty = byte-for-byte the 2026-08-20 field configuration; see below |
 
 Defaults are unchanged, so single-rover behaviour is byte-for-byte what the
-2026-08-20 field runs used. All three were verified to load with
-`ros2 launch ... -s`; **none has been run on hardware.**
+2026-08-20 field runs used. All four were verified to load with
+`ros2 launch ... -s` (real_mapping in both the default and `robot_ns:=rob_a`
+forms); **none has been run on hardware.**
 
-`real_mapping.launch.py` was left alone deliberately. It owns slam_toolbox —
-whose absolute `/map` publication needs the same load-bearing per-robot remap
-that `slam_multi.launch.py` carries in sim — plus the velocity guard and
-collision monitor, which are the field-validated safety path. Namespacing it
-without hardware to test against risks the one part of this tree that is known
-to work. It is the first task of the next session, and it needs: per-node
-`namespace=`, `('/map', '/{ns}/map')` and `('/map_metadata', ...)` remaps on
-slam_toolbox, prefixed `odom_frame`/`base_frame`/`map_frame`, and `/tf`,
-`/tf_static` kept global.
+`real_mapping.launch.py` namespacing (done overnight 2026-08-25, in sim only):
+per-node `namespace=`, the load-bearing `('/map', '/{ns}/map')` and
+`('/map_metadata', ...)` remaps on slam_toolbox, prefixed
+`odom_frame`/`base_frame`/`map_frame`, the full cmd_vel chain
+(`/{ns}/cmd_vel_nav → … → /{ns}/cmd_vel`) and scan chain
+(`/{ns}/scan → /{ns}/scan_filtered`, slam on `/{ns}/scan_uniform`)
+prefixed, `/tf`, `/tf_static` kept global on every node. Two guards worth
+knowing: `use_ekf:=true` together with `robot_ns` refuses to launch (the EKF
+belongs to `real_bringup.launch.py` in multi-rover mode — two EKFs fighting
+over `odom -> base_footprint` is worse than an error), and the velocity
+guard's `odom_topic` becomes `/{ns}/wheel_odom` — confirm the rover's driver
+publishes there or the guard will hold the rover still.
 
 Also flag: `real_mapping.launch.py` defaults `marker_length` to **0.15**. Use
 the card's number.
