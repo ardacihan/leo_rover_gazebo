@@ -72,6 +72,11 @@ def _launch_setup(context):
     fp = f'{ns}/' if ns else ''         # frame prefix
     nskw = {'namespace': ns} if ns else {}
     tf = TF_GLOBAL if ns else []
+    # Sim rehearsal only. The real configs pin use_sim_time false; under the
+    # sim clock every stamp would be wrong without this override.
+    sim_time = LaunchConfiguration(
+        'use_sim_time').perform(context).lower() == 'true'
+    st = [{'use_sim_time': True}] if sim_time else []
 
     scan_topic = LaunchConfiguration('scan_topic').perform(context)
     if ns and scan_topic == '/scan':
@@ -85,11 +90,25 @@ def _launch_setup(context):
         package='laser_filters',
         executable='scan_to_scan_filter_chain',
         name='scan_to_scan_filter_chain',
-        parameters=[os.path.join(cfg, 'scan_filter.yaml')],
+        parameters=[os.path.join(cfg, 'scan_filter.yaml')] + st,
         remappings=[('scan', scan_topic),
                     ('scan_filtered', f'{p}/scan_filtered')] + tf,
         **nskw, **common,
     )
+
+    # slam.yaml consumes /scan_uniform, which the navigation overlay's
+    # scan_normalizer produces in the single-rover stack. Under a robot_ns
+    # this launch must be self-contained, so the normalizer comes up here
+    # (namespaced mode only -- the default node list is untouched).
+    normalizer = Node(
+        package='leo_nav2_exploration',
+        executable='scan_normalizer',
+        name='scan_normalizer',
+        parameters=[{'input_topic': f'{p}/scan_filtered',
+                     'output_topic': f'{p}/scan_uniform'}] + st,
+        remappings=tf,
+        **nskw, **common,
+    ) if ns else None
 
     slam_params = [os.path.join(cfg, 'slam.yaml')]
     if ns:
@@ -103,7 +122,7 @@ def _launch_setup(context):
         package='slam_toolbox',
         executable='async_slam_toolbox_node',
         name='slam_toolbox',
-        parameters=slam_params,
+        parameters=slam_params + st,
         # The load-bearing remap: slam_toolbox publishes an ABSOLUTE /map,
         # so two rovers on one domain clobber each other without it. Same
         # pattern as slam_multi.launch.py in sim.
@@ -120,26 +139,31 @@ def _launch_setup(context):
         package='nav2_velocity_smoother',
         executable='velocity_smoother',
         name='velocity_smoother',
-        parameters=[os.path.join(cfg, 'nav2.yaml')],
+        parameters=[os.path.join(cfg, 'nav2.yaml')] + st,
         remappings=[('cmd_vel', f'{p}/cmd_vel_nav'),
                     ('cmd_vel_smoothed', f'{p}/cmd_vel_smoothed')] + tf,
         **nskw, **common,
     )
 
+    guard_odom = LaunchConfiguration('guard_odom_topic').perform(context)
     guard_params = [os.path.join(cfg, 'velocity_guard.yaml')]
     if ns:
         guard_params.append({
             'input_topic': f'{p}/cmd_vel_smoothed',
             'output_topic': f'{p}/cmd_vel_guarded',
             'scan_topic': f'{p}/scan_filtered',
-            'odom_topic': f'{p}/wheel_odom',
+            # The real rover publishes /{ns}/wheel_odom; the sim rehearsal
+            # points this at /{ns}/odom_wheel_like instead.
+            'odom_topic': guard_odom or f'{p}/wheel_odom',
             'battery_topic': f'{p}/battery_state',
         })
+    elif guard_odom:
+        guard_params.append({'odom_topic': guard_odom})
     guard = Node(
         package='leo_nav2_exploration',
         executable='velocity_guard',
         name='velocity_guard',
-        parameters=guard_params,
+        parameters=guard_params + st,
         remappings=tf,
         **nskw, **common,
     )
@@ -164,7 +188,7 @@ def _launch_setup(context):
         package='nav2_collision_monitor',
         executable='collision_monitor',
         name='collision_monitor',
-        parameters=cm_params,
+        parameters=cm_params + st,
         remappings=tf,
         **nskw, **common,
     )
@@ -173,7 +197,7 @@ def _launch_setup(context):
         package='nav2_lifecycle_manager',
         executable='lifecycle_manager',
         name='lifecycle_manager_collision_monitor',
-        parameters=[{'use_sim_time': False},
+        parameters=[{'use_sim_time': sim_time},
                     {'autostart': True},
                     {'bond_timeout': 10.0},
                     # velocity_smoother is a *lifecycle* node. Started without
@@ -216,8 +240,11 @@ def _launch_setup(context):
         condition=IfCondition(LaunchConfiguration('use_aruco')),
     )
 
-    return [scan_filter, slam, smoother, guard, collision_monitor,
-            lifecycle, odometry_fusion, aruco]
+    nodes = [scan_filter, slam, smoother, guard, collision_monitor,
+             lifecycle, odometry_fusion, aruco]
+    if normalizer is not None:
+        nodes.insert(1, normalizer)
+    return nodes
 
 
 def generate_launch_description():
@@ -226,6 +253,11 @@ def generate_launch_description():
         # Namespace of the rover this stack drives (rob_a / rob_b). Default
         # empty = the exact single-rover field configuration of 2026-08-20.
         DeclareLaunchArgument('robot_ns', default_value=''),
+        # Sim rehearsal knobs; both inert at their defaults.
+        DeclareLaunchArgument('use_sim_time', default_value='false'),
+        DeclareLaunchArgument(
+            'guard_odom_topic', default_value='',
+            description='velocity_guard odom source; empty = /{ns}/wheel_odom'),
         DeclareLaunchArgument('scan_topic', default_value='/scan'),
         DeclareLaunchArgument('start_slam', default_value='true'),
         # Off by default: the EKF takes ownership of odom -> base_footprint and
