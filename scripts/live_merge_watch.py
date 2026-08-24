@@ -37,7 +37,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
 from align_registries_offline import (            # noqa: E402
-    load_registry, fit, residuals, ang_diff_deg)
+    load_registry, fit, residuals, ang_diff_deg, refine_transform,
+    combined_landmarks)
 from render_multirobot_media import read_map       # noqa: E402
 
 import matplotlib                                  # noqa: E402
@@ -76,11 +77,21 @@ def render_waiting(maps, names, common, out_png, note):
     plt.close(fig)
 
 
-def render_merged(stem, est, common, res, out_png, truth=None):
+def render_merged(stem, est, common, res, out_png, truth=None, lm=None):
     grid, ext = read_map(stem)
     fig, ax = plt.subplots(figsize=(11, 11 * grid.shape[0] / grid.shape[1]))
     ax.imshow(grid_img(grid), cmap='gray', vmin=0, vmax=1, origin='lower',
               extent=[ext[0], ext[1], ext[2], ext[3]])
+    if lm:
+        colors = {'both': 'tab:green', 'rov1': 'tab:blue',
+                  'rov2': 'tab:orange'}
+        for i, (x, y, who) in sorted(lm.items()):
+            ax.plot(x, y, 'o', ms=10, mfc='none', mew=2, color=colors[who])
+            ax.annotate(str(i), (x, y), textcoords='offset points',
+                        xytext=(8, 8), fontsize=10, color=colors[who])
+        for who, col in colors.items():
+            ax.plot([], [], 'o', mfc='none', mew=2, color=col, label=who)
+        ax.legend(loc='lower right', fontsize=9)
     title = (f'SHARED MAP -- rendezvous on tags {common}   '
              f'tf ({est.dx:.2f} m, {est.dy:.2f} m, '
              f'{math.degrees(est.yaw):.1f} deg)   '
@@ -135,13 +146,19 @@ def tick(d, args, last_sig):
     tgt = [(r1[i][0], r1[i][1]) for i in common]
     est = fit(src, tgt)
     res = residuals(est, src, tgt)
+    if args.refine:
+        ref, _ = refine_transform(stem1, stem2, est)
+        if ref is not None:
+            est = ref
+            res = residuals(est, src, tgt)
     merged_stem = os.path.join(d, 'live_merged')
     subprocess.run(
         [sys.executable, os.path.join(HERE, 'fuse_maps_offline.py'),
          stem1, stem2, merged_stem,
          '--tf', f'{est.dx}', f'{est.dy}', f'{math.degrees(est.yaw)}'],
         check=True, stdout=subprocess.DEVNULL)
-    render_merged(merged_stem, est, common, res, out_png, args.truth)
+    render_merged(merged_stem, est, common, res, out_png, args.truth,
+                  lm=combined_landmarks(r1, r2, est))
     print(f'[{time.strftime("%H:%M:%S")}] merged: tags={common} '
           f'tf=({est.dx:.2f}, {est.dy:.2f}, {math.degrees(est.yaw):.1f} deg) '
           f'mean_res={sum(res) / len(res):.2f} m')
@@ -152,6 +169,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('dir')
     ap.add_argument('--interval', type=float, default=10.0)
+    ap.add_argument('--refine', action='store_true',
+                    help='polish each tag transform by local grid '
+                         'correlation before fusing (~2 s per frame)')
     ap.add_argument('--exclude', nargs='*', type=int, default=[])
     ap.add_argument('--use-best', action='store_true')
     ap.add_argument('--truth', nargs=3, type=float, default=None,

@@ -80,6 +80,89 @@ def ang_diff_deg(a_rad, b_rad):
     return d
 
 
+def refine_transform(map1_stem, map2_stem, est, trans_win=0.5, yaw_win_deg=4.0):
+    """Local grid-correlation polish of a tag-seeded transform.
+
+    This is deliberately NOT global map matching. Global scan/grid matching on
+    rectilinear, self-similar rooms has confidently produced 180-, 90- and
+    65-degree flips on this project (depot twice, husarion once) -- the SE(2)
+    objective is multimodal and a wrong optimum can score as well as the right
+    one. Seeded by the tag estimate and confined to a +/-0.5 m / +/-4 deg
+    trust region, the same wall-pattern signal becomes safe: within that
+    window the true alignment is the only good optimum, and the search can
+    only tighten the residual tag error, never flip the map.
+
+    Score = fraction of map2's occupied cells landing on (1-cell-dilated)
+    occupied cells of map1. Coarse-to-fine, ~2 s.
+    """
+    import numpy as np
+    from render_multirobot_media import read_map
+    a, ea = read_map(map1_stem)
+    b, eb = read_map(map2_stem)
+    if a is None or b is None:
+        return None, None
+    OCC = 2
+    resa = (ea[1] - ea[0]) / a.shape[1]
+    resb = (eb[1] - eb[0]) / b.shape[1]
+    occ = (a == OCC)
+    d = occ.copy()
+    d[1:, :] |= occ[:-1, :]; d[:-1, :] |= occ[1:, :]
+    d[:, 1:] |= occ[:, :-1]; d[:, :-1] |= occ[:, 1:]
+    d[1:, 1:] |= occ[:-1, :-1]; d[:-1, :-1] |= occ[1:, 1:]
+    d[1:, :-1] |= occ[:-1, 1:]; d[:-1, 1:] |= occ[1:, :-1]
+    ys, xs = np.nonzero(b == OCC)
+    if len(xs) < 50:
+        return None, None
+    if len(xs) > 6000:
+        pick = np.random.RandomState(0).choice(len(xs), 6000, replace=False)
+        ys, xs = ys[pick], xs[pick]
+    px = eb[0] + (xs + 0.5) * resb
+    py = eb[2] + (ys + 0.5) * resb
+
+    def score(dx, dy, yaw):
+        c, s = math.cos(yaw), math.sin(yaw)
+        qx = dx + c * px - s * py
+        qy = dy + s * px + c * py
+        ci = ((qx - ea[0]) / resa).astype(int)
+        ri = ((qy - ea[2]) / resa).astype(int)
+        ok = (ci >= 0) & (ci < a.shape[1]) & (ri >= 0) & (ri < a.shape[0])
+        if not ok.any():
+            return 0.0
+        return float(d[ri[ok], ci[ok]].sum()) / len(px)
+
+    best = (est.dx, est.dy, est.yaw)
+    base_s = best_s = score(*best)
+    stages = ((0.10, math.radians(1.0), trans_win, math.radians(yaw_win_deg)),
+              (0.025, math.radians(0.25), 0.12, math.radians(1.2)))
+    for step_t, step_y, wt, wy in stages:
+        cx, cy, cyaw = best
+        for yw in np.arange(cyaw - wy, cyaw + wy + 1e-9, step_y):
+            for tx in np.arange(cx - wt, cx + wt + 1e-9, step_t):
+                for ty in np.arange(cy - wt, cy + wt + 1e-9, step_t):
+                    s = score(tx, ty, yw)
+                    if s > best_s:
+                        best_s, best = s, (tx, ty, yw)
+    import types
+    ref = types.SimpleNamespace(dx=best[0], dy=best[1], yaw=best[2])
+    return ref, (base_s, best_s)
+
+
+def combined_landmarks(r1, r2, est):
+    """All landmarks in robot 1's frame: robot 2's discoveries transformed in.
+
+    For a tag both saw, keep robot 1's position (its frame is the reference).
+    Returns {id: (x, y, who)}.
+    """
+    c, s = math.cos(est.yaw), math.sin(est.yaw)
+    out = {}
+    for i, (x, y, _) in r2.items():
+        out[i] = (est.dx + c * x - s * y, est.dy + s * x + c * y, 'rov2')
+    for i, (x, y, _) in r1.items():
+        who = 'both' if i in r2 else 'rov1'
+        out[i] = (x, y, who)
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('run_dir', nargs='?',
@@ -96,6 +179,9 @@ def main():
                          'instead of the filtered position')
     ap.add_argument('--no-fuse', action='store_true',
                     help='only compute and print the transform')
+    ap.add_argument('--refine', action='store_true',
+                    help='polish the tag transform by local grid correlation '
+                         '(+/-0.5 m, +/-4 deg trust region around it)')
     args = ap.parse_args()
 
     reg1, reg2, map1, map2 = args.reg1, args.reg2, args.map1, args.map2
@@ -162,18 +248,42 @@ def main():
                 line += f'   vs truth {terr:.2f} m / {yerr:.1f} deg'
             print(line)
 
-    if args.truth:
-        terr = math.hypot(est.dx - args.truth[0], est.dy - args.truth[1])
-        yerr = abs(ang_diff_deg(est.yaw, math.radians(args.truth[2])))
+    def report_truth(e, label):
+        terr = math.hypot(e.dx - args.truth[0], e.dy - args.truth[1])
+        yerr = abs(ang_diff_deg(e.yaw, math.radians(args.truth[2])))
         verdict = 'PASS' if terr <= 0.5 and yerr <= 10 else 'FAIL'
-        print(f'\nvs ground truth ({args.truth[0]}, {args.truth[1]}, '
+        print(f'{label} vs ground truth ({args.truth[0]}, {args.truth[1]}, '
               f'{args.truth[2]} deg): {terr:.3f} m / {yerr:.2f} deg  '
               f'[{verdict} @ 0.5 m / 10 deg]')
 
+    if args.truth:
+        print()
+        report_truth(est, 'tags   ')
+
+    have_maps = (map1 and map2 and os.path.exists(map1 + '.pgm')
+                 and os.path.exists(map2 + '.pgm'))
+    if args.refine and have_maps:
+        ref, sc = refine_transform(map1, map2, est)
+        if ref is not None:
+            print(f'refined (grid correlation around tag estimate): '
+                  f'x={ref.dx:.3f}  y={ref.dy:.3f}  '
+                  f'yaw={math.degrees(ref.yaw):.2f} deg   '
+                  f'(overlap {sc[0]:.3f} -> {sc[1]:.3f})')
+            if args.truth:
+                report_truth(ref, 'refined')
+            est = ref
+    elif args.refine:
+        print('(--refine needs both saved maps)')
+
+    lm = combined_landmarks(r1, r2, est)
+    print('\ncombined landmark map (robot 1 frame):')
+    for i in sorted(lm):
+        x, y, who = lm[i]
+        print(f'  tag {i:2d}: ({x:7.2f}, {y:7.2f})   seen by {who}')
+
     if args.no_fuse:
         return 0
-    if not (map1 and map2 and os.path.exists(map1 + '.pgm')
-            and os.path.exists(map2 + '.pgm')):
+    if not have_maps:
         print('\n(no saved map pair found -- skipping fusion; '
               'pass --map1/--map2)')
         return 0
@@ -197,6 +307,14 @@ def main():
     fig, ax = plt.subplots(figsize=(10, 10 * grid.shape[0] / grid.shape[1]))
     ax.imshow(img, cmap='gray', vmin=0, vmax=1, origin='lower',
               extent=[ext[0], ext[1], ext[2], ext[3]])
+    colors = {'both': 'tab:green', 'rov1': 'tab:blue', 'rov2': 'tab:orange'}
+    for i, (x, y, who) in sorted(lm.items()):
+        ax.plot(x, y, 'o', ms=9, mfc='none', mew=2, color=colors[who])
+        ax.annotate(str(i), (x, y), textcoords='offset points',
+                    xytext=(7, 7), fontsize=9, color=colors[who])
+    for who, col in colors.items():
+        ax.plot([], [], 'o', mfc='none', mew=2, color=col, label=who)
+    ax.legend(loc='lower right', fontsize=8)
     ax.set_title(f'offline merge: tags {common}, '
                  f'tf ({est.dx:.2f}, {est.dy:.2f}, '
                  f'{math.degrees(est.yaw):.1f} deg)')

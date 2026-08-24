@@ -48,9 +48,21 @@ the map periodically or script `map_saver_cli` on a timer):
 # one per rover, on the laptop:
 while true; do rsync -q rovA:/data/aruco_registry_rovA.json \
     rovA:/data/rovA_map.{pgm,yaml} /lab/merge/; sleep 15; done &
-python scripts/live_merge_watch.py /lab/merge --interval 10
+python scripts/live_merge_watch.py /lab/merge --interval 10 --refine
 # open /lab/merge/live.html fullscreen on the projector
 ```
+
+`--refine` polishes each tag transform by grid correlation confined to a
+±0.5 m / ±4° trust region around it — that is what makes the fused walls
+single-pixel instead of hairline-doubled (validated: map overlap goes to
+~99% on every good recorded run, and it rescued the fresh office run to
+0.40 m / 0.3°). It is the safe version of "match the corridors": *global*
+grid matching is banned here because on rectilinear rooms it confidently
+produced 180°, 90° and 65° flips; locally seeded by tags, the true optimum
+is the only one in reach. The display also overlays the **combined landmark
+map** — tags colored by who found them (both / rover 1 only / rover 2
+only), which is the "each robot benefits from the other's discoveries"
+frame in one picture.
 
 The demo has a built-in dramatic beat: while the rovers have fewer than two
 common markers the screen shows two separate half-maps growing side by side
