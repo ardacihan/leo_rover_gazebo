@@ -174,6 +174,16 @@ transform, not the frontier allocation.
 
 ## 4. Bring-up order
 
+> **Naming decision (2026-08-25, saves four edits): use `leo1` and `leo2`
+> as the actual robot namespaces**, not `rob_a`/`rob_b`. Every sim-tested
+> piece — the explorer configs (`frontier_explorer_leo{1,2}_multi.yaml`),
+> `shared_align.launch.py` defaults, `distributed_shared_map.launch.py`,
+> and the demo RViz configs — then works verbatim. Read `rob_a` below as
+> `leo1`. **Demo visuals & recording: `config/rviz/DEMO_VISUALS.md`** —
+> laptop/projector/rover screens, pre-set QoS, and
+> `scripts/record_demo_bag.sh` per machine (costmaps and scans are
+> recorded on the rovers, never streamed over WiFi).
+
 **Partly runnable.** State of the namespacing, honestly:
 
 | launch | `robot_ns`? | note |
