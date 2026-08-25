@@ -113,8 +113,29 @@ missing topic or missing alignment TF → seamless own-map fallback. The
 independent condition never receives the topic, so the baseline is
 byte-identical. 6 unit tests.
 
-Measurements (coordinated vs independent, per map): (PENDING — office A/B on
-Viper, depot A/B queued)
+Live evidence (coordinated runs, all marker-free, `SKIP_ARUCO=1`):
+
+| run | lock err | conf | abstains before | mask cells (leo2) |
+|---|---|---|---|---|
+| office local (run5) | 0.45 m / 1.3° | 0.84 | 34 | 31,619 |
+| office Viper (phase2v) | 0.24 m / 0.1° | 0.94 | 37 | 17,635 |
+| depot Viper (phase2v) | **0.18 m / 0.0°** | 0.94 | 11 | — |
+
+The depot lock matters most: it is the world where the old grid matcher
+flipped 180° on 4 of 4 runs. Three live locks, zero confident-wrong.
+
+Coordinated metrics (metrics script, world-bounds-clipped, truth-transform
+duplicated coverage): office coordinated t90=495 s, dup 287 m², 53 goals /
+1 failed; depot coordinated t90=585 s, dup 162 m², 41 / 2.
+
+A/B against independent: **the first two independent baselines were broken
+by a runner bug of tonight** (empty `shared_map_topic:=` is a malformed
+launch argument; the explorer launch died and both runs did 25 min with
+zero explorers). Fixed, resubmitted on Viper; table to be completed when
+they land. Note the honest expectation either way: the lock arrives in the
+final third of a run, so the mask can only claim the last minutes —
+"rendezvous arrives late" is already documented as the reason coordination
+gains are modest.
 
 ## Phase 3 — distributed
 

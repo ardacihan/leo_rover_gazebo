@@ -288,6 +288,35 @@ Read this ledger first on every tick. Never restart a phase marked COMPLETE.
 - **Phase 4 rehearsal LAUNCHED** (freed sim slot):
   reports/night_2026-08-25/phase4_rehearsal, 10 min cap, real launch path
   ×2 with safety-chain motion checks.
+### 2026-08-25 01:0x — tick 7 — Docker Desktop failure identified; Viper agent lost to session limit
+
+- **Docker Desktop daemon wedged (HTTP 500 → hangs).** This is what
+  SIGKILLed run4 earlier and it stopped the Phase 4 rehearsal mid-jog
+  (both map-publish checks had already PASSED). Docker Desktop restarted.
+  Rehearsal will be re-run when the daemon is back.
+- **Viper subagent died at its session limit (resets 03:40)** right after
+  syncing phase2v_office_coordinated — which is COMPLETE and clean
+  (self-terminated, all artifacts). Slurm jobs it submitted keep running;
+  I am taking over the cluster directly over ssh.
+- **First Phase 2 numbers** (host-python metrics): office coordinated
+  (Viper) t90=495 s, dup 287 m², 53 goals/1 failed; run5 coordinated
+  t90=570 s, dup 250 m², 49/3. Independent baseline still needed for the
+  actual A/B.
+### 2026-08-25 01:2x — tick 7 cont. — took over Viper; A/B half-in; my launch bug found
+
+- Took over Viper by ssh (agent dead until 03:40; its Slurm jobs had all
+  finished). **All four phase2v runs existed; synced back.** Coordinated
+  runs are GOLD: office locked 0.24 m/0.1° conf 0.94 (mask: 17,635 cells);
+  **depot locked 0.18 m/0.0° conf 0.94 after 11 abstentions — the
+  flip-prone world, correct, marker-free.** Live locks now n=3 (0.45,
+  0.24, 0.18 m), zero confident-wrong ever.
+- **BUT both independent baselines were broken by MY runner bug:** empty
+  `shared_map_topic:=` is a malformed launch arg → collab_explore died →
+  25 min with zero explorers (15 m², 0 goals). Fixed locally
+  (${var:+...}), patched the Viper runner copy, **baselines resubmitted
+  (jobs 11007856/57)** — results ~01:55.
+- Docker Desktop still restarting; Phase 4 rehearsal rerun queued on it
+  (first 2 of 6 checks had already PASSED when the daemon died).
 - **Viper identified:** Slurm cluster, ssh viper11 via WSL bridge
   (`wsl.exe -d Ubuntu -- bash -lc "ssh viper11 '<cmd>'"`), 8 shared APU
   (ROCm) slots, courtesy cap ~6 jobs. Recon+setup delegated to a subagent
