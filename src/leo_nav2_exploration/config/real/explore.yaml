@@ -20,7 +20,12 @@ explore_node:
     costmap_updates_topic: map_updates
     return_to_init: true
     visualize: true
-    planner_frequency: 0.1
+    # 2026-08-25 live run: at 0.1 Hz the goal was preempted every 10 s, the
+    # top frontier flip-flopped between directions as the map grew, and 73%
+    # of measured /cmd_vel commands were pure rotation. 30 s of goal
+    # persistence lets a frontier actually be driven to before it can be
+    # stolen; progress_timeout still aborts a goal that goes nowhere.
+    planner_frequency: 0.033
     # A frontier is blacklisted if the rover makes no progress toward it for
     # this long, and once every frontier is blacklisted exploration stops. On
     # hardware the rover is slower than in simulation and a human may well be
@@ -28,7 +33,10 @@ explore_node:
     # a blacklisting is permanent for the run, and re-trying a frontier costs
     # far less than abandoning a room.
     progress_timeout: 60.0
-    potential_scale: 3.0
+    # Weight distance heavily so the nearest frontier wins decisively; near
+    # ties between frontiers on opposite sides are what caused the goal to
+    # alternate (and the rover to spin) on the 2026-08-25 run.
+    potential_scale: 5.0
     orientation_scale: 0.0
     gain_scale: 1.0
     transform_tolerance: 0.5

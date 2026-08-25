@@ -115,9 +115,12 @@ controller_server:
       cost_scaling_dist: 0.30
       cost_scaling_gain: 1.0
       inflation_cost_scaling_factor: 8.0
-      # In-place rotation is cheap on a skid-steer chassis; let it use that
-      # rather than needing room for an arc.
-      use_rotate_to_heading: true
+      # The RotationShim above already handles genuinely-behind headings
+      # (>1.0 rad). With this also true, both layers stopped to spin on
+      # every path refresh (~1.4 s while the map grows) and the 2026-08-25
+      # run measured 73% of commands as pure rotation. RPP without it still
+      # arcs through moderate heading changes instead of spinning first.
+      use_rotate_to_heading: false
       rotate_to_heading_min_angle: 1.0
       rotate_to_heading_angular_vel: 1.2
       allow_reversing: false
@@ -196,7 +199,13 @@ local_costmap:
       inflation_layer:
         plugin: nav2_costmap_2d::InflationLayer
         enabled: true
-        inflation_radius: 0.30
+        # 0.30 let plans run close enough to walls that the collision
+        # monitor's 0.26 m stop box filled and froze the rover (2026-08-25,
+        # twice: pinned at a corner, then against a wall, recoveries all
+        # collision-blocked). 0.38 keeps planned paths a hand's width
+        # further out; inflated cells are penalised, not lethal, so tight
+        # doorways remain traversable.
+        inflation_radius: 0.38
         cost_scaling_factor: 8.0
       always_send_full_costmap: true
 global_costmap:
@@ -241,7 +250,13 @@ global_costmap:
       inflation_layer:
         plugin: nav2_costmap_2d::InflationLayer
         enabled: true
-        inflation_radius: 0.30
+        # 0.30 let plans run close enough to walls that the collision
+        # monitor's 0.26 m stop box filled and froze the rover (2026-08-25,
+        # twice: pinned at a corner, then against a wall, recoveries all
+        # collision-blocked). 0.38 keeps planned paths a hand's width
+        # further out; inflated cells are penalised, not lethal, so tight
+        # doorways remain traversable.
+        inflation_radius: 0.38
         cost_scaling_factor: 8.0
       always_send_full_costmap: true
 planner_server:
