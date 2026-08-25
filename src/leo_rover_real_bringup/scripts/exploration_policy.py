@@ -1,5 +1,27 @@
 """Pure decision helpers shared by the real-rover safety nodes."""
 
+import math
+
+
+def parse_sectors(text):
+    """Parse "lo:hi,lo:hi" base-frame degrees into a list of (lo, hi) radians."""
+    sectors = []
+    for chunk in str(text).split(","):
+        chunk = chunk.strip()
+        if not chunk:
+            continue
+        try:
+            low_text, high_text = chunk.split(":")
+            low, high = float(low_text), float(high_text)
+        except ValueError as error:
+            raise ValueError(
+                f"bad sector {chunk!r}; expected 'low:high' in degrees"
+            ) from error
+        if high <= low:
+            raise ValueError(f"sector {chunk!r} must have high > low")
+        sectors.append((math.radians(low), math.radians(high)))
+    return sectors
+
 
 def robust_clearance(values, outlier_points, default_clearance=0.0):
     """Return a low clearance percentile while ignoring a bounded outlier set."""

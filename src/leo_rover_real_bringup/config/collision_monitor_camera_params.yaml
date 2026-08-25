@@ -1,0 +1,44 @@
+# Collision Monitor with BOTH the 2D LIDAR and a depth-derived scan.
+#
+# The LIDAR sees 360 degrees but only one horizontal plane, so it misses low
+# boxes, table tops and chair seats.  The forward-facing RealSense fills that
+# gap ahead of the robot.  It does NOT replace the LIDAR: the D456 cannot see
+# closer than about 0.45 m and covers roughly 87 degrees, so each source
+# guards what the other cannot.
+#
+# Both sources are independent -- either one alone can stop the robot.
+collision_monitor:
+  ros__parameters:
+    use_sim_time: false
+    base_frame_id: base_footprint
+    odom_frame_id: odom
+    cmd_vel_in_topic: /cmd_vel_raw
+    cmd_vel_out_topic: /cmd_vel
+    transform_tolerance: 0.2
+    # Depth arrives at ~15 Hz; 0.4 s tolerates a couple of dropped frames
+    # without tolerating a dead sensor.
+    source_timeout: 0.4
+    base_shift_correction: true
+    stop_pub_timeout: 1.0
+
+    polygons: [FootprintApproach]
+    FootprintApproach:
+      type: circle
+      radius: 0.31
+      action_type: approach
+      time_before_collision: 1.5
+      simulation_time_step: 0.1
+      max_points: 5
+      visualize: true
+      polygon_pub_topic: /collision_monitor/approach_footprint
+      enabled: true
+
+    observation_sources: [scan, depth_scan]
+    scan:
+      type: scan
+      topic: /scan
+      enabled: true
+    depth_scan:
+      type: scan
+      topic: /camera_scan
+      enabled: true

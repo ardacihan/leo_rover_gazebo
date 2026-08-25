@@ -8,8 +8,10 @@ install(DIRECTORY config launch
 )
 
 install(PROGRAMS
+  scripts/depth_obstacle_scan.py
   scripts/safety_command_gate.py
   scripts/safe_room_explorer.py
+  scripts/scan_self_filter.py
   scripts/wheel_odom_tf.py
   DESTINATION lib/${PROJECT_NAME}
 )

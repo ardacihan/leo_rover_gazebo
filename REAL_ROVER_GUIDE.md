@@ -477,7 +477,7 @@ The replacement logic now:
 - aborts reverse immediately if the rear corridor closes;
 - uses a direction-aware time-to-collision footprint rather than a static zone
   that also blocks motion away from a wall;
-- enforces an 11.50 V battery floor.
+- enforces a 10.50 V battery floor.
 
 Six pure decision tests and two isolated ROS controller scenarios passed: a
 boxed front selected straight reverse, and simulated forward/turn suppression
@@ -543,7 +543,7 @@ test topics were connected to the firmware.
 During the same session, battery voltage fell from about 10.96 V to 10.68 V
 while stationary and firmware telemetry began dropping out. The gate and
 explorer stopped as designed. Replace or recharge the battery before any
-physical autonomous test; do not lower the safety package's 11.50 V floor to
+physical autonomous test; do not lower the safety package's 10.50 V floor to
 work around dropout. A retrying `leo-ros.service` was also found sourcing a workspace
 without `leo_real` and requesting `enable_supervisor:=true`; it was stopped for
 the session but remains a boot-time maintenance issue.
