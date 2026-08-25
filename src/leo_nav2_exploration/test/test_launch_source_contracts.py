@@ -16,6 +16,8 @@ def test_all_operator_launch_files_exist():
         "real_navigation.launch.py",
         "frontier_exploration.launch.py",
         "sim_doorway_regression.launch.py",
+        "isolated_real_navigation.launch.py",
+        "isolated_firmware.launch.py",
     }
     assert expected <= {path.name for path in LAUNCH_DIR.glob("*.launch.py")}
 
@@ -56,6 +58,15 @@ def test_navigation_overlay_has_explicit_guarded_command_chain():
     assert "lifecycle_manager_collision_monitor" in source
     assert "('cmd_vel', topics.cmd_vel_nav)" in source
     assert "('cmd_vel_smoothed', topics.cmd_vel_smoothed)" in source
+
+
+def test_isolated_navigation_keeps_camera_on_localhost_domain():
+    source = _source("isolated_real_navigation.launch.py")
+    assert "ROS_DOMAIN_ID" in source
+    assert "'22'" in source
+    assert "ROS_LOCALHOST_ONLY" in source
+    assert "cloud_input_topic" in source
+    assert "publish_camera_tf" in source
 
 
 def test_real_profile_keeps_voxel_layer_opt_in():

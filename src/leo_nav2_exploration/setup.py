@@ -14,7 +14,10 @@ setup(
         ("share/" + package_name, ["package.xml"]),
         (os.path.join("share", package_name, "launch"), glob("launch/*.launch.py")),
         (os.path.join("share", package_name, "config", "sim"), glob("config/sim/*.yaml")),
-        (os.path.join("share", package_name, "config", "real"), glob("config/real/*.yaml")),
+        (
+            os.path.join("share", package_name, "config", "real"),
+            glob("config/real/*.yaml") + glob("config/real/*.xml"),
+        ),
         (
             os.path.join("share", package_name, "config", "real_baseline_2026-08-20"),
             glob("config/real_baseline_2026-08-20/*.yaml"),
@@ -47,6 +50,7 @@ setup(
             "leo_imu_bridge = leo_nav2_exploration.leo_imu_bridge:main",
             "cloud_filter = leo_nav2_exploration.cloud_filter:main",
             "scan_normalizer = leo_nav2_exploration.scan_normalizer:main",
+            "firmware_bridge = leo_nav2_exploration.firmware_bridge:main",
         ],
     },
 )

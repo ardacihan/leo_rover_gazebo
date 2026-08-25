@@ -19,35 +19,47 @@ collision_monitor:
       type: polygon
       points: [0.26, 0.26, 0.26, -0.26, -0.26, -0.26, -0.26, 0.26]
       action_type: stop
+      # Occupancy stop zeros linear AND angular while any hit is inside
+      # this square, so reverse/turn cannot escape (2026-08-25). Leave it
+      # off. FootprintApproach is directional: it only brakes motion that
+      # would hit, and still allows backup and spin.
       max_points: 3
       visualize: true
       polygon_pub_topic: /collision_monitor/stop_zone
-      enabled: true
+      enabled: false
 
     FootprintApproach:
       type: polygon
       action_type: approach
       footprint_topic: /local_costmap/published_footprint
-      time_before_collision: 1.5
+      # 1.5 s froze the rover in a small enclosure (any forward command
+      # had TTC < 1.5 s). 0.8 s at 0.15 m/s starts braking ~12 cm before
+      # impact -- enough to not hit the wall, short enough to still turn
+      # in a cluttered room.
+      time_before_collision: 0.8
       simulation_time_step: 0.05
       max_points: 3
       visualize: true
       polygon_pub_topic: footprint_approach
-      enabled: true
+      # Live jetson-02 2026-08-25: 0.8 s Approach zeroed every forward
+      # command at the pose where it first stopped (x=0.53). SlowdownZone
+      # at 0.45 m / 0.35 ratio is the remaining brake so it can still turn.
+      enabled: false
     SlowdownZone:
       type: polygon
       points:
-      - 0.34
-      - 0.34
-      - 0.34
-      - -0.34
-      - -0.34
-      - -0.34
-      - -0.34
-      - 0.34
+      - 0.45
+      - 0.45
+      - 0.45
+      - -0.45
+      - -0.45
+      - -0.45
+      - -0.45
+      - 0.45
       action_type: slowdown
       max_points: 3
-      slowdown_ratio: 0.75
+      # 0.75 left it crawling into the wall. 0.35 is a real brake.
+      slowdown_ratio: 0.35
       visualize: true
       polygon_pub_topic: slowdown_zone
       enabled: true

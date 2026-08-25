@@ -11,6 +11,8 @@ scan_to_scan_filter_chain:
       type: laser_filters/LaserScanBoxFilter
       params:
         box_frame: base_footprint
+        # Must stay inside Collision Monitor StopZone (0.26 m). A 0.32 m
+        # box hid table-leg hits that were already touching the chassis.
         min_x: -0.22
         max_x: 0.22
         min_y: -0.22

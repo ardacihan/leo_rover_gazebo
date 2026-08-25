@@ -1,9 +1,12 @@
-<!-- Replan at 1 Hz. Recovery clears first, then backs away before any in-place spin. -->
+<!-- Replan at 0.5 Hz. 1 Hz path refreshes made the rotation shim spin
+     in place on every new heading (2026-08-25). 0.2 Hz left ~75 cm of
+     travel on a stale path into a wall. Recovery still clears, then
+     backs away before any in-place spin. -->
 <root main_tree_to_execute="MainTree">
   <BehaviorTree ID="MainTree">
     <RecoveryNode number_of_retries="6" name="NavigateRecovery">
       <PipelineSequence name="NavigateWithReplanning">
-        <RateController hz="1.0">
+        <RateController hz="0.5">
           <RecoveryNode number_of_retries="1" name="ComputePathToPose">
             <ComputePathToPose goal="{goal}" path="{path}" planner_id="GridBased"/>
             <ClearEntireCostmap name="ClearGlobalCostmap-Context" service_name="global_costmap/clear_entirely_global_costmap"/>

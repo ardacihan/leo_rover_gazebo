@@ -114,3 +114,59 @@ def test_future_timestamp_is_rejected_as_clock_error():
     decision = evaluate_guard(0.05, 0.0, config(), state(scan_stamp=10.2))
     assert not decision.permitted
     assert decision.reason == "scan_clock_error"
+
+
+def test_front_wall_zeros_linear_and_turns_toward_clear_side():
+    decision = evaluate_guard(
+        0.15,
+        0.0,
+        config(front_stop_distance=0.42, blocked_turn_speed=0.35),
+        state(
+            front_min_range=0.30,
+            front_hit_points=8,
+            left_min_range=1.5,
+            right_min_range=0.4,
+        ),
+    )
+    assert decision.linear_x == 0.0
+    assert decision.angular_z == pytest.approx(0.35)
+    assert decision.reason == "front_obstacle"
+
+
+def test_front_wall_keeps_a_commanded_turn():
+    decision = evaluate_guard(
+        0.15,
+        -0.20,
+        config(front_stop_distance=0.42),
+        state(front_min_range=0.30, front_hit_points=8),
+    )
+    assert decision.linear_x == 0.0
+    assert decision.angular_z == pytest.approx(-0.20)
+    assert decision.reason == "front_obstacle"
+
+
+def test_open_front_does_not_block_forward_motion():
+    decision = evaluate_guard(
+        0.08,
+        0.0,
+        config(front_stop_distance=0.42),
+        state(front_min_range=1.20, front_hit_points=10),
+    )
+    assert decision.linear_x == pytest.approx(0.08)
+    assert decision.reason == "permitted"
+
+
+def test_min_range_in_cone_sees_a_wall_ahead():
+    from leo_nav2_exploration.velocity_guard_logic import min_range_in_cone
+
+    nearest, hits = min_range_in_cone(
+        [2.0, 2.0, 0.30, 2.0, 2.0],
+        angle_min=-0.40,
+        angle_increment=0.20,
+        range_min=0.05,
+        range_max=8.0,
+        center=0.0,
+        half_angle=0.25,
+    )
+    assert hits == 3
+    assert nearest == pytest.approx(0.30)
