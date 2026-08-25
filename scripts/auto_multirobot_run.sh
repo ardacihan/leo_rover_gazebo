@@ -340,7 +340,7 @@ SHARED_TOPIC=""
 [[ "$EXPLORE_MODE" == "coordinated" && "$NUM_ROBOTS" -eq 2 ]] && SHARED_TOPIC="/shared_map"
 # Distributed: every explorer consumes its OWN rover's merged map.
 [[ -n "${DISTRIBUTED:-}" && -n "$SHARED_TOPIC" ]] && SHARED_TOPIC="per_robot"
-CMD "explore: ros2 launch leo_rover_exploration collab_explore.launch.py num_robots:=$NUM_ROBOTS coordination_mode:=$EXPLORE_MODE common_frame:=leo1/map shared_map_topic:=$SHARED_TOPIC"
+CMD "explore: ros2 launch leo_rover_exploration collab_explore.launch.py num_robots:=$NUM_ROBOTS coordination_mode:=$EXPLORE_MODE common_frame:=leo1/map ${SHARED_TOPIC:+shared_map_topic:=$SHARED_TOPIC}"
 # Per-rover world extent, so frontier detection stops chasing cells outside
 # the building. Same source as the spawn poses, so they cannot drift apart.
 L1B="$("$PYBIN" "$ROOT/src/leo_rover_gazebo/launch/spawn_poses.py" "$WORLD" leo1 2>/dev/null || true)"
@@ -349,7 +349,7 @@ LOG "  frontier bounds: leo1 [$L1B] leo2 [$L2B]"
 in_sim_bg "exec ros2 launch leo_rover_exploration collab_explore.launch.py \
   num_robots:=$NUM_ROBOTS coordination_mode:=$EXPLORE_MODE \
   common_frame:=leo1/map leo1_bounds:=$L1B leo2_bounds:=$L2B \
-  shared_map_topic:=$SHARED_TOPIC \
+  ${SHARED_TOPIC:+shared_map_topic:=$SHARED_TOPIC} \
   > /ros2_ws/$OUT/explorer.log 2>&1"
 
 # ---------- 11. wait ----------
