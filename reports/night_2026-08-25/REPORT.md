@@ -218,9 +218,26 @@ office, markerfree, no cameras), n=1:
   `/rob_a/map`), frames become `rob_a/map|odom|base_footprint`, `/tf` stays
   global. `use_ekf:=true` together with `robot_ns` fails loudly (the EKF
   belongs to the rover's own bringup in multi-rover mode).
-- Rehearsal run through the real launch path: (PENDING)
-- LAB_SESSION.md update: (PENDING)
-- Clock sync check: (PENDING)
+- **Rehearsal: PASSED** (`phase4_rehearsal`, 4 attempts, each earlier
+  failure a real find): both real_mapping stacks up under leo1/leo2
+  namespaces against the sim, `/leo{i}/map` published by the real slam,
+  prefixed TF `map->base_link` resolving on both, and a teleop command
+  entering the TOP of the safety chain drove each rover ~0.8 m
+  (leo1 0.85 m, leo2 0.79 m) through smoother → guard → collision monitor.
+  The rehearsal caught two bugs that WOULD have burned lab time at 9am:
+  (a) bare-node-name parameter yamls silently do not load under a
+  namespace in Humble — the collision monitor aborted lifecycle bringup on
+  a missing polygon type and slam ran on defaults; params are now loaded
+  and passed inline in namespaced mode; (b) the scan box filter's
+  `base_footprint` frame must be prefixed — unprefixed, every scan was
+  dropped and the guard/monitor/slam all starved with the chain looking
+  healthy. (One harness-side note: the final verdict comparator used
+  python3 on a host that has only python; the corrected summary carries
+  the amendment and the raw numbers.)
+- LAB_SESSION.md: updated (bring-up, marker-free fallback with live
+  numbers, distributed option, clock-sync first step, stall table).
+- Clock sync between machines: NOT rehearsable in sim (single clock);
+  documented as the first bring-up step with the exact commands.
 
 ## Viper (remote Slurm cluster, 8 APU slots)
 
@@ -271,10 +288,16 @@ Details and copy-pasteable commands: `viper_recon.md`.
 
 ## Deliverables checklist
 
-- [x] PROGRESS.md ledger
-- [ ] Phase 1 live confirmation run media
-- [ ] Phase 2 A/B tables
-- [ ] Phase 3 partition run
-- [ ] Phase 4 rehearsal + LAB_SESSION.md
-- [ ] Dashboard rebuild
-- [x] Commits pushed (520fd6c, e2ec0a5, 794cc48, f7bdf48, 3d01193, e378397, …)
+- [x] PROGRESS.md ledger (appended every tick)
+- [x] Phase 1: benchmark before (0/10) and after (6/7 + 3 abstain, 0 wrong),
+      method written down, live confirmation run committed with media
+- [x] Phase 2: per-map coordinated vs independent with duplicated-coverage
+      (gate met on both maps)
+- [x] Phase 3: partition run (independent locks agreeing to 0.28 m/0.6°,
+      merged maps alive after the central kill)
+- [x] Phase 4: rehearsal PASSED (2 real bugs found and fixed on the way),
+      LAB_SESSION.md updated
+- [x] Every merged map as .pgm/.yaml AND rendered .png
+- [x] Dashboard: reports/night_2026-08-25/dashboard.html (7 runs, films)
+- [x] Committed and pushed to feat/multi-robot-integration, files staged
+      explicitly throughout (~15 commits, 520fd6c … end of night)

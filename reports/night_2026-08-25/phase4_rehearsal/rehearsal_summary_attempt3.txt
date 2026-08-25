@@ -1,0 +1,9 @@
+CHECK map(leo1): PASS (publisher count 1)
+CHECK map(leo2): PASS (publisher count 1)
+CHECK safety-chain motion(leo1): FAIL (odom x '0.0' -> '0.0' -- guard, smoother or monitor is holding the rover)
+CHECK safety-chain motion(leo2): FAIL (odom x '0.0' -> '0.0' -- guard, smoother or monitor is holding the rover)
+CHECK tf(leo1/map -> leo1/base_link): FAIL
+CHECK tf(leo2/map -> leo2/base_link): FAIL
+map save (leo1) failed (may just be too little motion yet)
+map save (leo2) failed (may just be too little motion yet)
+REHEARSAL FAILED (4 checks)

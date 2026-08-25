@@ -106,15 +106,12 @@ for i in 1 2; do
   in_sim "(timeout 15 ros2 topic pub -r 5 /$ns/cmd_vel_nav geometry_msgs/msg/Twist '{linear: {x: 0.15}}' >/dev/null 2>&1 || true); ros2 topic pub --once /$ns/cmd_vel_nav geometry_msgs/msg/Twist '{}' >/dev/null 2>&1 || true"
   after=$(in_sim "timeout 15 ros2 topic echo --once /$ns/odom_wheel_like 2>/dev/null | grep -m1 -A3 'position:' | grep 'x:' | head -1 | grep -oE '[-0-9.e]+'" || echo "")
   echo "jog($ns): x $before -> $after" >> "$ROOT/$OUT/run.log"
-  moved=$(python3 - "$before" "$after" <<'PY' 2>/dev/null || echo no
-import sys
-try:
-    b, a = float(sys.argv[1]), float(sys.argv[2])
-    print('yes' if abs(a - b) > 0.15 else 'no')
-except Exception:
-    print('no')
-PY
-)
+  # awk, not python3: this script runs on the HOST, whose git-bash has
+  # `python` only -- a python3 heredoc silently fell into the `no` fallback
+  # and mislabeled a rover that had driven 0.85 m as held (attempt 4).
+  moved=$(awk -v a="$after" -v b="$before" \
+    'BEGIN { if (a == "" || b == "") { print "no"; exit }
+             d = a - b; if (d < 0) d = -d; print (d > 0.15) ? "yes" : "no" }')
   if [[ "$moved" == "yes" ]]; then
     note "CHECK safety-chain motion($ns): PASS (odom x $before -> $after)"
   else

@@ -25,9 +25,9 @@ Read this ledger first on every tick. Never restart a phase marked COMPLETE.
 |---|---|---|
 | 0 | Build + tests, benchmark reproduces 0/10, GPU check | COMPLETE except GPU line (deferred to a camera-on run; markerfree run is camera-off) |
 | 1 | Marker-free merge ≥7/10, zero confident-wrong, <5 s/pair | **COMPLETE** — 6/7+3 abstain, 0 wrong offline; LIVE LOCK 0.45 m/1.3° markers-off (run5), media clean. Caveats: strict pass count 6 not 7 (7th drift-capped, tag-proven); big office pairs 6.5–7.1 s vs 5 s target |
-| 2 | Merged map changes exploration; coordinated vs independent, office first | NOT STARTED |
+| 2 | Merged map changes exploration; coordinated vs independent, office first | **COMPLETE** — gate met on BOTH maps: dup coverage −19% office / −10% depot vs independent, no stalls, mask live (31,619 cells) |
 | 3 | Per-rover merger; laptop-kill partition run | **COMPLETE** — both rovers locked independently (0.38 m & 0.17 m), estimates mutually agree 0.28 m/0.6°, shared maps saved live 40 s after bridge kill. Caveat: explorers finished 4 s post-kill |
-| 4 | Namespaced real launch path + rehearsal + LAB_SESSION.md | NOT STARTED |
+| 4 | Namespaced real launch path + rehearsal + LAB_SESSION.md | **COMPLETE** — rehearsal PASSED (maps, prefixed TF, ~0.8 m motion through the full safety chain on both rovers); 2 real bugs found+fixed (yaml-under-namespace, box_frame); LAB_SESSION + TOMORROW_PLAN updated |
 
 ## Assets already in the tree tonight (do not rebuild these)
 
@@ -334,6 +334,22 @@ Read this ledger first on every tick. Never restart a phase marked COMPLETE.
   (leo-rover-markerfree-merge, leo-rover-night-2026-08-25-ops).
 - Remaining: rehearsal verdict → baselines → final A/B table → dashboard
   → REPORT final pass → last commit/push.
+### 2026-08-25 ~04:00 — FINAL — all four phases complete, night closed
+
+- Phase 2 A/B landed (Viper baselines rerun after my empty-arg launch bug):
+  dup coverage 287 vs 355 m² office (−19%), 162 vs 181 m² depot (−10%),
+  same final areas, no stalls. GATE MET both maps.
+- Phase 4 rehearsal: 4 attempts, each failure a real find. (2) yaml files
+  don't match namespaced nodes → params inline; (3) box filter's
+  base_footprint frame unprefixed → every scan dropped, chain starved —
+  found by tracing a healthy-looking chain holding the rover at x=0.0,
+  fixed, verified by a 0.97 m jog; (4) all six checks pass — the two
+  motion "FAIL" labels were the host-python3 comparator erroring on real
+  0.85/0.79 m motion; comparator fixed (awk), summary amended with the
+  original numbers preserved.
+- REPORT.md complete (exec summary, all phases, 9 honest limitations,
+  deliverables all checked). Dashboard built. Memory saved. ~15 commits
+  pushed through the night; final commit follows this entry.
 - **Viper identified:** Slurm cluster, ssh viper11 via WSL bridge
   (`wsl.exe -d Ubuntu -- bash -lc "ssh viper11 '<cmd>'"`), 8 shared APU
   (ROCm) slots, courtesy cap ~6 jobs. Recon+setup delegated to a subagent

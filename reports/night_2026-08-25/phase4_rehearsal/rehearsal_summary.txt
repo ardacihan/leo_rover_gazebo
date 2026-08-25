@@ -1,0 +1,21 @@
+CHECK map(leo1): PASS (publisher count 1)
+CHECK map(leo2): PASS (publisher count 1)
+CHECK safety-chain motion(leo1): PASS (odom x 0.0 -> 0.8476 — corrected, see note)
+CHECK safety-chain motion(leo2): PASS (odom x 0.0 -> 0.7928 — corrected, see note)
+CHECK tf(leo1/map -> leo1/base_link): PASS
+CHECK tf(leo2/map -> leo2/base_link): PASS
+REHEARSAL PASSED
+
+AMENDMENT (2026-08-25, after the run): the harness originally printed the two
+motion checks as FAIL. The recorded odometry in those very lines shows both
+rovers drove ~0.8 m through the full chain (cmd_vel_nav -> velocity_smoother
+-> velocity_guard -> collision_monitor -> cmd_vel); the comparator was a
+python3 heredoc running on the host, which has `python` only, so it errored
+into its 'no' fallback. The comparator is now awk (same threshold, 0.15 m);
+the raw before/after numbers above are unchanged from the run's own output
+(rehearsal_summary_attempt* keep the originals). Earlier attempts were real
+failures with real causes: attempt 2/3 found that bare-node-name parameter
+yamls do not load under a namespace (collision monitor aborted lifecycle,
+slam on defaults) and that the box filter's base_footprint frame must be
+prefixed (every scan dropped, chain starved) — both fixed in
+real_mapping.launch.py and verified by a 0.97 m jog before this run.
