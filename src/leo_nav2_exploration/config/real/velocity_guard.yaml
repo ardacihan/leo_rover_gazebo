@@ -16,11 +16,5 @@ velocity_guard:
     battery_timeout: 2.0
     min_battery_voltage: 11.0
     minimum_valid_scan_points: 30
-    # Body half-length is 0.21 m. Stop ~20 cm before a plain wall so lidar
-    # hits that the self-box (0.22 m) still keeps are enough to veto forward.
-    front_stop_distance: 0.42
-    stop_half_angle: 0.70
-    stop_min_points: 3
-    blocked_turn_speed: 0.35
     publish_rate: 20.0
     diagnostic_rate: 1.0

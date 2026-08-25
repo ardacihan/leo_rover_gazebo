@@ -36,6 +36,21 @@ def generate_launch_description():
         ],
         output='screen',
     )
+    # The C1 is mounted yaw-π. A yaw-0 TF makes scan angle 0 look like the
+    # robot's front while that ray actually points out the back, so Nav2
+    # drives into the wall it thinks is behind it (jetson-02 2026-08-25).
+    # Offsets are the Leo mount measured on rover 4 (2026-08-13).
+    laser_tf = Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        name='base_footprint_to_laser',
+        arguments=[
+            '--x', '0.0775', '--y', '0.04', '--z', '0.2458',
+            '--yaw', '3.14159',
+            '--frame-id', 'base_footprint', '--child-frame-id', 'laser',
+        ],
+        output='screen',
+    )
     navigation = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(share, 'launch', 'real_navigation.launch.py')
@@ -53,5 +68,6 @@ def generate_launch_description():
         SetEnvironmentVariable('ROS_DOMAIN_ID', '22'),
         SetEnvironmentVariable('ROS_LOCALHOST_ONLY', '1'),
         base_link_tf,
+        laser_tf,
         navigation,
     ])

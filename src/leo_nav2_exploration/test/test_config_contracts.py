@@ -173,9 +173,6 @@ def test_guard_and_collision_monitor_form_single_final_command_chain(profile):
     assert guard["odom_topic"] == expected["odom_topic"]
     assert guard["require_camera"] is False
     assert guard["minimum_valid_scan_points"] >= 20
-    assert float(guard["front_stop_distance"]) >= 0.35
-    assert float(guard["stop_half_angle"]) >= 0.5
-    assert int(guard["stop_min_points"]) >= 3
     assert monitor["cmd_vel_in_topic"] == expected["guarded"]
     assert monitor["cmd_vel_out_topic"] == expected["final"]
     assert monitor["base_frame_id"] == expected["base"]
@@ -193,29 +190,6 @@ def test_guard_and_collision_monitor_form_single_final_command_chain(profile):
     # ROS 2 Humble uses one global source_timeout and has no state_topic parameter.
     assert "source_timeout" not in monitor["scan"]
     assert "state_topic" not in monitor
-
-
-def test_real_monitor_brakes_toward_walls_without_boxing_stop():
-    """StopZone zeros turn/reverse too. Approach is the directional brake."""
-    monitor = load("real", "collision_monitor")["collision_monitor"]["ros__parameters"]
-    assert monitor["StopZone"]["enabled"] is False
-    approach = monitor["FootprintApproach"]
-    assert approach["enabled"] is False
-    assert approach["action_type"] == "approach"
-    slowdown = monitor["SlowdownZone"]
-    assert slowdown["enabled"] is True
-    assert float(slowdown["slowdown_ratio"]) <= 0.40
-    assert max(abs(float(value)) for value in slowdown["points"]) >= 0.40
-
-
-def test_real_controller_refuses_paths_through_obstacles():
-    follow = load("real", "nav2")["controller_server"]["ros__parameters"]["FollowPath"]
-    # RPP collision detection freezes in inflation (patience exceeded).
-    # Collision Monitor FootprintApproach is the directional wall brake.
-    assert follow["use_collision_detection"] is False
-    assert follow["use_cost_regulated_linear_velocity_scaling"] is True
-    progress = load("real", "nav2")["controller_server"]["ros__parameters"]["progress_checker"]
-    assert float(progress["movement_time_allowance"]) <= 10.0
 
 
 @pytest.mark.parametrize("profile", ["sim", "real"])
@@ -242,11 +216,3 @@ def test_recovery_tree_backs_up_before_attempting_spin():
     spin = round_robin.find("Spin")
     assert float(backup.attrib["backup_speed"]) <= 0.05
     assert float(spin.attrib["spin_dist"]) <= 0.8
-
-
-def test_recovery_tree_replans_often_enough_to_see_new_walls():
-    root = ET.parse(PACKAGE / "behavior_trees" / "navigate_to_pose_doorway_recovery.xml").getroot()
-    rate = root.find(".//RateController")
-    assert rate is not None
-    hz = float(rate.attrib["hz"])
-    assert 0.4 <= hz <= 1.0

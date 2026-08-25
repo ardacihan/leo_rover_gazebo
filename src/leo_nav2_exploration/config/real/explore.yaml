@@ -18,7 +18,7 @@ explore_node:
     # the rolling costmap's bounds.
     costmap_topic: map
     costmap_updates_topic: map_updates
-    return_to_init: false
+    return_to_init: true
     visualize: true
     # 2026-08-25 live run: at 0.1 Hz the goal was preempted every 10 s, the
     # top frontier flip-flopped between directions as the map grew, and 73%
@@ -42,4 +42,4 @@ explore_node:
     transform_tolerance: 0.5
     # Metres. Smaller finds more detail and more noise; 0.5 m is about one
     # rover width, so anything it chases is somewhere it could actually go.
-    min_frontier_size: 0.35
+    min_frontier_size: 0.5

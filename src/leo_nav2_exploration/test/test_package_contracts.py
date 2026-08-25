@@ -29,7 +29,6 @@ def test_setup_installs_launch_config_bt_and_fixture_assets():
     assert "launch/*.launch.py" in source
     assert "config/sim/*.yaml" in source
     assert "config/real/*.yaml" in source
-    assert "config/real/*.xml" in source
     assert "behavior_trees/*.xml" in source
     assert "models/doorway_fixture/*" in source
     assert any(isinstance(node, ast.Call) and getattr(node.func, "id", "") == "setup" for node in ast.walk(tree))

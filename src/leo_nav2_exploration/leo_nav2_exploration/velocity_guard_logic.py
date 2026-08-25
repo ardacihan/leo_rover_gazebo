@@ -19,12 +19,6 @@ class GuardConfig:
     min_battery_voltage: float = 0.0
     minimum_valid_scan_points: int = 20
     future_tolerance: float = 0.05
-    # 0 disables the cone stop. Real rover yaml sets ~0.42 m so a plain
-    # wall in front zeros linear speed while still allowing a turn.
-    front_stop_distance: float = 0.0
-    stop_half_angle: float = 0.70
-    stop_min_points: int = 3
-    blocked_turn_speed: float = 0.35
 
     def __post_init__(self) -> None:
         positive = (
@@ -45,14 +39,6 @@ class GuardConfig:
             raise ValueError("minimum_valid_scan_points must be at least 1")
         if not math.isfinite(self.future_tolerance) or self.future_tolerance < 0.0:
             raise ValueError("future_tolerance must be finite and non-negative")
-        if not math.isfinite(self.front_stop_distance) or self.front_stop_distance < 0.0:
-            raise ValueError("front_stop_distance must be finite and non-negative")
-        if not math.isfinite(self.stop_half_angle) or self.stop_half_angle <= 0.0:
-            raise ValueError("stop_half_angle must be finite and positive")
-        if int(self.stop_min_points) < 1:
-            raise ValueError("stop_min_points must be at least 1")
-        if not math.isfinite(self.blocked_turn_speed) or self.blocked_turn_speed < 0.0:
-            raise ValueError("blocked_turn_speed must be finite and non-negative")
 
 
 @dataclass(frozen=True)
@@ -64,12 +50,6 @@ class GuardState:
     battery_stamp: Optional[float] = None
     battery_voltage: Optional[float] = None
     scan_valid_points: Optional[int] = None
-    front_min_range: Optional[float] = None
-    front_hit_points: int = 0
-    rear_min_range: Optional[float] = None
-    rear_hit_points: int = 0
-    left_min_range: Optional[float] = None
-    right_min_range: Optional[float] = None
 
 
 @dataclass(frozen=True)
@@ -106,47 +86,6 @@ def _stop(reason: str) -> GuardDecision:
 
 def _clamp(value: float, limit: float) -> float:
     return min(max(float(value), -limit), limit)
-
-
-def min_range_in_cone(
-    ranges,
-    *,
-    angle_min: float,
-    angle_increment: float,
-    range_min: float,
-    range_max: float,
-    center: float,
-    half_angle: float,
-) -> tuple[Optional[float], int]:
-    """Nearest finite return and hit count inside a heading cone."""
-    nearest: Optional[float] = None
-    hits = 0
-    for index, raw in enumerate(ranges):
-        if not math.isfinite(raw) or raw < range_min or raw > range_max:
-            continue
-        angle = angle_min + index * angle_increment
-        delta = math.atan2(math.sin(angle - center), math.cos(angle - center))
-        if abs(delta) > half_angle:
-            continue
-        hits += 1
-        if nearest is None or raw < nearest:
-            nearest = raw
-    return nearest, hits
-
-
-def _cone_blocked(distance: Optional[float], hits: int, config: GuardConfig) -> bool:
-    if distance is None or hits < config.stop_min_points:
-        return False
-    return distance <= config.front_stop_distance
-
-
-def _clearer_turn(left: Optional[float], right: Optional[float]) -> float:
-    """Positive yaw is left. Turn toward the side with more free space."""
-    left_d = 100.0 if left is None else left
-    right_d = 100.0 if right is None else right
-    if left_d >= right_d:
-        return 1.0
-    return -1.0
 
 
 def evaluate_guard(
@@ -200,25 +139,9 @@ def evaluate_guard(
         not math.isclose(linear_x, requested_linear_x, abs_tol=1e-12)
         or not math.isclose(angular_z, requested_angular_z, abs_tol=1e-12)
     )
-    reason = "permitted_clamped" if clamped else "permitted"
-    if config.front_stop_distance > 0.0:
-        if linear_x > 0.01 and _cone_blocked(
-            state.front_min_range, state.front_hit_points, config
-        ):
-            linear_x = 0.0
-            if abs(angular_z) < 0.05:
-                angular_z = config.blocked_turn_speed * _clearer_turn(
-                    state.left_min_range, state.right_min_range
-                )
-            reason = "front_obstacle"
-        elif linear_x < -0.01 and _cone_blocked(
-            state.rear_min_range, state.rear_hit_points, config
-        ):
-            linear_x = 0.0
-            reason = "rear_obstacle"
     return GuardDecision(
         linear_x=linear_x,
         angular_z=angular_z,
         permitted=True,
-        reason=reason,
+        reason="permitted_clamped" if clamped else "permitted",
     )
