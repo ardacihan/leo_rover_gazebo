@@ -504,6 +504,92 @@ RUNS = [
                 ('common tags', '6'), ('alignment', '3.05 m / 37°')]),
 ]
 
+# Night 2026-08-25 — marker-free merging, distributed mergers, A/B pairs.
+# Selected with --night; run dirs are relative to that night's report root.
+NIGHT_RUNS = [
+    dict(key='n1r1', dir='phase1_markerfree_office', world='office_world',
+         label='office · marker-free · run 1', phase='Phase 1', verdict='fail',
+         truth=(11.0, -10.0, 180.0), spawn1=(0, 0, 0),
+         headline='64 honest abstentions, zero merges — and the blind spot',
+         note='First live run of the marker-free aligner (no ArUco nodes, no '
+              'cameras). It never committed a wrong transform, but leo1 '
+              'mapped only two rooms while leo2 mapped everything, and the '
+              'forward-only scoring capped the visibly-correct merge at 0.30. '
+              'This run bought the bidirectional/triage architecture.',
+         stats=[('abstentions', '64'), ('wrong commits', '0'),
+                ('leo1 known', '~102 m²'), ('merge', 'never')]),
+    dict(key='n1r5', dir='phase1_markerfree_office_run5', world='office_world',
+         label='office · marker-free · run 5', phase='Phase 1', verdict='pass',
+         star=True,
+         truth=(11.0, -10.0, 180.0), spawn1=(0, 0, 0),
+         headline='marker-free lock: 0.45 m / 1.3°, cameras off',
+         note='34 abstentions while the maps were disjoint, then a lock at '
+              't≈645 s held to the end at confidence 0.84. Both explorers '
+              'self-terminated, zero failed goals; the merged map is the '
+              'whole office with single walls. The Phase 2 mask activated '
+              'after the lock: leo2 stopped generating frontiers in 31,619 '
+              'cells the peer had covered.',
+         stats=[('lock', '0.45 m / 1.3°'), ('confidence', '0.84'),
+                ('abstentions first', '34'), ('failed goals', '0')]),
+    dict(key='n3part', dir='phase3_partition_office', world='office_world',
+         label='office · distributed · partition', phase='Phase 3',
+         verdict='pass', star=True,
+         truth=(11.0, -10.0, 180.0), spawn1=(0, 0, 0),
+         headline='two independent merges agree to 0.28 m; laptop killed',
+         note='Each rover ran its own aligner+merger on the peer’s map. '
+              'Both locked independently (0.38 m and 0.17 m from truth, no '
+              'markers), their estimates compose to within 0.28 m/0.6° of '
+              'identity, and both per-rover merged maps were still being '
+              'served 40 s after the central bridge was killed at minute 13.',
+         stats=[('leo1’s lock', '0.38 m / 0.4°'),
+                ('leo2’s lock', '0.17 m / 1.0°'),
+                ('mutual agreement', '0.28 m / 0.6°'),
+                ('after bridge kill', 'both maps live')]),
+    dict(key='n2oc', dir='phase2v_office_coordinated', world='office_world',
+         label='office · coordinated (Viper)', phase='Phase 2', verdict='pass',
+         truth=(11.0, -10.0, 180.0), spawn1=(0, 0, 0),
+         headline='lock 0.24 m / 0.1°; 19% less duplicated coverage',
+         note='Run on the Viper cluster (llvmpipe, lidar-only). Locked at '
+              'conf 0.94 after 37 abstentions; the shared-map mask cut '
+              'duplicated coverage to 287 m² against the baseline’s '
+              '355 m², with t90 a minute faster and 14 fewer goals.',
+         stats=[('lock', '0.24 m / 0.1°'), ('dup coverage', '287 m²'),
+                ('t90', '495 s'), ('goals/failed', '53 / 1')]),
+    dict(key='n2oi', dir='phase2v_office_independent_run2',
+         world='office_world',
+         label='office · independent baseline (Viper)', phase='Phase 2',
+         verdict='pass',
+         truth=(11.0, -10.0, 180.0), spawn1=(0, 0, 0),
+         headline='the uncoordinated baseline: 355 m² covered twice',
+         note='Same world, same knobs, no shared map. Finishes the same area '
+              'but covers 355 m² twice (vs 287 coordinated) and needs 67 '
+              'goals (vs 53).',
+         stats=[('dup coverage', '355 m²'), ('t90', '555 s'),
+                ('goals/failed', '67 / 1'), ('merge', 'n/a (independent)')]),
+    dict(key='n2dc', dir='phase2v_depot_coordinated', world='depot_world',
+         label='depot · coordinated (Viper)', phase='Phase 2', verdict='pass',
+         star=True,
+         truth=(3.0, -9.0, 180.0), spawn1=(0, 0, 0),
+         headline='the flip-prone world locks correctly: 0.18 m / 0.0°',
+         note='Depot is where the old grid matcher flipped 180° on 4 of 4 '
+              'runs. The marker-free aligner abstained 11 times, then locked '
+              'at 0.18 m/0.0° with confidence 0.94 — no markers anywhere. '
+              'Duplicated coverage 162 m² vs the baseline’s 181 m².',
+         stats=[('lock', '0.18 m / 0.0°'), ('abstentions first', '11'),
+                ('dup coverage', '162 m²'), ('old matcher here', '4/4 flips')]),
+    dict(key='n2di', dir='phase2v_depot_independent_run2', world='depot_world',
+         label='depot · independent baseline (Viper)', phase='Phase 2',
+         verdict='pass',
+         truth=(3.0, -9.0, 180.0), spawn1=(0, 0, 0),
+         headline='baseline: 181 m² covered twice, t90 a minute faster',
+         note='Honest split result: the baseline reaches 90% a minute '
+              'earlier in the small depot (the mask arrives late), but '
+              'covers 181 m² twice against 162 coordinated and fails twice '
+              'as many goals.',
+         stats=[('dup coverage', '181 m²'), ('t90', '525 s'),
+                ('goals/failed', '46 / 4'), ('merge', 'n/a (independent)')]),
+]
+
 FIGURES = [
     ('merged_map.png', 'Merged map', 'The two grids fused into one, in leo1\u2019s frame.'),
     ('traj_overlay.png', 'Both paths on the merge', 'Where each rover drove, plus the true marker positions.'),
@@ -516,9 +602,9 @@ FIGURES = [
 ]
 
 
-def build_data(root, timelapse_dir):
+def build_data(root, timelapse_dir, run_specs=None):
     runs = []
-    for spec in RUNS:
+    for spec in (run_specs if run_specs is not None else RUNS):
         d = os.path.join(root, spec['dir'])
         if not os.path.isdir(d):
             continue
@@ -572,9 +658,12 @@ def main():
     ap.add_argument('root')
     ap.add_argument('-o', '--out', required=True)
     ap.add_argument('--timelapse-dir', default='phase4_office_fixed')
+    ap.add_argument('--night', action='store_true',
+                    help='use the night-2026-08-25 run list')
     args = ap.parse_args()
 
-    data = build_data(args.root, args.timelapse_dir)
+    data = build_data(args.root, args.timelapse_dir,
+                      NIGHT_RUNS if args.night else None)
     here = os.path.dirname(os.path.abspath(__file__))
     tpl = open(os.path.join(here, 'dashboard_template.html'), encoding='utf-8').read()
     html = tpl.replace('/*__DATA__*/null', json.dumps(data))

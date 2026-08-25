@@ -157,14 +157,26 @@ Coordinated metrics (metrics script, world-bounds-clipped, truth-transform
 duplicated coverage): office coordinated t90=495 s, dup 287 m², 53 goals /
 1 failed; depot coordinated t90=585 s, dup 162 m², 41 / 2.
 
-A/B against independent: **the first two independent baselines were broken
-by a runner bug of tonight** (empty `shared_map_topic:=` is a malformed
-launch argument; the explorer launch died and both runs did 25 min with
-zero explorers). Fixed, resubmitted on Viper; table to be completed when
-they land. Note the honest expectation either way: the lock arrives in the
-final third of a run, so the mask can only claim the last minutes —
-"rendezvous arrives late" is already documented as the reason coordination
-gains are modest.
+A/B, coordinated vs independent, one seed each (all on Viper, same knobs,
+markerfree, no cameras; the first two baselines were broken by a runner bug
+— empty `shared_map_topic:=` killed the explorer launch — fixed and rerun):
+
+| map | condition | final m² | t90 s | **dup m²** | goals | failed |
+|---|---|---|---|---|---|---|
+| office | coordinated | 181.2 | 495 | **287.1** | 53 | 1 |
+| office | independent | 179.8 | 555 | **354.9** | 67 | 1 |
+| depot | coordinated | 132.8 | 585 | **162.2** | 41 | 2 |
+| depot | independent | 133.7 | 525 | **180.9** | 46 | 4 |
+
+**Gate met on both maps**: coordination cuts duplicated coverage by 19%
+(office) and 10% (depot), with the same final area. Office also finishes
+faster with fewer goals; depot's baseline reaches t90 a minute earlier —
+honest split, consistent with the documented "rendezvous arrives late"
+mechanism (the lock lands in the final third, so the mask can only claim
+the last minutes; the small depot leaves it least room). No stalls in any
+condition; run5 additionally shows the seamless pre-lock fallback (the
+explorers ran fine through 34 abstain cycles before the merge existed).
+n=1 per cell.
 
 ## Phase 3 — distributed
 

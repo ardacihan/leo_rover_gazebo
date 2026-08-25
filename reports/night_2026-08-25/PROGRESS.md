@@ -317,6 +317,23 @@ Read this ledger first on every tick. Never restart a phase marked COMPLETE.
   (jobs 11007856/57)** — results ~01:55.
 - Docker Desktop still restarting; Phase 4 rehearsal rerun queued on it
   (first 2 of 6 checks had already PASSED when the daemon died).
+### 2026-08-25 01:5x — tick 8 — closing sprint (user: run everything, Viper+local)
+
+- Docker needed the HARD reset (kill procs + wsl --shutdown + relaunch);
+  soft restart was not enough. Recovered; **Phase 4 rehearsal re-launched
+  and past the map checks again (2/6 PASS, jog running).**
+- Viper baselines 11007856/57 both RUNNING healthily (fix confirmed:
+  explorers alive, coverage 90–110 m² at t=450 s). ETA ~01:58 + sync.
+- All four phase2v runs' media rendered; **depot marker-free merged map
+  visually verified: full depot, single walls, one faint <0.2 m offset at
+  the NW edge — consistent with the 0.18 m lock.**
+- LAB_SESSION.md finalized (markerfree fallback with live numbers,
+  distributed option + rob_a/rob_b edit flag, clock-sync first-step, stall
+  table + known-good numbers updated). TOMORROW_PLAN bonus tier updated to
+  match. REPORT exec summary + 9-point limitations written. Memory saved
+  (leo-rover-markerfree-merge, leo-rover-night-2026-08-25-ops).
+- Remaining: rehearsal verdict → baselines → final A/B table → dashboard
+  → REPORT final pass → last commit/push.
 - **Viper identified:** Slurm cluster, ssh viper11 via WSL bridge
   (`wsl.exe -d Ubuntu -- bash -lc "ssh viper11 '<cmd>'"`), 8 shared APU
   (ROCm) slots, courtesy cap ~6 jobs. Recon+setup delegated to a subagent

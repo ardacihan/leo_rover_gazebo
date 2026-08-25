@@ -48,6 +48,8 @@ is non-empty.
 
 import os
 
+import yaml
+
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import (DeclareLaunchArgument, IncludeLaunchDescription,
@@ -61,6 +63,23 @@ from launch_ros.actions import Node
 # /rob_a/tf and loses map->base unless the topics are pinned back to global.
 TF_GLOBAL = [('tf', '/tf'), ('tf_static', '/tf_static'),
              ('/tf', '/tf'), ('/tf_static', '/tf_static')]
+
+
+def _yaml_params(path, node_key):
+    """One node's ros__parameters dict from a config file.
+
+    A parameter file whose top-level key is a bare node name does not match
+    that node under a namespace (Humble matches the full name), so in
+    namespaced mode the yaml silently fails to load: the sim rehearsal
+    caught collision_monitor aborting on 'StopZone.type is not initialized'
+    and slam running on defaults. Inline dicts apply unconditionally, so
+    under a namespace the file is loaded here and passed inline. The
+    default (un-namespaced) path keeps passing the file itself,
+    byte-for-byte as fielded.
+    """
+    with open(path, encoding='utf-8') as handle:
+        data = yaml.safe_load(handle) or {}
+    return dict(data.get(node_key, {}).get('ros__parameters', {}))
 
 
 def _launch_setup(context):
@@ -86,11 +105,16 @@ def _launch_setup(context):
 
     common = {'output': 'screen', 'respawn': False}
 
+    def cfg_params(fname, node_key):
+        """File path in the default mode; inline dict under a namespace."""
+        path = os.path.join(cfg, fname)
+        return _yaml_params(path, node_key) if ns else path
+
     scan_filter = Node(
         package='laser_filters',
         executable='scan_to_scan_filter_chain',
         name='scan_to_scan_filter_chain',
-        parameters=[os.path.join(cfg, 'scan_filter.yaml')] + st,
+        parameters=[cfg_params('scan_filter.yaml', 'scan_to_scan_filter_chain')] + st,
         remappings=[('scan', scan_topic),
                     ('scan_filtered', f'{p}/scan_filtered')] + tf,
         **nskw, **common,
@@ -110,7 +134,7 @@ def _launch_setup(context):
         **nskw, **common,
     ) if ns else None
 
-    slam_params = [os.path.join(cfg, 'slam.yaml')]
+    slam_params = [cfg_params('slam.yaml', 'slam_toolbox')]
     if ns:
         slam_params.append({
             'odom_frame': f'{fp}odom',
@@ -139,14 +163,14 @@ def _launch_setup(context):
         package='nav2_velocity_smoother',
         executable='velocity_smoother',
         name='velocity_smoother',
-        parameters=[os.path.join(cfg, 'nav2.yaml')] + st,
+        parameters=[cfg_params('nav2.yaml', 'velocity_smoother')] + st,
         remappings=[('cmd_vel', f'{p}/cmd_vel_nav'),
                     ('cmd_vel_smoothed', f'{p}/cmd_vel_smoothed')] + tf,
         **nskw, **common,
     )
 
     guard_odom = LaunchConfiguration('guard_odom_topic').perform(context)
-    guard_params = [os.path.join(cfg, 'velocity_guard.yaml')]
+    guard_params = [cfg_params('velocity_guard.yaml', 'velocity_guard')]
     if ns:
         guard_params.append({
             'input_topic': f'{p}/cmd_vel_smoothed',
@@ -169,7 +193,7 @@ def _launch_setup(context):
     )
 
     cm_params = [
-        os.path.join(cfg, 'collision_monitor.yaml'),
+        cfg_params('collision_monitor.yaml', 'collision_monitor'),
         # FootprintApproach subscribes to /local_costmap/published_footprint,
         # which only Nav2's local costmap publishes. With no Nav2 running it
         # would sit permanently unarmed while looking configured, so it is

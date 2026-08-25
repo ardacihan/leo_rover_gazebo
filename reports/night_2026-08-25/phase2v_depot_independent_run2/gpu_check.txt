@@ -1,0 +1,12 @@
+=== rocm-smi (host, informational -- rendering is llvmpipe by design) ===
+
+
+============================================= ROCm System Management Interface =============================================
+======================================================= Concise Info =======================================================
+Device  Node  IDs              Temp        Power     Partitions          SCLK   MCLK     Fan  Perf    PwrCap  VRAM%  GPU%  
+[3m              (DID,     GUID)  (Junction)  (Socket)  (Mem, Compute, ID)                                                    [0m
+============================================================================================================================
+0       2     0x74a0,   10326  32.0°C      132.0W    NPS1, SPX, 0        94Mhz  1300Mhz  0%   manual  700.0W  0%     0%    
+=== Ogre renderer (the check that actually decides) ===
+INFO:    gocryptfs not found, will not be able to use gocryptfs
+NO RENDERER LINE after 60s
