@@ -153,8 +153,24 @@ Output: transform, per-tag residuals, PASS/FAIL vs your paced truth, and
 
 - Live shared map: put both rovers + laptop on domain 42 (CycloneDDS peer
   list, `LAB_SESSION.md` §2) and run `shared_align.launch.py` on the laptop.
-  Known risk: `real_mapping.launch.py` is NOT namespaced — both rovers publish
-  `/map`. That is exactly the clobbering bug from 2026-07-06. Do not attempt a
-  live merge without either namespacing it (untested!) or remapping one
-  rover's `/map` at launch.
-- Coordinated exploration: sim-only claim; show `dashboard.html`.
+  **Overnight update (2026-08-25):** `real_mapping.launch.py` IS namespaced
+  now — `robot_ns:=rob_a` / `rob_b` prefixes the whole chain including the
+  load-bearing `/map` remap, default byte-for-byte unchanged, brought up
+  twice against the sim through this exact launch file. On hardware it is
+  still a first flight; keep it in the bonus tier.
+- **Marker-free merge (overnight)**: if tags fail entirely there is now a
+  better fallback than paced poses: `alignment_mode:=markerfree` (or
+  offline, `scripts/merge_benchmark.py`-style matching via
+  `scripts/marker_free_matcher.py` on the two saved maps). Benchmarked
+  6/7 ≤0.5 m with zero confident-wrong; three live sim locks 0.18–0.45 m,
+  including symmetric depot-style rooms. It abstains until the maps
+  overlap enough — that is by design; a merge that refuses is not a
+  failure, a confidently wrong one is.
+- **Distributed merger (overnight)**: `distributed_shared_map.launch.py`
+  gives each rover its own merged map with no laptop dependency (sim
+  proof: independent locks agreeing to 0.28 m/0.6°, survives killing the
+  laptop node). Frame names are leo1/leo2 — 30-second edit for rob_a/rob_b.
+- Coordinated exploration: the merged map now actually redirects frontier
+  search (peer-covered space masked; live sim evidence in
+  `reports/night_2026-08-25/`). Still a sim-only claim for the demo; show
+  `dashboard.html` and the night report.

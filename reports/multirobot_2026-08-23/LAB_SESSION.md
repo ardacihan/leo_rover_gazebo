@@ -249,6 +249,49 @@ ros2 launch multi_robot_shared_mapping shared_align.launch.py \
 Then drive both rovers — teleop first, always — through the shared corridor so
 each sees the markers.
 
+**Marker-free fallback (new, night 2026-08-25).** If the markers fail (bad
+print, wrong ids, lighting), the merge no longer depends on them:
+`alignment_mode:=markerfree` runs the benchmarked global grid matcher with
+margin abstention — 6/7 recorded pairs within 0.5 m/10°, zero
+confident-wrong, and three live sim locks at 0.18–0.45 m including
+depot-style symmetric rooms. It abstains (honestly, with the reason on
+`/alignment_debug_json`) until the maps overlap enough; expect the lock
+later than the tag path (~10 min vs 5–7). Markers remain the primary for
+the demo; this is the "no babysitting" insurance.
+
+**Distributed option (new, night 2026-08-25).** To remove the laptop as a
+single point of failure, run the per-rover merger on each rover instead of
+`shared_align` on the laptop:
+
+```bash
+ros2 launch multi_robot_shared_mapping distributed_shared_map.launch.py \
+    use_sim_time:=false alignment_mode:=markerfree
+```
+
+Each rover then merges the peer's map locally and publishes its own
+`/leo{i}/shared_map` (own frame — the explorer mask needs no alignment TF).
+Verified in sim: both rovers locked independently, their merges agreed to
+0.28 m/0.6°, and both shared maps stayed alive after the laptop node was
+killed mid-run. The launch currently uses the leo1/leo2 names; for rob_a/
+rob_b, edit the two `_rover_pair(...)` lines at the bottom of the launch
+file — 30 seconds, flagged here so nobody hunts for a parameter that does
+not exist yet.
+
+**Clock synchronisation (check before trusting anything cross-rover).**
+Peer poses are TF lookups across machines and skew turns straight into
+position error — 1 s of skew at 0.26 m/s is 26 cm, comparable to the whole
+alignment error budget. On each machine and the laptop:
+
+```bash
+timedatectl status        # NTP active: yes, and the same source
+ntpdate -q <laptop-ip>    # offset should be << 0.1 s
+```
+
+If there is no NTP on the lab network, run chrony on the laptop and point
+both rovers at it before starting anything. The sim could not rehearse
+this (single clock); it is the one bring-up step with zero overnight
+coverage — do it first.
+
 ---
 
 ## 5. What to check before believing anything
@@ -280,7 +323,7 @@ In this order. Each one has cost a whole run in sim.
 |---|---|---|
 | `/alignment_locked` never true | rovers have not seen the same markers | drive both through the shared corridor; check `/rob_*/tag_detections` is non-empty for each |
 | Locked, but the merged map has doubled walls | alignment wrong despite confidence | check the tag-vs-grid disagreement in the bridge log; trust the tags |
-| Merged map is a rotated copy of itself | grid matcher found a 90°/180° flip | expected in rectilinear rooms; the bridge should already be refusing it — check `require_tag_evidence` is true |
+| Merged map is a rotated copy of itself | grid matcher found a 90°/180° flip | expected in rectilinear rooms; the bridge should already be refusing it — check `require_tag_evidence` is true (hybrid mode). In `markerfree` mode the margin abstention is the defense: 0 flips in 3 live runs + 10 benchmark pairs, but if you ever see one, stop trusting the merge and fall back to markers |
 | One rover's map is fragmented, walls dashed | that rover's SLAM is diverging | stop and restart it; check the EKF is actually running and the IMU topic is live |
 | A rover sits still, camera sees a blank wall | wedged | it has no escape; move it by hand and note the spot |
 | Confidence high, transform wrong | residuals measure self-consistency, not correctness | get a third common marker with good spread |
@@ -302,3 +345,7 @@ From the sim runs in `REPORT.md`. Treat as expectations, not guarantees.
 - SLAM drift after ~19 m of driving: **~3 m** — this is what breaks large spaces.
 - Time to first alignment lock: **5–7 minutes** of driving, once both rovers are
   moving through shared space.
+- Marker-free lock (night 2026-08-25, n=3): **0.18–0.45 m / 0.0–1.3°**,
+  arriving at ~10–11 minutes; 11–37 honest abstentions first is normal.
+- Per-rover (distributed) merges agree with each other to **~0.28 m / 0.6°**
+  (n=1).

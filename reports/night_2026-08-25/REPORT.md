@@ -7,7 +7,36 @@ marked otherwise; n=1 flagged wherever it is n=1.
 
 ## Executive summary
 
-(to be written last)
+The mission was: two rovers that know nothing about each other build maps,
+merge them **with or without markers**, and each uses the other's coverage —
+distributed, and ready for the lab at 9am. As of this report:
+
+- **Marker-free merging works, live.** A new global matcher (bidirectional
+  FFT search → 120 candidate modes → triage → full-resolution polish →
+  margin abstention) scores 6/7 recorded pairs within 0.5 m/10° with **zero
+  confident-wrong** (baseline: 0/10, all flips), and locked in **three live
+  sim runs with markers and cameras off: 0.45, 0.24 and 0.18 m** — the last
+  in the depot, the world where the old matcher flipped 4 of 4 times. When
+  it cannot be sure, it abstains and says why; abstention-until-markers is
+  the designed production behaviour.
+- **The merged map now changes behaviour**: unknown cells the peer already
+  covered stop generating frontiers (mask activated live, up to 31,619
+  cells), with a seamless fall-back when the merge is absent or stale.
+- **It is distributed**: each rover runs its own aligner+merger on the
+  peer's map and publishes its own merged map in its own frame. In the
+  partition run both rovers locked independently, their merges agreed to
+  0.28 m/0.6°, and the merged maps stayed alive after the central node was
+  killed.
+- **The real launch path is namespaced** behind defaults that leave the
+  field-validated single-rover stack byte-for-byte unchanged, and was
+  brought up twice (rob-style namespaces) against the simulator through
+  the same launch file the rovers will run.
+- Compute: local RTX 4060 Ti (D3D12) for interactive runs plus the Viper
+  Slurm cluster (apptainer port of the exact sim image, llvmpipe at RTF
+  ~0.95) for parallel A/B measurement runs.
+
+Everything below is the evidence; the limitations section is the part to
+read before the demo.
 
 ## Phase 0 — orientation
 
@@ -193,7 +222,40 @@ Details and copy-pasteable commands: `viper_recon.md`.
 
 ## Honest limitations
 
-- (collect at the end; keep every n=1 marked)
+1. **Strict Phase 1 pass count is 6/10, not 7/10.** The 7th attempted pair
+   (0.65 m) is drift-capped — the tag pipeline lands on the same transform —
+   and the two husarion pairs abstain on genuinely partial overlap. The
+   gate's hard clause (zero confident-wrong) is met everywhere, including
+   three live runs.
+2. **Matcher speed**: 4.0–7.1 s/pair in-container; the two largest office
+   pairs exceed the 5 s target by ~2 s. The live aligner cycles every
+   ~15 s, so this does not block live use.
+3. **The lock arrives late** (~10–11 min in a ~13 min exploration run), so
+   the mask can only influence the final minutes; coordination gains over
+   independent are correspondingly modest. This is the known "rendezvous
+   arrives late" behaviour, now with marker-free numbers attached.
+4. **Post-partition exploration was demonstrated for only ~4 s** (the
+   explorers finished right after the kill). Merge-path independence from
+   the central node is by construction (no subscription), and both merged
+   maps served the saver 40 s after the kill — but a long post-partition
+   exploration was not observed.
+5. **All of tonight is simulation.** The namespaced real launch path loads
+   and runs against the sim; none of it has touched hardware. The 13
+   pre-existing `leo_nav2_exploration` contract-test failures include
+   `[real]`-profile sensor/slam contracts — recheck against the rovers
+   before trusting those configs.
+6. **Clock sync between machines has zero overnight coverage** (single sim
+   clock); it is called out as the first bring-up step in LAB_SESSION.md.
+7. **Loader quirk**: the benchmark's map loader reads the saved-map unknown
+   pixel as free (yaml free_thresh 0.25 vs pixel 205). Harmless for wall
+   matching (thresholds were calibrated with it, and the live aligner
+   consumes proper OccupancyGrids), but any future *area* metric must use
+   the strict loader in `phase2_metrics.py`.
+8. **n=1 or n=3 everywhere.** Depot's own history shows 0.19–2.25 m
+   variance across identical runs; do not over-read any single number
+   above.
+9. Viper runs used llvmpipe software rendering, lidar-only; **cameras (and
+   therefore ArUco) were never tested on Viper** — marker runs stay local.
 
 ## Deliverables checklist
 
