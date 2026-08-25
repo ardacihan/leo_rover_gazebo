@@ -35,6 +35,11 @@ def launch_setup(context, *args, **kwargs):
     markers_file = LaunchConfiguration('markers_file').perform(context)
     coverage_target = float(
         LaunchConfiguration('camera_coverage_target').perform(context))
+    use_sim_time = LaunchConfiguration(
+        'use_sim_time').perform(context).lower() == 'true'
+    base_suffix = LaunchConfiguration('base_frame_suffix').perform(context)
+    camera_suffix = LaunchConfiguration('camera_frame_suffix').perform(context)
+    command_suffix = LaunchConfiguration('command_topic_suffix').perform(context)
     cfg_dir = os.path.join(
         get_package_share_directory('leo_rover_exploration'), 'config')
 
@@ -49,6 +54,8 @@ def launch_setup(context, *args, **kwargs):
     # independent baseline stays byte-identical.
     shared_map_topic = LaunchConfiguration(
         'shared_map_topic').perform(context).strip()
+    shared_alignment_topic = LaunchConfiguration(
+        'shared_alignment_topic').perform(context).strip()
 
     nodes = []
     for i in range(num_robots):
@@ -56,15 +63,28 @@ def launch_setup(context, *args, **kwargs):
         params_file = os.path.join(cfg_dir, f'frontier_explorer_{ns}_multi.yaml')
         overrides = {'coordination_mode': mode,
                      'share_claims': share_claims,
-                     'common_frame': common_frame}
+                     'common_frame': common_frame,
+                     'use_sim_time': use_sim_time,
+                     'robot_base_frame': f'{ns}/{base_suffix}',
+                     'camera_frame': f'{ns}/{camera_suffix}',
+                     'landmarks_topic': f'/{ns}/aruco_markers',
+                     # Physical runs must select cmd_vel_nav so recovery
+                     # motions enter above the safety chain. The simulation
+                     # default preserves the existing /leo{i}/cmd_vel path.
+                     'cmd_vel_topic': f'/{ns}/{command_suffix}'}
         if shared_map_topic and mode == 'coordinated':
             # 'per_robot' -> each explorer consumes ITS OWN rover's merged
             # map (/leo{i}/shared_map, published in that rover's own frame
             # by the distributed per-rover merger). Anything else is a
             # literal topic (the central merger's /shared_map).
             overrides['shared_map_topic'] = (
-                f'/{ns}/shared_map' if shared_map_topic == 'per_robot'
+                f'/{ns}/shared_map_raw' if shared_map_topic == 'per_robot'
                 else shared_map_topic)
+            # The central merger publishes rover-1-only fallback data before
+            # alignment. Gate frontier masking on the bridge lock so cleanup
+            # of that fallback cannot masquerade as peer exploration.
+            if shared_map_topic != 'per_robot' and shared_alignment_topic:
+                overrides['shared_alignment_topic'] = shared_alignment_topic
         # Per-rover, because each rover's map is anchored on its own spawn, so
         # the shared world box lands somewhere different in each frame.
         bounds = LaunchConfiguration(f'{ns}_bounds').perform(context).strip()
@@ -120,12 +140,20 @@ def generate_launch_description():
         'mock_markers_office_world.yaml')
     return LaunchDescription([
         DeclareLaunchArgument('num_robots', default_value='2'),
+        DeclareLaunchArgument('use_sim_time', default_value='true'),
+        DeclareLaunchArgument('base_frame_suffix', default_value='base_link'),
+        DeclareLaunchArgument(
+            'camera_frame_suffix', default_value='sensor_camera_link'),
+        DeclareLaunchArgument('command_topic_suffix', default_value='cmd_vel'),
         DeclareLaunchArgument(
             'coordination_mode', default_value='coordinated',
             description='coordinated | independent'),
         DeclareLaunchArgument(
             'shared_map_topic', default_value='',
             description='merged map topic for frontier masking; empty = off'),
+        DeclareLaunchArgument(
+            'shared_alignment_topic', default_value='/alignment_locked',
+            description='Bool lock required before a central shared map may mask frontiers'),
         DeclareLaunchArgument(
             'item_search', default_value='false',
             description='Enable camera sweep + mock detectors + item registry'),

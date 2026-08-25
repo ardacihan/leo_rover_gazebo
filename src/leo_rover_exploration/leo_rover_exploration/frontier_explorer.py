@@ -31,7 +31,7 @@ from rclpy.node import Node
 from rclpy.qos import (QoSDurabilityPolicy, QoSHistoryPolicy, QoSProfile,
                        QoSReliabilityPolicy)
 from slam_toolbox.srv import SaveMap, SerializePoseGraph
-from std_msgs.msg import String as StringMsg
+from std_msgs.msg import Bool, String as StringMsg
 from tf2_ros import Buffer, TransformListener
 from visualization_msgs.msg import Marker, MarkerArray
 
@@ -127,6 +127,8 @@ class FrontierExplorer(Node):
         # shared_map_max_age) silently degrades to own-map behaviour.
         self.declare_parameter('shared_map_topic', '')
         self.declare_parameter('shared_map_max_age', 20.0)
+        self.declare_parameter('shared_alignment_topic', '')
+        self.declare_parameter('cancel_redundant_shared_goal', True)
         self.declare_parameter('discount_radius', 3.0)      # meters
         self.declare_parameter('discount_strength', 1.0)    # 0..1
         # Don't declare exploration finished until we've actually driven this
@@ -146,6 +148,13 @@ class FrontierExplorer(Node):
         self.declare_parameter('sweep_max_cluster', 60)     # wall cells
         self.declare_parameter('coverage_update_period', 0.5)
         self.declare_parameter('detections_topic', '/leo1/aruco_detections')
+        # Persistent, detector-confirmed landmarks in this rover's map frame.
+        # Frontiers already border unknown cells, so a bonus near these points
+        # expands marker-bearing areas early without commanding the rover to
+        # drive directly at a wall-mounted marker.
+        self.declare_parameter('landmarks_topic', '/leo1/aruco_markers')
+        self.declare_parameter('marker_frontier_radius', 4.0)
+        self.declare_parameter('marker_frontier_bonus', 18.0)
         self.declare_parameter('verify_min_views', 2)
         self.declare_parameter('verify_max_attempts', 2)
         self.declare_parameter('verify_min_view_distance', 0.5)
@@ -217,8 +226,12 @@ class FrontierExplorer(Node):
         self.verify_min_view_interval = gp('verify_min_view_interval')
         self.verify_min_yaw_delta = gp('verify_min_yaw_delta')
         self.sweep_heading_weight = gp('sweep_heading_weight')
+        self.marker_frontier_radius = float(gp('marker_frontier_radius'))
+        self.marker_frontier_bonus = float(gp('marker_frontier_bonus'))
         self.share_claims = gp('share_claims')
         self._peer_offsets = {}      # peer -> (offset, resolved_at_sec)
+        self._peer_positions = {}    # peer -> last position in our map frame
+        self._peer_tracking_started_at = None
 
         self.map_msg = None
         self.state = STATE_EXPLORING
@@ -242,6 +255,8 @@ class FrontierExplorer(Node):
 
         # item registry: id -> {'pos','z','views','confirmed','attempts'}
         self.items = {}
+        self.landmarks = {}          # confirmed ArUco id -> own-map (x, y)
+        self._marker_priority_frontier_count = 0
         self.pending_verify = deque()
         self.verify_target = None
         self.last_sweep_target = None
@@ -263,6 +278,8 @@ class FrontierExplorer(Node):
             'validations_rejected': 0, 'costmap_clears': 0,
             'watchdog_recoveries': 0, 'escapes': 0, 'distance_traveled': 0.0,
             'sweep_goals': 0, 'verify_goals': 0,
+            'peer_goals_cancelled': 0,
+            'marker_priority_goals': 0,
         }
         self._last_xy = None
         self._last_yaw = 0.0
@@ -280,6 +297,8 @@ class FrontierExplorer(Node):
             OccupancyGrid, gp('map_topic'), self._map_cb, map_qos)
         self.create_subscription(
             MarkerArray, gp('detections_topic'), self._detection_cb, 10)
+        self.create_subscription(
+            MarkerArray, gp('landmarks_topic'), self._landmarks_cb, map_qos)
 
         # Shared (merged) map. The merger publishes VOLATILE; requesting
         # TRANSIENT_LOCAL here would silently never match (same QoS mismatch
@@ -287,9 +306,21 @@ class FrontierExplorer(Node):
         self.shared_map_msg = None
         self._shared_map_time = None
         self._shared_mask_active = False
+        self._shared_map_available = False
         self._shared_masked_cells = 0
         shared_topic = str(gp('shared_map_topic')).strip()
         self.shared_map_max_age = float(gp('shared_map_max_age'))
+        self.cancel_redundant_shared_goal = bool(
+            gp('cancel_redundant_shared_goal'))
+        self._shared_map_configured = bool(shared_topic)
+        self._completion_basis = 'local map'
+        self._waiting_for_shared_completion = False
+        alignment_topic = str(gp('shared_alignment_topic')).strip()
+        self._shared_alignment_required = bool(alignment_topic)
+        self._shared_alignment_locked = not self._shared_alignment_required
+        if alignment_topic:
+            self.create_subscription(
+                Bool, alignment_topic, self._shared_alignment_cb, 10)
         if shared_topic:
             shared_qos = QoSProfile(
                 depth=1,
@@ -361,6 +392,17 @@ class FrontierExplorer(Node):
         self.shared_map_msg = msg
         self._shared_map_time = self._now_sec()
 
+    def _shared_alignment_cb(self, msg):
+        locked = bool(msg.data)
+        if self._shared_alignment_locked and not locked:
+            self.get_logger().warn(
+                'shared-map alignment lock lost; disabling peer frontier mask')
+        self._shared_alignment_locked = locked
+        if not locked:
+            self._shared_map_available = False
+            self._shared_mask_active = False
+            self._shared_masked_cells = 0
+
     def _claim_cb(self, msg):
         if msg.ns == self.robot_name:
             return
@@ -415,6 +457,22 @@ class FrontierExplorer(Node):
                         self.verify_target = None
                         self._cancel_goal()
         self._publish_items()
+
+    def _landmarks_cb(self, msg):
+        """Replace the local copy of the detector's persistent registry."""
+        current = {}
+        expected = str(self.map_frame).lstrip('/')
+        for marker in msg.markers:
+            if marker.action != Marker.ADD:
+                continue
+            frame = str(marker.header.frame_id).lstrip('/')
+            if frame and frame != expected:
+                continue
+            current[int(marker.id)] = (
+                float(marker.pose.position.x),
+                float(marker.pose.position.y),
+            )
+        self.landmarks = current
 
     # ------------------------------------------- shared item/coverage claims
 
@@ -665,8 +723,7 @@ class FrontierExplorer(Node):
         if self.world_bounds is not None:
             xmin, xmax, ymin, ymax = self.world_bounds
             rows, cols = np.indices(frontier.shape)
-            wx = info.origin.position.x + (cols + 0.5) * info.resolution
-            wy = info.origin.position.y + (rows + 0.5) * info.resolution
+            wx, wy = FrontierExplorer._grid_cells_to_world(info, rows, cols)
             frontier &= (wx >= xmin) & (wx <= xmax) & (wy >= ymin) & (wy <= ymax)
 
         cells = np.argwhere(frontier)
@@ -675,8 +732,6 @@ class FrontierExplorer(Node):
 
         frontier_set = {(int(r), int(c)) for r, c in cells}
         res = info.resolution
-        ox, oy = info.origin.position.x, info.origin.position.y
-
         clusters = []
         while frontier_set:
             seed = frontier_set.pop()
@@ -696,12 +751,39 @@ class FrontierExplorer(Node):
             d2 = ((pts[:, 0] - cy) ** 2 + (pts[:, 1] - cx) ** 2)
             gr, gc = pts[int(np.argmin(d2))]
             gr, gc = self._snap_goal(free, int(gr), int(gc))
+            centroid_x, centroid_y = FrontierExplorer._grid_cells_to_world(
+                info, np.asarray(cy), np.asarray(cx))
+            goal_x, goal_y = FrontierExplorer._grid_cells_to_world(
+                info, np.asarray(gr), np.asarray(gc))
             clusters.append({
                 'size_m': len(members) * res,
-                'centroid': (ox + (cx + 0.5) * res, oy + (cy + 0.5) * res),
-                'goal': (ox + (gc + 0.5) * res, oy + (gr + 0.5) * res),
+                'centroid': (float(centroid_x), float(centroid_y)),
+                'goal': (float(goal_x), float(goal_y)),
             })
         return clusters
+
+    @staticmethod
+    def _origin_yaw(info):
+        q = getattr(info.origin, 'orientation', None)
+        if q is None:
+            return 0.0
+        return math.atan2(
+            2.0 * (getattr(q, 'w', 1.0) * getattr(q, 'z', 0.0)
+                   + getattr(q, 'x', 0.0) * getattr(q, 'y', 0.0)),
+            1.0 - 2.0 * (getattr(q, 'y', 0.0) ** 2
+                         + getattr(q, 'z', 0.0) ** 2),
+        )
+
+    @staticmethod
+    def _grid_cells_to_world(info, rows, cols):
+        local_x = (cols + 0.5) * info.resolution
+        local_y = (rows + 0.5) * info.resolution
+        yaw = FrontierExplorer._origin_yaw(info)
+        c, s = math.cos(yaw), math.sin(yaw)
+        return (
+            info.origin.position.x + c * local_x - s * local_y,
+            info.origin.position.y + s * local_x + c * local_y,
+        )
 
     def _peer_known_mask(self, info, unknown):
         """Bool array marking OUR unknown cells the shared map knows, or None.
@@ -714,10 +796,20 @@ class FrontierExplorer(Node):
         msg = self.shared_map_msg
         if msg is None or self._shared_map_time is None:
             return None
+        # The central merger publishes a leo1-only fallback before alignment.
+        # It may also clean tiny unknown holes. Neither is peer coverage.
+        # Never let that pre-lock map cancel or mask a real frontier.
+        if (self._shared_alignment_required
+                and not self._shared_alignment_locked):
+            self._shared_map_available = False
+            self._shared_mask_active = False
+            self._shared_masked_cells = 0
+            return None
         age = self._now_sec() - self._shared_map_time
         if age > self.shared_map_max_age:
-            if self._shared_mask_active:
+            if self._shared_map_available:
                 self._shared_mask_active = False
+                self._shared_map_available = False
                 self.get_logger().info(
                     f'shared-map mask OFF (stale by {age:.0f}s); '
                     'falling back to own map')
@@ -734,19 +826,32 @@ class FrontierExplorer(Node):
         if off is None:
             return None
         rows, cols = np.nonzero(unknown)
+        if not self._shared_map_available:
+            self.get_logger().info(
+                'shared-map union available: peer-covered unknown space now '
+                'suppresses local frontier work')
+        self._shared_map_available = True
         if rows.size == 0:
-            return None
-        res = info.resolution
-        wx = info.origin.position.x + (cols + 0.5) * res
-        wy = info.origin.position.y + (rows + 0.5) * res
+            self._shared_masked_cells = 0
+            return np.zeros_like(unknown)
+        wx, wy = FrontierExplorer._grid_cells_to_world(info, rows, cols)
         c, s = math.cos(off[2]), math.sin(off[2])
         gx = off[0] + c * wx - s * wy
         gy = off[1] + s * wx + c * wy
         sinfo = msg.info
         sgrid = np.asarray(msg.data, dtype=np.int8).reshape(
             sinfo.height, sinfo.width)
-        ci = ((gx - sinfo.origin.position.x) / sinfo.resolution).astype(int)
-        ri = ((gy - sinfo.origin.position.y) / sinfo.resolution).astype(int)
+        # OccupancyGrid origin orientation is part of the map geometry. Undo
+        # it before indexing the shared grid (real SLAM maps are allowed to
+        # publish a non-identity origin pose).
+        dx = gx - sinfo.origin.position.x
+        dy = gy - sinfo.origin.position.y
+        syaw = FrontierExplorer._origin_yaw(sinfo)
+        sc, ss = math.cos(syaw), math.sin(syaw)
+        local_x = sc * dx + ss * dy
+        local_y = -ss * dx + sc * dy
+        ci = np.floor(local_x / sinfo.resolution).astype(int)
+        ri = np.floor(local_y / sinfo.resolution).astype(int)
         ok = ((ci >= 0) & (ci < sinfo.width) & (ri >= 0) & (ri < sinfo.height))
         known = np.zeros(rows.size, dtype=bool)
         known[ok] = sgrid[ri[ok], ci[ok]] != UNKNOWN
@@ -754,7 +859,9 @@ class FrontierExplorer(Node):
         mask[rows[known], cols[known]] = True
         n = int(known.sum())
         self._shared_masked_cells = n
-        if n > 0 and not self._shared_mask_active:
+        active_before = self._shared_mask_active
+        self._shared_mask_active = n > 0
+        if n > 0 and not active_before:
             self._shared_mask_active = True
             self.get_logger().info(
                 f'shared-map mask ON: {n} unknown cells already covered '
@@ -869,7 +976,30 @@ class FrontierExplorer(Node):
         return (self.gain_scale * cluster['size_m']
                 - self.potential_scale * math.hypot(
                     cluster['goal'][0] - robot[0],
-                    cluster['goal'][1] - robot[1]))
+                    cluster['goal'][1] - robot[1])
+                + self._marker_bonus(cluster))
+
+    def _marker_bonus(self, cluster):
+        """Return a distance-decaying bonus for marker-adjacent unknown."""
+        if not self.landmarks or self.marker_frontier_radius <= 0.0:
+            return 0.0
+        gx, gy = cluster['goal']
+        distance = min(
+            math.hypot(gx - marker[0], gy - marker[1])
+            for marker in self.landmarks.values())
+        if distance >= self.marker_frontier_radius:
+            return 0.0
+        return self.marker_frontier_bonus * (
+            1.0 - distance / self.marker_frontier_radius)
+
+    @staticmethod
+    def _goal_has_matching_frontier(goal, clusters, replan_distance):
+        if goal is None:
+            return False
+        return any(math.hypot(
+            cluster['goal'][0] - goal[0],
+            cluster['goal'][1] - goal[1]) < replan_distance
+            for cluster in clusters)
 
     # ----------------------------------------------------------- main cycle
 
@@ -905,6 +1035,29 @@ class FrontierExplorer(Node):
             return
 
         clusters = [c for c in self._find_frontiers() if self._eligible(c)]
+        self._marker_priority_frontier_count = sum(
+            1 for cluster in clusters if self._marker_bonus(cluster) > 0.0)
+
+        # Re-evaluate an in-flight frontier against the latest shared union.
+        # A goal was valid when dispatched can disappear after the other rover
+        # maps the room. Cancel it immediately instead of honoring commitment
+        # hysteresis and duplicating the peer's travel.
+        if (self.cancel_redundant_shared_goal
+                and self._shared_map_available
+                and self._shared_mask_active
+                and self.navigating
+                and self.goal_kind == GOAL_FRONTIER
+                and self.goal_pos is not None
+                and not FrontierExplorer._goal_has_matching_frontier(
+                    self.goal_pos, clusters, self.replan_distance)):
+            old_goal = self.goal_pos
+            self.stats['peer_goals_cancelled'] += 1
+            self.get_logger().info(
+                f'CANCELLED REDUNDANT FRONTIER ({old_goal[0]:.2f}, '
+                f'{old_goal[1]:.2f}): shared map shows the peer already '
+                'covered its unknown region')
+            self._cancel_goal()
+
         self._publish_frontier_markers(clusters)
         self._publish_status(len(clusters))
 
@@ -956,6 +1109,31 @@ class FrontierExplorer(Node):
                 self.escape_ticks = 25
                 self.idle_cycles = 0
                 return
+            shared_trusted = self._shared_map_available and (
+                not self.peer_names
+                or any(self._peer_xy(peer) is not None
+                       for peer in self.peer_names)
+            )
+            if (self._shared_map_configured
+                    and self.coordination_mode == 'coordinated'
+                    and not shared_trusted):
+                if not self._waiting_for_shared_completion:
+                    self._waiting_for_shared_completion = True
+                    self.get_logger().info(
+                        'LOCAL FRONTIERS EXHAUSTED; holding stopped until the '
+                        'vetted shared frame is available, then global '
+                        'frontier completion will be checked')
+                self.cmd_vel_pub.publish(Twist())
+                return
+            self._waiting_for_shared_completion = False
+            if shared_trusted:
+                self._completion_basis = 'vetted shared-map union'
+                self.get_logger().info(
+                    'GLOBAL SHARED COVERAGE COMPLETE for this rover: no '
+                    'novel frontier remains after peer-map masking; stopping '
+                    'instead of revisiting peer-explored rooms')
+            else:
+                self._completion_basis = 'local map (shared union unavailable)'
             self._finish_exploration()
 
     def _get_common_offset(self):
@@ -1006,19 +1184,48 @@ class FrontierExplorer(Node):
 
     def _peer_xy(self, peer):
         """Peer rover position from the shared (merged) TF tree, or None."""
+        base_suffix = self.base_frame.split('/', 1)[-1]
         try:
             tf = self.tf_buffer.lookup_transform(
-                self.map_frame, f'{peer}/base_link', rclpy.time.Time(),
+                self.map_frame, f'{peer}/{base_suffix}', rclpy.time.Time(),
                 timeout=Duration(seconds=0.1))
         except Exception:
             return None
-        return (tf.transform.translation.x, tf.transform.translation.y)
+        position = (tf.transform.translation.x, tf.transform.translation.y)
+        self._peer_positions[peer] = position
+        if self._peer_tracking_started_at is None:
+            self._peer_tracking_started_at = self._now_sec()
+            moving = self.navigating or abs(self.stats['distance_traveled']) > 0.05
+            self.get_logger().info(
+                'PEER POSITION TRACKING STARTED at '
+                f't={self._peer_tracking_started_at:.1f}s: {peer} resolved in '
+                f'{self.map_frame} at ({position[0]:.2f}, {position[1]:.2f}); '
+                f'robot_in_motion={moving}. Coordinated frontier allocation '
+                'is active from this cycle.')
+        return position
 
     def _select_frontier(self, clusters, robot):
         """Pick this rover's frontier. In 'coordinated' mode run the shared
         greedy allocation over all rovers (poses from the merged TF tree, peer
         commitments from /exploration_claims) and take our own assignment; in
         'independent' mode just take the locally best-scoring frontier."""
+        marker_frontiers = [
+            cluster for cluster in clusters
+            if self._marker_bonus(cluster) > 0.0
+        ]
+        # A peer claim remains authoritative: both rovers should not abandon
+        # their allocation to chase the same marker-adjacent room.
+        unclaimed_marker_frontiers = [
+            cluster for cluster in marker_frontiers
+            if not any(
+                math.hypot(
+                    cluster['goal'][0] - claim[0],
+                    cluster['goal'][1] - claim[1],
+                ) < self.discount_radius
+                for claim in self.peer_claims.values()
+            )
+        ]
+
         # Commitment stickiness: if we are already driving to a frontier that
         # is still a valid frontier, keep it. Re-running the global allocation
         # every cycle otherwise makes a trailing rover thrash - it chases the
@@ -1032,7 +1239,17 @@ class FrontierExplorer(Node):
                 if math.hypot(c['goal'][0] - self.goal_pos[0],
                               c['goal'][1] - self.goal_pos[1]) \
                         < self.replan_distance:
+                    # A marker first seen during travel is allowed to propose
+                    # an earlier switch. _frontier_step still enforces commit
+                    # time and score hysteresis before cancelling anything.
+                    if (unclaimed_marker_frontiers
+                            and self._marker_bonus(c) <= 0.0):
+                        break
                     return c
+        if unclaimed_marker_frontiers:
+            return max(
+                unclaimed_marker_frontiers,
+                key=lambda cluster: self._score(cluster, robot))
         if self.coordination_mode == 'coordinated' and self.peer_names:
             robots = [(self.robot_name, robot)]
             for peer in self.peer_names:
@@ -1084,6 +1301,13 @@ class FrontierExplorer(Node):
                 if best_score < needed:
                     return
 
+        marker_bonus = self._marker_bonus(best)
+        if marker_bonus > 0.0:
+            self.stats['marker_priority_goals'] += 1
+            self.get_logger().info(
+                f'MARKER-PRIORITY FRONTIER ({best["goal"][0]:.2f}, '
+                f'{best["goal"][1]:.2f}): confirmed ArUco borders unknown '
+                f'space; exploration bonus={marker_bonus:.1f}')
         self._dispatch(best['goal'], best_score, robot, GOAL_FRONTIER)
 
     def _sweep_step(self, robot):
@@ -1377,6 +1601,8 @@ class FrontierExplorer(Node):
             self.goal_handle.cancel_goal_async()
         self.navigating = False
         self.goal_pos = None
+        self.goal_handle = None
+        self._publish_claim(None)
 
     # ------------------------------------------------------------- watchdog
 
@@ -1490,6 +1716,11 @@ class FrontierExplorer(Node):
     # ------------------------------------------------------------ shutdown
 
     def _finish_exploration(self):
+        # Stop both Nav2 and any direct recovery command before saving. The
+        # multi-rover mapping configs set return_to_init=false so completion
+        # means stop in place, exactly when no novel shared frontier remains.
+        self._cancel_goal()
+        self.cmd_vel_pub.publish(Twist())
         observed, total = self._coverage_counts
         frac = self._coverage_frac
         confirmed = [i for i, it in self.items.items() if it['confirmed']]
@@ -1497,7 +1728,8 @@ class FrontierExplorer(Node):
             f'Exploration + sweep complete: camera coverage {frac:.0%} '
             f'({observed}/{total} wall cells), items found: '
             f'{sorted(confirmed)} ({len(confirmed)} confirmed, '
-            f'{len(self.items)} seen)')
+            f'{len(self.items)} seen); completion basis: '
+            f'{self._completion_basis}')
         self._publish_claim(None)
         self._publish_items()
         if self.return_to_init and self.init_pose is not None:
@@ -1639,10 +1871,28 @@ class FrontierExplorer(Node):
             'camera_coverage': round(self._coverage_frac, 3),
             'items_confirmed': confirmed,
             'items_seen': len(self.items),
+            'aruco_landmarks': len(self.landmarks),
+            'marker_priority_frontiers': self._marker_priority_frontier_count,
             'blacklist': len(self.blacklist),
             'navigating': self.navigating,
             'goal': list(self.goal_pos) if self.goal_pos else None,
             'goal_kind': self.goal_kind if self.goal_pos else None,
+            # This timestamp is deliberately captured on the first successful
+            # peer TF lookup, not inferred later from an alignment lock.  It is
+            # the exact cycle on which this explorer can first use the other
+            # rover's position to allocate travel goals.
+            'peer_position_tracking': self._peer_tracking_started_at is not None,
+            'peer_tracking_started_at': self._peer_tracking_started_at,
+            'peer_positions': {
+                name: [round(pos[0], 3), round(pos[1], 3)]
+                for name, pos in self._peer_positions.items()
+            },
+            'shared_map_available': self._shared_map_available,
+            'shared_alignment_locked': self._shared_alignment_locked,
+            'shared_mask_active': self._shared_mask_active,
+            'shared_masked_cells': self._shared_masked_cells,
+            'completion_basis': self._completion_basis,
+            'waiting_for_shared_completion': self._waiting_for_shared_completion,
             **{k: (round(v, 1) if isinstance(v, float) else v)
                for k, v in self.stats.items()},
         }

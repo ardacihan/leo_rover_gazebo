@@ -20,11 +20,12 @@ Defaults differ from the demo's in the three ways Phase 1 requires:
   detected by `leo_nav2_exploration/aruco_detector` (the hardware-validated
   one) publishing the same `MarkerArray` contract on `/leo{i}/tag_detections`.
 
-`min_tags` stays at **2**. Two common landmarks are the minimum for a full 2D
-transform; one gives a bearing hint whose yaw is only as good as a single
-marker's normal. Rather than lower the bar, the markers were placed so that
-both rovers cross a shared area -- depot ids 3/5/6 in the south-central
-corridor, office ids 1/2/8 along the corridor every room opens onto.
+`min_tags` stays at **2** for a standalone marker-derived transform. It is not
+an alignment start gate: grid candidates are evaluated immediately and a
+strong, unambiguous, temporally repeated grid solution may establish the
+shared frame first. One or more common ArUco observations then provide an
+independent correction, and two well-spread markers make that correction much
+more accurate.
 """
 
 from launch import LaunchDescription
@@ -32,7 +33,6 @@ from launch.actions import DeclareLaunchArgument
 from launch.conditions import IfCondition
 from launch.substitutions import LaunchConfiguration, PythonExpression
 from launch_ros.actions import Node
-from launch_ros.parameter_descriptions import ParameterValue
 
 
 def generate_launch_description():
@@ -75,8 +75,12 @@ def generate_launch_description():
         output="screen",
         parameters=[{
             "use_sim_time": use_sim_time,
-            "leo1_detections_topic": "/leo1/tag_detections",
-            "leo2_detections_topic": "/leo2/tag_detections",
+            # The detector registry is transient-local and periodically
+            # republishes every confirmed map-frame landmark. This lets a
+            # restarted/late aligner recover all prior evidence immediately;
+            # tag_detections contains only the current camera frame.
+            "leo1_detections_topic": "/leo1/aruco_markers",
+            "leo2_detections_topic": "/leo2/aruco_markers",
             "landmark_persistence": True,
             "min_tags": cfg("min_tags"),
             # Scoring only -- never fed back into the estimate.
@@ -84,6 +88,12 @@ def generate_launch_description():
             "ground_truth_y": gt_y,
             "ground_truth_yaw": gt_yaw,
             "compare_to_ground_truth": cfg("compare_to_ground_truth"),
+            # Shared/global marker coordinates must use the exact transform
+            # vetted by alignment_tf_bridge and consumed by the map merger.
+            # Using the raw candidate confidence here can put landmarks into a
+            # frame the main map itself explicitly rejected.
+            "accepted_transform_topic": "/vetted_transform/leo2_to_leo1",
+            "accepted_confidence_topic": "/vetted_alignment_confidence",
         }],
         condition=IfCondition(cfg("enable_tag_alignment")),
     )
@@ -97,6 +107,7 @@ def generate_launch_description():
             "use_sim_time": use_sim_time,
             "alignment_mode": alignment_mode,
             "min_alignment_confidence": min_conf,
+            "accepted_confidence_topic": "/map_based_accepted_confidence",
         }],
         condition=IfCondition(PythonExpression([
             "'", cfg("enable_tag_alignment"), "' == 'true' or '",
@@ -116,15 +127,12 @@ def generate_launch_description():
             "parent_frame": "leo1/map",
             "child_frame": "leo2/map",
             "min_confidence": min_conf,
-            # require_tag_evidence was the defense against the OLD global
-            # grid matcher, which locked confident 180-degree flips. In
-            # markerfree mode the aligner's own margin abstention is that
-            # defense (benchmarked: zero confident-wrong on 10 pairs), and
-            # there are no tags by construction -- keeping the tag gate on
-            # would make marker-free locking impossible.
-            "require_tag_evidence": ParameterValue(
-                PythonExpression(["'", alignment_mode, "' != 'markerfree'"]),
-                value_type=bool),
+            "confidence_topic": "/map_based_accepted_confidence",
+            # The aligner itself now requires strong overlap, a clear margin,
+            # and temporal consensus before publishing a tagless accepted
+            # transform. ArUco improves/re-anchors that estimate; it no longer
+            # blocks all merging until a marker pair is available.
+            "require_tag_evidence": False,
         }],
         condition=IfCondition(cfg("enable_alignment_tf")),
     )
@@ -144,7 +152,7 @@ def generate_launch_description():
         DeclareLaunchArgument("enable_tag_alignment", default_value="true"),
         DeclareLaunchArgument("enable_map_alignment", default_value="true"),
         DeclareLaunchArgument("enable_alignment_tf", default_value="true"),
-        DeclareLaunchArgument("min_alignment_confidence", default_value="0.5"),
+        DeclareLaunchArgument("min_alignment_confidence", default_value="0.45"),
         DeclareLaunchArgument("min_tags", default_value="2"),
         # True spawn offset of leo2 relative to leo1, for scoring only.
         DeclareLaunchArgument("compare_to_ground_truth", default_value="true"),

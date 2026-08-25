@@ -110,9 +110,10 @@ docker stop leo_sim >/dev/null 2>&1 || true
 docker rm leo_sim >/dev/null 2>&1 || true
 
 # ---------- 1. sim ----------
-LOG "starting sim: world=$WORLD robots=$NUM_ROBOTS cameras=$ENABLE_CAMERA gt_odom_tf=FALSE"
-CMD "sim: WORLD=$WORLD GUI=false NUM_ROBOTS=$NUM_ROBOTS ENABLE_CAMERA=$ENABLE_CAMERA GT_ODOM_TF=false scripts/sim_gpu_wsl.sh"
-WORLD="$WORLD" GUI=false NUM_ROBOTS="$NUM_ROBOTS" ENABLE_CAMERA="$ENABLE_CAMERA" \
+SIM_GUI="${SIM_GUI:-false}"
+LOG "starting sim: world=$WORLD robots=$NUM_ROBOTS cameras=$ENABLE_CAMERA gui=$SIM_GUI gt_odom_tf=FALSE"
+CMD "sim: WORLD=$WORLD GUI=$SIM_GUI NUM_ROBOTS=$NUM_ROBOTS ENABLE_CAMERA=$ENABLE_CAMERA GT_ODOM_TF=false scripts/sim_gpu_wsl.sh"
+WORLD="$WORLD" GUI="$SIM_GUI" NUM_ROBOTS="$NUM_ROBOTS" ENABLE_CAMERA="$ENABLE_CAMERA" \
   GT_ODOM_TF=false "$ROOT/scripts/sim_gpu_wsl.sh" >>"$ROOT/$OUT/run.log" 2>&1
 
 LAST_NS="leo${NUM_ROBOTS}"
@@ -327,7 +328,7 @@ fi
 for i in $(seq 1 "$NUM_ROBOTS"); do
   [[ "$ENABLE_CAMERA" == "true" ]] || break
   ns="leo$i"
-  in_sim_bg "exec python3 /ros2_ws/scripts/frame_grabber.py /ros2_ws/$OUT/frames_$ns /$ns/camera/image /$ns/aruco/debug_image 25 16 > /ros2_ws/$OUT/frames_$ns.log 2>&1"
+  in_sim_bg "exec python3 /ros2_ws/scripts/frame_grabber.py /ros2_ws/$OUT/frames_$ns /$ns/camera/image /$ns/aruco/debug_image 25 32 > /ros2_ws/$OUT/frames_$ns.log 2>&1"
 done
 
 # ---------- 10. explorers ----------
@@ -337,7 +338,10 @@ LOG "launching explorers (mode=$EXPLORE_MODE, common_frame=leo1/map)"
 # already knows stop generating frontiers (Phase 2). Independent stays blind
 # to it, so the baseline is untouched.
 SHARED_TOPIC=""
-[[ "$EXPLORE_MODE" == "coordinated" && "$NUM_ROBOTS" -eq 2 ]] && SHARED_TOPIC="/shared_map"
+# Frontier decisions consume the raw vetted union. /shared_map is cleaned for
+# operators, and cleanup can fill tiny own-map unknown holes that are not peer
+# observations; using those pixels for planning caused false goal cancellation.
+[[ "$EXPLORE_MODE" == "coordinated" && "$NUM_ROBOTS" -eq 2 ]] && SHARED_TOPIC="/shared_map_raw"
 # Distributed: every explorer consumes its OWN rover's merged map.
 [[ -n "${DISTRIBUTED:-}" && -n "$SHARED_TOPIC" ]] && SHARED_TOPIC="per_robot"
 CMD "explore: ros2 launch leo_rover_exploration collab_explore.launch.py num_robots:=$NUM_ROBOTS coordination_mode:=$EXPLORE_MODE common_frame:=leo1/map shared_map_topic:=$SHARED_TOPIC"
@@ -351,6 +355,41 @@ in_sim_bg "exec ros2 launch leo_rover_exploration collab_explore.launch.py \
   common_frame:=leo1/map leo1_bounds:=$L1B leo2_bounds:=$L2B \
   shared_map_topic:=$SHARED_TOPIC \
   > /ros2_ws/$OUT/explorer.log 2>&1"
+
+# An operator-facing run stays alive after all launch stages are healthy.  It
+# uses the very same stack and monitors above; this branch only adds views and
+# skips the timed teardown/collection section below.
+if [[ "${INTERACTIVE:-false}" == "true" ]]; then
+  DASHBOARD_PORT="${DASHBOARD_PORT:-8080}"
+  LOG "starting RViz and live HTML dashboard"
+  in_sim_bg "exec rviz2 \
+    -d /ros2_ws/src/multi_robot_shared_mapping/config/shared_mapping.rviz \
+    --ros-args -p use_sim_time:=true > /ros2_ws/$OUT/rviz.log 2>&1"
+  in_sim_bg "exec python3 /ros2_ws/scripts/live_multirobot_dashboard.py \
+    --output /ros2_ws/$OUT --port $DASHBOARD_PORT \
+    --ros-args -p use_sim_time:=true > /ros2_ws/$OUT/dashboard.log 2>&1"
+  sleep 5
+  if ! curl --fail --silent "http://127.0.0.1:$DASHBOARD_PORT/api/status" \
+      >/dev/null 2>&1; then
+    LOG "WARNING: dashboard did not answer on port $DASHBOARD_PORT"
+  fi
+  HOST_DISPLAY="${DISPLAY:-}"
+  if [[ -z "$HOST_DISPLAY" ]]; then
+    X_SOCKET="$(find /tmp/.X11-unix -maxdepth 1 -type s -name 'X*' 2>/dev/null | head -1 || true)"
+    [[ -n "$X_SOCKET" ]] && HOST_DISPLAY=":${X_SOCKET##*X}"
+  fi
+  HOST_XAUTH="${XAUTHORITY:-/run/user/$(id -u)/gdm/Xauthority}"
+  if command -v xdg-open >/dev/null 2>&1 && [[ -n "$HOST_DISPLAY" ]]; then
+    DISPLAY="$HOST_DISPLAY" XAUTHORITY="$HOST_XAUTH" \
+      xdg-open "http://127.0.0.1:$DASHBOARD_PORT/" \
+      >"$ROOT/$OUT/browser.log" 2>&1 &
+  fi
+  LOG "INTERACTIVE READY: Gazebo + RViz + two explorers are running"
+  LOG "dashboard: http://127.0.0.1:$DASHBOARD_PORT/"
+  LOG "artifacts: $ROOT/$OUT"
+  LOG "save and stop: scripts/stop_two_robots_ubuntu.sh $OUT"
+  exit 0
+fi
 
 # ---------- 11. wait ----------
 LOG "polling for completion (cap ${CAP_MIN} min)"

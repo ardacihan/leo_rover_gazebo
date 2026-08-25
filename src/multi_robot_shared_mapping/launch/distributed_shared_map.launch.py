@@ -95,5 +95,5 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument("use_sim_time", default_value="true"),
         DeclareLaunchArgument("alignment_mode", default_value="markerfree"),
-        DeclareLaunchArgument("min_alignment_confidence", default_value="0.5"),
+        DeclareLaunchArgument("min_alignment_confidence", default_value="0.45"),
     ] + nodes)

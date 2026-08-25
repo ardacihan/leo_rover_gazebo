@@ -61,6 +61,16 @@ def test_one_tag_acceptance_with_agreement():
     assert threshold < 0.5
 
 
+def test_more_common_markers_monotonically_lower_acceptance_floor():
+    thresholds = [
+        min_acceptance_confidence(
+            count, "hybrid", 0.45, tag_map_agreement=True, base_min=0.45)
+        for count in (1, 2, 3)
+    ]
+    assert thresholds == [0.40, 0.36, 0.34]
+    assert thresholds[0] > thresholds[1] > thresholds[2]
+
+
 def test_debug_json_fields():
     policy = build_policy_debug(
         mode="hybrid",

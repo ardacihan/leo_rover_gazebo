@@ -87,6 +87,123 @@ clear
 ros2 launch leo_rover_gazebo two_robots.launch.py world:=husarion_office
 ```
 
+## Native Ubuntu: complete visible two-rover run
+
+From the `feat/multi-robot-workspace` branch, one command starts the same
+integrated graph used by the automated experiments and leaves it running:
+
+```bash
+./scripts/run_two_robots_ubuntu.sh office_world
+```
+
+It opens Gazebo and RViz on the Ubuntu desktop and opens the live dashboard at
+<http://127.0.0.1:8080/>. Both rovers run concurrently with independent
+realistic wheel/IMU EKFs, SLAM, ArUco detection, hybrid map alignment, shared
+map fusion, Nav2 and coordinated frontier exploration. Grid hypotheses are
+ranked from the first usable maps; an unambiguous grid transform may lock after
+two consistent evaluations, before any common marker. ArUco then continuously
+refines or re-anchors that transform. Ground-truth odometry and fixed map
+alignment are disabled.
+
+The command prints its report directory. Pass that directory to the stop
+command to zero both robots, save all three maps, capture the final ROS graph,
+render the run figures, and stop Gazebo:
+
+```bash
+./scripts/stop_two_robots_ubuntu.sh \
+  reports/live_YYYYMMDD_HHMMSS/office_world_coordinated
+```
+
+The live dashboard continuously appends `telemetry.jsonl` in that directory;
+the existing coverage, trajectory, alignment, camera-frame and map time-lapse
+recorders run alongside it. A second, self-contained dashboard for recording
+replay and post-run analysis can be generated at any time while the simulation
+keeps running:
+
+```bash
+python3 scripts/generate_recording_dashboard.py \
+  reports/live_YYYYMMDD_HHMMSS/office_world_coordinated
+```
+
+Open `recording_analysis.html` from that report directory. It embeds the
+recorded telemetry, saved camera views, local maps with persistent ArUco
+landmarks, ranked alignment possibilities, and sampled candidate-merge frames
+showing how the unvetted merge evolved. It works offline, provides a
+timeline replay, data-quality and mission statistics, and can export a flat
+CSV. The stop command generates this analysis dashboard automatically from the
+final recording.
+
+### Physical two-rover dashboard and shared map
+
+Use the namespaces `leo1` and `leo2` on the physical rover drivers. On each
+rover, after firmware/lidar/RealSense/TF bringup, start the field mapping and
+the real OpenCV detector (replace the marker length and ID list with the cards
+you physically installed):
+
+```bash
+# Build/source this revision on both rovers and the operator laptop first.
+colcon build --symlink-install --packages-select \
+  leo_nav2_exploration leo_rover_exploration multi_robot_shared_mapping
+source install/setup.bash
+
+# rover 1
+ros2 launch leo_nav2_exploration real_mapping.launch.py \
+  robot_ns:=leo1 use_aruco:=true aruco_debug_image:=true \
+  marker_length:=0.15 allowed_ids:=1,2,3,4
+
+# rover 2
+ros2 launch leo_nav2_exploration real_mapping.launch.py \
+  robot_ns:=leo2 use_aruco:=true aruco_debug_image:=true \
+  marker_length:=0.15 allowed_ids:=1,2,3,4
+```
+
+The launch now binds each detector to its own absolute namespaced RealSense
+topics, publishes detected markers in that rover's own map frame, limits
+persistent landmarks to 4.5 m, and gives each rover a separate annotated image
+topic. On the operator laptop, after both maps are live:
+
+```bash
+./scripts/run_two_robots_real.sh
+```
+
+This command audits those camera/map-frame contracts before it starts hybrid
+tag+map alignment. It aborts if a detector or persistent marker-registry
+publisher is missing, reads the other rover's camera, uses simulation time,
+publishes landmarks in the wrong map frame, has no map-to-optical-frame TF, or
+both RealSense drivers reuse the same frame ID.
+It then opens the dashboard at <http://127.0.0.1:8080/>. The view contains both
+annotated camera feeds, both local maps, the accepted merged map, the
+continuously updating unvetted candidate merge and merge progress,
+active desired goals and frontier candidates, the explicit execution pipeline,
+and the exact timestamp at which relative-position estimation and peer-aware
+travel begin.
+
+The laptop command does not start motion by default. Validate the Nav2 and
+safety chain on each physical rover first; then `START_EXPLORERS=true
+./scripts/run_two_robots_real.sh` starts both explorers through their
+`cmd_vel_nav` safety inputs. The merged ArUco positions
+shown on the main map use `/vetted_transform/leo2_to_leo1`, exactly the same
+accepted transform consumed by the shared-map merger; raw candidates never
+enter that overlay.
+
+Only after both namespaced Nav2 action servers and both collision monitors have
+been tested with bounded manual goals, the collaborative explorer's physical
+overrides are:
+
+```bash
+ros2 launch leo_rover_exploration collab_explore.launch.py \
+  use_sim_time:=false coordination_mode:=coordinated \
+  common_frame:=leo1/map shared_map_topic:=/shared_map_raw \
+  base_frame_suffix:=base_footprint \
+  command_topic_suffix:=cmd_vel_nav
+```
+
+`command_topic_suffix:=cmd_vel_nav` is load-bearing on hardware: recovery
+motions then enter at the top of the smoother → velocity guard → collision
+monitor chain rather than bypassing it. The first successful peer TF lookup is
+logged as `PEER POSITION TRACKING STARTED` and copied into each rover's status,
+including the timestamp and whether it was already moving.
+
 # Keyboard Controls
 
 Open a new terminal inside the container:
@@ -192,7 +309,7 @@ ros2 launch multi_robot_shared_mapping shared_mapping_demo.launch.py \
 | `enable_tag_alignment` | `false` | Run `tag_based_map_aligner` |
 | `enable_map_alignment` | `false` | Run `map_based_aligner` (also starts if tag alignment enabled) |
 | `alignment_mode` | `fixed` | `fixed \| map \| tag \| hybrid` |
-| `min_alignment_confidence` | `0.5` | Base acceptance threshold |
+| `min_alignment_confidence` | `0.45` | Base acceptance threshold; agreed marker evidence lowers the effective floor |
 | `landmark_persistence` | `true` | Tags never forgotten once seen |
 
 ### Key topics to monitor
@@ -329,7 +446,7 @@ For the best candidate:
 
 | Metric | Formula / meaning |
 |--------|-------------------|
-| `overlap_score` | Count of leo2 points landing on leo2 weight > 0 |
+| `overlap_score` | Count of leo2 points landing on leo1 weight > 0 |
 | `normalized_overlap_score` | `overlap_score / num_source_points` ∈ [0, 1] |
 | `free_space_conflict_ratio` | Fraction of leo2 points landing on leo1 known-free cells |
 
@@ -347,6 +464,17 @@ From coarse top-K candidates (`select_top_candidates`, k=5, NMS separation ≥0.
 - **Ambiguous** if ratio ≥ **0.85** (symmetric corridors, repeated wall patterns)
 
 Ambiguous map-only matches are **never accepted** — they remain on `/alignment_candidate_transform` and `/shared_map_candidate` only.
+
+For the pre-marker path the margin is deliberately stricter: the alternative
+ratio must be below **0.82**, overlap must be at least **0.55**, confidence at
+least **0.50**, and the transform must repeat for **2** evaluations within
+0.6 m / 8°. This lets estimation and, when geometry genuinely supports it,
+merging start before common markers without trusting the first corridor flip.
+
+Independent marker evidence removes that two-cycle debounce. When occupancy
+matching agrees with the marker transform, the acceptance floor decreases from
+**0.40** with one common marker to **0.36** with two and **0.34** with three or
+more; ambiguity, free-space conflict, residual and jump gates still apply.
 
 ### 7. Preflight rejection gates
 
@@ -383,11 +511,11 @@ Weighted mean over available components (`alignment_confidence.py`), renormalize
 
 | Situation | Typical level | Acceptance floor |
 |-----------|---------------|------------------|
-| 0 tags, strong overlap (≥0.45), unambiguous | medium | ~0.42 |
-| 1 tag + map agree + overlap ≥0.25 | medium | ~0.38 |
+| no tag-derived transform, strong clear repeated grid match | medium | ≥0.50 + 2-cycle consensus |
+| 1 tag + map agree + overlap ≥0.25 | medium | ~0.40 |
 | 1 tag alone (no map agreement) | low–medium | ≥0.50 (harder) |
-| 2+ tags, good spread | medium–high | ~0.42 |
-| 3+ tags, low residuals | high | ~0.40 |
+| 2+ tags, good spread | medium–high | ~0.36 |
+| 3+ tags, low residuals | high | ~0.34 |
 | Ambiguous | low | 1.0 (never accept) |
 
 **Accepted-vs-candidate state machine** (`alignment_state.py`):
@@ -395,8 +523,9 @@ Weighted mean over available components (`alignment_confidence.py`), renormalize
 - Every new estimate is a **candidate** first
 - Promoted to **accepted** only if:
   - Confidence ≥ dynamic floor
+  - A tagless candidate passes the stricter 2-cycle consensus above
   - Transform jump ≤ **2.0 m**, yaw jump ≤ **25°** (vs last accepted)
-  - Confidence improves prior accepted by ≥ **0.05** (when consistency required)
+  - Confidence improves prior accepted by ≥ **0.03** (when consistency required)
 - Rejection keeps previous accepted transform and stable `/shared_map`
 
 Only the **accepted** transform is published on `/map_based_transform/leo2_to_leo1`.
@@ -414,9 +543,23 @@ Otherwise:
 - Falls back to leo1-only map
 - Always publishes `/shared_map_candidate` from latest candidate transform
 
+Fusion inverse-samples every output cell, honors the full translation + yaw of
+each OccupancyGrid origin, and keeps occupied evidence conservative. This
+avoids the pinholes and apparent tilt caused by the former forward splat.
+
 ### 11. Collaborative exploration behavior
 
 Robots are **not** required to collect 2+ common tags before exploring separately.
+
+Once alignment is locked, explorers detect frontiers from their own SLAM maps
+but remove unknown cells already known in the raw vetted union
+(`/shared_map_raw`). An active Nav2 frontier is cancelled if the union shows
+that its unknown region was covered by the peer. When no novel union-aware
+frontier remains for three cycles, the rover cancels motion, publishes zero
+velocity, saves, and stops in place; it does not return through completed rooms.
+Before lock, each rover also gives an 18-point distance-decaying priority bonus
+to reachable frontiers within 4 m of a detector-confirmed ArUco landmark. Peer
+claims still suppress duplicate travel to the same marker-adjacent unknown.
 
 | `exploration_allowed` | Meaning |
 |-----------------------|---------|

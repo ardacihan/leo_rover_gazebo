@@ -23,11 +23,11 @@ the tree stays single-parent and rooted at `leo1/map`.
 
 Two properties that matter:
 
-* **Nothing is published before alignment.** A wrong transform is worse than
-  no transform -- rovers would coordinate over a bogus shared frame and the
-  merged map would be confidently wrong. Below `min_confidence` this node is
-  silent and both rovers explore independently, which is the correct
-  pre-rendezvous behaviour.
+* **Nothing is published before alignment is vetted.** A wrong transform is
+  worse than no transform. Vetted evidence may be either a strong,
+  unambiguous, temporally repeated grid solution or an ArUco-backed solution.
+  Below `min_confidence` this node is silent and both rovers explore
+  independently.
 * **The estimate keeps improving.** It republishes the latest accepted
   transform at `publish_rate_hz`, so a converging alignment reaches the
   explorers instead of being frozen at its first and worst value.
@@ -61,7 +61,7 @@ class AlignmentTfBridge(Node):
         self.declare_parameter("use_fallback", True)
         self.declare_parameter("parent_frame", "leo1/map")
         self.declare_parameter("child_frame", "leo2/map")
-        self.declare_parameter("min_confidence", 0.5)
+        self.declare_parameter("min_confidence", 0.45)
         # Once locked, do not go silent on a transient confidence dip: the
         # rovers would lose each other mid-plan and thrash between coordinated
         # and independent allocation. Drop the lock only if confidence stays
@@ -90,14 +90,10 @@ class AlignmentTfBridge(Node):
         # wrong, because leo2's SLAM had lost its heading. The tag and map
         # estimates disagreed by ~46 degrees at the time; that disagreement was
         # the only signal available that something was wrong.
-        # Grid matching alone must never lock the frame. The mission is that
-        # the rovers discover each other by both seeing the same wall markers;
-        # map matching is the cross-check, not the primary. An office or depot
-        # is full of rectilinear self-similarity, so a grid matcher will
-        # cheerfully find a confident 180-degree-flipped match: on depot_world
-        # 2026-08-24 it locked at 0.49 confidence with ZERO common tags and a
-        # yaw error of 179.9 degrees. With no tag estimate there is also no
-        # second opinion, so `require_agreement` cannot save it either.
+        # Optional legacy gate. The current aligner can publish a marker-free
+        # accepted transform only after strong overlap, a clear alternative
+        # margin, and temporal consensus; launch defaults therefore allow that
+        # early path and use ArUco as independent refinement/re-anchoring.
         self.declare_parameter("require_tag_evidence", True)
         self.declare_parameter("require_agreement", True)
         self.declare_parameter("max_disagreement_xy", 2.0)

@@ -226,14 +226,22 @@ def _launch_setup(context):
 
     aruco_args = {
         'profile': 'real',
-        'use_sim_time': 'false',
+        'use_sim_time': LaunchConfiguration('use_sim_time'),
         'marker_length': LaunchConfiguration('marker_length'),
+        'max_range': LaunchConfiguration('aruco_max_range'),
         'allowed_ids': LaunchConfiguration('allowed_ids'),
         'dictionary': LaunchConfiguration('dictionary'),
+        'publish_debug_image': LaunchConfiguration('aruco_debug_image'),
     }
     if ns:
         aruco_args['robot_ns'] = ns
+        # RealSense topics are absolute.  A ROS node namespace does not alter
+        # them, so explicitly bind this detector to this rover's camera.
+        aruco_args['image_topic'] = f'{p}/camera/camera/color/image_raw'
+        aruco_args['camera_info_topic'] = f'{p}/camera/camera/color/camera_info'
         aruco_args['detection_topic'] = f'{p}/tag_detections'
+        aruco_args['markers_topic'] = f'{p}/aruco_markers'
+        aruco_args['debug_image_topic'] = f'{p}/aruco/debug_image'
     aruco = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(share, 'launch', 'aruco.launch.py')),
         launch_arguments=aruco_args.items(),
@@ -268,8 +276,12 @@ def generate_launch_description():
         # Side of the printed black square, measured with a ruler. Not the
         # sheet, not the white border.
         DeclareLaunchArgument('marker_length', default_value='0.15'),
+        # Marker poses beyond this range are too sensitive to sub-pixel corner
+        # noise to serve as persistent map-alignment landmarks.
+        DeclareLaunchArgument('aruco_max_range', default_value='4.5'),
         # Comma-separated ids you physically placed; anything else is rejected.
         DeclareLaunchArgument('allowed_ids', default_value='1,2,3,4,5,6,7,8'),
         DeclareLaunchArgument('dictionary', default_value='DICT_4X4_50'),
+        DeclareLaunchArgument('aruco_debug_image', default_value='false'),
         OpaqueFunction(function=_launch_setup),
     ])

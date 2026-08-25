@@ -16,6 +16,56 @@ Transform = Tuple[float, float, float]  # dx, dy, yaw
 
 
 @dataclass
+class TransformConsensus:
+    """Require repeated nearby estimates before trusting grid-only geometry.
+
+    The counter deliberately lives outside ``AlignmentState``: tag-backed
+    updates retain the normal confidence/jump policy and never have to wait for
+    this grid-only debounce.
+    """
+
+    required: int = 3
+    max_translation: float = 0.6
+    max_yaw: float = math.radians(8.0)
+    anchor: Optional[Transform] = None
+    count: int = 0
+
+    def reset(self) -> None:
+        self.anchor = None
+        self.count = 0
+
+    def observe(self, candidate: Transform) -> int:
+        if self.anchor is None:
+            self.anchor = candidate
+            self.count = 1
+            return self.count
+        translation = math.hypot(
+            candidate[0] - self.anchor[0], candidate[1] - self.anchor[1])
+        yaw_delta = abs(_normalize_angle(candidate[2] - self.anchor[2]))
+        if translation > self.max_translation or yaw_delta > self.max_yaw:
+            self.anchor = candidate
+            self.count = 1
+            return self.count
+
+        # A circular running mean prevents noise at -pi/+pi from producing a
+        # zero-yaw anchor, while translation averaging avoids chasing jitter.
+        n = self.count
+        sin_yaw = n * math.sin(self.anchor[2]) + math.sin(candidate[2])
+        cos_yaw = n * math.cos(self.anchor[2]) + math.cos(candidate[2])
+        self.anchor = (
+            (n * self.anchor[0] + candidate[0]) / (n + 1),
+            (n * self.anchor[1] + candidate[1]) / (n + 1),
+            math.atan2(sin_yaw, cos_yaw),
+        )
+        self.count += 1
+        return self.count
+
+    @property
+    def ready(self) -> bool:
+        return self.count >= max(1, self.required)
+
+
+@dataclass
 class AlignmentState:
     """Tracks accepted transform and the latest candidate evaluation."""
 
@@ -26,7 +76,7 @@ class AlignmentState:
     candidate_reason: str = ""
     last_rejection_reason: str = ""
 
-    min_alignment_confidence: float = 0.5
+    min_alignment_confidence: float = 0.45
     min_confidence_improvement: float = 0.05
     max_transform_jump: float = 2.0
     max_yaw_jump: float = math.radians(25.0)
@@ -38,6 +88,7 @@ class AlignmentState:
         confidence: float,
         *,
         extra_reject_reason: str = "",
+        allow_reanchor: bool = False,
     ) -> Tuple[bool, str]:
         """
         Decide whether to promote candidate to accepted.
@@ -67,7 +118,13 @@ class AlignmentState:
                 candidate[0] - self.accepted[0], candidate[1] - self.accepted[1]
             )
             yaw_jump = abs(_normalize_angle(candidate[2] - self.accepted[2]))
-            if jump > self.max_transform_jump:
+            # A map-only estimate can be internally accepted while the safety
+            # bridge correctly withholds it for lack of tag evidence. Once
+            # independent tag evidence arrives, a tag-seeded map candidate is
+            # allowed to replace that unvetted anchor even when it is far
+            # away. The caller must explicitly establish that stronger
+            # evidence; routine post-lock updates remain jump-limited.
+            if not allow_reanchor and jump > self.max_transform_jump:
                 reason = (
                     f"transform jump {jump:.2f} m > max_transform_jump "
                     f"{self.max_transform_jump:.2f}"
@@ -75,7 +132,7 @@ class AlignmentState:
                 self.last_rejection_reason = reason
                 self.candidate_reason = reason
                 return False, reason
-            if yaw_jump > self.max_yaw_jump:
+            if not allow_reanchor and yaw_jump > self.max_yaw_jump:
                 reason = (
                     f"yaw jump {math.degrees(yaw_jump):.1f} deg > "
                     f"max_yaw_jump_deg {math.degrees(self.max_yaw_jump):.1f}"

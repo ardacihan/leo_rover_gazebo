@@ -17,12 +17,15 @@ from leo_rover_exploration.frontier_explorer import FrontierExplorer, UNKNOWN
 RES = 0.1
 
 
-def grid_msg(grid, ox=0.0, oy=0.0, frame='common'):
+def grid_msg(grid, ox=0.0, oy=0.0, frame='common', origin_yaw=0.0):
     h, w = grid.shape
     info = types.SimpleNamespace(
         height=h, width=w, resolution=RES,
         origin=types.SimpleNamespace(
-            position=types.SimpleNamespace(x=ox, y=oy)))
+            position=types.SimpleNamespace(x=ox, y=oy),
+            orientation=types.SimpleNamespace(
+                x=0.0, y=0.0, z=math.sin(origin_yaw / 2.0),
+                w=math.cos(origin_yaw / 2.0))))
     return types.SimpleNamespace(
         info=info, data=grid.flatten().tolist(),
         header=types.SimpleNamespace(frame_id=frame))
@@ -43,7 +46,10 @@ class Stub:
         self._shared_map_time = shared_time
         self._offset = offset
         self._shared_mask_active = False
+        self._shared_map_available = False
         self._shared_masked_cells = 0
+        self._shared_alignment_required = False
+        self._shared_alignment_locked = True
 
     def _now_sec(self):
         return 100.0
@@ -81,6 +87,16 @@ def test_stale_shared_map_disables_masking():
     unknown = np.ones((6, 6), bool)
     stub = Stub(grid_msg(shared), shared_time=100.0 - 21.0)
     assert call(stub, own_info(), unknown) is None
+
+
+def test_prelock_central_fallback_cannot_mask_frontiers():
+    shared = np.zeros((6, 6), np.int8)
+    unknown = np.ones((6, 6), bool)
+    stub = Stub(grid_msg(shared))
+    stub._shared_alignment_required = True
+    stub._shared_alignment_locked = False
+    assert call(stub, own_info(), unknown) is None
+    assert not stub._shared_map_available
 
 
 def test_missing_offset_disables_masking():
@@ -127,3 +143,42 @@ def test_rotated_offset_maps_cells_correctly():
     assert mask is not None
     assert mask[0, 0]
     assert not mask[1, 1]
+
+
+def test_rotated_grid_origins_are_used_for_shared_lookup():
+    # The own cell centre is (-0.05, 0.05) after a +90 degree origin pose.
+    # The shared grid also has a +90 degree origin, so this is shared (0,0).
+    shared = np.full((4, 4), UNKNOWN, np.int8)
+    shared[0, 0] = 0
+    unknown = np.zeros((2, 2), bool)
+    unknown[0, 0] = True
+    own = grid_msg(
+        np.zeros((2, 2), np.int8), origin_yaw=math.pi / 2).info
+    msg = grid_msg(shared, origin_yaw=math.pi / 2)
+    mask = call(Stub(msg), own, unknown)
+    assert mask[0, 0]
+
+
+def test_active_goal_is_redundant_when_shared_mask_removes_its_frontier():
+    clusters = [
+        {'goal': (1.0, 1.0)},
+        {'goal': (4.0, 4.0)},
+    ]
+    assert FrontierExplorer._goal_has_matching_frontier(
+        (1.2, 1.1), clusters, 0.5)
+    assert not FrontierExplorer._goal_has_matching_frontier(
+        (2.5, 2.5), clusters, 0.5)
+
+
+def test_marker_frontier_bonus_prefers_unknown_near_confirmed_landmark():
+    stub = types.SimpleNamespace(
+        landmarks={7: (2.0, 2.0)},
+        marker_frontier_radius=4.0,
+        marker_frontier_bonus=18.0,
+    )
+    near = FrontierExplorer._marker_bonus(
+        stub, {'goal': (3.0, 2.0), 'size_m': 1.0})
+    far = FrontierExplorer._marker_bonus(
+        stub, {'goal': (7.0, 2.0), 'size_m': 1.0})
+    assert near == 13.5
+    assert far == 0.0

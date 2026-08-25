@@ -29,6 +29,7 @@ from std_msgs.msg import Float32, Header, String
 
 from multi_robot_shared_mapping.map_postprocess import clean_occupancy_grid
 from multi_robot_shared_mapping.map_quality import LocalMapQualityTracker
+from multi_robot_shared_mapping.occupancy_fusion import GridSpec, fuse_grids
 
 
 class SharedMapMerger(Node):
@@ -47,7 +48,7 @@ class SharedMapMerger(Node):
         self.declare_parameter("map_transform_topic", "/map_based_transform/leo2_to_leo1")
         self.declare_parameter("candidate_transform_topic", "/alignment_candidate_transform")
         self.declare_parameter("confidence_topic", "/alignment_confidence")
-        self.declare_parameter("min_alignment_confidence", 0.5)
+        self.declare_parameter("min_alignment_confidence", 0.45)
         self.declare_parameter("use_cleaned_shared_map", True)
         self.declare_parameter("min_local_map_quality", 0.35)
 
@@ -209,13 +210,6 @@ class SharedMapMerger(Node):
             return None
         return self.accepted_dx, self.accepted_dy, self.accepted_yaw
 
-    def _transform_point(
-        self, x: float, y: float, transform: Tuple[float, float, float]
-    ) -> Tuple[float, float]:
-        tx, ty, yaw = transform
-        c, s = math.cos(yaw), math.sin(yaw)
-        return c * x - s * y + tx, s * x + c * y + ty
-
     def _merge_maps(
         self, include_leo2: bool, transform: Optional[Tuple[float, float, float]]
     ) -> Optional[OccupancyGrid]:
@@ -226,20 +220,28 @@ class SharedMapMerger(Node):
         if include_leo2 and self.map2 is not None and transform is not None:
             maps.append((self.map2, True))
 
-        resolution = min(m.info.resolution for m, _ in maps)
-        bounds = []
+        specs = []
         for grid, is_r2 in maps:
-            bound = self._map_bounds(grid, is_r2, transform)
-            if bound is None:
-                return None
-            bounds.append(bound)
+            q = grid.info.origin.orientation
+            origin_yaw = math.atan2(
+                2.0 * (q.w * q.z + q.x * q.y),
+                1.0 - 2.0 * (q.y * q.y + q.z * q.z),
+            )
+            data = np.asarray(grid.data, dtype=np.int16).reshape(
+                grid.info.height, grid.info.width)
+            spec = GridSpec(
+                data=data,
+                resolution=float(grid.info.resolution),
+                origin_x=float(grid.info.origin.position.x),
+                origin_y=float(grid.info.origin.position.y),
+                origin_yaw=origin_yaw,
+            )
+            specs.append((spec, transform if is_r2 else None))
 
-        min_x = min(b[0] for b in bounds)
-        min_y = min(b[1] for b in bounds)
-        max_x = max(b[2] for b in bounds)
-        max_y = max(b[3] for b in bounds)
-        width = max(1, int(math.ceil((max_x - min_x) / resolution)))
-        height = max(1, int(math.ceil((max_y - min_y) / resolution)))
+        threshold = int(self.get_parameter("occupied_threshold").value)
+        fused, resolution, min_x, min_y = fuse_grids(
+            specs, occupied_threshold=threshold)
+        height, width = fused.shape
 
         shared = OccupancyGrid()
         shared.header = Header()
@@ -251,56 +253,8 @@ class SharedMapMerger(Node):
         shared.info.origin.position.x = min_x
         shared.info.origin.position.y = min_y
         shared.info.origin.orientation.w = 1.0
-        shared.data = [-1] * (width * height)
-
-        threshold = int(self.get_parameter("occupied_threshold").value)
-        for grid, is_r2 in maps:
-            for iy in range(grid.info.height):
-                for ix in range(grid.info.width):
-                    value = grid.data[iy * grid.info.width + ix]
-                    if value < 0:
-                        continue
-                    x, y = self._grid_to_world(grid, ix, iy)
-                    if is_r2:
-                        x, y = self._transform_point(x, y, transform)
-                    sx = int(math.floor((x - min_x) / resolution))
-                    sy = int(math.floor((y - min_y) / resolution))
-                    if 0 <= sx < width and 0 <= sy < height:
-                        idx = sy * width + sx
-                        shared.data[idx] = self._merge_cell(
-                            shared.data[idx], value, threshold
-                        )
+        shared.data = fused.ravel().tolist()
         return shared
-
-    def _map_bounds(self, grid, is_r2, transform):
-        corners = [(0, 0), (grid.info.width, 0), (0, grid.info.height),
-                   (grid.info.width, grid.info.height)]
-        points = []
-        for ix, iy in corners:
-            x = grid.info.origin.position.x + ix * grid.info.resolution
-            y = grid.info.origin.position.y + iy * grid.info.resolution
-            if is_r2:
-                if transform is None:
-                    return None
-                x, y = self._transform_point(x, y, transform)
-            points.append((x, y))
-        xs, ys = [p[0] for p in points], [p[1] for p in points]
-        return min(xs), min(ys), max(xs), max(ys)
-
-    def _grid_to_world(self, grid, ix, iy):
-        return (
-            grid.info.origin.position.x + (ix + 0.5) * grid.info.resolution,
-            grid.info.origin.position.y + (iy + 0.5) * grid.info.resolution,
-        )
-
-    def _merge_cell(self, current, incoming, threshold):
-        if incoming < 0:
-            return current
-        if current < 0:
-            return incoming
-        if incoming >= threshold or current >= threshold:
-            return 100
-        return 0
 
     def _publish_all(self):
         fusion_ok = self._fusion_allowed()

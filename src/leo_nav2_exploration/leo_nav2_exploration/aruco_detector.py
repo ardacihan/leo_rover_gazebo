@@ -40,7 +40,12 @@ import rclpy
 from geometry_msgs.msg import PoseArray, Pose, TransformStamped
 from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
-from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy
+from rclpy.qos import (
+    QoSDurabilityPolicy,
+    QoSHistoryPolicy,
+    QoSProfile,
+    QoSReliabilityPolicy,
+)
 from sensor_msgs.msg import CameraInfo, Image
 from tf2_ros import Buffer, TransformListener, TransformBroadcaster
 import tf2_ros
@@ -239,9 +244,17 @@ class ArucoDetector(Node):
         sensor_qos = QoSProfile(depth=1,
                                 reliability=QoSReliabilityPolicy.BEST_EFFORT,
                                 history=QoSHistoryPolicy.KEEP_LAST)
+        landmark_qos = QoSProfile(
+            depth=1,
+            reliability=QoSReliabilityPolicy.RELIABLE,
+            durability=QoSDurabilityPolicy.TRANSIENT_LOCAL,
+            history=QoSHistoryPolicy.KEEP_LAST,
+        )
         self.pub = self.create_publisher(MarkerArray, g('detection_topic'), 10)
-        self.pub_all = self.create_publisher(MarkerArray, g('markers_topic'), 10)
-        self.pub_poses = self.create_publisher(PoseArray, g('markers_topic') + '_poses', 10)
+        self.pub_all = self.create_publisher(
+            MarkerArray, g('markers_topic'), landmark_qos)
+        self.pub_poses = self.create_publisher(
+            PoseArray, g('markers_topic') + '_poses', landmark_qos)
         self.pub_dbg = (self.create_publisher(Image, g('debug_image_topic'), 1)
                         if self.publish_debug else None)
 
@@ -255,6 +268,10 @@ class ArucoDetector(Node):
                 fh.write('t,id,range_m,side_px,reproj_px,'
                          'cam_x,cam_y,cam_z,map_x,map_y,map_z\n')
         self.create_timer(10.0, self.report)
+        # Republish the complete registry even when the marker has left the
+        # image. Late dashboards and saved-map recorders must still receive
+        # every confirmed landmark in this robot's map frame.
+        self.create_timer(2.0, self.publish_registry)
         if self.registry_file:
             self.create_timer(5.0, self.dump_registry)
 
@@ -378,7 +395,8 @@ class ArucoDetector(Node):
             if tr.hits >= self.min_hits and not tr.confirmed:
                 tr.confirmed = True
                 self.get_logger().info(
-                    f'ArUco {mid} CONFIRMED at map '
+                    f'ArUco {mid} CONFIRMED: TF-converted from {cam_frame} '
+                    f'into {self.map_frame} at '
                     f'({tr.pos[0]:.2f}, {tr.pos[1]:.2f}, {tr.pos[2]:.2f}) '
                     f'range {rng:.2f} m, reproj {reproj:.2f} px')
             confirmed = tr.confirmed
@@ -442,7 +460,9 @@ class ArucoDetector(Node):
         m.color.r, m.color.g, m.color.b, m.color.a = 0.0, 1.0, 0.2, 0.8
         return m
 
-    def publish_registry(self, stamp):
+    def publish_registry(self, stamp=None):
+        if stamp is None:
+            stamp = self.get_clock().now().to_msg()
         arr = MarkerArray()
         poses = PoseArray()
         poses.header.frame_id = self.map_frame

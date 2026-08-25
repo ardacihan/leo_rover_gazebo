@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Leo Rover · Recording Analysis</title>
+  <style>
+    :root { color-scheme: dark; --bg:#080d12; --panel:#101821; --panel2:#131e29; --line:#263746; --text:#eaf2f5; --muted:#91a5b3; --l1:#31d6a6; --l2:#ffb454; --blue:#62a9ff; --red:#ff6f7d; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:radial-gradient(circle at 10% -5%,#172b37 0,transparent 36%),var(--bg); color:var(--text); font:14px/1.45 Inter,system-ui,sans-serif; }
+    main { width:min(1500px,96vw); margin:auto; padding:28px 0 60px; }
+    header { display:flex; justify-content:space-between; gap:20px; align-items:flex-end; margin-bottom:22px; }
+    h1,h2,h3,p { margin:0; } h1 { font-size:clamp(27px,4vw,44px); letter-spacing:-.04em; } h2 { font-size:20px; margin:30px 0 12px; } h3 { font-size:15px; }
+    .eyebrow { color:var(--l1); text-transform:uppercase; font-weight:800; font-size:12px; letter-spacing:.13em; }
+    .muted,.sub { color:var(--muted); } .sub { margin-top:5px; }
+    .badge { border:1px solid #335064; background:#102331; padding:7px 11px; border-radius:999px; white-space:nowrap; }
+    .grid { display:grid; gap:12px; } .kpis { grid-template-columns:repeat(6,1fr); } .robots { grid-template-columns:1fr 1fr; } .charts { grid-template-columns:1fr 1fr; }
+    .panel,.kpi { background:linear-gradient(150deg,var(--panel2),var(--panel)); border:1px solid var(--line); border-radius:15px; box-shadow:0 13px 40px #0004; }
+    .panel { padding:16px; } .kpi { padding:14px; min-height:92px; }
+    .kpi strong { font-size:25px; display:block; margin-top:9px; } .kpi span { color:var(--muted); font-size:12px; }
+    .robot-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+    .dot { width:9px; height:9px; display:inline-block; border-radius:50%; margin-right:7px; background:var(--l1); } .leo2 .dot { background:var(--l2); }
+    table { width:100%; border-collapse:collapse; } th,td { text-align:left; border-bottom:1px solid #21313e; padding:8px 6px; } th { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.08em; } td:last-child,th:last-child { text-align:right; }
+    .replay-top { display:flex; gap:12px; align-items:center; margin-bottom:15px; } button { color:var(--text); background:#1b3040; border:1px solid #355268; border-radius:9px; padding:8px 13px; cursor:pointer; } button:hover { background:#244259; }
+    input[type=range] { flex:1; accent-color:var(--l1); } .replay-grid { display:grid; grid-template-columns:1.1fr 1fr 1fr; gap:12px; }
+    .snapshot { border:1px solid #243744; border-radius:12px; padding:12px; background:#0b1219; } .snapshot strong { font-size:19px; } .snapshot-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; } .snapshot-grid div { color:var(--muted); } .snapshot-grid b { color:var(--text); display:block; }
+    canvas { display:block; width:100%; height:260px; margin-top:8px; } #positionChart { height:230px; }
+    .chart-title { display:flex; justify-content:space-between; align-items:center; } .chart-title small { color:var(--muted); }
+    .quality { grid-template-columns:1fr 1fr 1fr; } .quality strong { font-size:18px; display:block; } .quality small { color:var(--muted); }
+    .events { max-height:290px; overflow:auto; } .event { display:grid; grid-template-columns:76px 90px 1fr; gap:8px; padding:8px 4px; border-bottom:1px solid #21313e; } .event time,.event span { color:var(--muted); }
+    .gallery { grid-template-columns:1fr 1fr; } figure { margin:0; overflow:hidden; } figure img { width:100%; height:360px; object-fit:contain; display:block; background:#080d12; border-radius:10px; margin-top:10px; } figcaption { color:var(--muted); }
+    .camera-grid,.map-grid { grid-template-columns:1fr 1fr; }
+    .camera-hero { width:100%; height:350px; object-fit:contain; display:block; background:#080d12; border-radius:10px; margin:12px 0; }
+    .camera-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:7px; }
+    .camera-thumb { padding:3px; border-radius:7px; min-width:0; background:#0a1219; }
+    .camera-thumb img { display:block; width:100%; height:78px; object-fit:cover; border-radius:4px; }
+    .camera-caption { color:var(--muted); font-size:12px; min-height:18px; }
+    .map-shot { height:380px; position:relative; overflow:hidden; display:block; background:#080d12; border-radius:10px; margin-top:12px; }
+    .map-shot img,.map-shot canvas { position:absolute; display:block; margin:0; width:auto; height:auto; }
+    .map-shot canvas { pointer-events:none; }
+    .map-legend { display:flex; gap:16px; color:var(--muted); font-size:12px; margin-top:10px; flex-wrap:wrap; }
+    .key { width:9px; height:9px; display:inline-block; transform:rotate(45deg); background:#ffd44d; margin-right:6px; }
+    .key.rover { transform:none; border-radius:50%; background:var(--blue); } .key.goal { transform:none; background:var(--red); }
+    footer { margin-top:30px; color:var(--muted); display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+    @media(max-width:1050px) { .kpis { grid-template-columns:repeat(3,1fr); } .charts,.gallery,.camera-grid,.map-grid { grid-template-columns:1fr; } }
+    @media(max-width:720px) { header { align-items:flex-start; flex-direction:column; } .kpis,.robots,.quality,.replay-grid { grid-template-columns:1fr; } .event { grid-template-columns:65px 70px 1fr; } }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div><div class="eyebrow">Saved mission · Data analysis</div><h1>Two-Rover Recording</h1><p class="sub" id="subtitle"></p></div>
+    <div class="badge">Offline · read-only · self-contained</div>
+  </header>
+
+  <section class="grid kpis" id="kpis"></section>
+
+  <h2>Robot outcomes</h2>
+  <section class="grid robots" id="robotOutcomes"></section>
+
+  <h2>Final alignment possibilities</h2>
+  <section class="panel"><p class="sub">Ranked grid hypotheses saved from the last alignment evaluation. Weight is relative among the displayed alternatives, not a probability.</p><table><thead><tr><th>Rank</th><th>Leo2 → Leo1 x</th><th>y</th><th>yaw</th><th>score</th><th>relative weight</th></tr></thead><tbody id="alignmentPossibilities"></tbody></table></section>
+
+  <h2>Recorded possible map merges</h2>
+  <p class="sub">Snapshots of the continuously changing, unvetted merge candidate. These previews document what the aligner tried and were never used for robot travel until accepted.</p>
+  <section class="panel" id="candidateMapEvidence"></section>
+
+  <h2>Recording replay</h2>
+  <section class="panel">
+    <div class="replay-top"><button id="play">▶ Play</button><input id="replay" type="range" min="0" value="0"><strong id="replayTime"></strong><button id="csv">Export CSV</button></div>
+    <div class="replay-grid">
+      <div class="snapshot"><div class="chart-title"><h3>Local odometry traces</h3><small>active sample highlighted</small></div><canvas id="positionChart"></canvas></div>
+      <div class="snapshot leo1" id="snap-leo1"></div>
+      <div class="snapshot leo2" id="snap-leo2"></div>
+    </div>
+  </section>
+
+  <h2>Recorded telemetry</h2>
+  <section class="grid charts">
+    <div class="panel"><div class="chart-title"><h3>Known map area</h3><small>m²</small></div><canvas id="mapChart"></canvas></div>
+    <div class="panel"><div class="chart-title"><h3>Distance travelled</h3><small>metres</small></div><canvas id="distanceChart"></canvas></div>
+    <div class="panel"><div class="chart-title"><h3>Linear velocity</h3><small>m/s</small></div><canvas id="speedChart"></canvas></div>
+    <div class="panel"><div class="chart-title"><h3>Laser scan rate</h3><small>Hz</small></div><canvas id="scanChart"></canvas></div>
+    <div class="panel"><div class="chart-title"><h3>Camera information rate</h3><small>Hz</small></div><canvas id="cameraChart"></canvas></div>
+    <div class="panel"><div class="chart-title"><h3>Detected frontiers</h3><small>count</small></div><canvas id="frontierChart"></canvas></div>
+    <div class="panel"><div class="chart-title"><h3>Alignment confidence and lock</h3><small>0–1</small></div><canvas id="alignmentChart"></canvas></div>
+    <div class="panel"><div class="chart-title"><h3>ROS graph health</h3><small>node count</small></div><canvas id="nodeChart"></canvas></div>
+  </section>
+
+  <h2>Data quality</h2>
+  <section class="grid quality" id="quality"></section>
+
+  <h2>Mission events</h2>
+  <section class="panel events" id="events"></section>
+
+  <h2>Saved camera views</h2>
+  <p class="sub">Latest dashboard image plus representative raw and ArUco-annotated frames captured throughout the run.</p>
+  <section class="grid camera-grid" id="cameraEvidence"></section>
+
+  <h2>Local maps with ArUco landmarks</h2>
+  <p class="sub">Persistent marker positions are plotted in each rover's own map frame.</p>
+  <section class="grid map-grid" id="localMapEvidence"></section>
+
+  <h2>Saved evidence</h2>
+  <section class="grid gallery" id="gallery"></section>
+
+  <footer><span id="source"></span><span>Generated from the recorded ROS telemetry; this report never sends robot commands.</span></footer>
+</main>
+<script id="recording-data" type="application/json">null</script>
+<script>
+const D=JSON.parse(document.getElementById('recording-data').textContent), S=D.samples, Q=D.summary;
+const C={leo1:'#31d6a6',leo2:'#ffb454',shared:'#62a9ff',candidate:'#e6b94d',red:'#ff6f7d',muted:'#91a5b3'};
+const fmt=(v,n=1,s='—')=>Number.isFinite(v)?v.toFixed(n):s;
+const clock=s=>{if(!Number.isFinite(s))return '—'; const m=Math.floor(s/60),q=Math.round(s%60);return `${m}m ${q}s`};
+const pct=v=>Number.isFinite(v)?`${v.toFixed(1)}%`:'—';
+document.getElementById('subtitle').textContent=`${Q.started} → ${Q.ended} · ${D.meta.directory}`;
+const cards=[['Recording',clock(Q.wallDuration)],['Samples',Q.sampleCount.toLocaleString()],['Combined travel',`${fmt(Q.totalDistance)} m`],['Shared map',`${fmt(Q.sharedArea,2)} m²`],['Alignment',Q.alignmentLockedAt===null?'not locked':`locked at ${clock(Q.alignmentLockedAt)}`],['Successful goals',Q.totalGoalsSucceeded]];
+document.getElementById('kpis').innerHTML=cards.map(x=>`<article class="kpi"><span>${x[0]}</span><strong>${x[1]}</strong></article>`).join('');
+document.getElementById('robotOutcomes').innerHTML=['leo1','leo2'].map(name=>{const r=Q.robots[name];return `<article class="panel ${name}"><div class="robot-head"><h3><i class="dot"></i>${name.toUpperCase()}</h3><span class="badge">${r.finalStatus}</span></div><table><tr><td>Travelled</td><td>${fmt(r.distance)} m</td></tr><tr><td>Known local map</td><td>${fmt(r.finalMap,2)} m²</td></tr><tr><td>Goals sent / succeeded / failed</td><td>${r.goalsSent} / ${r.goalsSucceeded} / ${r.goalsFailed}</td></tr><tr><td>Resolved-goal success</td><td>${pct(r.goalSuccessRate)}</td></tr><tr><td>Moving time</td><td>${clock(r.movingSeconds)}</td></tr><tr><td>Median scan / camera</td><td>${fmt(r.medianScanHz)} / ${fmt(r.medianCameraHz)} Hz</td></tr><tr><td>Watchdog recoveries</td><td>${r.recoveries}</td></tr></table></article>`}).join('');
+document.getElementById('alignmentPossibilities').innerHTML=(Q.alignmentPossibilities||[]).length?Q.alignmentPossibilities.map(c=>`<tr><td>#${c.rank}</td><td>${fmt(c.dx,2)} m</td><td>${fmt(c.dy,2)} m</td><td>${fmt(c.yawDeg,1)}°</td><td>${fmt(c.score,1)}</td><td>${fmt(100*c.relativeWeight,1)}%</td></tr>`).join(''):'<tr><td colspan="6" class="muted">No grid candidates were recorded.</td></tr>';
+const candidateFrames=D.candidateMapEvidence||[],candidatePanel=document.getElementById('candidateMapEvidence');candidatePanel.innerHTML=candidateFrames.length?`<div class="robot-head"><h3>UNVETTED CANDIDATE MERGE</h3><span class="badge">${candidateFrames.length} saved stages</span></div><img class="camera-hero" id="candidate-map-hero" src="${candidateFrames[candidateFrames.length-1].image}" alt="saved candidate merge"><div class="camera-caption" id="candidate-map-caption">${candidateFrames[candidateFrames.length-1].label}</div><div class="camera-strip">${candidateFrames.map((f,i)=>`<button class="camera-thumb candidate-thumb" data-frame="${i}" title="${f.label}"><img src="${f.image}" alt="${f.label}"></button>`).join('')}</div>`:'<p class="muted">This recording predates candidate-map frame capture.</p>';document.querySelectorAll('.candidate-thumb').forEach(button=>button.onclick=()=>{const frame=candidateFrames[+button.dataset.frame];document.getElementById('candidate-map-hero').src=frame.image;document.getElementById('candidate-map-caption').textContent=`${frame.label} · ${frame.file}`});
+
+function chart(canvas, series, options={}){
+  const box=canvas.getBoundingClientRect(), ratio=devicePixelRatio||1, w=Math.max(300,box.width),h=Math.max(190,box.height);
+  canvas.width=w*ratio;canvas.height=h*ratio;const x=canvas.getContext('2d');x.scale(ratio,ratio);x.clearRect(0,0,w,h);
+  const pad={l:48,r:14,t:28,b:31}, pw=w-pad.l-pad.r,ph=h-pad.t-pad.b, all=series.flatMap(z=>z.values.filter(Number.isFinite));
+  let lo=options.min??Math.min(...all,0), hi=options.max??Math.max(...all,1); if(hi===lo)hi=lo+1; const tmax=Math.max(S[S.length-1].t,1);
+  x.font='11px system-ui';x.strokeStyle='#243644';x.fillStyle='#8297a5';x.lineWidth=1;
+  for(let i=0;i<=4;i++){const y=pad.t+ph*i/4;x.beginPath();x.moveTo(pad.l,y);x.lineTo(w-pad.r,y);x.stroke();const val=hi-(hi-lo)*i/4;x.fillText(fmt(val,options.decimals??1),4,y+4)}
+  for(let i=0;i<=4;i++){const px=pad.l+pw*i/4;x.fillText(clock(tmax*i/4),px-12,h-7)}
+  series.forEach((z,j)=>{x.strokeStyle=z.color;x.lineWidth=1.8;x.beginPath();let open=false;z.values.forEach((v,i)=>{if(!Number.isFinite(v)){open=false;return}const px=pad.l+pw*S[i].t/tmax,py=pad.t+ph*(hi-v)/(hi-lo);if(open)x.lineTo(px,py);else{x.moveTo(px,py);open=true}});x.stroke();const lx=pad.l+j*145;x.fillStyle=z.color;x.fillRect(lx,8,14,3);x.fillStyle='#dce8ed';x.fillText(z.name,lx+20,13)});
+}
+const vals=fn=>S.map(fn), robot=(name,key)=>vals(s=>s.robots[name][key]);
+function drawCharts(){
+  chart(mapChart,[{name:'Leo 1',color:C.leo1,values:robot('leo1','map')},{name:'Leo 2',color:C.leo2,values:robot('leo2','map')},{name:'Accepted shared',color:C.shared,values:vals(s=>s.shared)},{name:'Candidate merge',color:C.candidate,values:vals(s=>s.candidate)}]);
+  chart(distanceChart,[{name:'Leo 1',color:C.leo1,values:robot('leo1','distance')},{name:'Leo 2',color:C.leo2,values:robot('leo2','distance')}]);
+  chart(speedChart,[{name:'Leo 1',color:C.leo1,values:robot('leo1','v')},{name:'Leo 2',color:C.leo2,values:robot('leo2','v')}]);
+  chart(scanChart,[{name:'Leo 1',color:C.leo1,values:robot('leo1','scan')},{name:'Leo 2',color:C.leo2,values:robot('leo2','scan')}]);
+  chart(cameraChart,[{name:'Leo 1',color:C.leo1,values:robot('leo1','camera')},{name:'Leo 2',color:C.leo2,values:robot('leo2','camera')}]);
+  chart(frontierChart,[{name:'Leo 1',color:C.leo1,values:robot('leo1','frontiers')},{name:'Leo 2',color:C.leo2,values:robot('leo2','frontiers')}],{decimals:0});
+  chart(alignmentChart,[{name:'Confidence',color:C.shared,values:vals(s=>s.conf)},{name:'Locked',color:C.leo1,values:vals(s=>s.lock?1:0)}],{min:0,max:1});
+  chart(nodeChart,[{name:'ROS nodes',color:C.shared,values:vals(s=>s.nodes)}],{decimals:0});
+}
+
+const slider=document.getElementById('replay');slider.max=S.length-1;slider.value=S.length-1;let timer=null;
+function positionChart(index){const c=document.getElementById('positionChart'),box=c.getBoundingClientRect(),d=devicePixelRatio||1,w=Math.max(250,box.width),h=Math.max(190,box.height);c.width=w*d;c.height=h*d;const x=c.getContext('2d');x.scale(d,d);x.fillStyle='#080e14';x.fillRect(0,0,w,h);const points=['leo1','leo2'].flatMap(n=>S.slice(0,index+1).map(s=>s.robots[n]).filter(p=>Number.isFinite(p.x)&&Number.isFinite(p.y)));if(!points.length)return;let xmin=Math.min(...points.map(p=>p.x)),xmax=Math.max(...points.map(p=>p.x)),ymin=Math.min(...points.map(p=>p.y)),ymax=Math.max(...points.map(p=>p.y));if(xmax===xmin)xmax++;if(ymax===ymin)ymax++;const p=18,px=v=>p+(v-xmin)*(w-2*p)/(xmax-xmin),py=v=>h-p-(v-ymin)*(h-2*p)/(ymax-ymin);['leo1','leo2'].forEach(n=>{x.strokeStyle=C[n];x.lineWidth=2;x.beginPath();let started=false;S.slice(0,index+1).forEach(s=>{const q=s.robots[n];if(!Number.isFinite(q.x)||!Number.isFinite(q.y))return;if(started)x.lineTo(px(q.x),py(q.y));else{x.moveTo(px(q.x),py(q.y));started=true}});x.stroke();const q=S[index].robots[n];if(Number.isFinite(q.x)){x.fillStyle=C[n];x.beginPath();x.arc(px(q.x),py(q.y),5,0,Math.PI*2);x.fill()}});x.fillStyle=C.muted;x.font='10px system-ui';x.fillText('Each trace uses its robot-local odometry frame',9,h-5)}
+function snapshot(name,r){return `<div class="robot-head"><h3><i class="dot"></i>${name.toUpperCase()}</h3><span class="badge">${r.status}</span></div><strong>${fmt(r.distance)} m travelled</strong><div class="snapshot-grid"><div>Pose<b>${fmt(r.x,2)}, ${fmt(r.y,2)} · ${fmt(r.yaw)}°</b></div><div>Velocity<b>${fmt(r.v,3)} m/s · ${fmt(r.w,3)} rad/s</b></div><div>Sensors<b>${fmt(r.scan)} Hz scan · ${fmt(r.camera)} Hz camera</b></div><div>Perception<b>${r.frontiers} frontiers · ${r.tags} tags</b></div><div>Map<b>${fmt(r.map,2)} m²</b></div><div>Goals<b>${r.success} success · ${r.failed} failed</b></div></div>`}
+function replay(index){const s=S[index];document.getElementById('replayTime').textContent=`${clock(s.t)} · sim ${fmt(s.sim)} s · ${s.lock?'aligned':'not aligned'}`;['leo1','leo2'].forEach(n=>document.getElementById(`snap-${n}`).innerHTML=snapshot(n,s.robots[n]));positionChart(index)}
+slider.oninput=()=>replay(+slider.value);document.getElementById('play').onclick=e=>{if(timer){clearInterval(timer);timer=null;e.target.textContent='▶ Play';return}if(+slider.value>=S.length-1)slider.value=0;e.target.textContent='❚❚ Pause';timer=setInterval(()=>{let i=+slider.value+1;if(i>=S.length){clearInterval(timer);timer=null;e.target.textContent='▶ Play';return}slider.value=i;replay(i)},100)};
+
+const quality=[];['leo1','leo2'].forEach(n=>{const r=Q.robots[n];quality.push([`${n.toUpperCase()} pose samples`,pct(r.poseCompleteness),'Odometry available in the recording'],[`${n.toUpperCase()} laser freshness`,pct(r.scanFreshness),'Samples no older than 0.5 s'],[`${n.toUpperCase()} camera freshness`,pct(r.cameraFreshness),'Samples no older than 1.0 s'])});
+document.getElementById('quality').innerHTML=quality.map(q=>`<article class="panel"><strong>${q[1]}</strong><div>${q[0]}</div><small>${q[2]}</small></article>`).join('');
+document.getElementById('events').innerHTML=D.events.length?D.events.map(e=>`<div class="event"><time>${clock(e.t)}</time><span>${e.kind}</span><b>${e.message}</b></div>`).join(''):'<p class="muted">No state transitions recorded.</p>';
+const cameras=D.cameraEvidence||{};
+document.getElementById('cameraEvidence').innerHTML=['leo1','leo2'].map(name=>{const frames=cameras[name]||[];if(!frames.length)return `<article class="panel ${name}"><div class="robot-head"><h3><i class="dot"></i>${name.toUpperCase()} CAMERA</h3></div><p class="muted">No camera frame was saved for this run.</p></article>`;return `<article class="panel ${name}"><div class="robot-head"><h3><i class="dot"></i>${name.toUpperCase()} CAMERA</h3><span class="badge">${frames.length} saved views</span></div><img class="camera-hero" id="camera-${name}" src="${frames[0].image}" alt="${name} saved camera view"><div class="camera-caption" id="camera-caption-${name}">${frames[0].label} · ${frames[0].file}</div><div class="camera-strip">${frames.map((f,i)=>`<button class="camera-thumb" data-robot="${name}" data-frame="${i}" title="${f.label} · ${f.file}"><img src="${f.image}" alt="${f.label}"></button>`).join('')}</div></article>`}).join('');
+document.querySelectorAll('.camera-thumb').forEach(button=>button.onclick=()=>{const name=button.dataset.robot,frame=cameras[name][+button.dataset.frame];document.getElementById(`camera-${name}`).src=frame.image;document.getElementById(`camera-caption-${name}`).textContent=`${frame.label} · ${frame.file}`});
+
+const localMaps=D.localMapEvidence||{};
+document.getElementById('localMapEvidence').innerHTML=['leo1','leo2'].map(name=>{const item=localMaps[name];if(!item)return `<article class="panel ${name}"><div class="robot-head"><h3><i class="dot"></i>${name.toUpperCase()} LOCAL MAP</h3></div><p class="muted">No saved local occupancy map is available.</p></article>`;return `<article class="panel ${name}"><div class="robot-head"><h3><i class="dot"></i>${name.toUpperCase()} LOCAL MAP</h3><span class="badge">${item.markers.length} ArUco landmarks</span></div><div class="map-shot" id="map-shot-${name}"><img id="local-map-${name}" src="${item.image}" alt="${name} local occupancy map"><canvas id="local-overlay-${name}"></canvas></div><div class="map-legend"><span><i class="key"></i>ArUco ID</span><span><i class="key rover"></i>robot</span><span><i class="key goal"></i>desired place</span><span>${item.map.frame}</span></div></article>`}).join('');
+function renderLocalMap(name){const item=localMaps[name],img=document.getElementById(`local-map-${name}`),canvas=document.getElementById(`local-overlay-${name}`),wrap=document.getElementById(`map-shot-${name}`);if(!item||!img||!canvas||!wrap||!img.naturalWidth)return;const scale=Math.min(wrap.clientWidth/img.naturalWidth,wrap.clientHeight/img.naturalHeight),w=Math.max(1,img.naturalWidth*scale),h=Math.max(1,img.naturalHeight*scale),left=(wrap.clientWidth-w)/2,top=(wrap.clientHeight-h)/2,d=devicePixelRatio||1;[img,canvas].forEach(el=>{el.style.width=`${w}px`;el.style.height=`${h}px`;el.style.left=`${left}px`;el.style.top=`${top}px`});canvas.width=w*d;canvas.height=h*d;const x=canvas.getContext('2d');x.scale(d,d);const m=item.map,o=m.origin||{x:0,y:0,yaw:0},valid=m.resolution>0&&m.width>0&&m.height>0,z=(o.yaw||0)*Math.PI/180,c=Math.cos(z),s=Math.sin(z),point=(gx,gy)=>{const dx=gx-o.x,dy=gy-o.y,lx=c*dx+s*dy,ly=-s*dx+c*dy;return [lx/(m.resolution*m.width)*w,h-ly/(m.resolution*m.height)*h]};if(!valid)return;item.markers.forEach(marker=>{const [a,b]=point(marker.x,marker.y);x.save();x.translate(a,b);x.rotate(Math.PI/4);x.fillStyle='#ffd44d';x.strokeStyle='#382700';x.lineWidth=2;x.fillRect(-7,-7,14,14);x.strokeRect(-7,-7,14,14);x.restore();x.fillStyle='#fff3aa';x.font='bold 12px system-ui';x.fillText(`ID ${marker.id}`,a+11,b-8)});if(item.goal&&Number.isFinite(item.goal.x)&&Number.isFinite(item.goal.y)){const [a,b]=point(item.goal.x,item.goal.y);x.strokeStyle=C.red;x.lineWidth=3;x.beginPath();x.moveTo(a-8,b);x.lineTo(a+8,b);x.moveTo(a,b-8);x.lineTo(a,b+8);x.stroke()}if(item.pose&&Number.isFinite(item.pose.x)&&Number.isFinite(item.pose.y)){const [a,b]=point(item.pose.x,item.pose.y);x.fillStyle=C.shared;x.beginPath();x.arc(a,b,6,0,Math.PI*2);x.fill()}}
+['leo1','leo2'].forEach(name=>{const img=document.getElementById(`local-map-${name}`);if(img){img.onload=()=>renderLocalMap(name);if(img.complete)renderLocalMap(name)}});
+const evidence=[['mergedMap','Merged occupancy map'],['trajectories','Both trajectories on the shared map'],['coverage','Coverage analysis'],['alignment','Alignment analysis']];document.getElementById('gallery').innerHTML=evidence.filter(x=>D.evidence[x[0]]).map(x=>`<figure class="panel"><figcaption>${x[1]}</figcaption><img src="${D.evidence[x[0]]}" alt="${x[1]}"></figure>`).join('');
+document.getElementById('source').textContent=`Source: ${D.meta.source} · ${Q.sampleCount} samples · ${Q.rejectedLines} rejected`;
+document.getElementById('csv').onclick=()=>{const keys=['t','sim','nodes','lock','confidence','shared_map_m2','leo1_x','leo1_y','leo1_speed','leo1_scan_hz','leo1_camera_hz','leo1_frontiers','leo1_distance','leo2_x','leo2_y','leo2_speed','leo2_scan_hz','leo2_camera_hz','leo2_frontiers','leo2_distance'];const rows=S.map(s=>[s.t,s.sim,s.nodes,+s.lock,s.conf,s.shared,s.robots.leo1.x,s.robots.leo1.y,s.robots.leo1.v,s.robots.leo1.scan,s.robots.leo1.camera,s.robots.leo1.frontiers,s.robots.leo1.distance,s.robots.leo2.x,s.robots.leo2.y,s.robots.leo2.v,s.robots.leo2.scan,s.robots.leo2.camera,s.robots.leo2.frontiers,s.robots.leo2.distance]);const blob=new Blob([[keys.join(','),...rows.map(r=>r.map(v=>v??'').join(','))].join('\n')],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='two_rover_recording.csv';a.click();URL.revokeObjectURL(a.href)};
+let resize;new ResizeObserver(()=>{clearTimeout(resize);resize=setTimeout(()=>{drawCharts();positionChart(+slider.value);['leo1','leo2'].forEach(renderLocalMap)},100)}).observe(document.querySelector('main'));
+drawCharts();replay(S.length-1);
+</script>
+</body>
+</html>

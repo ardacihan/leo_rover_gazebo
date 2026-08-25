@@ -85,7 +85,13 @@ class TagBasedMapAligner(Node):
         # default is off. Left in place, and worth revisiting with a proper
         # per-marker uncertainty rather than a hand-fitted weight.
         self.declare_parameter("use_tag_orientation", False)
-        self.declare_parameter("max_mean_error", 0.35)
+        # Keep the estimator and the explicit residual gate consistent. The
+        # tag transform is an initial alignment measurement cross-checked by
+        # occupancy matching; 0.75 m is the existing downstream mean-residual
+        # limit, while the old 0.35 m estimator limit rejected otherwise good
+        # three-tag office estimates before that gate could evaluate them.
+        self.declare_parameter("max_mean_error", 0.75)
+        self.declare_parameter("max_point_error", 1.5)
 
         # Robustness gating: tags are only an initial guess, so bad estimates
         # must be rejected or published with clearly low confidence.
@@ -102,7 +108,7 @@ class TagBasedMapAligner(Node):
         # included while the accepted map transform confidence is high.
         self.declare_parameter("accepted_transform_topic", "/map_based_transform/leo2_to_leo1")
         self.declare_parameter("accepted_confidence_topic", "/alignment_confidence")
-        self.declare_parameter("min_confidence_for_shared_landmarks", 0.5)
+        self.declare_parameter("min_confidence_for_shared_landmarks", 0.40)
 
         gate = float(self.get_parameter("landmark_gate_distance").value)
         gate_min_obs = int(self.get_parameter("landmark_gate_min_observations").value)
@@ -111,8 +117,10 @@ class TagBasedMapAligner(Node):
             "leo2": LandmarkMap(gate_distance=gate, gate_min_observations=gate_min_obs),
         }
         self.last_transform: Optional[Tuple[float, float, float]] = None
+        self.last_transform_confidence: float = 0.0
         self.accepted_map_transform: Optional[Tuple[float, float, float]] = None
         self.accepted_map_confidence: Optional[float] = None
+        self._merged_conversion_started_at: Optional[float] = None
         self._last_status_log_sec = 0.0
         self._single_tag_logged = False
 
@@ -212,6 +220,13 @@ class TagBasedMapAligner(Node):
             float(msg.transform.translation.y),
             yaw,
         )
+        if self._merged_conversion_started_at is None:
+            self._merged_conversion_started_at = self._now_sec()
+            self.get_logger().info(
+                'MERGED MARKER CONVERSION ENABLED at '
+                f't={self._merged_conversion_started_at:.1f}s: leo2 marker '
+                'coordinates will now be transformed into leo1/map with the '
+                'vetted transform used by shared_map_merger.')
 
     def _accepted_confidence_cb(self, msg: Float32):
         self.accepted_map_confidence = float(msg.data)
@@ -379,6 +394,7 @@ class TagBasedMapAligner(Node):
                 [(map1.landmarks[tid].x, map1.landmarks[tid].y) for tid in common_ids],
                 min_tags=min_tags,
                 max_mean_error=float(self.get_parameter("max_mean_error").value),
+                max_point_error=float(self.get_parameter("max_point_error").value),
                 ground_truth=ground_truth,
                 source_yaws=[map2.landmarks[tid].yaw for tid in common_ids],
                 target_yaws=[map1.landmarks[tid].yaw for tid in common_ids],
@@ -399,7 +415,6 @@ class TagBasedMapAligner(Node):
                 float(self.get_parameter("single_tag_max_confidence").value),
             )
 
-        self.confidence_pub.publish(Float32(data=float(confidence)))
         self.tag_debug_pub.publish(String(data=json.dumps({
             "common_landmarks": common_ids,
             "tag_residual_mean": mean_residual,
@@ -413,6 +428,8 @@ class TagBasedMapAligner(Node):
         self._log_estimate(estimate, common_ids, mean_residual, max_residual, confidence)
 
         if not estimate.success:
+            self.confidence_pub.publish(
+                Float32(data=float(self.last_transform_confidence)))
             self._log_status(now, common_ids, f"transform rejected: {estimate.message}")
             return
 
@@ -420,6 +437,8 @@ class TagBasedMapAligner(Node):
             max_res_mean = float(self.get_parameter("max_tag_residual_mean").value)
             max_res_max = float(self.get_parameter("max_tag_residual_max").value)
             if mean_residual > max_res_mean or max_residual > max_res_max:
+                self.confidence_pub.publish(
+                    Float32(data=float(self.last_transform_confidence)))
                 self._log_status(
                     now, common_ids,
                     f"transform rejected: residual too high "
@@ -430,6 +449,7 @@ class TagBasedMapAligner(Node):
 
         self._log_status(now, common_ids, "transform published")
         self.last_transform = (estimate.dx, estimate.dy, estimate.yaw)
+        self.last_transform_confidence = float(confidence)
 
         transform = TransformStamped()
         transform.header.stamp = self.get_clock().now().to_msg()
@@ -441,6 +461,9 @@ class TagBasedMapAligner(Node):
         transform.transform.rotation.z = math.sin(estimate.yaw / 2.0)
         transform.transform.rotation.w = math.cos(estimate.yaw / 2.0)
         self.transform_pub.publish(transform)
+        # This confidence now always belongs to the transform immediately
+        # above; rejected candidates never upgrade a stale published pose.
+        self.confidence_pub.publish(Float32(data=self.last_transform_confidence))
 
         if self.get_parameter("publish_estimated_tf").value:
             self.tf_broadcaster.sendTransform(transform)

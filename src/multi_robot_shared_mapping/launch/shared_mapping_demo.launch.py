@@ -353,7 +353,7 @@ def generate_launch_description():
         DeclareLaunchArgument("alignment_mode", default_value="fixed"),
         DeclareLaunchArgument("enable_alignment_evaluation", default_value="false"),
         DeclareLaunchArgument("tag_cache_timeout_sec", default_value="30.0"),
-        DeclareLaunchArgument("min_alignment_confidence", default_value="0.5"),
+        DeclareLaunchArgument("min_alignment_confidence", default_value="0.45"),
         # Persistent landmark map: tags are never forgotten once seen.
         DeclareLaunchArgument("landmark_persistence", default_value="true"),
 

@@ -62,10 +62,19 @@ def _launch_setup(context, *_args, **_kwargs):
         # expressed in two different frames as if they shared one.
         map_frame = f'{ns}/map'
 
+    # The presets are safe single-rover defaults.  A physical two-rover graph
+    # must be able to point each detector at its own namespaced RealSense;
+    # otherwise both namespaced detector nodes still subscribe to the same
+    # absolute /camera/... topic and one rover's landmarks are silently
+    # attributed to the other rover.
+    image_topic = cfg('image_topic').perform(context).strip()
+    camera_info_topic = cfg('camera_info_topic').perform(context).strip()
+    camera_frame_override = cfg('camera_frame_override').perform(context).strip()
+
     params = {
         'use_sim_time': cfg('use_sim_time').perform(context).lower() == 'true',
-        'image_topic': _ns(preset['image_topic']),
-        'camera_info_topic': _ns(preset['camera_info_topic']),
+        'image_topic': image_topic or _ns(preset['image_topic']),
+        'camera_info_topic': camera_info_topic or _ns(preset['camera_info_topic']),
         'frame_is_optical': preset['frame_is_optical'],
         'rate_limit_hz': preset['rate_limit_hz'],
         'map_frame': map_frame,
@@ -78,6 +87,7 @@ def _launch_setup(context, *_args, **_kwargs):
         'detection_topic': _ns(cfg('detection_topic').perform(context)),
         'markers_topic': _ns(cfg('markers_topic').perform(context)),
         'tag_frame_prefix': f'{ns}/' if ns else '',
+        'camera_frame_override': camera_frame_override,
         'publish_debug_image': cfg('publish_debug_image').perform(context).lower() == 'true',
         'debug_image_topic': _ns(cfg('debug_image_topic').perform(context)),
         'publish_tf': cfg('publish_tf').perform(context).lower() == 'true',
@@ -101,6 +111,11 @@ def generate_launch_description():
         # the sim profile's topics; empty keeps the rover's names.
         DeclareLaunchArgument('robot_ns', default_value=''),
         DeclareLaunchArgument('use_sim_time', default_value='false'),
+        # Leave empty for the selected profile's single-rover defaults.  Set
+        # these explicitly for namespaced real cameras.
+        DeclareLaunchArgument('image_topic', default_value=''),
+        DeclareLaunchArgument('camera_info_topic', default_value=''),
+        DeclareLaunchArgument('camera_frame_override', default_value=''),
         DeclareLaunchArgument('map_frame', default_value='map'),
         DeclareLaunchArgument('dictionary', default_value='DICT_4X4_50'),
         # Side of the black square. The sim plates are 0.20 m edge to edge

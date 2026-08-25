@@ -71,9 +71,11 @@ class FrameGrabber(Node):
 
     def _save(self, kind, msg):
         t = self.get_clock().now().nanoseconds * 1e-9
-        # Debug frames are worth more, so let them in more often; the detector
-        # only publishes one when it actually found a marker worth drawing.
-        period = self.period if kind == 'raw' else max(self.period / 4.0, 2.0)
+        # Current real/sim detectors publish their annotated stream even when
+        # no marker is present. Use the full period for both streams so the
+        # bounded evidence set spans the whole mission instead of filling in
+        # its first two minutes and missing the eventual shared markers.
+        period = self.period
         if t - self.last[kind] < period:
             return
         if self.counts[kind] >= self.max_per_kind:

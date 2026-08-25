@@ -44,6 +44,14 @@ def test_occupancy_grid_to_points_extracts_occupied_cells():
     assert points[0] == pytest.approx([12.5, 21.5])
 
 
+def test_occupancy_grid_to_points_honors_rotated_origin():
+    points = occupancy_grid_to_points(
+        [100, 0], width=2, height=1, resolution=1.0,
+        origin_x=10.0, origin_y=20.0, origin_yaw=math.pi / 2,
+    )
+    assert points[0] == pytest.approx([9.5, 20.5])
+
+
 def test_downsample_respects_max_points():
     points = np.random.default_rng(0).uniform(0, 10, size=(2000, 2))
     down = downsample_points(points, voxel_size=0.1, max_points=100)

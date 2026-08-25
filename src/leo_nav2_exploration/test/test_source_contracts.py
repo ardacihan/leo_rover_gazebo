@@ -24,3 +24,19 @@ def test_preflight_requires_both_raw_and_filtered_scan_publishers():
     assert 'profile["scan"]' in source
     assert "raw scan publishers" in source
     assert "filtered scan publishers" in source
+
+
+def test_explorer_reports_exact_first_peer_position_use():
+    source = (PACKAGE.parent / "leo_rover_exploration" /
+              "leo_rover_exploration" / "frontier_explorer.py").read_text(
+                  encoding="utf-8")
+    assert "PEER POSITION TRACKING STARTED" in source
+    assert "peer_tracking_started_at" in source
+    assert "peer_position_tracking" in source
+
+
+def test_aruco_registry_is_latched_and_republished_for_late_map_viewers():
+    source = (MODULES / "aruco_detector.py").read_text(encoding="utf-8")
+    assert "QoSDurabilityPolicy.TRANSIENT_LOCAL" in source
+    assert "self.create_timer(2.0, self.publish_registry)" in source
+    assert "def publish_registry(self, stamp=None):" in source

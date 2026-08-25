@@ -103,14 +103,19 @@ def min_acceptance_confidence(
     if is_ambiguous:
         return 1.0  # never accept ambiguous transforms
 
+    # Each independently persistent common marker makes the grid hypothesis
+    # less likely to be a corridor/room symmetry.  Lower the promotion floor
+    # monotonically as that independent evidence grows.  This changes only
+    # the confidence gate: ambiguity, map conflict, residual and transform-
+    # jump checks still run before a transform can reach the shared map.
     if common_landmark_count >= 3:
-        return max(0.40, base_min - 0.10)
+        return max(0.34, base_min - 0.12)
     if common_landmark_count >= 2:
-        return max(0.42, base_min - 0.08)
+        return max(0.36, base_min - 0.10)
 
     if common_landmark_count == 1:
         if tag_map_agreement and map_overlap_score >= 0.25:
-            return max(0.38, base_min - 0.12)
+            return max(0.40, base_min - 0.08)
         return max(0.50, base_min)  # tag alone: harder to accept
 
     # No common tags — map-only path.

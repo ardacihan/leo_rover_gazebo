@@ -37,7 +37,10 @@ from multi_robot_shared_mapping.alignment_confidence import (
     select_top_candidates,
     transforms_disagree,
 )
-from multi_robot_shared_mapping.alignment_state import AlignmentState
+from multi_robot_shared_mapping.alignment_state import (
+    AlignmentState,
+    TransformConsensus,
+)
 from multi_robot_shared_mapping.grid_map_matching import (
     GridMatchResult,
     downsample_points,
@@ -46,6 +49,7 @@ from multi_robot_shared_mapping.grid_map_matching import (
 )
 from multi_robot_shared_mapping import marker_free_matching
 from multi_robot_shared_mapping.map_quality import LocalMapQualityTracker
+from multi_robot_shared_mapping.occupancy_fusion import GridSpec, fuse_grids
 from multi_robot_shared_mapping.exploration_policy import (
     build_policy_debug,
     min_acceptance_confidence,
@@ -70,6 +74,8 @@ class MapBasedAligner(Node):
         self.declare_parameter("output_topic", "/map_based_transform/leo2_to_leo1")
         self.declare_parameter("candidate_topic", "/alignment_candidate_transform")
         self.declare_parameter("confidence_topic", "/alignment_confidence")
+        self.declare_parameter(
+            "accepted_confidence_topic", "/map_based_accepted_confidence")
         self.declare_parameter("debug_topic", "/alignment_debug_json")
         self.declare_parameter("recovery_topic", "/alignment_recovery_goal")
         self.declare_parameter("parent_map_frame", "leo1/map")
@@ -89,12 +95,21 @@ class MapBasedAligner(Node):
 
         self.declare_parameter("min_occupied_cells", 100)
         self.declare_parameter("min_overlap_score", 30)
-        self.declare_parameter("min_alignment_confidence", 0.5)
-        self.declare_parameter("min_confidence_improvement", 0.05)
+        self.declare_parameter("min_alignment_confidence", 0.45)
+        self.declare_parameter("min_confidence_improvement", 0.03)
         self.declare_parameter("map_mode_min_confidence", 0.6)
         self.declare_parameter("max_transform_jump", 2.0)
         self.declare_parameter("max_yaw_jump_deg", 25.0)
         self.declare_parameter("require_consistency_for_update", True)
+        # With no common marker yet, a strong grid solution can establish the
+        # shared frame, but only after it repeats. ArUco is then an independent
+        # continuous correction rather than a two-marker start gate.
+        self.declare_parameter("grid_only_consensus_cycles", 2)
+        self.declare_parameter("grid_only_consistency_xy", 0.6)
+        self.declare_parameter("grid_only_consistency_yaw_deg", 8.0)
+        self.declare_parameter("grid_only_min_confidence", 0.50)
+        self.declare_parameter("grid_only_min_overlap", 0.55)
+        self.declare_parameter("grid_only_max_ambiguity_ratio", 0.82)
 
         self.declare_parameter("max_tag_map_disagreement_m", 1.0)
         self.declare_parameter("max_tag_map_disagreement_yaw_deg", 15.0)
@@ -125,9 +140,18 @@ class MapBasedAligner(Node):
         )
         self.quality_leo1 = LocalMapQualityTracker()
         self.quality_leo2 = LocalMapQualityTracker()
+        self.grid_only_consensus = TransformConsensus(
+            required=int(self.get_parameter("grid_only_consensus_cycles").value),
+            max_translation=float(
+                self.get_parameter("grid_only_consistency_xy").value),
+            max_yaw=math.radians(float(
+                self.get_parameter("grid_only_consistency_yaw_deg").value)),
+        )
         self._idle_logged = False
         self._last_recovery: Optional[str] = None
         self._mf_counter = 0
+        self._estimation_started_at: Optional[float] = None
+        self._accepted_common_landmark_count = 0
 
         self.create_subscription(
             OccupancyGrid, str(self.get_parameter("map1_topic").value), self._map1_cb, 10
@@ -164,6 +188,11 @@ class MapBasedAligner(Node):
         )
         self.confidence_pub = self.create_publisher(
             Float32, str(self.get_parameter("confidence_topic").value), 10
+        )
+        self.accepted_confidence_pub = self.create_publisher(
+            Float32,
+            str(self.get_parameter("accepted_confidence_topic").value),
+            10,
         )
         self.debug_pub = self.create_publisher(
             String, str(self.get_parameter("debug_topic").value), 10
@@ -236,9 +265,15 @@ class MapBasedAligner(Node):
 
     def _grid_points(self, grid: OccupancyGrid, select: str = "occupied"):
         threshold = int(self.get_parameter("occupied_threshold").value)
+        q = grid.info.origin.orientation
+        origin_yaw = math.atan2(
+            2.0 * (q.w * q.z + q.x * q.y),
+            1.0 - 2.0 * (q.y * q.y + q.z * q.z),
+        )
         return occupancy_grid_to_points(
             grid.data, grid.info.width, grid.info.height,
             grid.info.resolution, grid.info.origin.position.x, grid.info.origin.position.y,
+            origin_yaw=origin_yaw,
             occupied_threshold=threshold, select=select,
         )
 
@@ -263,6 +298,23 @@ class MapBasedAligner(Node):
     def _grid_tuple(self, msg: OccupancyGrid):
         h, w = msg.info.height, msg.info.width
         grid = np.asarray(msg.data, dtype=np.int8).reshape(h, w)
+        q = msg.info.origin.orientation
+        origin_yaw = math.atan2(
+            2.0 * (q.w * q.z + q.x * q.y),
+            1.0 - 2.0 * (q.y * q.y + q.z * q.z),
+        )
+        if abs(origin_yaw) > 1e-6:
+            # Marker-free matching carries only origin x/y/resolution.
+            # Canonicalize a rotated real OccupancyGrid instead of silently
+            # dropping the yaw component of its origin pose.
+            grid, resolution, origin_x, origin_y = fuse_grids([(
+                GridSpec(
+                    grid.astype(np.int16), float(msg.info.resolution),
+                    float(msg.info.origin.position.x),
+                    float(msg.info.origin.position.y), origin_yaw),
+                None,
+            )])
+            return grid.astype(np.int8), (origin_x, origin_y, resolution)
         info = (
             msg.info.origin.position.x,
             msg.info.origin.position.y,
@@ -421,9 +473,52 @@ class MapBasedAligner(Node):
         )
         confidence = compute_final_confidence(conf_inputs)
         candidate = (result.dx, result.dy, result.yaw)
+        grid_only = (
+            self.tag_estimate is None
+            and self._mode() in ("map", "hybrid", "tag")
+        )
+        consensus_count = self.grid_only_consensus.count
+        if grid_only:
+            # Count only candidates that are independently plausible. A
+            # repeated ambiguous corridor flip is still ambiguous, not a
+            # consensus.
+            grid_only_ok = (
+                not extra_reject
+                and result.normalized_overlap_score >= float(
+                    self.get_parameter("grid_only_min_overlap").value)
+                and ambiguity_ratio < float(
+                    self.get_parameter("grid_only_max_ambiguity_ratio").value)
+                and confidence >= float(
+                    self.get_parameter("grid_only_min_confidence").value)
+            )
+            if grid_only_ok:
+                consensus_count = self.grid_only_consensus.observe(candidate)
+                if not self.grid_only_consensus.ready:
+                    extra_reject = (
+                        "grid-only transform is plausible; waiting for temporal "
+                        f"consensus {consensus_count}/"
+                        f"{self.grid_only_consensus.required}")
+            else:
+                self.grid_only_consensus.reset()
+                consensus_count = 0
+                if not extra_reject:
+                    if result.normalized_overlap_score < float(
+                            self.get_parameter("grid_only_min_overlap").value):
+                        extra_reject = "grid-only overlap is not strong enough"
+                    elif ambiguity_ratio >= float(self.get_parameter(
+                            "grid_only_max_ambiguity_ratio").value):
+                        extra_reject = (
+                            "grid-only alternatives remain too similar; "
+                            "candidate only")
+                    else:
+                        extra_reject = "grid-only confidence is not strong enough"
+        else:
+            # Marker evidence supersedes the grid-only debounce immediately.
+            consensus_count = self.grid_only_consensus.count
         self._finalize(
             candidate, confidence, conf_inputs, result, is_ambiguous,
             extra_reject or "", top_k=top_k, ambiguity_ratio=ambiguity_ratio,
+            grid_only=grid_only, consensus_count=consensus_count,
         )
 
     def _preflight_reject(self, result: GridMatchResult, is_ambiguous: bool) -> str:
@@ -473,8 +568,18 @@ class MapBasedAligner(Node):
         extra_reject: str,
         top_k: Optional[list] = None,
         ambiguity_ratio: float = 0.0,
+        grid_only: bool = False,
+        consensus_count: int = 0,
     ):
         mode = self._mode()
+        if self._estimation_started_at is None:
+            self._estimation_started_at = self.get_clock().now().nanoseconds * 1e-9
+            self.get_logger().info(
+                'RELATIVE POSITION ESTIMATION STARTED at '
+                f't={self._estimation_started_at:.1f}s (mode={mode}): first '
+                'leo2/map -> leo1/map candidate is being evaluated while the '
+                'rovers may continue travelling; it is not used for merging '
+                'or coordination until accepted and locked.')
         self._publish_transform(self.candidate_pub, candidate)
         self.confidence_pub.publish(Float32(data=float(confidence)))
 
@@ -496,6 +601,11 @@ class MapBasedAligner(Node):
             base_min=base_min,
             map_mode_min=map_min,
         )
+        if grid_only:
+            min_conf = max(
+                min_conf,
+                float(self.get_parameter("grid_only_min_confidence").value),
+            )
         self.state.min_alignment_confidence = min_conf
 
         policy_preview = build_policy_debug(
@@ -546,7 +656,26 @@ class MapBasedAligner(Node):
             accepted, reason = False, extra_reject
             self.state.evaluate_candidate(candidate, confidence, extra_reject_reason=extra_reject)
         else:
-            accepted, reason = self.state.evaluate_candidate(candidate, confidence)
+            # The bridge never vets a tagless hybrid estimate. If that early
+            # map-only candidate nevertheless entered AlignmentState, allow a
+            # later tag-seeded, non-ambiguous map match to re-anchor it. This
+            # is deliberately one-way: once an accepted estimate had tag
+            # evidence, normal translation/yaw jump limits apply again.
+            allow_reanchor = bool(
+                mode in ("hybrid", "tag")
+                and self.state.accepted is not None
+                and self._accepted_common_landmark_count == 0
+                and self.tag_estimate is not None
+                and len(self.common_landmarks) >= 2
+                and not is_ambiguous
+                and result is not None
+            )
+            accepted, reason = self.state.evaluate_candidate(
+                candidate, confidence, allow_reanchor=allow_reanchor)
+            if accepted:
+                self._accepted_common_landmark_count = (
+                    len(self.common_landmarks)
+                    if self.tag_estimate is not None else 0)
 
         debug = self.state.debug_dict(
             mode,
@@ -563,12 +692,32 @@ class MapBasedAligner(Node):
             final_confidence=confidence,
             accepted=accepted,
             reason=reason,
-            top_candidates=[
-                {"dx": c[0], "dy": c[1], "yaw": c[2], "score": c[3]}
-                for c in (top_k or [])
-            ],
+            grid_only=grid_only,
+            grid_only_consensus_count=consensus_count,
+            grid_only_consensus_required=self.grid_only_consensus.required,
+            top_candidates=self._candidate_diagnostics(top_k or []),
         )
+        # Keep the actual state-machine decision visible. The policy also has
+        # a human explanation named "reason"; storing it separately avoids
+        # masking safety rejections such as a transform jump.
+        policy_reason = policy.pop("reason", "")
         debug.update(policy)
+        # build_policy_debug reports the generic map-mode floor. Grid-only
+        # temporal vetting can impose a stricter floor; expose the effective
+        # value so the operator does not see 0.42 while the node requires 0.55.
+        debug["min_acceptance_confidence"] = min_conf
+        debug["evidence_path"] = (
+            f"marker-assisted ({len(self.common_landmarks)} common ArUco)"
+            if self.tag_estimate is not None else
+            f"grid-only ({consensus_count}/{self.grid_only_consensus.required} consensus)"
+        )
+        debug["marker_reduced_threshold"] = bool(
+            self.tag_estimate is not None
+            and agreement
+            and min_conf < base_min
+        )
+        debug["policy_reason"] = policy_reason
+        debug['relative_estimation_started_at'] = self._estimation_started_at
         self.debug_pub.publish(String(data=json.dumps(debug)))
 
         tag_initial = (
@@ -589,10 +738,17 @@ class MapBasedAligner(Node):
         )
         if accepted:
             self.get_logger().info(log)
-            if self.state.accepted is not None:
-                self._publish_transform(self.accepted_pub, self.state.accepted)
         else:
             self.get_logger().warn(log)
+
+        # Republish the accepted transform and ITS confidence periodically.
+        # /alignment_confidence describes the latest candidate, which may have
+        # been rejected; pairing that number with an older accepted transform
+        # can make a safety bridge trust evidence that never belonged to it.
+        if self.state.accepted is not None:
+            self._publish_transform(self.accepted_pub, self.state.accepted)
+            self.accepted_confidence_pub.publish(
+                Float32(data=float(self.state.accepted_confidence)))
 
         if recovery:
             payload = json.dumps(recovery)
@@ -601,6 +757,25 @@ class MapBasedAligner(Node):
                 self.recovery_pub.publish(String(data=payload))
         elif self._last_recovery is not None:
             self._last_recovery = None
+
+    @staticmethod
+    def _candidate_diagnostics(candidates):
+        """Dashboard-friendly rankings; weights are relative, not Bayesian."""
+        positive = [max(0.0, float(candidate[3])) for candidate in candidates]
+        total = sum(positive)
+        return [
+            {
+                "rank": rank,
+                "dx": float(candidate[0]),
+                "dy": float(candidate[1]),
+                "yaw": float(candidate[2]),
+                "yaw_deg": math.degrees(float(candidate[2])),
+                "score": float(candidate[3]),
+                "relative_weight": (score / total if total > 0.0 else 0.0),
+            }
+            for rank, (candidate, score) in enumerate(
+                zip(candidates, positive), start=1)
+        ]
 
     def _search_window(self):
         mode = self._mode()
@@ -658,8 +833,16 @@ class MapBasedAligner(Node):
         if len(ix) == 0:
             return
         known = values[iy, ix]
-        xs = grid.info.origin.position.x + (ix + 0.5) * res
-        ys = grid.info.origin.position.y + (iy + 0.5) * res
+        local_x = (ix + 0.5) * res
+        local_y = (iy + 0.5) * res
+        q = grid.info.origin.orientation
+        origin_yaw = math.atan2(
+            2.0 * (q.w * q.z + q.x * q.y),
+            1.0 - 2.0 * (q.y * q.y + q.z * q.z),
+        )
+        oc, os = math.cos(origin_yaw), math.sin(origin_yaw)
+        xs = grid.info.origin.position.x + oc * local_x - os * local_y
+        ys = grid.info.origin.position.y + os * local_x + oc * local_y
         c, s = math.cos(result.yaw), math.sin(result.yaw)
         tx = c * xs - s * ys + result.dx
         ty = s * xs + c * ys + result.dy

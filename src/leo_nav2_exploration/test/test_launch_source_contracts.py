@@ -88,3 +88,17 @@ def test_navigation_overlay_filters_raw_lidar_before_slam_navigation_and_safety(
     assert "paths.scan_filter" in source
     assert "('scan', scan_topics.raw)" in source
     assert "('scan_filtered', scan_topics.filtered)" in source
+
+
+def test_namespaced_real_aruco_uses_that_rovers_camera_and_map():
+    mapping = _source("real_mapping.launch.py")
+    aruco = _source("aruco.launch.py")
+
+    assert "f'{p}/camera/camera/color/image_raw'" in mapping
+    assert "f'{p}/camera/camera/color/camera_info'" in mapping
+    assert "f'{p}/tag_detections'" in mapping
+    assert "f'{p}/aruco/debug_image'" in mapping
+    assert "DeclareLaunchArgument('aruco_max_range', default_value='4.5')" in mapping
+    assert "image_topic or _ns(preset['image_topic'])" in aruco
+    assert "camera_info_topic or _ns(preset['camera_info_topic'])" in aruco
+    assert "map_frame = f'{ns}/map'" in aruco

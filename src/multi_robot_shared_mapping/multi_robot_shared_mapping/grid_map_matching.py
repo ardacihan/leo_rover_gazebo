@@ -47,6 +47,7 @@ def occupancy_grid_to_points(
     resolution: float,
     origin_x: float,
     origin_y: float,
+    origin_yaw: float = 0.0,
     occupied_threshold: int = 50,
     select: str = "occupied",
 ) -> np.ndarray:
@@ -61,8 +62,11 @@ def occupancy_grid_to_points(
     else:
         mask = (grid >= 0) & (grid < occupied_threshold)
     iy, ix = np.nonzero(mask)
-    xs = origin_x + (ix + 0.5) * resolution
-    ys = origin_y + (iy + 0.5) * resolution
+    local_x = (ix + 0.5) * resolution
+    local_y = (iy + 0.5) * resolution
+    c, s = math.cos(origin_yaw), math.sin(origin_yaw)
+    xs = origin_x + c * local_x - s * local_y
+    ys = origin_y + s * local_x + c * local_y
     return np.column_stack([xs, ys])
 
 

@@ -129,3 +129,7 @@ reports/**/frames_leo*/
 # Per-snapshot occupancy grids for the merge time-lapse (already covered by the
 # *.npz rule above, listed here so the intent is obvious).
 reports/**/timelapse/
+
+# Interactive Gazebo/RViz/dashboard sessions.  Each run can contain large map
+# snapshots and an unbounded telemetry JSONL; keep them local and reviewable.
+reports/live_*/
