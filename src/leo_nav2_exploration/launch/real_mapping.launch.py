@@ -110,11 +110,21 @@ def _launch_setup(context):
         path = os.path.join(cfg, fname)
         return _yaml_params(path, node_key) if ns else path
 
+    scan_params = [cfg_params('scan_filter.yaml', 'scan_to_scan_filter_chain')]
+    if ns:
+        # The box filter resolves the scan into box_frame via TF; the bare
+        # 'base_footprint' of the single-rover config does not exist under a
+        # namespace, and an unresolvable frame silently drops EVERY scan --
+        # which starves the guard, the collision monitor and slam at once
+        # (rehearsal attempt 3: rover held at odom x=0.0 with a healthy,
+        # activated chain).
+        scan_params.append({'filter1': {'params': {
+            'box_frame': f'{fp}base_footprint'}}})
     scan_filter = Node(
         package='laser_filters',
         executable='scan_to_scan_filter_chain',
         name='scan_to_scan_filter_chain',
-        parameters=[cfg_params('scan_filter.yaml', 'scan_to_scan_filter_chain')] + st,
+        parameters=scan_params + st,
         remappings=[('scan', scan_topic),
                     ('scan_filtered', f'{p}/scan_filtered')] + tf,
         **nskw, **common,

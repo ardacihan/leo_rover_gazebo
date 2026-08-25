@@ -79,7 +79,11 @@ for i in 1 2; do
     guard_odom_topic:=/$ns/odom_wheel_like \
     > /ros2_ws/$OUT/real_mapping_$ns.log 2>&1"
 done
-sleep 30
+sleep 45
+# warm the ros2 CLI daemon once, so the checks below do not spend their
+# timeouts on discovery (a 6 s echo returned empty on a cold daemon and
+# failed an otherwise-healthy stack)
+in_sim "ros2 topic list > /dev/null 2>&1 || true"
 
 # --- check 1: per-robot maps from the real slam nodes -----------------------
 for i in 1 2; do
@@ -98,9 +102,9 @@ done
 LOG "teleop jog through the top of the safety chain"
 for i in 1 2; do
   ns="leo$i"
-  before=$(in_sim "timeout 6 ros2 topic echo --once /$ns/odom_wheel_like 2>/dev/null | grep -m1 -A3 'position:' | grep 'x:' | head -1 | grep -oE '[-0-9.e]+'" || echo "")
-  in_sim "(timeout 10 ros2 topic pub -r 5 /$ns/cmd_vel_nav geometry_msgs/msg/Twist '{linear: {x: 0.15}}' >/dev/null 2>&1 || true); ros2 topic pub --once /$ns/cmd_vel_nav geometry_msgs/msg/Twist '{}' >/dev/null 2>&1 || true"
-  after=$(in_sim "timeout 6 ros2 topic echo --once /$ns/odom_wheel_like 2>/dev/null | grep -m1 -A3 'position:' | grep 'x:' | head -1 | grep -oE '[-0-9.e]+'" || echo "")
+  before=$(in_sim "timeout 15 ros2 topic echo --once /$ns/odom_wheel_like 2>/dev/null | grep -m1 -A3 'position:' | grep 'x:' | head -1 | grep -oE '[-0-9.e]+'" || echo "")
+  in_sim "(timeout 15 ros2 topic pub -r 5 /$ns/cmd_vel_nav geometry_msgs/msg/Twist '{linear: {x: 0.15}}' >/dev/null 2>&1 || true); ros2 topic pub --once /$ns/cmd_vel_nav geometry_msgs/msg/Twist '{}' >/dev/null 2>&1 || true"
+  after=$(in_sim "timeout 15 ros2 topic echo --once /$ns/odom_wheel_like 2>/dev/null | grep -m1 -A3 'position:' | grep 'x:' | head -1 | grep -oE '[-0-9.e]+'" || echo "")
   echo "jog($ns): x $before -> $after" >> "$ROOT/$OUT/run.log"
   moved=$(python3 - "$before" "$after" <<'PY' 2>/dev/null || echo no
 import sys
@@ -121,7 +125,7 @@ sleep 10
 
 for i in 1 2; do
   ns="leo$i"
-  if in_sim "timeout 8 ros2 run tf2_ros tf2_echo $ns/map $ns/base_link 2>/dev/null | grep -q 'Translation'"; then
+  if in_sim "timeout 15 ros2 run tf2_ros tf2_echo $ns/map $ns/base_link 2>/dev/null | grep -q 'Translation'"; then
     note "CHECK tf($ns/map -> $ns/base_link): PASS"
   else
     note "CHECK tf($ns/map -> $ns/base_link): FAIL"
