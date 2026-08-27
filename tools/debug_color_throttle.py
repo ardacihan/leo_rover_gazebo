@@ -5,6 +5,9 @@ Publishes, at a rate you choose:
 
     /bag/color/compressed        the driver's OWN jpeg, passed through
                                  untouched. ~157 kB/frame at 640x480.
+    /bag/color/camera_info       colour intrinsics at 1 Hz. Tiny, and without
+                                 it ArUco CANNOT be run offline: the detector
+                                 needs K and D to solvePnP a marker pose.
     /bag/depth/compressed        aligned depth, PNG-encoded 16UC1 in mm.
                                  ~190 kB/frame. Only with DEPTH=1.
     /rob_4/camera/depth/camera_info   throttled copy of the depth intrinsics.
@@ -64,8 +67,9 @@ class BagFeeds(Node):
             'DEPTH_TOPIC',
             '/camera/camera/aligned_depth_to_color/image_raw')
         depth_info = depth.rsplit('/', 2)[0] + '/depth/camera_info'
+        color_info = color.rsplit('/', 1)[0] + '/camera_info'
 
-        self.last = {'color': 0.0, 'depth': 0.0, 'info': 0.0}
+        self.last = {'color': 0.0, 'depth': 0.0, 'info': 0.0, 'cinfo': 0.0}
         self.n = {'color': 0, 'depth': 0}
 
         self.pub_color = self.create_publisher(
@@ -75,6 +79,15 @@ class BagFeeds(Node):
 
         self.pub_info = self.create_publisher(CameraInfo, REPLAY_DEPTH_INFO, 5)
         self.create_subscription(CameraInfo, depth_info, self._on_info,
+                                 qos_profile_sensor_data)
+
+        # The colour intrinsics. Cheap at 1 Hz and load-bearing: running the
+        # ArUco detector offline against the bag is impossible without them,
+        # and that is the difference between "we can retune marker_length
+        # afterwards" and "the marker poses are whatever we guessed in the lab".
+        self.pub_cinfo = self.create_publisher(
+            CameraInfo, '/bag/color/camera_info', 5)
+        self.create_subscription(CameraInfo, color_info, self._on_color_info,
                                  qos_profile_sensor_data)
 
         if self.want_depth:
@@ -108,6 +121,10 @@ class BagFeeds(Node):
         # /tf and the IMU combined. Replay needs one per second at most.
         if self._due('info', 1.0):
             self.pub_info.publish(msg)
+
+    def _on_color_info(self, msg):
+        if self._due('cinfo', 1.0):
+            self.pub_cinfo.publish(msg)
 
     def _on_depth(self, msg):
         if not self._due('depth', self.depth_period):

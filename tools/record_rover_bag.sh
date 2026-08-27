@@ -97,7 +97,10 @@ TOPICS=(
   # camera, throttled and already jpeg. These names are what
   # scripts/drive_replay/ reads -- a bag under other names replays as
   # pictures only, with no costmap/plan/frontier reconstruction.
-  /bag/color/compressed /rob_4/camera/depth/camera_info
+  # /bag/color/camera_info is what makes OFFLINE ArUco possible: the detector
+  # needs K and D to solvePnP. Without it the bag holds pictures you cannot
+  # turn into marker poses, and the lab session cannot be redone.
+  /bag/color/compressed /bag/color/camera_info /rob_4/camera/depth/camera_info
 )
 
 if [[ "$PROFILE" == "full" ]]; then

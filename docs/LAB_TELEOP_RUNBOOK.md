@@ -70,10 +70,12 @@ nothing — Humble approach polygons have no static-points parameter, the
 polygon comes from `footprint_publisher.py`. A second `/cmd_vel` publisher is
 someone else's teleop; find it before you drive.
 
-## 2b. ArUco detector — terminal 2b (only if you want the maps to merge)
+## 2b. ArUco detector — OPTIONAL, and you probably want to skip it
 
-Without this there is no landmark registry, and two runs cannot be merged.
-Start it **after** the stack is up.
+**Detection can be done offline from the bag**, and offline is the better
+choice — see "ArUco: live or offline" below. Run it live only if you want to
+see markers appear in RViz during the drive. If you do, start it **after** the
+stack is up.
 
 ```bash
 mkdir -p ~/leo_nav2_ws/runs/current
@@ -93,6 +95,36 @@ or long along the view ray. 0.08 is what rover 2 was deployed with; measure
 your actual plates. `deploy/jetson02/run_aruco.sh` is this same command frozen.
 
 Check it is seeing things: `ros2 topic echo /aruco_markers --once`.
+
+### ArUco: live or offline
+
+Offline, on the laptop, once per bag:
+
+```bash
+MARKER_LENGTH=0.08 bash tools/offline_aruco.sh session1/bags/legA_2026... legA session1
+```
+
+Same detector, same registry file, same merge afterwards. It works because the
+bag carries the three things detection needs: `/bag/color/compressed` (the
+pictures), `/bag/color/camera_info` (K and D — without these there is no pose
+at all), and `/tf` + `/tf_static`, whose `map -> odom` half came from the SLAM
+that ran live, so offline marker poses land in the same frame as the saved map.
+
+**Offline is better for three reasons.** `marker_length` is the one parameter
+that can be wrong without anything erroring — the pose just lands short or long
+along the view ray, and the merge inherits the error; offline you measure the
+plates and re-run. A wrong `dictionary` detects nothing and looks exactly like
+"no markers were in view". And it is one fewer thing to start, watch and
+restart between legs — forgetting that restart is the trap two sections down.
+
+**Live is better for one:** you find out in the lab whether the markers are
+detectable at all, while you can still move them, add more, or improve the
+lighting. If you have never run these plates before, run it live for the first
+leg as a check, then rely on offline for the poses.
+
+The one thing offline cannot recover is a frame you never recorded. At 2 Hz
+with the detector's `min_hits: 3`, a marker must be in view ~1.5 s to be
+confirmed — so **dwell on each marker for two or three seconds** when driving.
 
 ## 3. Recording — terminals 3 and 4
 
@@ -138,7 +170,7 @@ bag without it will not play.
 |---|---|---|
 | map growing, robot path | **yes** | yes |
 | lidar, camera, odometry, battery | **yes** | yes |
-| ArUco markers placed in the map | **yes**, `/aruco_markers` | yes |
+| ArUco markers placed in the map | only if you ran 2b | **yes** — `tools/offline_aruco.sh` |
 | local + global costmaps | no | **yes** — `scripts/drive_replay/` |
 | Nav2 plans, frontier goals, goal allocation | no | **yes** — same pipeline |
 
@@ -257,11 +289,13 @@ each leg's map frame is anchored at that leg's own start, and nothing in the
 merge knows it was one robot twice.
 
 1. Drive leg A in one part of the building. `bash tools/finish_run.sh legA`.
-2. **Restart the stack AND the ArUco detector** (terminals 2 and 2b), then
-   move the robot and restart the bag under `legB`.
+2. **Restart the stack** (terminal 2) — and the ArUco detector too, if you ran
+   it live. Then move the robot and restart the bag under `legB`.
 3. Drive leg B. `bash tools/finish_run.sh legB`.
 
-> **Restart the detector, not just SLAM.** The registry accumulates marker
+> **If you ran the detector live: restart it too, not just SLAM.** (Detecting
+> offline sidesteps this entirely — one bag, one registry, by construction.)
+> The registry accumulates marker
 > positions *in the map frame*. Restarting SLAM moves the map origin to leg B's
 > start; a detector left running keeps appending to the same registry, so leg
 > A's markers stay in it at leg A's coordinates while leg B's arrive in leg B's.

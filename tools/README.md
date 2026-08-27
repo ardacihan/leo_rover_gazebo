@@ -102,6 +102,19 @@ The recording command above. Profiles `lean` / `full`, message-level zstd when
 `rosbag2_compression_zstd` is installed, 1 GB splits, absent topics skipped,
 `/cmd_vel_raw` and raw images excluded by construction.
 
+## offline_aruco.sh + decompress_color.py
+
+Detect ArUco from a recorded bag instead of live: plays the bag with `--clock`,
+decompresses `/bag/color/compressed` to an `Image` the detector accepts, and
+runs the same `aruco_detector` into `aruco_registry_<leg>.json` — the file the
+offline merger reads. `MARKER_LENGTH`, `DICTIONARY`, `ALLOWED_IDS`, `RATE` are
+env overrides, which is the point: those are the parameters that fail silently
+in the lab and can be corrected here.
+
+Needs `/bag/color/camera_info` in the bag (K and D — no intrinsics, no pose)
+and `/tf` + `/tf_static`, whose `map -> odom` half came from the live SLAM, so
+offline poses land in the same frame as the saved map.
+
 ## finish_run.sh
 
 Closes one leg of a run while SLAM is alive: saves the map, serialises the
