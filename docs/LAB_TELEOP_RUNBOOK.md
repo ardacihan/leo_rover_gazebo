@@ -257,9 +257,18 @@ each leg's map frame is anchored at that leg's own start, and nothing in the
 merge knows it was one robot twice.
 
 1. Drive leg A in one part of the building. `bash tools/finish_run.sh legA`.
-2. Stop the stack (terminal 2) and restart it — that is what resets the map
-   frame. Move the robot to the other area. Restart the bag under `legB`.
+2. **Restart the stack AND the ArUco detector** (terminals 2 and 2b), then
+   move the robot and restart the bag under `legB`.
 3. Drive leg B. `bash tools/finish_run.sh legB`.
+
+> **Restart the detector, not just SLAM.** The registry accumulates marker
+> positions *in the map frame*. Restarting SLAM moves the map origin to leg B's
+> start; a detector left running keeps appending to the same registry, so leg
+> A's markers stay in it at leg A's coordinates while leg B's arrive in leg B's.
+> The merge then fits a transform to a registry that is half in one frame and
+> half in another, and it will produce a confident, wrong answer rather than an
+> error. `finish_run.sh legA` copies the registry first, so restarting the
+> detector after it costs you nothing.
 4. On the laptop:
 
 ```bash
