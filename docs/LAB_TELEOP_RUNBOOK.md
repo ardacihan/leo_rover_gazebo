@@ -103,13 +103,59 @@ python3 tools/debug_color_throttle.py             # terminal 3, leave running
 bash   tools/record_rover_bag.sh lab_teleop_1     # terminal 4, Ctrl+C to stop
 ```
 
-~20 MB/min. Add `full` as a second argument for depth (~45 MB/min) only if you
-will replay the camera costmap layer. Topics that don't exist in your chosen
-mode are skipped with a note — with `start_safety:=false` the gate and
+**Use `full` if you want costmaps, plans or frontier goals afterwards** — see
+"What you will and will not see" below. `lean` is ~25 MB/min, `full` ~48
+MB/min, both at the throttle's default 2 Hz. Topics that don't exist in your
+chosen mode are skipped with a note — with `start_safety:=false` the gate and
 collision-monitor topics are simply absent.
+
+### 5 Hz, 2 Hz — what those actually are
+
+`debug_color_throttle.py` forwards **whole frames at the RealSense's own
+resolution**, which step 1 sets to **640×480**. It does not resize anything;
+the rate is the only thing it changes. Measured per frame: colour ~157 kB as
+the driver's jpeg, depth ~190 kB as PNG-encoded 16-bit millimetres.
+
+| rate | frames in 10 min | colour | + depth |
+|---|---:|---:|---:|
+| 2 Hz (default) | 1200 | 19 MB/min | 42 MB/min |
+| 5 Hz | 3000 | 47 MB/min | 104 MB/min |
+
+Add ~6 MB/min for everything else — lidar, TF, odom, IMU, cmd chain, ArUco.
+2 Hz is choppy to watch and is fine for stills, the map timeline and the
+costmap replay, which consumes ~5 Hz at most anyway. `HZ=5 bash ...` if the
+presentation needs smoother video.
 
 Ctrl+C, never `kill -9`: rosbag2 writes `metadata.yaml` on SIGINT only, and a
 bag without it will not play.
+
+### What you will and will not see
+
+`safe_mapping.launch.py` runs SLAM, sensor fusion and the safety chain. It runs
+**no Nav2** — no planner, no controller, no costmaps. So during the drive:
+
+| | live | offline, from the bag |
+|---|---|---|
+| map growing, robot path | **yes** | yes |
+| lidar, camera, odometry, battery | **yes** | yes |
+| ArUco markers placed in the map | **yes**, `/aruco_markers` | yes |
+| local + global costmaps | no | **yes** — `scripts/drive_replay/` |
+| Nav2 plans, frontier goals, goal allocation | no | **yes** — same pipeline |
+
+The offline half is `scripts/drive_replay/replay_drive_wsl.sh`: it plays the
+bag through the real-rover Nav2 bundle in shadow mode — scan filter →
+slam_toolbox → costmaps → NavFn → RPP → explore_lite — so the frontier goals
+and plans are computed against what the robot actually saw, and its `/cmd_vel`
+lands on `/cmd_vel_shadow` next to what you actually drove. That is where the
+costmap films come from.
+
+It needs depth, so **record with `full`** if you want any of the bottom three
+rows. It also reads fixed topic names (`/bag/color/compressed`,
+`/bag/depth/compressed`, `/rob_4/camera/depth/camera_info`), which is exactly
+why `debug_color_throttle.py` publishes those names — but that pairing has not
+been run end-to-end on a bag recorded this way. Record a two-minute test bag
+early in the session and put it through `scripts/drive_replay/probe_bag.py`
+before you rely on it.
 
 ---
 

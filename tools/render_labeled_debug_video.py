@@ -32,12 +32,15 @@ def nearest(store, t):
 # The colour topic is jpeg now (record_rover_bag.sh records
 # /debug/color_5hz/compressed -- the raw one is 6x the bytes for the same
 # picture). Older bags carry the raw Image; accept either.
-if '/debug/color_5hz/compressed' in tid:
-    frames = load('/debug/color_5hz/compressed', CompressedImage)
-elif '/debug/color_5hz' in tid:
-    frames = load('/debug/color_5hz', Image)
+_COLOR = [('/bag/color/compressed', CompressedImage),
+          ('/debug/color_5hz/compressed', CompressedImage),
+          ('/debug/color_5hz', Image)]          # oldest name last
+for _t, _ty in _COLOR:
+    if _t in tid:
+        frames = load(_t, _ty)
+        break
 else:
-    raise SystemExit('bag has no /debug/color_5hz[/compressed] topic')
+    raise SystemExit(f'bag has none of {[t for t, _ in _COLOR]}')
 
 
 def decode(raw, msgtype):

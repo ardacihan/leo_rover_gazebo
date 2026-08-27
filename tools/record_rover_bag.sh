@@ -3,8 +3,11 @@
 #
 #   tools/record_rover_bag.sh <name> [lean|full] [outdir]
 #
-#   lean (default)  everything but depth      ~20 MB/min
-#   full            + throttled depth          ~45 MB/min
+#   lean (default)  everything but depth      ~25 MB/min
+#   full            + throttled depth          ~48 MB/min
+#
+# Both assume debug_color_throttle.py at its default 2 Hz. At HZ=5 colour
+# alone is 47 MB/min; see tools/README.md for the arithmetic.
 #
 # Run it ON the rover, with the stack already up, from a terminal that has
 # `source /opt/ros/humble/setup.bash` and the right ROS_DOMAIN_ID.
@@ -25,9 +28,9 @@
 # costs about 6 MB/min. The levers, in order:
 #
 #   1. Drop depth unless you are replaying the camera costmap layer. Halves it.
-#   2. Record the DRIVER'S jpeg, never the raw Image. /debug/color_5hz is a raw
-#      rgb8 topic: 921 kB/frame, 4.6 MB/s at 5 Hz. Its /compressed sibling is
-#      ~150 kB/frame for the same picture. This script records the compressed.
+#   2. Record the DRIVER'S jpeg, never the raw Image. A raw 640x480 rgb8 frame
+#      is 921 kB against ~157 kB for the same picture as jpeg -- 4.6 MB/s at
+#      5 Hz. debug_color_throttle.py forwards the driver's own jpeg untouched.
 #   3. Throttle camera_info. At 30 Hz it costs more than /cmd_vel + /tf + IMU
 #      combined, and a replay needs one message per second at most.
 #   4. zstd the bag. It does nothing for jpeg/png payloads but roughly halves
@@ -57,8 +60,8 @@ BAG="$OUTDIR/${NAME}_$(date +%Y%m%d_%H%M%S)"
 
 have() { ros2 topic list 2>/dev/null | grep -qx "$1"; }
 
-if ! have /debug/color_5hz/compressed; then
-  echo "WARNING: /debug/color_5hz/compressed is not published."
+if ! have /bag/color/compressed; then
+  echo "WARNING: /bag/color/compressed is not published."
   echo "         Start it first, in its own terminal:"
   echo "           python3 tools/debug_color_throttle.py"
   echo "         Recording anyway -- the bag will have no camera."
@@ -91,17 +94,18 @@ TOPICS=(
   # aruco_registry_<name>.json, so tools/finish_run.sh copies it next to the
   # bag. A bag alone cannot be merged.
   /aruco_markers /aruco_detections /aruco_markers_poses
-  # camera, throttled and already jpeg
-  /debug/color_5hz/compressed /debug/color_5hz/camera_info
+  # camera, throttled and already jpeg. These names are what
+  # scripts/drive_replay/ reads -- a bag under other names replays as
+  # pictures only, with no costmap/plan/frontier reconstruction.
+  /bag/color/compressed /rob_4/camera/depth/camera_info
 )
 
 if [[ "$PROFILE" == "full" ]]; then
-  # Only worth it when the camera costmap layer has to be replayed
-  # (scripts/drive_replay/depth_to_points.py rebuilds the cloud from this).
-  for t in /camera/camera/aligned_depth_to_color/image_raw/compressedDepth \
-           /camera/camera/depth/camera_info; do
-    if have "$t"; then TOPICS+=("$t"); else echo "note: $t absent, skipping"; fi
-  done
+  # Depth is half the bytes and there is exactly one reason to pay them: the
+  # offline costmap replay. drive_replay/depth_to_points.py rebuilds the
+  # RealSense cloud from this topic so Nav2's camera ObstacleLayer runs as it
+  # does on hardware. Needs DEPTH=1 on debug_color_throttle.py (its default).
+  TOPICS+=(/bag/depth/compressed)
 fi
 
 # Drop topics that do not exist on this rover rather than letting rosbag2 sit

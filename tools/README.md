@@ -12,10 +12,24 @@ python3 tools/debug_color_throttle.py            # terminal A, leave running
 bash   tools/record_rover_bag.sh explore_run3    # terminal B, Ctrl+C to stop
 ```
 
-`lean` (the default profile) is everything but depth, ~20 MB/min. Add `full`
-as a second argument to include throttled depth, ~45 MB/min — only worth it
-when the camera costmap layer has to be replayed. `SPLIT_MB` (default 1024)
-and `COMPRESS=none` are the other knobs.
+`lean` (the default profile) is everything but depth, **~25 MB/min**. Add
+`full` as a second argument for throttled depth, **~48 MB/min** — pay that only
+if you want the offline costmap / plan / frontier reconstruction, which needs
+depth. Both figures assume the throttle's default 2 Hz. `SPLIT_MB` (default
+1024) and `COMPRESS=none` are the other knobs.
+
+### What "2 Hz" is
+
+Whole frames at the RealSense's own resolution — 640×480 if launched per the
+runbook. The throttle resizes nothing; rate is all it changes. Per frame:
+colour ~157 kB (driver jpeg), depth ~190 kB (PNG 16-bit mm).
+
+| rate | frames in 10 min | colour | + depth |
+|---|---:|---:|---:|
+| 2 Hz (default) | 1200 | 19 MB/min | 42 MB/min |
+| 5 Hz | 3000 | 47 MB/min | 104 MB/min |
+
+Plus ~6 MB/min for lidar, TF, odom, IMU, cmd chain and ArUco.
 
 ### Where the bytes go
 
@@ -61,11 +75,17 @@ jetson-02 and jetson-04).
 
 ## debug_color_throttle.py
 
-Publishes `/debug/color_5hz/compressed` (the driver's own jpeg, passed through
-untouched) plus `/debug/color_5hz/camera_info`. `HZ` sets the rate cap
-(default 5), `COLOR_TOPIC` the source. `RAW=1` additionally republishes the
-raw `sensor_msgs/Image` on `/debug/color_5hz` — only for a tool that cannot
-decode jpeg; do not bag it.
+Publishes `/bag/color/compressed` (the driver's own jpeg, untouched),
+`/bag/depth/compressed` (aligned depth as PNG 16UC1 mm) and a 1 Hz copy of the
+depth intrinsics on `/rob_4/camera/depth/camera_info`. Those three names are
+what `scripts/drive_replay/` reads, so a bag recorded this way drops into the
+offline costmap / plan / frontier reconstruction. `HZ` (default 2), `DEPTH_HZ`
+(default 2), `DEPTH=0` to skip depth, `COLOR_TOPIC` / `DEPTH_TOPIC` for the
+sources.
+
+Depth is emitted as plain PNG bytes, not the `compressedDepth` transport
+format — that one prefixes a 12-byte header and `drive_replay` decodes with a
+bare `cv2.imdecode(IMREAD_UNCHANGED)`.
 
 ## rover_teleop.py
 
