@@ -3,7 +3,7 @@ import numpy as np
 import cv2
 import rclpy  # noqa - ensures ament env
 from rclpy.serialization import deserialize_message
-from sensor_msgs.msg import Image, LaserScan
+from sensor_msgs.msg import CompressedImage, Image, LaserScan
 from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
 from rcl_interfaces.msg import Log
@@ -29,7 +29,24 @@ def nearest(store, t):
     if abs(ts[j]-t) > 1.5: return None
     return deserialize_message(ms[j], mt)
 
-frames = load('/debug/color_5hz', Image)
+# The colour topic is jpeg now (record_rover_bag.sh records
+# /debug/color_5hz/compressed -- the raw one is 6x the bytes for the same
+# picture). Older bags carry the raw Image; accept either.
+if '/debug/color_5hz/compressed' in tid:
+    frames = load('/debug/color_5hz/compressed', CompressedImage)
+elif '/debug/color_5hz' in tid:
+    frames = load('/debug/color_5hz', Image)
+else:
+    raise SystemExit('bag has no /debug/color_5hz[/compressed] topic')
+
+
+def decode(raw, msgtype):
+    m = deserialize_message(raw, msgtype)
+    if msgtype is CompressedImage:
+        return cv2.imdecode(np.frombuffer(m.data, dtype=np.uint8),
+                            cv2.IMREAD_COLOR)
+    rgb = np.frombuffer(m.data, dtype=np.uint8).reshape(m.height, m.width, 3)
+    return cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR)
 fused = load('/scan_collision_fused', LaserScan)
 camscan = load('/camera/scan_collision', LaserScan)
 req = load('/cmd_vel_request', Twist)
@@ -59,9 +76,7 @@ path_len, last_p = 0.0, None
 n = len(frames[0])
 for k in range(n):
     t = frames[0][k]
-    img = deserialize_message(frames[1][k], Image)
-    rgb = np.frombuffer(img.data, dtype=np.uint8).reshape(img.height, img.width, 3)
-    bgr = cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR)
+    bgr = decode(frames[1][k], frames[2])
     canvas = np.zeros((H, W, 3), dtype=np.uint8)
     canvas[40:40+CAM_H, 0:CAM_W] = cv2.resize(bgr, (CAM_W, CAM_H))
 

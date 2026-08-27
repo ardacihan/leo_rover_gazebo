@@ -1077,9 +1077,13 @@ cost real time (see the false-start list in the previous section).
    approach polygon is fed by `footprint_publisher.py`; if that node is
    missing the polygon is EMPTY and collision avoidance silently checks
    nothing (Humble approach polygons have no static points parameter).
-4. **Debug recording**: start `tools/debug_color_throttle.py`, then the
-   standard bag topic set from `tools/README.md`. Never bag `/cmd_vel_raw`
-   (gate closes) or raw images (CPU starvation). Optionally start
+4. **Debug recording**: `python3 tools/debug_color_throttle.py` in one
+   terminal, `bash tools/record_rover_bag.sh <name>` in another. Never bag
+   `/cmd_vel_raw` (gate closes) or raw images (CPU starvation) — the script
+   excludes both by construction and records the driver's jpeg rather than
+   the raw colour Image, which is the difference between ~20 MB/min and
+   ~280 MB/min (see `tools/README.md` for the per-topic breakdown measured
+   on drive_2026-08-20). Optionally start
    `tools/firmware_stability_monitor.py`.
 5. **Explorer** — always pass the full wiring (standalone defaults are wrong
    for this stack):
