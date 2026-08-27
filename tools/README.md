@@ -67,6 +67,15 @@ untouched) plus `/debug/color_5hz/camera_info`. `HZ` sets the rate cap
 raw `sensor_msgs/Image` on `/debug/color_5hz` — only for a tool that cannot
 decode jpeg; do not bag it.
 
+## rover_teleop.py
+
+Keyboard teleop for the physical rover, publishing on `/cmd_vel_request` — the
+head of the safety chain, not `/cmd_vel`. Streams at 20 Hz because the gate
+drops a command older than 0.3 s, and refuses `/cmd_vel` / `/cmd_vel_raw`
+without `--unsafe`. The browser UI at `http://10.0.0.1/` is the simpler way to
+drive and needs nothing started; see `docs/LAB_TELEOP_RUNBOOK.md` for which to
+use when.
+
 ## record_rover_bag.sh
 
 The recording command above. Profiles `lean` / `full`, message-level zstd when
