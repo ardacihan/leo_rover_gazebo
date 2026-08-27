@@ -17,16 +17,30 @@ Those names are not arbitrary: `scripts/drive_replay/` reads exactly them
 what reconstructs costmaps, Nav2 plans and frontier goals from a bag afterwards.
 A bag recorded under any other name replays as pictures only.
 
-Rates, measured on drive_2026-08-20:
+RATE IS DECIMATION, NOT RESAMPLING. This keeps a frame when one period has
+elapsed and drops the rest, so the achieved rate is always the camera's rate
+divided by a whole number. Ask for 10 Hz from a 15 fps camera and you get 7.5,
+not 10 -- it cannot invent the frames in between. Choose a camera fps that is a
+whole multiple of what you want:
 
-    colour @ 2 Hz   19 MB/min      colour @ 5 Hz   47 MB/min
-    depth  @ 2 Hz   23 MB/min      depth  @ 5 Hz   57 MB/min
+    want 10 Hz  ->  run the camera at 30 fps   (30/3)
+    want  5 Hz  ->  15 fps  (15/3)  or 30 fps  (30/6)
+    want  2 Hz  ->   6 fps  (6/3)   or 30 fps  (30/15)
 
-so the default is 2 Hz for both. 2 Hz is 2 frames per second at whatever the
-RealSense colour profile is set to — 640x480 if you launched it the way the
-runbook says. It is choppy to watch and perfectly good for stills, a map
-timeline, and feeding the costmap replay, which consumes ~5 Hz at most anyway.
-Raise HZ if the presentation needs smoother video and you can afford the bytes.
+The node measures what it actually achieved and warns if it is more than 20%
+under what you asked for, because a silent shortfall here is a bag with a
+quarter of the frames you planned for.
+
+Sizes, from the 157 kB/frame measured at 640x480 and scaled by pixel count:
+
+    profile      kB/frame   @2 Hz      @5 Hz       @10 Hz
+    640x480         157     19 MB/min  46 MB/min    92 MB/min
+    848x480        ~208     24         61          122
+    1280x720       ~470     55        138          275
+
+Depth is ~190 kB/frame at 640x480, ~570 kB at 1280x720, and feeds only the
+offline costmap layer -- keep it slow. At 0.1 m/s, 2 Hz is a depth frame every
+5 cm, and drive_replay throttles to ~5 Hz internally anyway.
 
 Never bag the raw image topics. That is not a size argument, it is a stability
 one: bagging raw 640x480 colour+depth pushed load average to 9.3 on 6 cores and
@@ -71,6 +85,8 @@ class BagFeeds(Node):
 
         self.last = {'color': 0.0, 'depth': 0.0, 'info': 0.0, 'cinfo': 0.0}
         self.n = {'color': 0, 'depth': 0}
+        self.seen = {'color': 0, 'depth': 0}     # arrivals, before decimation
+        self.t0 = time.monotonic()
 
         self.pub_color = self.create_publisher(
             CompressedImage, '/bag/color/compressed', 5)
@@ -112,6 +128,7 @@ class BagFeeds(Node):
         return True
 
     def _on_color(self, msg):
+        self.seen['color'] += 1
         if self._due('color', self.period):
             self.pub_color.publish(msg)
             self.n['color'] += 1
@@ -127,6 +144,7 @@ class BagFeeds(Node):
             self.pub_cinfo.publish(msg)
 
     def _on_depth(self, msg):
+        self.seen['depth'] += 1
         if not self._due('depth', self.depth_period):
             return
         # Plain PNG bytes, NOT the compressedDepth transport format -- that one
@@ -157,9 +175,27 @@ class BagFeeds(Node):
             self.get_logger().warn(
                 'no colour frames yet -- check '
                 'ros2 topic list | grep color/image_raw/compressed')
-        else:
-            self.get_logger().info(
-                f'forwarded {self.n["color"]} colour, {self.n["depth"]} depth')
+            return
+        el = max(time.monotonic() - self.t0, 1e-6)
+        out_c, out_d = self.n['color'] / el, self.n['depth'] / el
+        in_c, in_d = self.seen['color'] / el, self.seen['depth'] / el
+        self.get_logger().info(
+            f'colour {self.n["color"]} out @ {out_c:.1f} Hz (camera {in_c:.1f})'
+            f'; depth {self.n["depth"]} out @ {out_d:.1f} Hz (camera {in_d:.1f})')
+        # Decimation can only give camera_rate/N, so asking 10 Hz of a 15 fps
+        # camera yields 7.5. Saying so beats discovering it in the bag.
+        want_c = 1.0 / self.period
+        if out_c < 0.8 * want_c:
+            self.get_logger().warn(
+                f'colour is {out_c:.1f} Hz, asked {want_c:.1f}. The camera is '
+                f'supplying {in_c:.1f} fps and this only decimates: set the '
+                f'RealSense colour profile to a whole multiple of {want_c:.0f}.')
+        if self.want_depth:
+            want_d = 1.0 / self.depth_period
+            if out_d < 0.8 * want_d:
+                self.get_logger().warn(
+                    f'depth is {out_d:.1f} Hz, asked {want_d:.1f} '
+                    f'(camera {in_d:.1f} fps).')
 
 
 def main():

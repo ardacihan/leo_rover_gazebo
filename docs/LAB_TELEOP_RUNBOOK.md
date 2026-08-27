@@ -51,17 +51,60 @@ Depth is ~190 kB/frame at 640×480 and only feeds the offline costmap layer, so
 keep it small and slow — 640×480 at 2 Hz is 22 MB/min. Add ~6 MB/min for
 lidar, TF, odom, IMU and the command chain.
 
-**Good default for a data-gathering session** — sharper than before, ~89
-MB/min, so a 10-minute leg is ~0.9 GB:
+### Rate is decimation, not resampling
+
+The throttle keeps a frame when a period has elapsed and drops the rest, so the
+achieved rate is always **the camera's fps divided by a whole number**. Ask for
+10 Hz from a 15 fps camera and you get 7.5 — it cannot invent the frames in
+between. Pick a camera fps that is a whole multiple of your target:
+
+| want | run the camera at |
+|---|---|
+| 10 Hz | **30 fps** (30/3) |
+| 5 Hz | 15 fps (15/3) or 30 fps (30/6) |
+| 2 Hz | 6 fps (6/3) or 30 fps (30/15) |
+
+The node prints its achieved rate every 30 s and warns if it is more than 20%
+short. Watch that line once before you start driving.
+
+### The 1280×720 @ 10 Hz + depth setting
 
 ```bash
-ros2 launch realsense2_camera rs_launch.py align_depth.enable:=true   rgb_camera.color_profile:=848x480x15 depth_module.depth_profile:=848x480x15
+ros2 launch realsense2_camera rs_launch.py align_depth.enable:=true   rgb_camera.color_profile:=1280x720x30   depth_module.depth_profile:=1280x720x6
 ```
 
-then `HZ=5 DEPTH_HZ=2 python3 tools/debug_color_throttle.py` in step 3.
+Colour at **30 fps** so decimation gives an exact 10 Hz. Depth at **6 fps**
+deliberately: the throttle receives every raw depth frame over DDS before
+deciding to drop it, and a raw 1280×720 16-bit frame is 1.84 MB — at 30 fps
+that is 55 MB/s of traffic to throw 28 of 30 frames away. At 6 fps it is 11
+MB/s, and 6/3 gives an exact 2 Hz out.
 
-`1280x720x15` with `HZ=5` gives 166 MB/min, 1.7 GB per 10-minute leg — fine if
-the disk has room, and `preflight_topics.sh` checks that.
+Then in step 3: `HZ=10 DEPTH_HZ=2 python3 tools/debug_color_throttle.py`
+
+| | rate | MB/min |
+|---|---|---:|
+| colour 1280×720 jpeg (~470 kB/frame) | 10 Hz | 275 |
+| depth 1280×720 PNG (~570 kB/frame) | 2 Hz | 67 |
+| lidar, TF, odom, IMU, cmd chain, ArUco | — | 6 |
+| **total** | | **~348** |
+
+**~3.5 GB per 10-minute leg.** Three legs is ~10.5 GB, so have 15 GB free —
+`preflight_topics.sh` checks, and `NEED_GB=` overrides the threshold. Sustained
+write is 5.8 MB/s: fine on eMMC or NVMe, marginal on a slow SD card, so run a
+two-minute test leg and check `verify_bag.py` reports the rates you asked for
+before committing to a long one.
+
+Depth at 2 Hz is not stingy: the rover drives at ~0.1 m/s, so that is a depth
+frame every 5 cm, and `drive_replay` throttles to ~5 Hz internally anyway.
+
+A real bonus at this resolution: ArUco range. The detector rejects markers
+under `min_marker_px: 18`, and doubling the linear resolution roughly doubles
+the distance at which a plate still clears that — worth more for the merge than
+the prettier video is.
+
+Lower-cost alternatives if the disk or the write rate bites: `848x480x15` with
+`HZ=5 DEPTH_HZ=2` is ~89 MB/min (0.9 GB/leg); `640x480x15` with the same is
+~74 MB/min.
 
 One caveat worth respecting: `deploy/jetson04/MOTION_STACK.md` says keep the
 camera at 640×480×15, because heavy Jetson traffic can saturate the link to the
@@ -167,7 +210,9 @@ confirmed — so **dwell on each marker for two or three seconds** when driving.
 Same for both driving methods.
 
 ```bash
-HZ=5 DEPTH_HZ=2 python3 tools/debug_color_throttle.py   # terminal 3, leave running
+HZ=10 DEPTH_HZ=2 python3 tools/debug_color_throttle.py  # terminal 3, leave running
+# watch its 30 s line: "colour ... out @ 10.0 Hz (camera 30.0)". If it says
+# 7.5, the camera profile is 15 fps and you are recording 3/4 of the frames.
 
 bash tools/preflight_topics.sh full                     # terminal 4 — MUST be ALL CLEAR
 bash tools/record_rover_bag.sh legA full                # then record
