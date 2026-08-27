@@ -70,6 +70,30 @@ nothing — Humble approach polygons have no static-points parameter, the
 polygon comes from `footprint_publisher.py`. A second `/cmd_vel` publisher is
 someone else's teleop; find it before you drive.
 
+## 2b. ArUco detector — terminal 2b (only if you want the maps to merge)
+
+Without this there is no landmark registry, and two runs cannot be merged.
+Start it **after** the stack is up.
+
+```bash
+mkdir -p ~/leo_nav2_ws/runs/current
+ros2 run leo_nav2_exploration aruco_detector --ros-args \
+  -p image_topic:=/rob_2/camera/color/image_raw \
+  -p camera_info_topic:=/rob_2/camera/color/camera_info \
+  -p dictionary:=DICT_4X4_50 -p marker_length:=0.08 \
+  -p allowed_ids:="[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]" \
+  -p frame_is_optical:=true -p rate_limit_hz:=5.0 \
+  -p registry_file:="$HOME/leo_nav2_ws/runs/current/aruco_registry.json" \
+  -p samples_file:="$HOME/leo_nav2_ws/runs/current/aruco_detections.csv"
+```
+
+`marker_length` is the side of the black square in metres and it is the one
+number that can be wrong without anything erroring — the pose just lands short
+or long along the view ray. 0.08 is what rover 2 was deployed with; measure
+your actual plates. `deploy/jetson02/run_aruco.sh` is this same command frozen.
+
+Check it is seeing things: `ros2 topic echo /aruco_markers --once`.
+
 ## 3. Recording — terminals 3 and 4
 
 Same for both driving methods.
@@ -95,11 +119,26 @@ The rover's own SBC serves the stock Leo Rover UI. Nothing to start; it is
 already running as part of `leo_bringup` (which is also what runs
 `web_video_server`, `rosbridge` and `rosapi`).
 
-1. Join the rover's own Wi-Fi — SSID `leo-rover5a7c`, password `password`.
-   This is a different network from the lab Wi-Fi you SSH to the Jetson over,
-   so use a second device, or a second Wi-Fi adapter, or hop back and forth.
-2. Open **`http://10.0.0.1/`**.
-3. Drive with the on-screen joystick.
+**Either** join the rover's own Wi-Fi — SSID `leo-rover5a7c`, password
+`password` — and open `http://10.0.0.1/`. That is a different network from the
+lab Wi-Fi you SSH over, so it wants a second device or a second adapter.
+
+**Or stay on lab Wi-Fi and tunnel through the Jetson**, which already reaches
+the SBC over `enP8p1s0` (that link is what `ping 10.0.0.1` from the Jetson
+measures during a starvation check):
+
+```bash
+ssh -L 8081:10.0.0.1:80 -L 9091:10.0.0.1:9090 jetson-04@192.168.178.104
+```
+
+Leave that session open and browse **`http://localhost:8081`**. Both ports are
+needed: 80 serves the page, 9090 is the rosbridge the joystick and the camera
+widget talk to. If the joystick moves but the rover does not, 9091 is not
+forwarded or the UI has the rosbridge host hard-coded to `10.0.0.1` — in that
+case fall back to joining the rover AP. *Not yet tried in the lab; the AP route
+is the one that is known to work.*
+
+Then drive with the on-screen joystick.
 
 Two things to know, both of them documented failures on this robot:
 
@@ -148,17 +187,63 @@ Three things that will look like bugs and are not:
 
 ---
 
-## 5. Artifacts — while SLAM is still alive
+## 5. Close the leg — while SLAM is still alive
+
+Ctrl+C the bag first, then:
 
 ```bash
-ros2 service call /save_mapping_artifacts std_srvs/srv/Trigger '{}'   # -> ~/leo_maps
-ros2 run nav2_map_server map_saver_cli -f ~/leo_maps/lab_teleop_1
-ros2 service call /slam_toolbox/serialize_map \
-  slam_toolbox/srv/SerializePoseGraph '{filename: /home/<user>/leo_maps/lab_teleop_1}'
+bash tools/finish_run.sh legA          # or legB, legC...
 ```
 
-Do this **before** stopping the stack. Then Ctrl+C the bag, then the rest, then
-`scp` the bag and `~/leo_maps` off.
+That saves the map, serialises the pose graph, copies the ArUco registry under
+the name the merger globs for, and moves the bag in beside them — all into
+`~/leo_runs/session1/`. Do it **before** stopping the stack: `map_saver_cli`
+and the serialise service both need SLAM alive.
+
+---
+
+## 6. One robot, two legs, one merged map
+
+This is the supported path, and the one chosen for the lab day (2026-08-24)
+over the live aligner. Two legs driven with the same robot, with **SLAM
+restarted between them**, are exactly two rovers with an unknown relative pose:
+each leg's map frame is anchored at that leg's own start, and nothing in the
+merge knows it was one robot twice.
+
+1. Drive leg A in one part of the building. `bash tools/finish_run.sh legA`.
+2. Stop the stack (terminal 2) and restart it — that is what resets the map
+   frame. Move the robot to the other area. Restart the bag under `legB`.
+3. Drive leg B. `bash tools/finish_run.sh legB`.
+4. On the laptop:
+
+```bash
+scp -r jetson-04@192.168.178.104:~/leo_runs/session1 .
+python3 scripts/align_registries_offline.py session1 --refine
+```
+
+It prints the recovered legB→legA transform, a leave-one-out table so one bad
+landmark can be spotted and dropped with `--exclude <id>`, and writes the fused
+map plus a PNG. About a second, re-runnable as often as you like.
+
+**The one requirement:** both legs must confirm at least **2 of the same marker
+ids** — 3 or more for the leave-one-out check to mean anything. Put markers in
+the overlap region and drive both legs past them. `finish_run.sh` warns when a
+leg confirms fewer than 2.
+
+### What this gives you for the presentation, and what it does not
+
+It gives you the payoff frame: two independently-built maps landing on each
+other under a transform recovered from nothing but shared markers, residuals
+printed. That is the claim, and it is measured.
+
+It does **not** replay as a live merge. Nothing here plays two real bags
+simultaneously into a live merger — `scripts/drive_replay/` replays one bag,
+and `render_timelapse.py` renders the three-panel merge film only from the
+`.npz` snapshots `merge_timelapse_recorder.py` writes during a *live* two-robot
+run. The honest cut from two real bags is: leg A's map growing (bag replay in
+RViz), leg B's map growing, then the merged result. The true "they snap
+together at the moment of sighting" animation from two real bags is a script
+that does not exist yet.
 
 ## Two things that must not happen
 

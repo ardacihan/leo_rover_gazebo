@@ -82,6 +82,15 @@ The recording command above. Profiles `lean` / `full`, message-level zstd when
 `rosbag2_compression_zstd` is installed, 1 GB splits, absent topics skipped,
 `/cmd_vel_raw` and raw images excluded by construction.
 
+## finish_run.sh
+
+Closes one leg of a run while SLAM is alive: saves the map, serialises the
+pose graph, copies the ArUco registry in as `aruco_registry_<leg>.json` — the
+name `scripts/align_registries_offline.py` globs for — and moves the bag in
+beside them. Two legs closed this way merge with one laptop command. Warns
+when a leg confirmed fewer than 2 markers, which is the silent way to end up
+with two runs that cannot be aligned.
+
 ## firmware_stability_monitor.py
 
 Watches firmware health for 300 s: battery-telemetry rate per 30 s bin,

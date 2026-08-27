@@ -85,6 +85,12 @@ TOPICS=(
   /rob_2/firmware/battery_averaged
   # logs -- the explorer's reasoning is only in rosout
   /rosout
+  # ArUco. Tiny MarkerArrays, and the reason a second run can be merged onto
+  # this one at all. NOT /aruco/debug_image -- that is a raw Image.
+  # The registry JSON is a FILE, not a topic: the offline aligner reads
+  # aruco_registry_<name>.json, so tools/finish_run.sh copies it next to the
+  # bag. A bag alone cannot be merged.
+  /aruco_markers /aruco_detections /aruco_markers_poses
   # camera, throttled and already jpeg
   /debug/color_5hz/compressed /debug/color_5hz/camera_info
 )
