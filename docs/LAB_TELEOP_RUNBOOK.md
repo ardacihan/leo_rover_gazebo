@@ -32,8 +32,44 @@ ros2 launch realsense2_camera rs_launch.py align_depth.enable:=true \
   rgb_camera.color_profile:=640x480x15 depth_module.depth_profile:=640x480x15
 ```
 
-Keep 640×480×15. Higher resolution is the documented route to saturating the
-Jetson↔SBC link and freezing firmware telemetry.
+### Picking the resolution and rate
+
+**Set the camera's own fps to what you want to record.** Do not run it at 30
+and throttle to 5: the jpeg encoder runs at the *camera's* rate as soon as
+anything subscribes to the compressed topic, so a fast stream you throw away
+costs Jetson CPU for nothing. Match them and the throttle becomes a passthrough.
+
+Colour jpeg measured at 640×480 is 157 kB/frame; the rest scales with pixels.
+
+| profile | kB/frame | @5 Hz | @10 Hz |
+|---|---:|---:|---:|
+| 640×480 | 157 | 46 MB/min | 92 MB/min |
+| 848×480 | ~208 | 61 MB/min | 122 MB/min |
+| 1280×720 | ~470 | 138 MB/min | 275 MB/min |
+
+Depth is ~190 kB/frame at 640×480 and only feeds the offline costmap layer, so
+keep it small and slow — 640×480 at 2 Hz is 22 MB/min. Add ~6 MB/min for
+lidar, TF, odom, IMU and the command chain.
+
+**Good default for a data-gathering session** — sharper than before, ~89
+MB/min, so a 10-minute leg is ~0.9 GB:
+
+```bash
+ros2 launch realsense2_camera rs_launch.py align_depth.enable:=true   rgb_camera.color_profile:=848x480x15 depth_module.depth_profile:=848x480x15
+```
+
+then `HZ=5 DEPTH_HZ=2 python3 tools/debug_color_throttle.py` in step 3.
+
+`1280x720x15` with `HZ=5` gives 166 MB/min, 1.7 GB per 10-minute leg — fine if
+the disk has room, and `preflight_topics.sh` checks that.
+
+One caveat worth respecting: `deploy/jetson04/MOTION_STACK.md` says keep the
+camera at 640×480×15, because heavy Jetson traffic can saturate the link to the
+rover SBC and freeze firmware telemetry. That failure was driven by the rover
+**web UI subscribing to camera topics**, not by the camera resolution alone —
+so keep the UI's camera panel collapsed while recording, and watch
+`/rob_2/firmware/battery_averaged` in the preflight. If firmware telemetry
+starts dropping, drop back to 640×480 before blaming anything else.
 
 ## 2. Stack — terminal 2
 
@@ -131,9 +167,28 @@ confirmed — so **dwell on each marker for two or three seconds** when driving.
 Same for both driving methods.
 
 ```bash
-python3 tools/debug_color_throttle.py             # terminal 3, leave running
-bash   tools/record_rover_bag.sh lab_teleop_1     # terminal 4, Ctrl+C to stop
+HZ=5 DEPTH_HZ=2 python3 tools/debug_color_throttle.py   # terminal 3, leave running
+
+bash tools/preflight_topics.sh full                     # terminal 4 — MUST be ALL CLEAR
+bash tools/record_rover_bag.sh legA full                # then record
 ```
+
+**Do not skip the preflight.** A topic existing in `ros2 topic list` proves
+nothing — discovery and the CLI daemon both keep stale names, and a node that
+died at startup leaves its advertisements behind. `ros2 bag record` subscribes
+to a name that will never deliver and says nothing for the whole run; that is
+what a bag "missing data" is. The preflight waits for an actual message on each
+topic, separates MISSING from SILENT, and checks free disk.
+
+After each leg, before tearing anything down:
+
+```bash
+python3 tools/verify_bag.py ~/leo_bags/legA_2026...
+```
+
+Per-topic counts, rates and byte shares, with the ones that matter judged
+against a minimum rate. A missing lidar is fixable in the ten minutes you are
+still in the lab and unfixable the moment you leave.
 
 **Use `full` if you want costmaps, plans or frontier goals afterwards** — see
 "What you will and will not see" below. `lean` is ~25 MB/min, `full` ~48

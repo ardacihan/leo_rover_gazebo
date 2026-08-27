@@ -87,6 +87,15 @@ Depth is emitted as plain PNG bytes, not the `compressedDepth` transport
 format — that one prefixes a 12-byte header and `drive_replay` decodes with a
 bare `cv2.imdecode(IMREAD_UNCHANGED)`.
 
+## preflight_topics.sh + verify_bag.py
+
+`preflight_topics.sh [lean|full]` before recording: waits for a real message on
+every topic that cannot be regenerated offline, separates MISSING (no
+publisher) from SILENT (publisher, no data — the one that produces empty bags),
+and checks free disk. `verify_bag.py <bag>` after: per-topic counts, rates and
+byte shares from the .db3 directly, with the load-bearing topics judged against
+a minimum rate. Neither needs anything beyond ROS and sqlite3.
+
 ## rover_teleop.py
 
 Keyboard teleop for the physical rover, publishing on `/cmd_vel_request` — the
