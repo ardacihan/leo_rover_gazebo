@@ -2,6 +2,7 @@
 
 | Script | Purpose |
 |--------|---------|
+| `setup_workspace.sh` | Fetch the three nested third-party repos + world patch (run first on a new machine) |
 | `sim_gpu_wsl.sh` | Start `leo_sim` container with GPU Gazebo (WSL / Docker Desktop) |
 | `sim_gpu_linux.sh` | Same, on native Linux with `nvidia-container-toolkit` |
 | `slam_nav2_wsl.sh` | SLAM + Nav2 + RViz inside running container |
@@ -34,6 +35,27 @@ One line, for anyone who just wants more curves:
 scripts/auto_multirobot_run.sh <coordinated|independent|single> \
     <husarion_office|office_world|depot_world> reports/<your-run-name> [cap_min]
 ```
+
+## On a new machine, before anything else
+
+`git clone` does not bring the whole workspace. `src/frontier_exploration_ros2`,
+`src/husarion_gz_worlds` and `src/m-explore-ros2` are *nested git repositories*,
+not submodules, so git skips them -- including the one holding the
+`husarion_office` world every multi-robot run uses. The world also carries a
+one-line local edit (`real_time_factor` 1.0 -> 2.0) that is not in any repo.
+
+```bash
+./scripts/setup_workspace.sh          # clone/checkout at the validated commits, patch the world
+./scripts/setup_workspace.sh --check  # verify only
+# then, inside the container:
+cd /ros2_ws && colcon build --symlink-install && source install/setup.bash
+```
+
+`install/`, `build/` and `log/` are gitignored, so the workspace must be built
+on each machine. `--symlink-install` is not optional: the harness relies on
+edits to `src/*.py` taking effect without a rebuild.
+
+## Running
 
 The harness picks the GPU launcher for the host automatically:
 `sim_gpu_wsl.sh` under Docker Desktop or WSL, `sim_gpu_linux.sh` on native
