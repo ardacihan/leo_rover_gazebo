@@ -44,7 +44,10 @@ def colourise(grid, flip=True):
     img[:] = UNKNOWN
     img[(grid >= 0) & (grid < 50)] = FREE
     img[grid >= 50] = OCC
-    return np.flipud(img) if flip else img
+    # ``np.flipud`` returns a negative-stride view.  OpenCV drawing functions
+    # (circle/line) reject that layout on the Humble image's OpenCV 4.5 build,
+    # so materialize a contiguous array before trajectories are overlaid.
+    return np.ascontiguousarray(np.flipud(img)) if flip else img
 
 
 def world_to_px(x, y, info, shape):

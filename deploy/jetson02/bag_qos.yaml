@@ -1,0 +1,99 @@
+# QoS the recorder uses to SUBSCRIBE. Getting these wrong is silent: the
+# subscription is simply never matched and the topic lands in the bag with
+# zero messages (see run3 2026-08-25, /map: 0 of an expected ~270).
+#
+# Two rules:
+#   - a RELIABLE subscriber never matches a BEST_EFFORT publisher, so every
+#     sensor stream below must be best_effort;
+#   - a VOLATILE subscriber never receives the latched backlog, so every
+#     latched publisher (/map, /tf_static) must be transient_local or the
+#     recorder only ever sees messages published after it started.
+#
+# Used by record_session.sh via --qos-profile-overrides-path.
+
+# ---- latched (TRANSIENT_LOCAL) publishers -------------------------------
+/map:
+  history: keep_last
+  depth: 10
+  reliability: reliable
+  durability: transient_local
+/tf_static:
+  history: keep_last
+  depth: 100
+  reliability: reliable
+  durability: transient_local
+/global_costmap/costmap:
+  history: keep_last
+  depth: 10
+  reliability: reliable
+  durability: transient_local
+/local_costmap/costmap:
+  history: keep_last
+  depth: 10
+  reliability: reliable
+  durability: transient_local
+/rob_2/camera/extrinsics/depth_to_color:
+  history: keep_last
+  depth: 5
+  reliability: reliable
+  durability: transient_local
+
+# ---- best-effort sensor streams -----------------------------------------
+/scan:
+  history: keep_last
+  depth: 50
+  reliability: best_effort
+  durability: volatile
+/scan_filtered:
+  history: keep_last
+  depth: 50
+  reliability: best_effort
+  durability: volatile
+/scan_uniform:
+  history: keep_last
+  depth: 50
+  reliability: best_effort
+  durability: volatile
+/wheel_odom:
+  history: keep_last
+  depth: 100
+  reliability: best_effort
+  durability: volatile
+/firmware/imu:
+  history: keep_last
+  depth: 200
+  reliability: best_effort
+  durability: volatile
+/firmware/wheel_states:
+  history: keep_last
+  depth: 100
+  reliability: best_effort
+  durability: volatile
+/firmware/battery_averaged:
+  history: keep_last
+  depth: 50
+  reliability: best_effort
+  durability: volatile
+/rob_2/camera/color/image_raw/compressed:
+  history: keep_last
+  depth: 10
+  reliability: best_effort
+  durability: volatile
+/rob_2/camera/color/camera_info:
+  history: keep_last
+  depth: 10
+  reliability: best_effort
+  durability: volatile
+
+# ---- high-rate reliable topics: deep queues so a disk hiccup drops
+# ---- nothing (the recorder buffers instead of dropping) ------------------
+/tf:
+  history: keep_last
+  depth: 500
+  reliability: reliable
+  durability: volatile
+/imu/data:
+  history: keep_last
+  depth: 500
+  reliability: reliable
+  durability: volatile

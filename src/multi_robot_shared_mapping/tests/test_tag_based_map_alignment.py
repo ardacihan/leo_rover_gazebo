@@ -109,6 +109,30 @@ def test_outlier_is_rejected():
     assert "rejected" in estimate.message.lower()
 
 
+def test_drift_tolerant_gate_preserves_tag_hint_for_map_validation():
+    """Moderate SLAM warp must not hide an otherwise accurate tag seed."""
+    dx, dy, yaw = 3.0, -9.0, math.pi
+    source = [(0.0, 0.0), (0.0, 4.0)]
+    target = _rotate_points(source, dx, dy, yaw)
+    # Stretch the two-tag baseline by 1.3 m. Kabsch splits that mismatch into
+    # ~0.65 m residual per tag while preserving the correct centroid and yaw.
+    target[0] = (target[0][0], target[0][1] - 0.65)
+    target[1] = (target[1][0], target[1][1] + 0.65)
+
+    estimate = estimate_2d_transform(
+        source,
+        target,
+        max_mean_error=0.75,
+        max_point_error=1.5,
+        ground_truth=(dx, dy, yaw),
+    )
+
+    assert estimate.success
+    assert 0.35 < estimate.mean_reprojection_error < 0.75
+    assert estimate.translation_error < 1e-6
+    assert estimate.yaw_error < math.radians(1.0)
+
+
 def test_apply_2d_transform_matches_estimate():
     source = [(1.5, -0.5), (0.0, 2.0)]
     dx, dy, yaw = 2.36, -11.27, 0.2

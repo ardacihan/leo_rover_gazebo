@@ -85,7 +85,16 @@ class TagBasedMapAligner(Node):
         # default is off. Left in place, and worth revisiting with a proper
         # per-marker uncertainty rather than a hand-fitted weight.
         self.declare_parameter("use_tag_orientation", False)
-        self.declare_parameter("max_mean_error", 0.35)
+        # Tags seed the grid matcher; they are not fused without the downstream
+        # occupancy/agreement gates.  Real SLAM drift distorts the distance
+        # between two otherwise-correct common landmarks: a live depot run on
+        # 2026-08-28 recovered 0.13 m / 0.3 deg truth error but had 0.67 m tag
+        # residual and was discarded by the old hidden 0.35/0.50 m defaults.
+        # Keep these consistent with the explicit residual gates below so a
+        # useful tag seed reaches map validation instead of leaving a stale
+        # one-tag estimate active.
+        self.declare_parameter("max_mean_error", 0.75)
+        self.declare_parameter("max_point_error", 1.5)
 
         # Robustness gating: tags are only an initial guess, so bad estimates
         # must be rejected or published with clearly low confidence.
@@ -379,6 +388,7 @@ class TagBasedMapAligner(Node):
                 [(map1.landmarks[tid].x, map1.landmarks[tid].y) for tid in common_ids],
                 min_tags=min_tags,
                 max_mean_error=float(self.get_parameter("max_mean_error").value),
+                max_point_error=float(self.get_parameter("max_point_error").value),
                 ground_truth=ground_truth,
                 source_yaws=[map2.landmarks[tid].yaw for tid in common_ids],
                 target_yaws=[map1.landmarks[tid].yaw for tid in common_ids],
@@ -451,8 +461,9 @@ class TagBasedMapAligner(Node):
             self.get_parameter("min_common_landmarks_for_high_confidence").value
         )
         if len(common_ids) < min_high_conf:
+            noun = "landmark" if len(common_ids) == 1 else "landmarks"
             self.get_logger().warn(
-                "Only 2 common landmarks; yaw estimate may be unstable."
+                f"Only {len(common_ids)} common {noun}; yaw estimate may be unstable."
             )
             confidence = min(confidence, 0.35)
 

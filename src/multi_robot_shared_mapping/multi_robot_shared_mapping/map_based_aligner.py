@@ -35,7 +35,6 @@ from multi_robot_shared_mapping.alignment_confidence import (
     compute_final_confidence,
     detect_ambiguity,
     select_top_candidates,
-    transforms_disagree,
 )
 from multi_robot_shared_mapping.alignment_state import AlignmentState
 from multi_robot_shared_mapping.grid_map_matching import (
@@ -48,6 +47,7 @@ from multi_robot_shared_mapping import marker_free_matching
 from multi_robot_shared_mapping.map_quality import LocalMapQualityTracker
 from multi_robot_shared_mapping.exploration_policy import (
     build_policy_debug,
+    fusion_evidence_rejection,
     min_acceptance_confidence,
     tag_map_agree,
 )
@@ -444,21 +444,20 @@ class MapBasedAligner(Node):
                 f"free-space conflict {result.free_space_conflict_ratio:.2f} > "
                 f"max_free_space_conflict_ratio"
             )
-        # Ambiguous map-only: candidate only, never accepted.
-        if mode in ("map", "hybrid", "tag") and is_ambiguous and len(self.common_landmarks) == 0:
-            return "ambiguous map-only match; candidate only until geometry is distinctive"
-        if (
-            mode in ("hybrid", "tag")
-            and len(self.common_landmarks) == 1
-            and self.tag_estimate is not None
-            and transforms_disagree(
-                self.tag_estimate,
-                (result.dx, result.dy, result.yaw),
-                float(self.get_parameter("max_tag_map_disagreement_m").value),
-                math.radians(float(self.get_parameter("max_tag_map_disagreement_yaw_deg").value)),
-            )
-        ):
-            return "Rejected candidate: tag alignment and occupancy alignment disagree"
+        evidence_reject = fusion_evidence_rejection(
+            mode,
+            self.tag_estimate,
+            (result.dx, result.dy, result.yaw),
+            is_ambiguous=is_ambiguous,
+            max_translation_m=float(
+                self.get_parameter("max_tag_map_disagreement_m").value
+            ),
+            max_yaw=math.radians(
+                float(self.get_parameter("max_tag_map_disagreement_yaw_deg").value)
+            ),
+        )
+        if evidence_reject:
+            return evidence_reject
         if self.quality_leo1.is_severe or self.quality_leo2.is_severe:
             return "local map quality too low for fusion"
         return ""

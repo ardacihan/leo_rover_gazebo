@@ -37,6 +37,41 @@ def tag_map_agree(
     return translation <= max_translation_m and yaw_delta <= max_yaw
 
 
+def fusion_evidence_rejection(
+    mode: str,
+    tag_estimate: Optional[Tuple[float, float, float]],
+    map_estimate: Tuple[float, float, float],
+    *,
+    is_ambiguous: bool,
+    max_translation_m: float,
+    max_yaw: float,
+) -> str:
+    """Return why a map candidate must remain a preview, or ``""``.
+
+    Hybrid/tag fusion deliberately waits for a common-landmark transform.  A
+    grid match found before rendezvous may be useful as a preview, but must not
+    become the aligner's state anchor: a wrong early anchor would make the
+    later, better tag-seeded candidate fail the transform-jump check.
+    """
+    if mode in ("hybrid", "tag"):
+        if tag_estimate is None:
+            return (
+                "waiting for common-landmark transform; map candidate is "
+                "preview-only"
+            )
+        if not tag_map_agree(
+            tag_estimate,
+            map_estimate,
+            max_translation_m,
+            max_yaw,
+        ):
+            return "Rejected candidate: tag alignment and occupancy alignment disagree"
+
+    if mode in ("map", "hybrid", "tag") and is_ambiguous:
+        return "ambiguous map match; candidate only until geometry is distinctive"
+    return ""
+
+
 def classify_confidence_level(
     final_confidence: float,
     common_landmark_count: int,
