@@ -159,6 +159,30 @@ class FrontierExplorer(Node):
         # within this long, end the run with a distinct "immobilised" message
         # so a stuck rover is never counted as a finished exploration.
         self.declare_parameter('immobilised_abort_sec', 600.0)
+        # How a frontier is valued.
+        #   'linear' - gain_scale * size_m - potential_scale * distance. The
+        #              default, and the only form any run has validated.
+        #   'ratio'  - unknown m2 near the frontier per metre driven to it.
+        #              EXPERIMENTAL, off by default: see below.
+        #
+        # The motivation was real. Rewarding a frontier's own width says
+        # nothing about how much world lies behind it, so on husarion_office
+        # the doorway into a 20 m2 room scored 7.55, and against
+        # potential_scale=3.0 it could only win from within 3.7 m. The room
+        # went unentered while the rover scraped 3.7 m2 out of 390 s of
+        # leftovers 11 m away.
+        #
+        # 'ratio' does not fix that, and was measured not fixing it. On the
+        # same world and budget (office_ratio_utility, 2026-08-29) no rover
+        # entered the room either, and the union area trailed the 'linear'
+        # run at every matched time: 107.0 vs 124.5 m2 at t=600, 124.4 vs
+        # 130.0 at t=915. One run each and the ratio run was cut short by a
+        # Docker wedge, so this is not proof it is worse -- but it is not
+        # evidence it is better, and it failed its own acceptance test.
+        # Left in, tested, and off, for a proper A/B where runs are cheap.
+        self.declare_parameter('frontier_utility', 'linear')
+        self.declare_parameter('gain_radius', 2.5)      # metres
+        self.declare_parameter('min_travel_cost', 1.0)  # metres
         self.declare_parameter('watchdog_period', 10.0)
         self.declare_parameter('return_to_init', True)
         self.declare_parameter('map_save_path', '/ros2_ws/maps/explored_map')
@@ -234,6 +258,9 @@ class FrontierExplorer(Node):
         self.backtrack_min_distance = float(gp('backtrack_min_distance'))
         self.backtrack_min_age = float(gp('backtrack_min_age'))
         self.immobilised_abort_sec = float(gp('immobilised_abort_sec'))
+        self.frontier_utility = str(gp('frontier_utility'))
+        self.gain_radius = float(gp('gain_radius'))
+        self.min_travel_cost = max(1e-3, float(gp('min_travel_cost')))
         self.watchdog_period = gp('watchdog_period')
         self.return_to_init = gp('return_to_init')
         self.map_save_path = gp('map_save_path')
@@ -694,13 +721,20 @@ class FrontierExplorer(Node):
                 near_occ = grown
             frontier &= ~near_occ
 
-        # And drop anything outside the world we were told about.
+        # And drop anything outside the world we were told about. The same
+        # mask is applied to `unknown` before it is used to value frontiers:
+        # unknown cells beyond the building are not a reward, and without
+        # this a frontier hugging an outer wall would be credited with the
+        # whole unmapped outdoors behind it.
         if self.world_bounds is not None:
             xmin, xmax, ymin, ymax = self.world_bounds
             rows, cols = np.indices(frontier.shape)
             wx = info.origin.position.x + (cols + 0.5) * info.resolution
             wy = info.origin.position.y + (rows + 0.5) * info.resolution
-            frontier &= (wx >= xmin) & (wx <= xmax) & (wy >= ymin) & (wy <= ymax)
+            in_bounds = ((wx >= xmin) & (wx <= xmax)
+                         & (wy >= ymin) & (wy <= ymax))
+            frontier &= in_bounds
+            unknown = unknown & in_bounds
 
         cells = np.argwhere(frontier)
         if cells.size == 0:
@@ -733,8 +767,39 @@ class FrontierExplorer(Node):
                 'size_m': len(members) * res,
                 'centroid': (ox + (cx + 0.5) * res, oy + (cy + 0.5) * res),
                 'goal': (ox + (gc + 0.5) * res, oy + (gr + 0.5) * res),
+                'gr': int(gr), 'gc': int(gc),
             })
+        # Only in 'ratio' mode. coordinated_allocation prefers an explicit
+        # 'gain' over size_m, so attaching one unconditionally would change
+        # what the coordinated condition optimises even with the utility left
+        # at 'linear' -- the explorer would score one thing and the allocator
+        # another, and neither would be what office_final_check measured.
+        if self.frontier_utility == 'ratio':
+            self._attach_information_gain(clusters, unknown, res)
         return clusters
+
+    def _attach_information_gain(self, clusters, unknown, res):
+        """Set cluster['gain'] to the unknown area (m2) near its goal.
+
+        How much is behind the frontier, rather than how wide the frontier is.
+        One summed-area table over the unknown mask answers every cluster in
+        O(1), so this stays cheap at the planning rate even with a few hundred
+        clusters. The mask is the same one the frontier search used, so it is
+        already peer-masked and inside the world bounds -- unknown space
+        outside the building cannot inflate a reward.
+        """
+        if not clusters:
+            return
+        r = max(1, int(round(self.gain_radius / res)))
+        ii = np.cumsum(np.cumsum(unknown.astype(np.int32), axis=0), axis=1)
+        ii = np.pad(ii, ((1, 0), (1, 0)))
+        h, w = unknown.shape
+        cell = res * res
+        for c in clusters:
+            r0, r1 = max(0, c['gr'] - r), min(h, c['gr'] + r + 1)
+            c0, c1 = max(0, c['gc'] - r), min(w, c['gc'] + r + 1)
+            n = (ii[r1, c1] - ii[r0, c1] - ii[r1, c0] + ii[r0, c0])
+            c['gain'] = float(n) * cell
 
     def _peer_known_mask(self, info, unknown):
         """Bool array marking OUR unknown cells the shared map knows, or None.
@@ -944,10 +1009,18 @@ class FrontierExplorer(Node):
         return True
 
     def _score(self, cluster, robot):
-        return (self.gain_scale * cluster['size_m']
-                - self.potential_scale * math.hypot(
-                    cluster['goal'][0] - robot[0],
-                    cluster['goal'][1] - robot[1]))
+        d = math.hypot(cluster['goal'][0] - robot[0],
+                       cluster['goal'][1] - robot[1])
+        if self.frontier_utility == 'ratio':
+            # Unknown area per metre driven. min_travel_cost keeps a frontier
+            # the rover is standing on from scoring infinitely.
+            gain = float(cluster.get('gain', cluster['size_m']))
+            return gain / max(d, self.min_travel_cost)
+        # 'linear' stays exactly what office_final_check validated, down to
+        # rewarding the frontier's own width rather than the information
+        # behind it. Do not quietly feed it the new gain: that would change
+        # the measured condition without any run having measured it.
+        return self.gain_scale * cluster['size_m'] - self.potential_scale * d
 
     # ----------------------------------------------------------- main cycle
 
@@ -1196,7 +1269,9 @@ class FrontierExplorer(Node):
                     potential_scale=self.potential_scale,
                     gain_scale=self.gain_scale,
                     discount_radius=self.discount_radius,
-                    discount_strength=self.discount_strength)
+                    discount_strength=self.discount_strength,
+                    utility_mode=self.frontier_utility,
+                    min_travel_cost=self.min_travel_cost)
                 my_goal = assignment.get(self.robot_name)
                 if my_goal is not None:
                     return min(clusters, key=lambda c: math.hypot(

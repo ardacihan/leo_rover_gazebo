@@ -28,16 +28,30 @@ def _dist(a, b):
     return math.hypot(a[0] - b[0], a[1] - b[1])
 
 
-def base_utility(gain, robot_xy, frontier_xy, potential_scale, gain_scale):
-    """Single-robot frontier score: size reward minus distance penalty."""
-    return gain_scale * gain - potential_scale * _dist(robot_xy, frontier_xy)
+def base_utility(gain, robot_xy, frontier_xy, potential_scale, gain_scale,
+                 mode='linear', min_travel_cost=1.0):
+    """Single-robot frontier score.
+
+    'linear' is the original reward-minus-distance. 'ratio' is gain per metre
+    driven, which is what keeps a large distant region competitive: under the
+    linear form a frontier's reward has to exceed potential_scale times the
+    extra distance, so a far room is never chosen while any nearer scrap
+    survives, however little that scrap is worth.
+    """
+    d = _dist(robot_xy, frontier_xy)
+    if mode == 'ratio':
+        return gain / max(d, min_travel_cost)
+    return gain_scale * gain - potential_scale * d
 
 
 def _normalize(frontiers):
     out = []
     for f in frontiers:
         if isinstance(f, dict):
-            gain = float(f.get('size_m', f.get('gain', 1.0)))
+            # An explicit information gain wins over the frontier's own
+            # width when the caller computed one; size_m stays the fallback
+            # so existing callers and tests are unaffected.
+            gain = float(f.get('gain', f.get('size_m', 1.0)))
             out.append({'goal': tuple(f['goal']), 'gain': gain})
         else:
             out.append({'goal': (f[0], f[1]), 'gain': float(f[2])})
@@ -59,7 +73,8 @@ def _apply_discount(gains, used, frontiers, goal, radius, strength):
 
 def coordinated_allocation(robots, frontiers, committed=None,
                            potential_scale=3.0, gain_scale=1.0,
-                           discount_radius=3.0, discount_strength=1.0):
+                           discount_radius=3.0, discount_strength=1.0,
+                           utility_mode='linear', min_travel_cost=1.0):
     """Assign at most one frontier to each robot.
 
     robots:    list of (name, (x, y)); MUST include self.
@@ -103,7 +118,9 @@ def coordinated_allocation(robots, frontiers, committed=None,
             for fi, f in enumerate(F):
                 if used[fi]:
                     continue
-                u = gain_scale * gains[fi] - potential_scale * _dist(xy, f['goal'])
+                u = base_utility(gains[fi], xy, f['goal'],
+                                 potential_scale, gain_scale,
+                                 utility_mode, min_travel_cost)
                 if best is None or u > best[0] or (
                         u == best[0] and (name, f['goal']) < (best[1], best[2])):
                     best = (u, name, f['goal'], fi)
