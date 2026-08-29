@@ -2,7 +2,8 @@
 
 | Script | Purpose |
 |--------|---------|
-| `sim_gpu_wsl.sh` | Start `leo_sim` container with GPU Gazebo |
+| `sim_gpu_wsl.sh` | Start `leo_sim` container with GPU Gazebo (WSL / Docker Desktop) |
+| `sim_gpu_linux.sh` | Same, on native Linux with `nvidia-container-toolkit` |
 | `slam_nav2_wsl.sh` | SLAM + Nav2 + RViz inside running container |
 | `teleop_wsl.sh` | Interactive keyboard teleop (needs `leo_rover_control`, see note) |
 | `build_ogre_wsl_gpu.sh` | One-time Ogre GPU patch build into `docker/patched/` |
@@ -11,8 +12,11 @@
 | `demo_teleop_record.sh` | Presentation demo: stack + small rosbag, driven by teleop |
 | `demo_teleop_wsl.sh` | Keyboard teleop for the demo (self-contained) |
 | `map_coverage.py` | Sample known map area every N seconds into `coverage*.log` |
+| `multirobot_sensor_probe.py` | Bounded message-level RGB, depth-cloud, and LiDAR health proof |
 | `plot_coverage.py` | `coverage*.log` -> coverage-over-time PNG |
 | `render_multirobot_media.py` | Run dir -> maps, coverage curve, path overlay |
+| `render_timelapse.py` | Recorded map snapshots -> live merge MP4 |
+| `render_collab_comparison.py` | Matched coordinated/independent coverage and duplication figure |
 
 Windows entry points at repo root call these via WSL (`run_sim.ps1`, etc.).
 
@@ -31,13 +35,43 @@ scripts/auto_multirobot_run.sh <coordinated|independent|single> \
     <husarion_office|office_world|depot_world> reports/<your-run-name> [cap_min]
 ```
 
+The harness picks the GPU launcher for the host automatically:
+`sim_gpu_wsl.sh` under Docker Desktop or WSL, `sim_gpu_linux.sh` on native
+Linux. Force one with `SIM_LAUNCHER=/path/to/script`. The difference matters:
+under WSL no NVIDIA EGL/GLX ICD reaches the container, so Ogre runs through
+Mesa's `d3d12` translation layer (`GL_RENDERER = D3D12 (NVIDIA ...)`, OpenGL
+4.2), which segfaults in `libd3d12core.so` after 9-13 min of two-camera
+rendering. On native Linux Ogre gets the real driver. Check which path a run
+took in `gpu_check.txt`; `llvmpipe` there means software GL and a ~6x slowdown.
+
+Two more things to know before reading a run's numbers. First, exploration
+budgets are wall-clock, but `husarion_office` runs at ~0.45x real time on a
+laptop (188 mesh models; the Gazebo server is the serial bottleneck, not the
+GPU), so a 10-minute cap buys under 5 minutes of simulated exploration. Second,
+`finished=N/2` in `run.log` counts only rovers that ran out of frontiers;
+rovers that gave up appear as `aborted=` and their maps are incomplete by
+definition. A run is only a complete exploration when it logs
+`all explorers finished`.
+
+`cap_min` limits exploration (default 14). The harness separately enforces a
+20-minute end-to-end wall budget, reserves 150 seconds for maps/media, and has
+a container-identity-checked hard watchdog. Override `MAX_WALL_MIN` or
+`FINALIZE_RESERVE_SEC` only when deliberately changing that operational limit.
+
 It writes `coverage.log` (merged) and `coverage_leo1.log` / `coverage_leo2.log`
 (per rover) into the run directory, sampled every 15 s and clipped to the same
-world bounds for every condition. Turn them into pictures with either:
+world bounds for every condition. Camera-on two-rover runs also fail closed if
+either rover's RGB, camera calibration, organized depth cloud, or LiDAR stream
+is silent; the measured rates and message metadata are saved in
+`sensor_probe.json`. Final maps, plots, camera stills, and `merge_timelapse.mp4`
+are rendered automatically before teardown. Turn raw recordings into pictures
+again with either:
 
 ```bash
 python3 scripts/plot_coverage.py <run>/coverage_leo1.log <run>/coverage.png "label"
 python3 scripts/render_multirobot_media.py <run> --world office_world   # all figures
+python3 scripts/render_collab_comparison.py office_world <coordinated-run> \
+    <independent-run> <comparison.png>
 ```
 
 Robot count is 1 (`single`) or 2 — `alignment` and `shared_map_merger` are

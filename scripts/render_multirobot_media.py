@@ -149,18 +149,41 @@ def read_traj(path):
 
 def markers_for(world):
     try:
-        share = os.path.join(os.path.dirname(os.path.dirname(
-            os.path.abspath(__file__))), 'src', 'leo_rover_exploration',
-            'config', f'mock_markers_{world}.yaml')
+        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        share = os.path.join(root, 'src', 'leo_rover_exploration',
+                             'config', f'mock_markers_{world}.yaml')
         if not os.path.exists(share):
             return []
         out = []
         for line in open(share):
-            m = re.search(r'id:\s*(\d+).*?x:\s*(-?[\d.]+).*?y:\s*(-?[\d.]+)', line)
+            m = re.search(
+                r'id:\s*(\d+).*?x:\s*(-?[\d.]+).*?y:\s*(-?[\d.]+)',
+                line)
             if m:
-                out.append((int(m.group(1)), float(m.group(2)), float(m.group(3))))
+                out.append((int(m.group(1)), float(m.group(2)),
+                            float(m.group(3))))
+
+        # Marker YAML is authored in the Gazebo world frame, while the merged
+        # grid is in leo1/map, anchored at leo1's spawn pose.  Drawing the raw
+        # world coordinates displaced every marker on depot/office media (for
+        # example depot's markers were 4.5 m too high).  Apply the same inverse
+        # spawn transform SLAM implicitly uses for leo1/map.
+        launch_dir = os.path.join(root, 'src', 'leo_rover_gazebo', 'launch')
+        if launch_dir not in sys.path:
+            sys.path.insert(0, launch_dir)
+        from spawn_poses import SPAWN_POSES
+        pose = SPAWN_POSES.get(world, {}).get('leo1')
+        if pose:
+            sx, sy, _, _, _, yaw = (float(value) for value in pose)
+            c, s = math.cos(-yaw), math.sin(-yaw)
+            out = [
+                (mid,
+                 c * (x - sx) - s * (y - sy),
+                 s * (x - sx) + c * (y - sy))
+                for mid, x, y in out
+            ]
         return out
-    except OSError:
+    except (ImportError, OSError):
         return []
 
 
@@ -168,6 +191,26 @@ def _apply_tf(pts, tf):
     x0, y0, yaw = tf[0], tf[1], math.radians(tf[2])
     c, s = math.cos(yaw), math.sin(yaw)
     return [(t_, x0 + c * x - s * y, y0 + s * x + c * y) for t_, x, y in pts]
+
+
+def final_locked_transform(run):
+    """Return the last accepted leo2->leo1 transform recorded by the run."""
+    path = os.path.join(run, 'alignment.csv')
+    if not os.path.exists(path):
+        return None
+    try:
+        with open(path) as handle:
+            rows = list(csv.DictReader(handle))
+        for row in reversed(rows):
+            if row.get('locked', '').strip() not in ('1', 'true', 'True'):
+                continue
+            values = (float(row['map_x']), float(row['map_y']),
+                      float(row['map_yaw_deg']))
+            if all(math.isfinite(value) for value in values):
+                return values
+    except (KeyError, OSError, ValueError):
+        return None
+    return None
 
 
 def save_overlay(run, out, world, title, leo2_tf=None):
@@ -220,9 +263,8 @@ def save_overlay(run, out, world, title, leo2_tf=None):
         ax.plot(xs[0], ys[0], 'o', color=colour, ms=10, mfc='white', mew=2.2)
         ax.plot(xs[-1], ys[-1], 's', color=colour, ms=9)
 
-    # Marker ground truth is in leo1's *world* frame; leo1/map is anchored on
-    # leo1's spawn, so this only lines up when leo1 started at the origin.
-    # Drawn regardless, as a scale and orientation reference.
+    # Marker ground truth is transformed from the Gazebo world frame into
+    # leo1/map by markers_for(), so it lines up with every authored spawn.
     for mid, mx, my in markers_for(world):
         ax.plot(mx, my, '*', color='#8e44ad', ms=13, mec='white', mew=0.7)
         ax.annotate(str(mid), (mx, my), textcoords='offset points',
@@ -315,6 +357,16 @@ def save_alignment(run, out, title):
     ax1b.axhline(10.0, ls='--', lw=1, color='#8e44ad', alpha=0.6)
     ax1b.set_ylabel('yaw error [deg]', color='#8e44ad')
     ax1.set_ylabel('xy error [m]', color='#c0392b')
+    # Both error axes start at zero and keep headroom above their gate line.
+    # Left to autoscale, a run whose error stays in 0.10-0.28 m gets a y-axis
+    # starting at 0.10, which visually triples the error and pins the 0.5 m
+    # gate to the top edge, so the margin the gate is proving disappears.
+    def _headroom(values, gate):
+        finite = values[np.isfinite(values)]
+        peak = float(np.max(finite)) if finite.size else 0.0
+        return max(gate, peak) * 1.15
+    ax1.set_ylim(0.0, _headroom(col('err_xy_m'), 0.5))
+    ax1b.set_ylim(0.0, _headroom(np.abs(col('err_yaw_deg')), 10.0))
     ax1.set_title(title)
     ax1.grid(alpha=0.3, lw=0.5)
     ax1.legend(loc='upper right', fontsize=8)
@@ -346,6 +398,7 @@ def main():
     args = ap.parse_args()
     run = args.run_dir
     tag = args.title or os.path.basename(run.rstrip('/\\'))
+    leo2_tf = args.leo2_tf or final_locked_transform(run)
 
     made = []
     for stem, out, title in (
@@ -356,7 +409,7 @@ def main():
             made.append(out)
     if save_overlay(run, os.path.join(run, 'traj_overlay.png'), args.world,
                     f'{tag} - merged map, both trajectories, marker truth',
-                    leo2_tf=args.leo2_tf):
+                    leo2_tf=leo2_tf):
         made.append('traj_overlay.png')
     if save_coverage(run, os.path.join(run, 'coverage.png'),
                      f'{tag} - merged coverage'):

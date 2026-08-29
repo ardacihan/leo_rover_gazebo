@@ -76,7 +76,13 @@ def relative_offset(world_name):
 WORLD_BOUNDS = {
     'depot_world': (-7.0, 7.0, -7.0, 7.0),
     'office_world': (-12.0, 12.0, -8.0, 8.0),
-    'husarion_office': (-4.0, 27.0, -15.0, 4.0),
+    # Measured from the world's own floor meshes
+    # (husarion_gz_worlds/models/Surfaces/meshes/floor_*.obj), whose union
+    # spans x[0.27, 14.43] y[-13.06, 0.39] -- 162 m2 of authored floor. The
+    # previous (-4, 27, -15, 4) box claimed 31 x 19 m and so let frontiers
+    # up to 12 m east of the building stay eligible. One metre of margin
+    # keeps real frontiers safe under SLAM drift.
+    'husarion_office': (-1.0, 15.5, -14.0, 1.5),
 }
 
 

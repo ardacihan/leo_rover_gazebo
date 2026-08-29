@@ -35,8 +35,26 @@
 # cheating" claim can be checked against what actually ran rather than believed.
 set -eo pipefail
 
-MODE="$1"; WORLD="$2"; OUT="$3"; CAP_MIN="${4:-25}"
+RUN_STARTED_EPOCH=$(date +%s)
+MODE="$1"; WORLD="$2"; OUT="$3"; CAP_MIN="${4:-14}"
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+# The fourth argument is the requested *exploration* cap.  MAX_WALL_MIN is a
+# stricter end-to-end budget that also includes simulator startup, map saving,
+# media rendering, and teardown.  Reserve enough time for collection and keep
+# a container-specific watchdog as the final backstop, so a slow startup or a
+# hung saver cannot turn a nominally short run into a >20 minute one.
+MAX_WALL_MIN="${MAX_WALL_MIN:-20}"
+FINALIZE_RESERVE_SEC="${FINALIZE_RESERVE_SEC:-150}"
+if ! [[ "$CAP_MIN" =~ ^[0-9]+$ && "$MAX_WALL_MIN" =~ ^[0-9]+$ &&
+        "$FINALIZE_RESERVE_SEC" =~ ^[0-9]+$ ]]; then
+  echo "FATAL: run budgets must be whole non-negative numbers" >&2
+  exit 2
+fi
+if (( MAX_WALL_MIN < 4 || FINALIZE_RESERVE_SEC >= MAX_WALL_MIN * 60 )); then
+  echo "FATAL: MAX_WALL_MIN must leave time before the collection reserve" >&2
+  exit 2
+fi
 
 # Overridable for the marker-free confirmation runs (Phase 1, night 2026-08-25):
 #   ALIGN_MODE=markerfree SKIP_ARUCO=1  -> no detectors, no tag aligner; the
@@ -99,7 +117,7 @@ if [[ -z "$GT_X" || -z "$GT_Y" || -z "$GT_YAW" ]]; then
 fi
 LOG "ground-truth leo2->leo1 offset: x=$GT_X y=$GT_Y yaw=$GT_YAW rad (scoring only)"
 
-echo "run: mode=$MODE world=$WORLD cap=${CAP_MIN}min started $(date -Iseconds)" \
+echo "run: mode=$MODE world=$WORLD explore_cap=${CAP_MIN}min max_wall=${MAX_WALL_MIN}min collection_reserve=${FINALIZE_RESERVE_SEC}s started $(date -Iseconds)" \
   > "$ROOT/$OUT/cmdlines.txt"
 
 # ---------- 0. clean process table ----------
@@ -110,10 +128,51 @@ docker stop leo_sim >/dev/null 2>&1 || true
 docker rm leo_sim >/dev/null 2>&1 || true
 
 # ---------- 1. sim ----------
+# Pick the GPU path for this host. Under Docker Desktop (Windows/Git-bash) or
+# inside WSL, no NVIDIA EGL/GLX ICD reaches the container, so Ogre has to go
+# through Mesa's d3d12 translation layer -- that is the path that caps out at
+# OpenGL 4.2 and segfaults in libd3d12core.so on two-camera runs. Native Linux
+# with nvidia-container-toolkit gets the real driver. Both launchers create the
+# same container with the same mounts, so nothing downstream changes.
+# Force either one with SIM_LAUNCHER=/path/to/script.
+if [[ -z "${SIM_LAUNCHER:-}" ]]; then
+  case "$(uname -s)" in
+    MINGW*|MSYS*|CYGWIN*) SIM_LAUNCHER="$ROOT/scripts/sim_gpu_wsl.sh" ;;
+    *) if [[ -e /dev/dxg || -d /usr/lib/wsl ]]; then
+         SIM_LAUNCHER="$ROOT/scripts/sim_gpu_wsl.sh"
+       else
+         SIM_LAUNCHER="$ROOT/scripts/sim_gpu_linux.sh"
+       fi ;;
+  esac
+fi
+[[ -f "$SIM_LAUNCHER" ]] || {
+  echo "FATAL: sim launcher not found: $SIM_LAUNCHER" >&2; exit 2; }
 LOG "starting sim: world=$WORLD robots=$NUM_ROBOTS cameras=$ENABLE_CAMERA gt_odom_tf=FALSE"
-CMD "sim: WORLD=$WORLD GUI=false NUM_ROBOTS=$NUM_ROBOTS ENABLE_CAMERA=$ENABLE_CAMERA GT_ODOM_TF=false scripts/sim_gpu_wsl.sh"
+LOG "  launcher: $(basename "$SIM_LAUNCHER")"
+CMD "sim: WORLD=$WORLD GUI=false NUM_ROBOTS=$NUM_ROBOTS ENABLE_CAMERA=$ENABLE_CAMERA GT_ODOM_TF=false scripts/$(basename "$SIM_LAUNCHER")"
 WORLD="$WORLD" GUI=false NUM_ROBOTS="$NUM_ROBOTS" ENABLE_CAMERA="$ENABLE_CAMERA" \
-  GT_ODOM_TF=false "$ROOT/scripts/sim_gpu_wsl.sh" >>"$ROOT/$OUT/run.log" 2>&1
+  GT_ODOM_TF=false bash "$SIM_LAUNCHER" >>"$ROOT/$OUT/run.log" 2>&1
+
+# Stop only the exact container created above.  The identity check prevents a
+# stale watchdog from ever stopping a later run that reused the leo_sim name.
+SIM_CONTAINER_ID=$(docker inspect --format '{{.Id}}' leo_sim 2>/dev/null || true)
+hard_stop_epoch=$(( RUN_STARTED_EPOCH + MAX_WALL_MIN * 60 - 5 ))
+watchdog_delay=$(( hard_stop_epoch - $(date +%s) ))
+(( watchdog_delay > 0 )) || watchdog_delay=1
+(
+  sleep "$watchdog_delay"
+  current_id=$(docker inspect --format '{{.Id}}' leo_sim 2>/dev/null || true)
+  if [[ -n "$SIM_CONTAINER_ID" && "$current_id" == "$SIM_CONTAINER_ID" ]]; then
+    LOG "HARD WALL WATCHDOG: stopping this run before ${MAX_WALL_MIN} min"
+    docker stop -t 2 "$SIM_CONTAINER_ID" >/dev/null 2>&1 || true
+  fi
+) &
+WALL_WATCHDOG_PID=$!
+cancel_wall_watchdog() {
+  kill "$WALL_WATCHDOG_PID" >/dev/null 2>&1 || true
+  wait "$WALL_WATCHDOG_PID" 2>/dev/null || true
+}
+trap cancel_wall_watchdog EXIT
 
 LAST_NS="leo${NUM_ROBOTS}"
 LOG "waiting for /$LAST_NS/scan"
@@ -286,6 +345,21 @@ done
 [[ -n "$ok" ]] || { LOG "FATAL: Nav2 never came up for all robots"; exit 1; }
 sleep 8
 
+# A discovered topic can remain in the graph after its publisher stops, so the
+# camera/depth/LiDAR requirement needs message-level evidence rather than a
+# topic-list check.  Measure after alignment and Nav2 are live so the rates
+# reflect the complete stack's load, not an artificially quiet startup phase.
+if [[ "$ENABLE_CAMERA" == "true" && "$NUM_ROBOTS" -eq 2 ]]; then
+  LOG "measuring RGB, depth-cloud and LiDAR flow for both rovers"
+  CMD "sensor preflight: multirobot_sensor_probe.py --duration 8"
+  if ! in_sim "python3 /ros2_ws/scripts/multirobot_sensor_probe.py \
+      --duration 8 --output /ros2_ws/$OUT/sensor_probe.json" \
+      >> "$ROOT/$OUT/run.log" 2>&1; then
+    LOG "FATAL: one or more required RGB/depth/LiDAR topics are silent"
+    exit 1
+  fi
+fi
+
 # ---------- 8. bootstrap jog ----------
 # slam_toolbox needs motion before it will publish a map at all, and a rover
 # whose first frontier goal lands inside Nav2's goal tolerance "succeeds"
@@ -353,14 +427,28 @@ in_sim_bg "exec ros2 launch leo_rover_exploration collab_explore.launch.py \
   > /ros2_ws/$OUT/explorer.log 2>&1"
 
 # ---------- 11. wait ----------
-LOG "polling for completion (cap ${CAP_MIN} min)"
+exploration_started_epoch=$(date +%s)
+requested_deadline=$(( exploration_started_epoch + CAP_MIN * 60 ))
+collection_deadline=$(( RUN_STARTED_EPOCH + MAX_WALL_MIN * 60 - FINALIZE_RESERVE_SEC ))
+deadline=$requested_deadline
+cap_reason="requested ${CAP_MIN} min exploration cap"
+if (( collection_deadline < requested_deadline )); then
+  deadline=$collection_deadline
+  cap_reason="${MAX_WALL_MIN} min end-to-end budget (collection reserve ${FINALIZE_RESERVE_SEC}s)"
+fi
+effective_explore_sec=$(( deadline - exploration_started_epoch ))
+(( effective_explore_sec > 0 )) || effective_explore_sec=0
+LOG "polling for completion (${cap_reason}; effective exploration ${effective_explore_sec}s)"
 finished=""
 gz_dead=""
 stalls=0
 prev_sim_t=""
-deadline=$(( $(date +%s) + CAP_MIN * 60 ))
 while [[ $(date +%s) -lt $deadline ]]; do
-  sleep 60
+  remaining=$(( deadline - $(date +%s) ))
+  (( remaining > 0 )) || break
+  sleep_for=60
+  (( remaining < sleep_for )) && sleep_for=$remaining
+  sleep "$sleep_for"
   if ! docker ps --format '{{.Names}}' | grep -qx leo_sim; then
     LOG "FATAL: container died mid-run"
     docker logs --tail 100 leo_sim >>"$ROOT/$OUT/run.log" 2>&1 || true
@@ -389,7 +477,7 @@ while [[ $(date +%s) -lt $deadline ]]; do
   # their own aligner+merger pairs afterwards.
   if [[ -n "${PARTITION_AT_MIN:-}" && -z "${partition_done:-}" ]]; then
     now_s=$(date +%s)
-    if [[ $(( deadline - now_s )) -le $(( (CAP_MIN - PARTITION_AT_MIN) * 60 )) ]]; then
+    if (( now_s - exploration_started_epoch >= PARTITION_AT_MIN * 60 )); then
       partition_done=1
       LOG "PARTITION: killing central alignment_tf_bridge (minute ${PARTITION_AT_MIN})"
       in_sim "pkill -f 'alignment_tf[_]bridge'" || true
@@ -398,15 +486,31 @@ while [[ $(date +%s) -lt $deadline ]]; do
   fi
   done_n=$(grep -c 'Exploration finished\.' "$ROOT/$OUT/explorer.log" 2>/dev/null || true)
   done_n=${done_n//[^0-9]/}; done_n=${done_n:-0}
+  # A rover that gave up because it could not move has NOT explored its
+  # share. It is counted separately so a run is never recorded as a
+  # completed exploration when a rover was simply stuck.
+  abort_n=$(grep -c 'Exploration aborted:' "$ROOT/$OUT/explorer.log" 2>/dev/null || true)
+  abort_n=${abort_n//[^0-9]/}; abort_n=${abort_n:-0}
+  settled_n=$(( done_n + abort_n ))
   cov=$(grep -oE 'known=[0-9.]+m2' "$ROOT/$OUT/coverage.log" 2>/dev/null | tail -1 || true)
   align=$(tail -1 "$ROOT/$OUT/alignment.log" 2>/dev/null || true)
-  LOG "  finished=$done_n/$NUM_ROBOTS coverage=${cov:-?} | ${align:-no alignment yet}"
-  if [[ "$done_n" -ge "$NUM_ROBOTS" ]] 2>/dev/null; then finished=1; LOG "all explorers finished"; break; fi
+  LOG "  finished=$done_n/$NUM_ROBOTS${abort_n:+ aborted=$abort_n} coverage=${cov:-?} | ${align:-no alignment yet}"
+  if [[ "$settled_n" -ge "$NUM_ROBOTS" ]] 2>/dev/null; then
+    if [[ "$abort_n" -gt 0 ]]; then
+      LOG "explorers settled with $abort_n immobilised - map is INCOMPLETE"
+      grep 'Exploration aborted:' "$ROOT/$OUT/explorer.log" | tail -2 \
+        | sed 's/^/[multirobot]   /' | tee -a "$ROOT/$OUT/run.log" || true
+    else
+      finished=1
+      LOG "all explorers finished"
+    fi
+    break
+  fi
 done
 if [[ -n "$gz_dead" ]]; then
   LOG "collecting what exists from the dead-simulator run"
 elif [[ -z "$finished" ]]; then
-  LOG "WARNING: hit the ${CAP_MIN} min cap before finishing; collecting anyway"
+  LOG "WARNING: hit the ${cap_reason} before finishing; collecting anyway"
 fi
 sleep 8
 
@@ -437,10 +541,25 @@ for i in $(seq 1 "$NUM_ROBOTS"); do
     >> "$ROOT/$OUT/map_saver.log" 2>&1 || LOG "map_saver_cli ($ns) failed"
 done
 
-# ---------- 13. teardown ----------
-LOG "flushing recorders and stopping the container"
+# ---------- 13. media + teardown ----------
+LOG "flushing recorders"
 in_sim 'pkill -INT -f "merge_timelapse_recorder[.]py" || true; pkill -INT -f "map_coverage[.]py" || true; pkill -INT -f "traj_recorder[.]py" || true; pkill -INT -f "alignment_recorder[.]py" || true' || true
 sleep 12
+
+# Render before the container stops: the ROS image also carries the known-good
+# matplotlib/OpenCV versions, so presentation artifacts do not depend on the
+# host Python environment.  A run that reaches the cap still gets reviewable
+# evidence rather than only raw logs.
+LOG "rendering final maps, trajectories, curves and live-merge video"
+in_sim "python3 /ros2_ws/scripts/render_multirobot_media.py /ros2_ws/$OUT \
+  --world $WORLD --title ${WORLD}_${MODE}" \
+  > "$ROOT/$OUT/media.log" 2>&1 || LOG "WARNING: still-media rendering failed"
+in_sim "python3 /ros2_ws/scripts/render_timelapse.py /ros2_ws/$OUT \
+  --fps 6 --max-frames 200" \
+  >> "$ROOT/$OUT/media.log" 2>&1 || LOG "WARNING: merge-video rendering failed"
+
+LOG "stopping the container"
 docker stop leo_sim >/dev/null 2>&1 || true
-LOG "done -> $OUT"
+elapsed_wall=$(( $(date +%s) - RUN_STARTED_EPOCH ))
+LOG "done in ${elapsed_wall}s wall time -> $OUT"
 [[ -n "$finished" ]] || exit 3

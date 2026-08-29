@@ -54,6 +54,9 @@ STATUS_SUCCEEDED = 4
 GOAL_FRONTIER = 'frontier'
 GOAL_SWEEP = 'sweep'
 GOAL_VERIFY = 'verify'
+# Recovery goal: a pose this rover already occupied, so it is known-free and
+# was reachable. Sent when blind escapes have failed to free a wedged rover.
+GOAL_BACKTRACK = 'backtrack'
 
 
 class FrontierExplorer(Node):
@@ -135,6 +138,27 @@ class FrontierExplorer(Node):
         # and the tiny initial map is mistaken for a complete one.
         self.declare_parameter('min_explore_distance', 4.0)  # meters
         self.declare_parameter('idle_cycles_to_finish', 3)
+        # A frontier hidden only by a *temporary* ban is not a finished map.
+        # idle_cycles_to_finish x planner_period is 12 s, while one Nav2
+        # abort bans its goal for blacklist_ttl (90 s) and one planner
+        # rejection for skip_ttl (20 s) -- so without a hold the explorer
+        # declares the world explored seconds after a single failed goal and
+        # never plans again (STATE_DONE is terminal). Hold this long for a
+        # short ban to lapse before treating the frontier as unreachable.
+        self.declare_parameter('suppressed_hold_sec', 180.0)
+        # Wedge recovery. A rover pinned on mesh geometry keeps validating
+        # paths and keeps failing to move; blind 4 s nudges did not free it
+        # (husarion_office 2026-08-29, leo1 pinned at (0.06, -6.65) for the
+        # last 200 s of the run). After this many failed wedge escapes, drive
+        # back to a pose the rover already occupied instead of nudging.
+        self.declare_parameter('backtrack_after_escapes', 2)
+        self.declare_parameter('backtrack_min_distance', 1.5)   # metres
+        self.declare_parameter('backtrack_min_age', 30.0)       # seconds
+        # A rover that cannot move has not explored the world. Never report
+        # completion in that state; keep recovering, and if nothing frees it
+        # within this long, end the run with a distinct "immobilised" message
+        # so a stuck rover is never counted as a finished exploration.
+        self.declare_parameter('immobilised_abort_sec', 600.0)
         self.declare_parameter('watchdog_period', 10.0)
         self.declare_parameter('return_to_init', True)
         self.declare_parameter('map_save_path', '/ros2_ws/maps/explored_map')
@@ -205,6 +229,11 @@ class FrontierExplorer(Node):
         self.discount_strength = gp('discount_strength')
         self.min_explore_distance = gp('min_explore_distance')
         self.idle_cycles_to_finish = gp('idle_cycles_to_finish')
+        self.suppressed_hold_sec = float(gp('suppressed_hold_sec'))
+        self.backtrack_after_escapes = int(gp('backtrack_after_escapes'))
+        self.backtrack_min_distance = float(gp('backtrack_min_distance'))
+        self.backtrack_min_age = float(gp('backtrack_min_age'))
+        self.immobilised_abort_sec = float(gp('immobilised_abort_sec'))
         self.watchdog_period = gp('watchdog_period')
         self.return_to_init = gp('return_to_init')
         self.map_save_path = gp('map_save_path')
@@ -228,6 +257,10 @@ class FrontierExplorer(Node):
         self._common_offset = None   # (offset, resolved_at_sec)
         self.init_pose = None
         self.idle_cycles = 0
+        self._hold_since = None      # holding for a short ban to lapse
+        self.wedge_escapes = 0       # consecutive escapes that freed nothing
+        self._stalled_since = None   # immobilised while work remains
+        self._escape_from = None     # pose an escape burst started from
 
         self.goal_handle = None
         self.goal_pos = None
@@ -852,6 +885,51 @@ class FrontierExplorer(Node):
         self.skip_list.append(
             {'pos': xy, 'expires': now + self.skip_ttl, 'strikes': 1})
 
+    def _worthwhile(self, clusters):
+        """Clusters big enough to be worth driving to, bans ignored."""
+        return [c for c in clusters if c['size_m'] >= self.min_frontier_size]
+
+    def _immobilised(self, window_sec=120.0, moved_min=0.5):
+        """True when the rover has barely moved over the recent window.
+
+        Used to tell "the map is finished" apart from "I am pinned and so
+        everything looks unreachable from here". Too few samples counts as
+        mobile, so a rover that has just started is never called stuck.
+        """
+        now = self._now_sec()
+        window = [(x, y) for t, x, y in self.pos_history
+                  if now - t < window_sec]
+        if len(window) < 10:
+            return False
+        return max(math.hypot(x - window[0][0], y - window[0][1])
+                   for x, y in window) < moved_min
+
+    def _temporarily_suppressed(self, clusters):
+        """Worthwhile frontiers that only a short-lived ban is hiding.
+
+        An entry that has already reached blacklist_max_strikes is the
+        "confirmed unreachable" verdict of the strike ladder, so frontiers
+        behind one of those do not hold exploration open -- otherwise a
+        genuinely walled-off gap would keep the rover alive forever.
+        """
+        now = self._now_sec()
+        held = []
+        for c in clusters:
+            if c['size_m'] < self.min_frontier_size:
+                continue
+            gx, gy = c['goal']
+            blocking = [e for e in self.blacklist + self.skip_list
+                        if e.get('expires', 0) > now
+                        and math.hypot(gx - e['pos'][0], gy - e['pos'][1])
+                        < self._entry_radius(e)]
+            if not blocking:
+                continue
+            if all(int(e.get('strikes', 1)) >= self.blacklist_max_strikes
+                   for e in blocking):
+                continue
+            held.append(c)
+        return held
+
     def _eligible(self, cluster):
         if cluster['size_m'] < self.min_frontier_size:
             return False
@@ -904,7 +982,8 @@ class FrontierExplorer(Node):
         if self._handle_verification(robot):
             return
 
-        clusters = [c for c in self._find_frontiers() if self._eligible(c)]
+        all_clusters = self._find_frontiers()
+        clusters = [c for c in all_clusters if self._eligible(c)]
         self._publish_frontier_markers(clusters)
         self._publish_status(len(clusters))
 
@@ -928,6 +1007,7 @@ class FrontierExplorer(Node):
 
         if clusters:
             self.idle_cycles = 0
+            self._hold_since = None
             if self.state != STATE_EXPLORING:
                 self.get_logger().info('New frontiers - back to EXPLORING')
                 self.state = STATE_EXPLORING
@@ -937,6 +1017,34 @@ class FrontierExplorer(Node):
         # No frontiers left: sweep walls the camera has not seen yet.
         if self._sweep_step(robot):
             return
+
+        # "Nothing eligible" is not "nothing left". A frontier banned by a
+        # single Nav2 abort comes back in blacklist_ttl (90 s), long after
+        # the 12 s finish timer would have retired this rover for good.
+        # Wait the ban out; only once a frontier has survived
+        # suppressed_hold_sec of holding is it treated as truly unreachable.
+        held = self._temporarily_suppressed(all_clusters)
+        if held:
+            now = self._now_sec()
+            if self._hold_since is None:
+                self._hold_since = now
+                self.get_logger().info(
+                    f'{len(held)} frontier(s) banned but not confirmed '
+                    f'unreachable - holding up to '
+                    f'{self.suppressed_hold_sec:.0f}s instead of finishing')
+                self._clear_costmaps()
+            if now - self._hold_since < self.suppressed_hold_sec:
+                self.idle_cycles = 0
+                return
+            self.get_logger().warn(
+                f'Held {now - self._hold_since:.0f}s and {len(held)} '
+                f'frontier(s) never became reachable - confirming unreachable')
+            for c in held:
+                self._add_blacklist(c['goal'],
+                                    strikes=self.blacklist_max_strikes)
+            self._hold_since = None
+        else:
+            self._hold_since = None
 
         self.idle_cycles += 1
         if (self.idle_cycles >= self.idle_cycles_to_finish
@@ -956,6 +1064,47 @@ class FrontierExplorer(Node):
                 self.escape_ticks = 25
                 self.idle_cycles = 0
                 return
+            # "Everything left is unreachable" means one thing from a rover
+            # that can drive and another from one that is pinned. A wedged
+            # rover reports every frontier unreachable because it cannot move
+            # at all, and calling that a finished exploration is how a run
+            # ends up claiming a complete map of half a building.
+            # A rover that never once reached a goal has explored nothing,
+            # whatever its frontier list says. husarion_office 2026-08-29:
+            # leo2 spawned in lethal cost, every plan failed, and once its one
+            # frontier hit the long ban it reported a finished exploration
+            # with 6.1 m2 mapped and 1.1 m travelled.
+            never_arrived = self.stats['goals_succeeded'] == 0
+            if never_arrived or (self._immobilised()
+                                 and self._worthwhile(all_clusters)):
+                now = self._now_sec()
+                if self._stalled_since is None:
+                    self._stalled_since = now
+                why = ('never reached a goal' if never_arrived
+                       else 'immobilised')
+                left = len(self._worthwhile(all_clusters))
+                if now - self._stalled_since < self.immobilised_abort_sec:
+                    self.get_logger().warn(
+                        f'{why} with {left} frontier(s) left - recovering, '
+                        f'not finishing ({now - self._stalled_since:.0f}s of '
+                        f'{self.immobilised_abort_sec:.0f}s)',
+                        throttle_duration_sec=30.0)
+                    self.idle_cycles = 0
+                    # Backtracking needs somewhere to go back to. A rover that
+                    # never left its spawn has no such history, so nudge it.
+                    if not self._backtrack_step() and self.escape_ticks == 0:
+                        self.escape_count += 1
+                        self.escape_ticks = 25
+                    return
+                self.get_logger().error(
+                    f'Exploration aborted: rover {why} for '
+                    f'{now - self._stalled_since:.0f}s with {left} '
+                    f'frontier(s) still unexplored')
+                self._save_map(
+                    reason=f'Exploration aborted: {why}, {left} '
+                           f'frontier(s) left unexplored.')
+                return
+            self._stalled_since = None
             self._finish_exploration()
 
     def _get_common_offset(self):
@@ -1360,6 +1509,14 @@ class FrontierExplorer(Node):
             self.stats['goals_succeeded'] += 1
             if kind == GOAL_FRONTIER:
                 self.last_done_frontier = xy
+        elif kind == GOAL_BACKTRACK:
+            # A backtrack target is a pose the rover already stood in.
+            # Banning it would blacklist its own escape route and, worse,
+            # ban free space the frontier search still needs.
+            self.stats['goals_failed'] += 1
+            self.get_logger().warn(
+                f'backtrack to ({xy[0]:.2f}, {xy[1]:.2f}) failed '
+                f'(status {status}) - not blacklisting a pose we held')
         else:
             self.stats['goals_failed'] += 1
             self._add_blacklist(xy)
@@ -1371,6 +1528,37 @@ class FrontierExplorer(Node):
             # unconfirmed the queue rotates and we may try once more.
             self.verify_target = None
         self.goal_pos = None
+
+    def _backtrack_step(self):
+        """Drive to a pose this rover already occupied. True if dispatched.
+
+        Picked from pos_history, so the target is free space the rover has
+        physically stood in. Preferring the furthest old sample walks it back
+        out of whatever pocket it drove into, which a blind nudge cannot do
+        once the rover is properly pinned.
+        """
+        robot = self._robot_xy()
+        if robot is None or not self.pos_history:
+            return False
+        now = self._now_sec()
+        candidates = [
+            (math.hypot(x - robot[0], y - robot[1]), (x, y))
+            for t, x, y in self.pos_history
+            if now - t >= self.backtrack_min_age
+            and math.hypot(x - robot[0], y - robot[1])
+            >= self.backtrack_min_distance
+        ]
+        if not candidates:
+            return False
+        _, target = max(candidates)
+        self.get_logger().warn(
+            f'Watchdog: {self.wedge_escapes} escapes did not free the rover '
+            f'- backtracking to a pose it already held '
+            f'({target[0]:.2f}, {target[1]:.2f})')
+        # Straight to Nav2: validating from a wedged pose is exactly what
+        # keeps failing, and this target is known-good by construction.
+        self._send_goal(target, 0.0, robot, GOAL_BACKTRACK)
+        return True
 
     def _cancel_goal(self):
         if self.goal_handle is not None:
@@ -1401,18 +1589,42 @@ class FrontierExplorer(Node):
             if len(window) >= 10:
                 moved = max(math.hypot(x - window[0][1], y - window[0][2])
                             for _, x, y in window)
-                if moved < 0.3:
+                if moved >= 0.3:
+                    # Moving again: the wedge ladder starts over.
+                    self.wedge_escapes = 0
+                else:
                     self.stats['watchdog_recoveries'] += 1
                     self.stats['escapes'] += 1
                     self.escape_count += 1
-                    self.escape_ticks = 20  # 4 s at the 0.2 s escape timer
+                    self.wedge_escapes += 1
+                    # Strike the goal we failed to reach. Without this the
+                    # escape only cancels it, the next plan cycle scores the
+                    # same frontier best again, and the rover grinds
+                    # escape -> re-select -> escape on one unreachable goal
+                    # for the rest of the run.
+                    if self.goal_pos is not None:
+                        self._add_blacklist(self.goal_pos)
+                        self.get_logger().warn(
+                            f'Watchdog: striking unreachable goal '
+                            f'({self.goal_pos[0]:.2f}, {self.goal_pos[1]:.2f})')
+                    self._cancel_goal()
+                    self._clear_costmaps()
+                    # Blind nudges only free a rover that is lightly caught.
+                    # Once they have failed repeatedly, drive back to a pose
+                    # this rover actually occupied: known-free, and reachable
+                    # when it was last there.
+                    if self.wedge_escapes >= self.backtrack_after_escapes \
+                            and self._backtrack_step():
+                        return
+                    # Otherwise nudge, for longer each time it fails.
+                    self.escape_ticks = min(
+                        20 * self.wedge_escapes, 80)  # 4-16 s at 0.2 s/tick
                     self.get_logger().warn(
                         f'Watchdog: <0.3 m movement in 120 s despite active '
                         f'work - blind '
                         f'{"reverse" if self.escape_count % 2 else "rotate"} '
-                        f'escape')
-                    self._cancel_goal()
-                    self._clear_costmaps()
+                        f'escape ({self.escape_ticks * 0.2:.0f}s, '
+                        f'attempt {self.wedge_escapes})')
                     return
         if self.navigating or self.validation_in_flight:
             return
@@ -1461,12 +1673,27 @@ class FrontierExplorer(Node):
     def _escape_tick(self):
         if self.escape_ticks <= 0:
             return
+        if self._escape_from is None:
+            self._escape_from = self._last_xy
         self.escape_ticks -= 1
         twist = Twist()
         if self.escape_ticks == 0:
             self.cmd_vel_pub.publish(twist)  # stop
             self._clear_costmaps()
-            self.skips_since_dispatch = 0
+            # Clearing the planner-rejection count means "the slate is clean,
+            # start counting again" - which is only true if the escape moved
+            # us. Clearing it unconditionally is what starved the
+            # escape_after_skips ladder on husarion_office 2026-08-29: leo2
+            # spawned in lethal cost, every plan failed, and each warmup nudge
+            # reset the counter before it could reach the threshold that
+            # triggers the stronger escape. It never left its spawn.
+            freed = (self._escape_from is None or self._last_xy is None
+                     or math.hypot(self._last_xy[0] - self._escape_from[0],
+                                   self._last_xy[1] - self._escape_from[1])
+                     > 0.2)
+            if freed:
+                self.skips_since_dispatch = 0
+            self._escape_from = None
             # Make skipped goals retryable right away, but keep their strike
             # memory: if escapes cycle without freeing the robot, the
             # rejection strikes must still accumulate into long bans or the
@@ -1516,7 +1743,10 @@ class FrontierExplorer(Node):
         else:
             self._save_map()
 
-    def _save_map(self):
+    def _save_map(self, reason='Exploration finished.'):
+        # `reason` is the terminal line for this rover. Only the default text
+        # means "the map is done" -- the run harness counts that exact string
+        # to decide whether a run completed, so an abort must not emit it.
         self.state = STATE_SAVING
         path = self.map_save_path
         if self.save_map_client.service_is_ready():
@@ -1532,7 +1762,7 @@ class FrontierExplorer(Node):
             self.serialize_client.call_async(req)
         self.state = STATE_DONE
         self._publish_status(0)
-        self.get_logger().info('Exploration finished.')
+        self.get_logger().info(reason)
 
     # -------------------------------------------------------- visualization
 
