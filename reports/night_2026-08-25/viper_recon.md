@@ -142,6 +142,35 @@ On the Windows/WSL side:
 
 Recon plan allowed 2 jobs; 4 short jobs were used (11006532 2 s failed build, 11006593 19 s verify, 11006598 + 11006602 ~2 min smokes) after the mid-task update lifted the courtesy cap ("all 8 slots tonight") and asked for an actual port attempt rather than assessment. No existing jobs were touched; our queue is empty again — all 8 slots free for the overnight work. APU partition had 8 idle nodes and jobs started within seconds of submission every time.
 
+## Phase 2 measurement pairs on Viper (night task 2, started ~00:00)
+
+The real harness now runs on Viper: `scripts/auto_multirobot_run_viper.sh` (a copy of `auto_multirobot_run.sh`, original untouched) driven by `viper11:/ptmp/akalenik/leo_sim/leo_run.sbatch`:
+
+```bash
+sbatch --export=ALL,MODE=coordinated,WORLD=office_world,\
+OUT=reports/night_2026-08-25/phase2v_office_coordinated,CAP_MIN=25,\
+ALIGN_MODE=markerfree,SKIP_ARUCO=1 leo_run.sbatch
+```
+
+Code sync state on Viper at launch: git HEAD 794cc48 + the two later matcher iterations + the 3d01193 merger fix, verified by md5 against the local working tree (`shared_map_merger.py` 56f1cf10…, `marker_free_matching.py` dff95ef9…) and by `import multi_robot_shared_mapping.marker_free_matching` inside the sif resolving to the synced source (symlink-install). `colcon build --symlink-install --packages-select multi_robot_shared_mapping leo_rover_exploration` re-run in the sif; installed `collab_explore.launch.py` carries `shared_map_topic` (5 hits).
+
+### Two failed attempts first, honestly
+
+1. Jobs **11006678 + 11006679** (office A/B, attempt 1): FATAL "scan topics never appeared" after 4 min, both nodes. Sim launch was healthy; no other apptainer exec could see its topics.
+2. Jobs **11006752 + 11006753** (attempt 2, with ROS_LOCALHOST_ONLY=1): same failure — and the new diagnostics dump revealed the real cause: **"no instance found with name leo_sim_…"** — the `apptainer instance` had died seconds after starting. An instance daemonizes out of the Slurm job step and this cluster reaps it; run 1's sim_launch.log froze 5 s in, run 2's launch never wrote a byte. The ROS_LOCALHOST_ONLY guess was treating a symptom.
+
+Fixes (both in the runner now):
+- **No `apptainer instance`.** Plain `apptainer exec --contain` per command. Without PID namespaces every container process is a host process in the job cgroup: DDS works across execs, PIDs are signalable, everything dies with the job. This is exactly the architecture the successful smoke used.
+- **`CYCLONEDDS_URI` pinned to 127.0.0.1 with MaxAutoParticipantIndex=119.** Compute nodes are multi-homed and CycloneDDS's default interface pick breaks cross-process discovery on some nodes (worked on vipa1281, failed on vipa1124/1210/1291). Loopback here is not multicast-capable, so discovery is unicast index probing, and the default index cap is below this stack's 30+ participants. Validated on the login node across independent execs, including a publisher started after 12 other participants.
+- Teardown/pkill are PID-scoped, not name-scoped: two of our jobs can share a node, and a name-based pkill would murder the sibling run's recorders. Step 0 (docker stop) is a deliberate no-op for the same reason.
+
+### Attempt 3 — running
+
+- **11006806** office_world coordinated, ALIGN_MODE=markerfree SKIP_ARUCO=1 ENABLE_CAMERA=false, vipa1083: passed every gate (scan, EKF TF live, 1 publisher per /leoN/map, aligner up, Nav2 up, jog, monitors, explorers). At sim_t=426 s: traj 137 rows/rover, shared coverage 111 m² and climbing, matcher still abstaining (margin gate) as expected on small maps.
+- **11006807** office_world independent, SKIP_ARUCO=1, vipa1227: started 3 min later (Resources), same gates passed, coverage climbing.
+
+(Results and depot pair appended below when done.)
+
 ### GO/NO-GO summary
 
 | Workload | Verdict | Evidence |

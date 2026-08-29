@@ -1,0 +1,98 @@
+{
+  "average_hz": {
+    "/leo1/camera/camera_info": 1.998,
+    "/leo1/camera/image": 2.123,
+    "/leo1/camera/points": 1.998,
+    "/leo1/scan": 6.994,
+    "/leo1/tag_detections": 0.0,
+    "/leo2/camera/camera_info": 1.998,
+    "/leo2/camera/image": 1.998,
+    "/leo2/camera/points": 1.998,
+    "/leo2/scan": 6.62,
+    "/leo2/tag_detections": 1.499
+  },
+  "counts": {
+    "/leo1/camera/camera_info": 16,
+    "/leo1/camera/image": 17,
+    "/leo1/camera/points": 16,
+    "/leo1/scan": 56,
+    "/leo1/tag_detections": 0,
+    "/leo2/camera/camera_info": 16,
+    "/leo2/camera/image": 16,
+    "/leo2/camera/points": 16,
+    "/leo2/scan": 53,
+    "/leo2/tag_detections": 12
+  },
+  "metadata": {
+    "/leo1/camera/camera_info": {
+      "frame_id": "leo1/sensor_camera_link",
+      "fx": 554.3827128226441,
+      "fy": 554.3827128226441,
+      "height": 480,
+      "width": 640
+    },
+    "/leo1/camera/image": {
+      "encoding": "rgb8",
+      "frame_id": "leo1/sensor_camera_link",
+      "height": 480,
+      "width": 640
+    },
+    "/leo1/camera/points": {
+      "fields": [
+        "x",
+        "y",
+        "z",
+        "rgb"
+      ],
+      "frame_id": "leo1/sensor_camera_link",
+      "height": 480,
+      "point_step": 24,
+      "row_step": 15360,
+      "width": 640
+    },
+    "/leo1/scan": {
+      "frame_id": "leo1/sensor_lidar_link",
+      "range_max_m": 20.0,
+      "range_min_m": 0.10000000149011612,
+      "samples": 360
+    },
+    "/leo2/camera/camera_info": {
+      "frame_id": "leo2/sensor_camera_link",
+      "fx": 554.3827128226441,
+      "fy": 554.3827128226441,
+      "height": 480,
+      "width": 640
+    },
+    "/leo2/camera/image": {
+      "encoding": "rgb8",
+      "frame_id": "leo2/sensor_camera_link",
+      "height": 480,
+      "width": 640
+    },
+    "/leo2/camera/points": {
+      "fields": [
+        "x",
+        "y",
+        "z",
+        "rgb"
+      ],
+      "frame_id": "leo2/sensor_camera_link",
+      "height": 480,
+      "point_step": 24,
+      "row_step": 15360,
+      "width": 640
+    },
+    "/leo2/scan": {
+      "frame_id": "leo2/sensor_lidar_link",
+      "range_max_m": 20.0,
+      "range_min_m": 0.10000000149011612,
+      "samples": 360
+    },
+    "/leo2/tag_detections": {
+      "markers_in_last_message": 1
+    }
+  },
+  "pass": true,
+  "required_topics_missing": [],
+  "wall_seconds": 8.006430985999941
+}

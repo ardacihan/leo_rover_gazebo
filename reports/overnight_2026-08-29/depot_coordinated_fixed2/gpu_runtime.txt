@@ -1,0 +1,13 @@
+Captured live during the full camera + depth + LiDAR + SLAM + Nav2 + merger run
+at 2026-08-28 23:25:14 Europe/Berlin via `wsl -d Ubuntu-20.04 -- nvidia-smi`.
+
+GPU: NVIDIA GeForce RTX 4060 Ti
+Driver/KMD: 610.62
+Temperature: 40 C
+Power: 12 W / 165 W
+Memory: 857 MiB / 16380 MiB
+GPU utilization: 11%
+
+Gazebo's own Ogre log in `gpu_check.txt` identifies the renderer as
+`D3D12 (NVIDIA GeForce RTX 4060 Ti)`. Together, the renderer identity and live
+non-zero utilization show that the WSL simulation is using the NVIDIA GPU.

@@ -1,0 +1,11 @@
+run: mode=coordinated world=office_world cap=25min started 2026-08-24T23:56:36+02:00
+sim: WORLD=office_world GUI=false NUM_ROBOTS=2 ENABLE_CAMERA=false GT_ODOM_TF=false scripts/sim_gpu_wsl.sh
+odom(leo1): sim_realism_odom.py (publish_tf=false, zero_origin=true) + sim_realism_imu.py + robot_localization ekf_node
+odom(leo2): sim_realism_odom.py (publish_tf=false, zero_origin=true) + sim_realism_imu.py + robot_localization ekf_node
+slam: ros2 launch leo_rover_gazebo slam_multi.launch.py num_robots:=2
+/leo1/map publishers=1
+/leo2/map publishers=1
+aruco: SKIPPED (SKIP_ARUCO=1)
+align: ros2 launch multi_robot_shared_mapping shared_align.launch.py alignment_mode:=markerfree enable_tag_alignment:=false enable_map_alignment:=true compare_to_ground_truth:=true ground_truth_x:=11.0000 ground_truth_y:=-10.0000 ground_truth_yaw:=-3.1416
+nav2: ros2 launch leo_rover_gazebo nav2_multi.launch.py num_robots:=2
+explore: ros2 launch leo_rover_exploration collab_explore.launch.py num_robots:=2 coordination_mode:=coordinated common_frame:=leo1/map shared_map_topic:=/shared_map
