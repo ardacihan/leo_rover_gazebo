@@ -81,7 +81,7 @@ def test_debug_json_fields():
     assert policy["recommended_action"] == "explore_separate_frontiers"
 
 
-def test_hybrid_map_candidate_cannot_anchor_state_before_rendezvous():
+def test_hybrid_accepts_distinctive_geometry_before_rendezvous():
     reason = fusion_evidence_rejection(
         "hybrid",
         None,
@@ -90,10 +90,10 @@ def test_hybrid_map_candidate_cannot_anchor_state_before_rendezvous():
         max_translation_m=2.0,
         max_yaw=0.25,
     )
-    assert "preview-only" in reason
+    assert reason == ""
 
 
-def test_hybrid_requires_tag_and_map_agreement_after_rendezvous():
+def test_noisy_tags_do_not_veto_distinctive_geometry():
     reason = fusion_evidence_rejection(
         "hybrid",
         (3.0, -9.0, -3.14),
@@ -102,7 +102,7 @@ def test_hybrid_requires_tag_and_map_agreement_after_rendezvous():
         max_translation_m=2.0,
         max_yaw=0.25,
     )
-    assert "disagree" in reason
+    assert reason == ""
 
     accepted = fusion_evidence_rejection(
         "hybrid",
@@ -124,3 +124,24 @@ def test_map_only_mode_still_accepts_distinctive_geometry():
         max_translation_m=2.0,
         max_yaw=0.25,
     ) == ""
+
+
+def test_occupancy_overlay_does_not_override_hybrid_mode_evidence():
+    """A symmetric 5 cm overlay is not proof that it is the right room."""
+    reason = fusion_evidence_rejection(
+        "hybrid",
+        (3.0, -9.0, -3.14),
+        (4.55, -1.35, -1.55),
+        is_ambiguous=True,
+        max_translation_m=2.0,
+        max_yaw=0.25,
+        geometry_aligned=True,
+    )
+    assert "ambiguous map match" in reason
+    floor = min_acceptance_confidence(
+        4, "hybrid", 0.80, is_ambiguous=True, geometry_aligned=True,
+        base_min=0.5)
+    assert floor == 1.0
+    assert min_acceptance_confidence(
+        4, "hybrid", 0.80, is_ambiguous=True, geometry_aligned=False,
+        base_min=0.5) == 1.0

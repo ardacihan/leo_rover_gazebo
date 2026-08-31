@@ -66,7 +66,7 @@ docker run -d --name leo_sim \
          mkdir -p /usr/local/share/leo_rover_gazebo && \
          touch /usr/local/share/leo_rover_gazebo/ogre_wsl_gpu_patched; \
        fi && \
-       ros2 launch leo_rover_gazebo two_robots_gpu.launch.py world:='"${WORLD:-husarion_office}"' gui:='"${GUI:-true}"' num_robots:='"${NUM_ROBOTS:-1}"' enable_camera:='"${ENABLE_CAMERA:-true}"' gt_odom_tf:='"${GT_ODOM_TF:-true}"
+       ros2 launch leo_rover_gazebo two_robots_gpu.launch.py world:='"${WORLD:-husarion_office}"' gui:='"${GUI:-true}"' num_robots:='"${NUM_ROBOTS:-1}"' enable_camera:='"${ENABLE_CAMERA:-true}"' gt_odom_tf:='"${GT_ODOM_TF:-true}"' sim_speed:='"${SIM_SPEED:-1.0}"
 
 echo "Leo sim started (container: leo_sim)"
 echo "Logs: docker logs -f leo_sim"

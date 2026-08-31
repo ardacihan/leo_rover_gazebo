@@ -57,6 +57,45 @@ def test_extra_reject_reason():
     assert reason == "ambiguous"
 
 
+def test_high_confidence_shifted_overlay_is_not_accepted():
+    state = AlignmentState(min_alignment_confidence=0.5)
+    ok, reason = state.evaluate_candidate(
+        (11.12, -9.79, 3.14), 0.74,
+        extra_reject_reason="median occupancy residual 0.244 m > 0.10 m")
+    assert not ok
+    assert "residual" in reason
+    assert state.accepted is None
+
+
+def test_lower_residual_updates_even_without_confidence_gain():
+    state = AlignmentState(
+        min_alignment_confidence=0.5,
+        min_confidence_improvement=0.1,
+    )
+    ok, _ = state.evaluate_candidate((11.4, -9.7, 3.14), 0.70, residual_m=0.09)
+    assert ok
+    ok, reason = state.evaluate_candidate(
+        (11.25, -9.80, 3.14), 0.68, residual_m=0.05)
+    assert ok, reason
+    assert state.accepted[0] == 11.25
+    assert state.accepted_residual_m == 0.05
+
+
+def test_geometry_degraded_accepted_pose_can_be_replaced_without_conf_gain():
+    state = AlignmentState(
+        min_alignment_confidence=0.5,
+        min_confidence_improvement=0.1,
+    )
+    state.evaluate_candidate((11.3, -9.7, 3.14), 0.86, residual_m=0.05)
+    # The aligner sets this after re-evaluating the old pose on newly grown
+    # maps and finding that it no longer passes the geometry gate.
+    state.accepted_residual_m = float('inf')
+    ok, reason = state.evaluate_candidate(
+        (11.25, -9.79, 3.14), 0.84, residual_m=0.07)
+    assert ok, reason
+    assert state.accepted == (11.25, -9.79, 3.14)
+
+
 def test_debug_dict_includes_transforms():
     state = AlignmentState()
     state.evaluate_candidate((1.0, 2.0, math.pi / 4), 0.75)

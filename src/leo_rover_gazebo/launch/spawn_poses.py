@@ -39,6 +39,25 @@ SPAWN_POSES = {
         'leo2': ('4.0', '-5.0', '0.2', '0.0', '0.0', '3.1416'),
     },
     # leo1 north-central, leo2 in the south-east room behind the x=2 partition.
+    # AWS RoboMaker small house (vendored at src/aws_small_house, ros2
+    # branch): ~19x11 m residence, many rooms, narrow doorways, dense
+    # furniture. Spawns sit in the far west / far east rooms, facing in.
+    'small_house': {
+        'leo1': ('-6.5', '-2.5', '0.2', '0.0', '0.0', '0.0'),
+        'leo2': ('6.5', '-2.5', '0.2', '0.0', '0.0', '3.1416'),
+    },
+    'small_house_l3': {
+        'leo1': ('-6.5', '-2.5', '0.2', '0.0', '0.0', '0.0'),
+        'leo2': ('6.5', '-2.5', '0.2', '0.0', '0.0', '3.1416'),
+    },
+    'small_house_l9': {
+        'leo1': ('-6.5', '-2.5', '0.2', '0.0', '0.0', '0.0'),
+        'leo2': ('6.5', '-2.5', '0.2', '0.0', '0.0', '3.1416'),
+    },
+    'small_house_l15': {
+        'leo1': ('-6.5', '-2.5', '0.2', '0.0', '0.0', '0.0'),
+        'leo2': ('6.5', '-2.5', '0.2', '0.0', '0.0', '3.1416'),
+    },
     'depot_world': {
         'leo1': ('0.0', '4.5', '0.2', '0.0', '0.0', '0.0'),
         'leo2': ('3.0', '-4.5', '0.2', '0.0', '0.0', '3.1416'),
@@ -74,6 +93,10 @@ def relative_offset(world_name):
 # which no path can ever reach. On depot 2026-08-24, 43% of one rover's failed
 # goals were for frontiers at x>7 in a world that ends at x=7.
 WORLD_BOUNDS = {
+    'small_house': (-9.5, 9.6, -5.9, 5.6),
+    'small_house_l3': (-9.5, 9.6, -5.9, 5.6),
+    'small_house_l9': (-9.5, 9.6, -5.9, 5.6),
+    'small_house_l15': (-9.5, 9.6, -5.9, 5.6),
     'depot_world': (-7.0, 7.0, -7.0, 7.0),
     'office_world': (-12.0, 12.0, -8.0, 8.0),
     # Measured from the world's own floor meshes
@@ -82,7 +105,7 @@ WORLD_BOUNDS = {
     # previous (-4, 27, -15, 4) box claimed 31 x 19 m and so let frontiers
     # up to 12 m east of the building stay eligible. One metre of margin
     # keeps real frontiers safe under SLAM drift.
-    'husarion_office': (-1.0, 15.5, -14.0, 1.5),
+    'husarion_office': (-1.0, 13.6, -12.2, 1.5),
 }
 
 

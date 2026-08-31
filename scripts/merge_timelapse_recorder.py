@@ -55,8 +55,10 @@ class MergeTimelapse(Node):
         os.makedirs(out_dir, exist_ok=True)
         self.out_dir = out_dir
         self.n = 0
-        self.maps = {'leo1': None, 'leo2': None, 'shared': None}
+        self.maps = {'leo1': None, 'leo2': None, 'shared': None,
+                     'candidate': None}
         self.tf_est = None
+        self.candidate_tf = None
         self.locked = False
         # Everything below exists so the recording can answer "why did it do
         # that", not just "what did the map look like": which frontier each
@@ -66,7 +68,10 @@ class MergeTimelapse(Node):
         self.frontiers = {'leo1': [], 'leo2': []}
         self.tags_seen = {'leo1': {}, 'leo2': {}}
         self.tag_events = []          # (t, robot, id) first sighting only
-        self.conf = {'tag': float('nan'), 'map': float('nan')}
+        self.conf = {'tag': float('nan'), 'map': float('nan'),
+                     'accepted': float('nan')}
+        self.validation = {}
+        self.alignment_debug = {}
 
         # VOLATILE matches BOTH a VOLATILE publisher (shared_map_merger) and a
         # TRANSIENT_LOCAL one (slam_toolbox). A TRANSIENT_LOCAL subscriber
@@ -80,15 +85,26 @@ class MergeTimelapse(Node):
                                  lambda m: self._set('leo2', m), qos)
         self.create_subscription(OccupancyGrid, '/shared_map',
                                  lambda m: self._set('shared', m), qos)
+        self.create_subscription(OccupancyGrid, '/shared_map_candidate',
+                                 lambda m: self._set('candidate', m), qos)
         self.create_subscription(
             TransformStamped, '/vetted_transform/leo2_to_leo1',
             self._on_tf, 10)
+        self.create_subscription(
+            TransformStamped, '/alignment_candidate_transform',
+            self._on_candidate_tf, 10)
         self.create_subscription(Bool, '/alignment_locked',
                                  lambda m: setattr(self, 'locked', bool(m.data)), 10)
         self.create_subscription(Float32, '/tag_alignment_confidence',
                                  lambda m: self.conf.__setitem__('tag', float(m.data)), 10)
         self.create_subscription(Float32, '/alignment_confidence',
                                  lambda m: self.conf.__setitem__('map', float(m.data)), 10)
+        self.create_subscription(Float32, '/accepted_alignment_confidence',
+                                 lambda m: self.conf.__setitem__('accepted', float(m.data)), 10)
+        self.create_subscription(String, '/accepted_alignment_validation',
+                                 self._on_validation, 10)
+        self.create_subscription(String, '/alignment_debug_json',
+                                 self._on_alignment_debug, 10)
         for ns in ('leo1', 'leo2'):
             self.create_subscription(
                 String, f'/{ns}/frontier_explorer/status',
@@ -112,6 +128,24 @@ class MergeTimelapse(Node):
         t = msg.transform
         self.tf_est = (float(t.translation.x), float(t.translation.y),
                        2.0 * math.atan2(t.rotation.z, t.rotation.w))
+
+    def _on_candidate_tf(self, msg):
+        t = msg.transform
+        self.candidate_tf = (float(t.translation.x),
+                             float(t.translation.y),
+                             2.0 * math.atan2(t.rotation.z, t.rotation.w))
+
+    def _on_validation(self, msg):
+        try:
+            self.validation = json.loads(msg.data)
+        except (ValueError, TypeError):
+            pass
+
+    def _on_alignment_debug(self, msg):
+        try:
+            self.alignment_debug = json.loads(msg.data)
+        except (ValueError, TypeError):
+            pass
 
     def _on_status(self, ns, msg):
         try:
@@ -157,7 +191,10 @@ class MergeTimelapse(Node):
                    'p1': np.array(self._pose('leo1'), dtype=np.float64),
                    'p2': np.array(self._pose('leo2'), dtype=np.float64),
                    'tf': np.array(self.tf_est if self.tf_est else
-                                  (np.nan, np.nan, np.nan), dtype=np.float64)}
+                                  (np.nan, np.nan, np.nan), dtype=np.float64),
+                   'candidate_tf': np.array(
+                       self.candidate_tf if self.candidate_tf else
+                       (np.nan, np.nan, np.nan), dtype=np.float64)}
         for ns in ('leo1', 'leo2'):
             st = self.status.get(ns) or {}
             g = st.get('goal')
@@ -174,11 +211,20 @@ class MergeTimelapse(Node):
             payload[f'{ns}_tagpos'] = (np.array([tg[k] for k in sorted(tg)],
                                                 dtype=np.float64)
                                        if tg else np.zeros((0, 2)))
-        payload['conf'] = np.array([self.conf['tag'], self.conf['map']],
+        payload['conf'] = np.array([self.conf['tag'], self.conf['map'],
+                                    self.conf['accepted']],
                                    dtype=np.float64)
+        payload['alignment_residual_m'] = np.float64(
+            self.validation.get('residual_m', np.nan))
+        payload['alignment_geometry_ok'] = np.bool_(
+            self.validation.get('geometry_ok', False))
+        payload['alignment_reason'] = np.str_(str(
+            self.alignment_debug.get('reason', '')))
+        payload['alignment_ambiguity'] = np.float64(
+            self.alignment_debug.get('ambiguity_score', np.nan))
         common = sorted(set(self.tags_seen['leo1']) & set(self.tags_seen['leo2']))
         payload['common'] = np.array(common, dtype=np.int32)
-        for key in ('leo1', 'leo2', 'shared'):
+        for key in ('leo1', 'leo2', 'shared', 'candidate'):
             g, info = _grid(self.maps[key])
             payload[key] = g if g is not None else np.zeros((1, 1), dtype=np.int8)
             payload[f'{key}_info'] = np.array(info, dtype=np.float64)

@@ -29,7 +29,8 @@ def _dist(a, b):
 
 
 def base_utility(gain, robot_xy, frontier_xy, potential_scale, gain_scale,
-                 mode='linear', min_travel_cost=1.0):
+                 mode='linear', min_travel_cost=1.0,
+                 information_gain_travel_weight=0.10, dist=None):
     """Single-robot frontier score.
 
     'linear' is the original reward-minus-distance. 'ratio' is gain per metre
@@ -37,10 +38,18 @@ def base_utility(gain, robot_xy, frontier_xy, potential_scale, gain_scale,
     linear form a frontier's reward has to exceed potential_scale times the
     extra distance, so a far room is never chosen while any nearer scrap
     survives, however little that scrap is worth.
+
+    `dist`, when given, is a precomputed travel distance (geodesic through
+    free space); the euclidean fallback lies through walls in maze maps.
     """
-    d = _dist(robot_xy, frontier_xy)
+    d = _dist(robot_xy, frontier_xy) if dist is None else dist
     if mode == 'ratio':
         return gain / max(d, min_travel_cost)
+    if mode == 'information_gain':
+        # Unknown area is the objective; distance is only a modest cost. This
+        # keeps a doorway into a room competitive with nearby map scraps while
+        # avoiding gratuitous cross-building travel between equal-gain goals.
+        return gain - information_gain_travel_weight * d
     return gain_scale * gain - potential_scale * d
 
 
@@ -52,9 +61,11 @@ def _normalize(frontiers):
             # width when the caller computed one; size_m stays the fallback
             # so existing callers and tests are unaffected.
             gain = float(f.get('gain', f.get('size_m', 1.0)))
-            out.append({'goal': tuple(f['goal']), 'gain': gain})
+            out.append({'goal': tuple(f['goal']), 'gain': gain,
+                        'tie_breaker': float(f.get('tie_breaker', 0.0))})
         else:
-            out.append({'goal': (f[0], f[1]), 'gain': float(f[2])})
+            out.append({'goal': (f[0], f[1]), 'gain': float(f[2]),
+                        'tie_breaker': 0.0})
     return out
 
 
@@ -74,7 +85,9 @@ def _apply_discount(gains, used, frontiers, goal, radius, strength):
 def coordinated_allocation(robots, frontiers, committed=None,
                            potential_scale=3.0, gain_scale=1.0,
                            discount_radius=3.0, discount_strength=1.0,
-                           utility_mode='linear', min_travel_cost=1.0):
+                           utility_mode='linear', min_travel_cost=1.0,
+                           information_gain_travel_weight=0.10,
+                           dist_lookup=None):
     """Assign at most one frontier to each robot.
 
     robots:    list of (name, (x, y)); MUST include self.
@@ -113,20 +126,25 @@ def coordinated_allocation(robots, frontiers, committed=None,
 
     # Greedy global assignment for the rest.
     while remaining and any(not u for u in used):
-        best = None  # (utility, name, goal, fidx)
+        best = None  # (geometric utility, soft tie-breaker, name, goal, fidx)
         for name, xy in remaining:
             for fi, f in enumerate(F):
                 if used[fi]:
                     continue
+                d = dist_lookup(name, f['goal']) if dist_lookup else None
                 u = base_utility(gains[fi], xy, f['goal'],
                                  potential_scale, gain_scale,
-                                 utility_mode, min_travel_cost)
+                                 utility_mode, min_travel_cost,
+                                 information_gain_travel_weight, dist=d)
+                hint = f['tie_breaker']
                 if best is None or u > best[0] or (
-                        u == best[0] and (name, f['goal']) < (best[1], best[2])):
-                    best = (u, name, f['goal'], fi)
+                        u == best[0] and hint > best[1]) or (
+                        u == best[0] and hint == best[1]
+                        and (name, f['goal']) < (best[2], best[3])):
+                    best = (u, hint, name, f['goal'], fi)
         if best is None:
             break
-        _, name, goal, fi = best
+        _, _, name, goal, fi = best
         assignment[name] = goal
         used[fi] = True
         remaining = [(n, xy) for n, xy in remaining if n != name]

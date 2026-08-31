@@ -45,30 +45,19 @@ def fusion_evidence_rejection(
     is_ambiguous: bool,
     max_translation_m: float,
     max_yaw: float,
+    geometry_aligned: bool = False,
 ) -> str:
     """Return why a map candidate must remain a preview, or ``""``.
 
-    Hybrid/tag fusion deliberately waits for a common-landmark transform.  A
-    grid match found before rendezvous may be useful as a preview, but must not
-    become the aligner's state anchor: a wrong early anchor would make the
-    later, better tag-seeded candidate fail the transform-jump check.
+    Geometry is the primary alignment evidence.  Marker estimates may resolve
+    a genuinely ambiguous geometric mode, but a noisy marker fit must not veto
+    a distinctive, geometrically validated occupancy alignment.
     """
-    if mode in ("hybrid", "tag"):
-        if tag_estimate is None:
-            return (
-                "waiting for common-landmark transform; map candidate is "
-                "preview-only"
-            )
-        if not tag_map_agree(
-            tag_estimate,
-            map_estimate,
-            max_translation_m,
-            max_yaw,
-        ):
-            return "Rejected candidate: tag alignment and occupancy alignment disagree"
-
     if mode in ("map", "hybrid", "tag") and is_ambiguous:
-        return "ambiguous map match; candidate only until geometry is distinctive"
+        return (
+            "ambiguous map match; candidate only until geometry is distinctive "
+            "or agreeing markers select a geometric mode"
+        )
     return ""
 
 
@@ -126,6 +115,7 @@ def min_acceptance_confidence(
     *,
     is_ambiguous: bool = False,
     tag_map_agreement: bool = False,
+    geometry_aligned: bool = False,
     base_min: float = 0.5,
     map_mode_min: float = 0.6,
 ) -> float:
@@ -136,7 +126,7 @@ def min_acceptance_confidence(
     or strong occupancy overlap depending on mode.
     """
     if is_ambiguous:
-        return 1.0  # never accept ambiguous transforms
+        return 1.0  # never accept a still-ambiguous geometric mode
 
     if common_landmark_count >= 3:
         return max(0.40, base_min - 0.10)
@@ -206,6 +196,7 @@ def build_policy_debug(
     recovery: Optional[dict],
     base_min: float = 0.5,
     map_mode_min: float = 0.6,
+    **_extra,
 ) -> Dict:
     """Fields merged into /alignment_debug_json."""
     level = classify_confidence_level(

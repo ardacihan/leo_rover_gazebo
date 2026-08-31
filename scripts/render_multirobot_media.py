@@ -403,6 +403,8 @@ def main():
     made = []
     for stem, out, title in (
             ('merged_map', 'merged_map.png', f'{tag} - merged /shared_map'),
+            ('candidate_map', 'candidate_map.png',
+             f'{tag} - candidate /shared_map_candidate'),
             ('leo1_map', 'leo1_map.png', f'{tag} - leo1 /leo1/map'),
             ('leo2_map', 'leo2_map.png', f'{tag} - leo2 /leo2/map')):
         if save_map(os.path.join(run, stem), os.path.join(run, out), title):

@@ -9,3 +9,9 @@ markers:
   - {id: 6, x: -11.88, y: -5.0, z: 0.3, yaw: 0.0}      # west outer wall, office S1
   - {id: 7, x: 4.0, y: -7.88, z: 0.3, yaw: 1.5708}     # south outer wall, office S2
   - {id: 8, x: -3.0, y: -1.32, z: 0.3, yaw: -1.5708}   # corridor wall south face, office S1
+  # Shared-witness note (2026-08-30): the map merge needs a marker BOTH
+  # rovers have seen, and the corridor-END markers 1 and 2 are the reliable
+  # ones - rovers drive along the corridor facing them. Side-wall corridor
+  # markers were tried (ids 0/9 on the y=+/-1.2 walls) and never detected:
+  # a camera moving along the corridor sees them edge-on. If more witness
+  # redundancy is needed, add markers facing ALONG the corridor axis.

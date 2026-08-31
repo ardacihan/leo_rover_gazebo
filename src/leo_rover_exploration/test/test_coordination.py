@@ -66,3 +66,35 @@ def test_deterministic():
     a1 = coordinated_allocation(robots, frontiers)
     a2 = coordinated_allocation(robots, frontiers)
     assert a1 == a2
+
+
+def test_soft_hint_cannot_displace_a_better_geometric_frontier():
+    """Alignment/marker hints must not become the primary policy again."""
+    robots = [('leo1', (0.0, 0.0))]
+    geometric_best = {'goal': (1.0, 0.0), 'size_m': 2.0,
+                      'tie_breaker': -1.0}
+    hinted_worse = {'goal': (2.0, 0.0), 'size_m': 2.0,
+                    'tie_breaker': 1000.0}
+    result = coordinated_allocation(robots, [geometric_best, hinted_worse])
+    assert result['leo1'] == geometric_best['goal']
+
+
+def test_soft_hint_breaks_an_exact_geometric_tie():
+    """Provisional alignment remains useful without changing exploration."""
+    robots = [('leo1', (0.0, 0.0))]
+    peer_covered = {'goal': (1.0, 0.0), 'size_m': 2.0,
+                    'tie_breaker': -0.8}
+    peer_unknown = {'goal': (0.0, 1.0), 'size_m': 2.0,
+                    'tie_breaker': -0.1}
+    result = coordinated_allocation(robots, [peer_covered, peer_unknown])
+    assert result['leo1'] == peer_unknown['goal']
+
+
+def test_information_gain_keeps_a_large_room_ahead_of_nearby_scrap():
+    robots = [('leo1', (0.0, 0.0))]
+    room = {'goal': (8.0, 0.0), 'gain': 8.0, 'tie_breaker': -100.0}
+    scrap = {'goal': (1.0, 0.0), 'gain': 1.0, 'tie_breaker': 100.0}
+    result = coordinated_allocation(
+        robots, [room, scrap], utility_mode='information_gain',
+        information_gain_travel_weight=0.10)
+    assert result['leo1'] == room['goal']

@@ -23,6 +23,7 @@ Usage (inside the container):
 
 import json
 import math
+import os
 import sys
 
 import rclpy
@@ -41,7 +42,7 @@ def _wrap_deg(rad: float) -> float:
 
 
 class AlignmentRecorder(Node):
-    def __init__(self, path, gt, period):
+    def __init__(self, path, gt, period, candidates_path=None):
         super().__init__('alignment_recorder')
         self.set_parameters([rclpy.parameter.Parameter(
             'use_sim_time', rclpy.Parameter.Type.BOOL, True)])
@@ -50,15 +51,23 @@ class AlignmentRecorder(Node):
         self.map = None
         self.tag_conf = float('nan')
         self.map_conf = float('nan')
+        self.candidate_conf = float('nan')
         self.locked = False
         self.n_tags = {'leo1': 0, 'leo2': 0}
         self.ids = {'leo1': set(), 'leo2': set()}
+        self.last_debug = {}
+        self.residual_m = float('nan')
+        self.geometry_ok = False
+        self.candidates_path = candidates_path or os.path.join(
+            os.path.dirname(path), 'alignment_candidates.jsonl')
 
         self.f = open(path, 'w')
         self.f.write('t,tag_x,tag_y,tag_yaw_deg,tag_conf,'
                      'map_x,map_y,map_yaw_deg,map_conf,locked,'
-                     'err_xy_m,err_yaw_deg,n_leo1_tags,n_leo2_tags,n_common\n')
+                     'err_xy_m,err_yaw_deg,n_leo1_tags,n_leo2_tags,n_common,'
+                     'residual_m,geometry_ok,candidate_conf\n')
         self.f.flush()
+        self.candidates_f = open(self.candidates_path, 'w')
 
         self.create_subscription(
             TransformStamped, '/estimated_transform/leo2_to_leo1',
@@ -73,10 +82,18 @@ class AlignmentRecorder(Node):
             lambda m: setattr(self, 'tag_conf', float(m.data)), 10)
         self.create_subscription(
             Float32, '/alignment_confidence',
+            lambda m: setattr(self, 'candidate_conf', float(m.data)), 10)
+        self.create_subscription(
+            Float32, '/accepted_alignment_confidence',
             lambda m: setattr(self, 'map_conf', float(m.data)), 10)
         self.create_subscription(
             Bool, '/alignment_locked',
             lambda m: setattr(self, 'locked', bool(m.data)), 10)
+        self.create_subscription(
+            String, '/alignment_debug_json', self._alignment_debug, 10)
+        self.create_subscription(
+            String, '/accepted_alignment_validation',
+            self._accepted_validation, 10)
         for robot in ('leo1', 'leo2'):
             self.create_subscription(
                 String, f'/{robot}/apriltag_landmarks_data',
@@ -86,6 +103,33 @@ class AlignmentRecorder(Node):
         self.get_logger().info(
             f'alignment_recorder -> {path} (ground truth '
             f'{gt[0]:.2f}, {gt[1]:.2f}, {math.degrees(gt[2]):.1f} deg)')
+
+    def _alignment_debug(self, msg):
+        try:
+            data = json.loads(msg.data)
+        except (ValueError, TypeError):
+            return
+        self.last_debug = data
+        payload = {
+            't': round(self.get_clock().now().nanoseconds / 1e9, 2),
+            'confidence': data.get('final_confidence'),
+            'confidence_level': data.get('confidence_level'),
+            'accepted': data.get('accepted'),
+            'reason': data.get('reason'),
+            'ambiguity_score': data.get('ambiguity_score'),
+            'common_landmark_count': data.get('common_landmark_count'),
+            'top_candidates': data.get('top_candidates', []),
+        }
+        self.candidates_f.write(json.dumps(payload, separators=(',', ':')) + '\n')
+        self.candidates_f.flush()
+
+    def _accepted_validation(self, msg):
+        try:
+            data = json.loads(msg.data)
+            self.residual_m = float(data['residual_m'])
+            self.geometry_ok = bool(data['geometry_ok'])
+        except (KeyError, TypeError, ValueError):
+            pass
 
     def _landmarks(self, robot, msg):
         try:
@@ -134,6 +178,9 @@ class AlignmentRecorder(Node):
             self._fmt(err_xy),
             '' if err_yaw is None else f'{err_yaw:.3f}',
             str(self.n_tags['leo1']), str(self.n_tags['leo2']), str(common),
+            self._fmt(self.residual_m),
+            '1' if self.geometry_ok else '0',
+            f'{self.candidate_conf:.3f}',
         ])
         self.f.write(row + '\n')
         self.f.flush()
@@ -164,6 +211,8 @@ def main():
         try:
             node.f.flush()
             node.f.close()
+            node.candidates_f.flush()
+            node.candidates_f.close()
         except Exception:
             pass
         node.destroy_node()

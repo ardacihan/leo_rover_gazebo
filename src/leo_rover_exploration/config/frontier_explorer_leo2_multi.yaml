@@ -18,24 +18,41 @@
     peer_names: leo1
     discount_radius: 3.0
     discount_strength: 1.0
+    candidate_map_topic: /leo1/map
+    candidate_transform_topic: /alignment_candidate_transform
+    alignment_confidence_topic: /alignment_confidence
+    candidate_guidance_min_confidence: 0.15
     # --- exploration ---
     planner_frequency: 0.25
     min_frontier_size: 0.5
-    potential_scale: 3.0
+    # Higher distance penalty: finish what is near before crossing the
+    # building. Goal logs showed east-west corridor thrash (9.5 -> 5.1 ->
+    # 12.8 -> 7.6 -> 14.6 m jumps) under 3.0.
+    potential_scale: 4.0
     gain_scale: 1.0
     progress_timeout: 30.0
     blacklist_radius: 0.6
     blacklist_ttl: 90.0
-    blacklist_long_ttl: 900.0
+    # 900 s outlived half a run: 10 planner-reject long-bans once wrote off
+    # three husarion rooms for good. Maps evolve; retry in 5 minutes.
+    blacklist_long_ttl: 300.0
     blacklist_max_strikes: 3
     replan_distance: 0.7
-    goal_commit_time: 10.0
-    switch_margin: 1.25
+    goal_commit_time: 20.0
+    switch_margin: 1.6
     validate_goals: true
     planner_action_name: compute_path_to_pose
     skip_ttl: 20.0
     claim_radius: 1.5
-    idle_cycles_to_finish: 3
+    frontier_utility: linear
+    gain_radius: 2.5
+    min_remaining_room_m2: 2.0
+    # Finish the room you are in before crossing the building (see the
+    # husarion back-and-forth evidence, 2026-08-30 afternoon).
+    local_first_radius: 4.0
+    # 0.30 eroded doorway frontiers to nothing in furniture-dense maps.
+    frontier_min_clearance: 0.20
+    idle_cycles_to_finish: 8
     watchdog_period: 10.0
     return_to_init: false
     map_save_path: /ros2_ws/maps/leo2_map

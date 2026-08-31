@@ -90,8 +90,11 @@ def _binary_dilate(m, it):
 
 def _world_points(grid, info, val_test):
     ys, xs = np.nonzero(val_test(grid))
-    ox, oy, res = info
-    return np.stack([ox + (xs + 0.5) * res, oy + (ys + 0.5) * res], 1)
+    ox, oy, res = info[:3]
+    lx, ly = (xs + 0.5) * res, (ys + 0.5) * res
+    yaw = info[3] if len(info) > 3 else 0.0
+    c, s = math.cos(yaw), math.sin(yaw)
+    return np.stack([ox + c * lx - s * ly, oy + s * lx + c * ly], 1)
 
 
 def _raster(points, lo, cell, shape):
@@ -253,7 +256,7 @@ def polish(g1, i1, g2, i2, dx, dy, yaw, n_pts=4000, stages=None):
         ys, xs = ys[pick], xs[pick]
     px = i2[0] + (xs + 0.5) * i2[2]
     py = i2[1] + (ys + 0.5) * i2[2]
-    ox, oy, res = i1
+    ox, oy, res = i1[:3]
     h, w = g1.shape
 
     def score(tx, ty, th):

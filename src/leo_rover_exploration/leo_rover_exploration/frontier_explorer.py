@@ -20,7 +20,7 @@ from collections import deque
 
 import numpy as np
 import rclpy
-from geometry_msgs.msg import PoseStamped, Twist
+from geometry_msgs.msg import PoseStamped, TransformStamped, Twist
 from nav2_msgs.action import ComputePathToPose, NavigateToPose
 from nav2_msgs.srv import ClearEntireCostmap
 from nav_msgs.msg import OccupancyGrid
@@ -31,6 +31,7 @@ from rclpy.node import Node
 from rclpy.qos import (QoSDurabilityPolicy, QoSHistoryPolicy, QoSProfile,
                        QoSReliabilityPolicy)
 from slam_toolbox.srv import SaveMap, SerializePoseGraph
+from std_msgs.msg import Bool, Float32
 from std_msgs.msg import String as StringMsg
 from tf2_ros import Buffer, TransformListener
 from visualization_msgs.msg import Marker, MarkerArray
@@ -38,6 +39,8 @@ from visualization_msgs.msg import Marker, MarkerArray
 from .camera_coverage import CameraCoverageTracker, yaw_from_quat
 from .coordination import coordinated_allocation
 from .observations import distinct_view
+from .remaining_regions import (
+    remaining_room_area_m2, remaining_unknown_regions)
 from .selection import sweep_candidate_metrics
 
 FREE_MAX = 50      # occupancy values below this count as free
@@ -130,6 +133,19 @@ class FrontierExplorer(Node):
         # shared_map_max_age) silently degrades to own-map behaviour.
         self.declare_parameter('shared_map_topic', '')
         self.declare_parameter('shared_map_max_age', 20.0)
+        # Before an alignment is accepted, the latest candidate remains a
+        # *soft* tie-breaker. It can prefer one of two geometrically equal
+        # frontiers, but never removes a local frontier, stops exploration, or
+        # displaces a better geometric frontier.
+        self.declare_parameter('candidate_map_topic', '')
+        self.declare_parameter('candidate_transform_topic',
+                               '/alignment_candidate_transform')
+        self.declare_parameter('alignment_confidence_topic',
+                               '/alignment_confidence')
+        self.declare_parameter('alignment_debug_topic', '/alignment_debug_json')
+        self.declare_parameter('alignment_locked_topic', '/alignment_locked')
+        self.declare_parameter('candidate_max_age', 20.0)
+        self.declare_parameter('candidate_guidance_min_confidence', 0.15)
         self.declare_parameter('discount_radius', 3.0)      # meters
         self.declare_parameter('discount_strength', 1.0)    # 0..1
         # Don't declare exploration finished until we've actually driven this
@@ -180,9 +196,14 @@ class FrontierExplorer(Node):
         # Docker wedge, so this is not proof it is worse -- but it is not
         # evidence it is better, and it failed its own acceptance test.
         # Left in, tested, and off, for a proper A/B where runs are cheap.
-        self.declare_parameter('frontier_utility', 'linear')
+        self.declare_parameter('frontier_utility', 'information_gain')
         self.declare_parameter('gain_radius', 2.5)      # metres
         self.declare_parameter('min_travel_cost', 1.0)  # metres
+        self.declare_parameter('information_gain_travel_weight', 0.10)
+        self.declare_parameter('min_remaining_room_m2', 2.0)
+        # >0: when eligible frontiers exist within this radius, only they
+        # compete - finish the local room before crossing the building.
+        self.declare_parameter('local_first_radius', 0.0)
         self.declare_parameter('watchdog_period', 10.0)
         self.declare_parameter('return_to_init', True)
         self.declare_parameter('map_save_path', '/ros2_ws/maps/explored_map')
@@ -260,7 +281,14 @@ class FrontierExplorer(Node):
         self.immobilised_abort_sec = float(gp('immobilised_abort_sec'))
         self.frontier_utility = str(gp('frontier_utility'))
         self.gain_radius = float(gp('gain_radius'))
+        self.min_remaining_room_m2 = float(gp('min_remaining_room_m2'))
+        self.local_first_radius = float(gp('local_first_radius'))
+        self._remaining_room_m2 = 0.0
+        self._remaining_rooms = []
+        self._room_goal_attempts = {}
         self.min_travel_cost = max(1e-3, float(gp('min_travel_cost')))
+        self.information_gain_travel_weight = max(
+            0.0, float(gp('information_gain_travel_weight')))
         self.watchdog_period = gp('watchdog_period')
         self.return_to_init = gp('return_to_init')
         self.map_save_path = gp('map_save_path')
@@ -281,6 +309,7 @@ class FrontierExplorer(Node):
         self.blacklist = []          # [{'pos','expires','strikes'}]
         self.skip_list = []          # [{'pos','expires'}] planner said no path
         self.peer_claims = {}        # robot_name -> (x, y) in OUR map frame
+        self.peer_claim_stamp = {}   # robot_name -> sim seconds of last claim
         self._common_offset = None   # (offset, resolved_at_sec)
         self.init_pose = None
         self.idle_cycles = 0
@@ -298,6 +327,7 @@ class FrontierExplorer(Node):
         self.validation_in_flight = False
         self.best_dist_to_goal = None
         self.last_progress_time = None
+        self.last_progress_pos = None
         self.cleared_costmaps_for_goal = False
 
         # item registry: id -> {'pos','z','views','confirmed','attempts'}
@@ -348,17 +378,49 @@ class FrontierExplorer(Node):
         self._shared_map_time = None
         self._shared_mask_active = False
         self._shared_masked_cells = 0
+        self.candidate_map_msg = None
+        self._candidate_map_time = None
+        self.candidate_transform = None
+        self._candidate_transform_time = None
+        self.alignment_confidence = 0.0
+        self.alignment_ambiguity = 1.0
+        self.alignment_locked = False
+        self.candidate_max_age = float(gp('candidate_max_age'))
+        self.candidate_guidance_min_confidence = float(
+            gp('candidate_guidance_min_confidence'))
         shared_topic = str(gp('shared_map_topic')).strip()
         self.shared_map_max_age = float(gp('shared_map_max_age'))
+        shared_qos = QoSProfile(
+            depth=1,
+            history=QoSHistoryPolicy.KEEP_LAST,
+            reliability=QoSReliabilityPolicy.RELIABLE,
+            durability=QoSDurabilityPolicy.VOLATILE,
+        )
         if shared_topic:
-            shared_qos = QoSProfile(
+            self.create_subscription(
+                OccupancyGrid, shared_topic, self._shared_map_cb, shared_qos)
+        if self.coordination_mode == 'coordinated' and self.peer_names:
+            candidate_qos = QoSProfile(
                 depth=1,
                 history=QoSHistoryPolicy.KEEP_LAST,
                 reliability=QoSReliabilityPolicy.RELIABLE,
-                durability=QoSDurabilityPolicy.VOLATILE,
+                durability=QoSDurabilityPolicy.TRANSIENT_LOCAL,
             )
             self.create_subscription(
-                OccupancyGrid, shared_topic, self._shared_map_cb, shared_qos)
+                OccupancyGrid, str(gp('candidate_map_topic')),
+                self._candidate_map_cb, candidate_qos)
+            self.create_subscription(
+                TransformStamped, str(gp('candidate_transform_topic')),
+                self._candidate_transform_cb, 10)
+            self.create_subscription(
+                Float32, str(gp('alignment_confidence_topic')),
+                self._alignment_confidence_cb, 10)
+            self.create_subscription(
+                StringMsg, str(gp('alignment_debug_topic')),
+                self._alignment_debug_cb, 10)
+            self.create_subscription(
+                Bool, str(gp('alignment_locked_topic')),
+                self._alignment_locked_cb, 10)
 
         self.nav_client = ActionClient(self, NavigateToPose, 'navigate_to_pose')
         self.path_client = ActionClient(
@@ -421,11 +483,39 @@ class FrontierExplorer(Node):
         self.shared_map_msg = msg
         self._shared_map_time = self._now_sec()
 
+    def _candidate_map_cb(self, msg):
+        self.candidate_map_msg = msg
+        self._candidate_map_time = self._now_sec()
+
+    def _candidate_transform_cb(self, msg):
+        q = msg.transform.rotation
+        yaw = math.atan2(2.0 * (q.w * q.z + q.x * q.y),
+                         1.0 - 2.0 * (q.y * q.y + q.z * q.z))
+        self.candidate_transform = (
+            float(msg.transform.translation.x),
+            float(msg.transform.translation.y), yaw)
+        self._candidate_transform_time = self._now_sec()
+
+    def _alignment_confidence_cb(self, msg):
+        self.alignment_confidence = max(0.0, min(1.0, float(msg.data)))
+
+    def _alignment_debug_cb(self, msg):
+        try:
+            data = json.loads(msg.data)
+        except (ValueError, TypeError):
+            return
+        self.alignment_ambiguity = max(
+            0.0, min(1.0, float(data.get('ambiguity_score', 1.0))))
+
+    def _alignment_locked_cb(self, msg):
+        self.alignment_locked = bool(msg.data)
+
     def _claim_cb(self, msg):
         if msg.ns == self.robot_name:
             return
         if msg.action == Marker.DELETE:
             self.peer_claims.pop(msg.ns, None)
+            self.peer_claim_stamp.pop(msg.ns, None)
         else:
             # Claims are shared in the common 'map' frame; convert into our own
             # map frame so the allocation compares them against our frontiers.
@@ -436,6 +526,18 @@ class FrontierExplorer(Node):
                 # coordinates were stored as if they were already ours.
                 return
             self.peer_claims[msg.ns] = mine
+            self.peer_claim_stamp[msg.ns] = self._now_sec()
+
+    def _live_peer_claims(self, ttl_sec=45.0):
+        """Peer claims fresher than ttl_sec of sim time.
+
+        A wedged or restarted peer used to hold its last claim (plus a 3 m
+        allocation dead zone around it) for the rest of the run, because the
+        DELETE that clears a claim is only published on a clean finish.
+        """
+        now = self._now_sec()
+        return {ns: xy for ns, xy in self.peer_claims.items()
+                if now - self.peer_claim_stamp.get(ns, now) <= ttl_sec}
 
     def _detection_cb(self, msg):
         view = self._camera_view()
@@ -625,6 +727,88 @@ class FrontierExplorer(Node):
         return (self._now_sec(), p.x, p.y,
                 yaw_from_quat(tf.transform.rotation))
 
+    def _geodesic_field(self, start_xy):
+        """Metres of actual driving from start to any map cell, or None.
+
+        Straight-line distance is a lie in a cubicle maze: a frontier 3 m
+        away through a wall costs 15 m of driving, and scoring with the lie
+        is exactly what made a rover leave room A for room B across the
+        building and come back to room A later. BFS over the free grid at
+        half resolution (2x2 blocks passable only when fully free, so thin
+        walls stay walls) prices frontiers by the path that actually exists.
+
+        Returns a lookup fn (x, y) -> metres, or None for unreachable /
+        outside; or None if no field could be built.
+        """
+        from collections import deque
+        msg = self.map_msg
+        if msg is None:
+            return None
+        info = msg.info
+        h, w = info.height, info.width
+        grid = np.asarray(msg.data, dtype=np.int8).reshape(h, w)
+        free = (grid >= 0) & (grid < FREE_MAX)
+        f = 2
+        hh, ww = h // f, w // f
+        if hh < 2 or ww < 2:
+            return None
+        blocks = free[:hh * f, :ww * f].reshape(hh, f, ww, f).all(axis=(1, 3))
+        res = info.resolution * f
+        ox, oy = info.origin.position.x, info.origin.position.y
+
+        def to_rc(x, y):
+            c = int((x - ox) / res)
+            r = int((y - oy) / res)
+            return r, c
+
+        r0, c0 = to_rc(start_xy[0], start_xy[1])
+        if not (0 <= r0 < hh and 0 <= c0 < ww):
+            return None
+        # The robot's own block can be pooled away (standing near a wall):
+        # start from the nearest passable block within a small window.
+        if not blocks[r0, c0]:
+            found = False
+            for rad in (1, 2, 3):
+                rs = slice(max(0, r0 - rad), min(hh, r0 + rad + 1))
+                cs = slice(max(0, c0 - rad), min(ww, c0 + rad + 1))
+                ys, xs = np.nonzero(blocks[rs, cs])
+                if len(ys):
+                    r0, c0 = rs.start + ys[0], cs.start + xs[0]
+                    found = True
+                    break
+            if not found:
+                return None
+
+        dist = np.full((hh, ww), -1.0, dtype=np.float32)
+        dist[r0, c0] = 0.0
+        q = deque([(r0, c0)])
+        diag = res * math.sqrt(2.0)
+        while q:
+            r, c = q.popleft()
+            d0 = dist[r, c]
+            for dr, dc, step in ((-1, 0, res), (1, 0, res), (0, -1, res),
+                                 (0, 1, res), (-1, -1, diag), (-1, 1, diag),
+                                 (1, -1, diag), (1, 1, diag)):
+                nr, nc = r + dr, c + dc
+                if (0 <= nr < hh and 0 <= nc < ww and blocks[nr, nc]
+                        and dist[nr, nc] < 0.0):
+                    dist[nr, nc] = d0 + step
+                    q.append((nr, nc))
+
+        def lookup(x, y):
+            r, c = to_rc(x, y)
+            # A frontier goal sits at the free/unknown boundary and its own
+            # block is often not fully free: take the best of a 3x3 patch.
+            best = None
+            for rr in range(max(0, r - 1), min(hh, r + 2)):
+                for cc in range(max(0, c - 1), min(ww, c + 2)):
+                    v = dist[rr, cc]
+                    if v >= 0.0 and (best is None or v < best):
+                        best = v
+            return best
+
+        return lookup
+
     def _robot_xy(self):
         try:
             tf = self.tf_buffer.lookup_transform(
@@ -737,9 +921,6 @@ class FrontierExplorer(Node):
             unknown = unknown & in_bounds
 
         cells = np.argwhere(frontier)
-        if cells.size == 0:
-            return []
-
         frontier_set = {(int(r), int(c)) for r, c in cells}
         res = info.resolution
         ox, oy = info.origin.position.x, info.origin.position.y
@@ -769,14 +950,93 @@ class FrontierExplorer(Node):
                 'goal': (ox + (gc + 0.5) * res, oy + (gr + 0.5) * res),
                 'gr': int(gr), 'gc': int(gc),
             })
-        # Only in 'ratio' mode. coordinated_allocation prefers an explicit
-        # 'gain' over size_m, so attaching one unconditionally would change
-        # what the coordinated condition optimises even with the utility left
-        # at 'linear' -- the explorer would score one thing and the allocator
-        # another, and neither would be what office_final_check measured.
-        if self.frontier_utility == 'ratio':
-            self._attach_information_gain(clusters, unknown, res)
+        self._attach_remaining_rooms(clusters, unknown, free, res, ox, oy)
+        self._attach_frontier_context(clusters, unknown, res)
         return clusters
+
+    def _attach_remaining_rooms(self, clusters, unknown, free, res, ox, oy):
+        """Keep genuinely unexplored rooms in the goal set.
+
+        Doorway frontiers can vanish after a ban or clearance while the room
+        behind them is still unknown. Those rooms stay first-class geometric
+        goals until their reachable unknown area is gone.
+        """
+        rooms = remaining_unknown_regions(
+            unknown, free, res, (ox, oy),
+            min_area_m2=self.min_remaining_room_m2,
+            world_bounds=self.world_bounds)
+        self._remaining_rooms = rooms
+        self._remaining_room_m2 = remaining_room_area_m2(rooms)
+        for room in rooms:
+            if any(math.hypot(room['goal'][0] - c['goal'][0],
+                              room['goal'][1] - c['goal'][1]) < 1.5
+                   for c in clusters):
+                continue
+            clusters.append(room)
+
+    def _attach_frontier_context(self, clusters, unknown, res):
+        """Attach geometric gain and provisional-alignment tie-breakers.
+
+        Marker visibility is deliberately absent from frontier utility. ArUco
+        observations remain available to alignment and item verification, but
+        exploration ordering is driven by frontier geometry alone.
+        """
+        if not clusters:
+            return
+        # Information gain is the primary score. Alignment may only break ties.
+        self._attach_information_gain(clusters, unknown, res)
+        for cluster in clusters:
+            redundancy = self._candidate_redundancy(cluster['goal'])
+            cluster['candidate_redundancy'] = redundancy
+            cluster['tie_breaker'] = -redundancy
+
+    def _candidate_redundancy(self, own_xy):
+        """Confidence-weighted probability that the peer already knows a goal.
+
+        Returns zero for missing/stale candidates and after a hard shared-map
+        mask is active. Thus candidate guidance can only rank local frontiers;
+        it can never make the robot wait for alignment.
+        """
+        if self.alignment_locked or self._shared_mask_active:
+            return 0.0
+        guidance_confidence = (self.alignment_confidence
+                               * (1.0 - self.alignment_ambiguity))
+        now = self._now_sec()
+        if (self.candidate_map_msg is None or self.candidate_transform is None
+                or self._candidate_map_time is None
+                or self._candidate_transform_time is None
+                or now - self._candidate_map_time > self.candidate_max_age
+                or now - self._candidate_transform_time > self.candidate_max_age
+                or guidance_confidence
+                < self.candidate_guidance_min_confidence):
+            return 0.0
+        # The published transform maps leo2 into leo1. Convert this rover's
+        # local point into the *peer map* subscribed above.
+        x, y = own_xy
+        if self.robot_name == 'leo2':
+            tx, ty, yaw = self.candidate_transform
+            c, s = math.cos(yaw), math.sin(yaw)
+            x, y = tx + c * x - s * y, ty + s * x + c * y
+        else:
+            tx, ty, yaw = self.candidate_transform
+            dx, dy = x - tx, y - ty
+            c, s = math.cos(-yaw), math.sin(-yaw)
+            x, y = c * dx - s * dy, s * dx + c * dy
+        msg = self.candidate_map_msg
+        info = msg.info
+        col = int((x - info.origin.position.x) / info.resolution)
+        row = int((y - info.origin.position.y) / info.resolution)
+        if row < 0 or col < 0 or row >= info.height or col >= info.width:
+            return 0.0
+        grid = np.asarray(msg.data, dtype=np.int8).reshape(info.height, info.width)
+        # Sample a neighbourhood whose radius shrinks as confidence grows.
+        uncertainty_m = 0.25 + 1.5 * (1.0 - guidance_confidence)
+        rad = max(1, int(round(uncertainty_m / info.resolution)))
+        r0, r1 = max(0, row - rad), min(info.height, row + rad + 1)
+        c0, c1 = max(0, col - rad), min(info.width, col + rad + 1)
+        patch = grid[r0:r1, c0:c1]
+        known_fraction = float((patch != UNKNOWN).sum()) / max(1, patch.size)
+        return guidance_confidence * known_fraction
 
     def _attach_information_gain(self, clusters, unknown, res):
         """Set cluster['gain'] to the unknown area (m2) near its goal.
@@ -799,7 +1059,10 @@ class FrontierExplorer(Node):
             r0, r1 = max(0, c['gr'] - r), min(h, c['gr'] + r + 1)
             c0, c1 = max(0, c['gc'] - r), min(w, c['gc'] + r + 1)
             n = (ii[r1, c1] - ii[r0, c1] - ii[r1, c0] + ii[r0, c0])
-            c['gain'] = float(n) * cell
+            local_gain = float(n) * cell
+            # A remaining-room goal represents the connected reachable
+            # unknown region, not merely the doorway's local window.
+            c['gain'] = max(local_gain, float(c.get('area_m2', 0.0)))
 
     def _peer_known_mask(self, info, unknown):
         """Bool array marking OUR unknown cells the shared map knows, or None.
@@ -811,6 +1074,12 @@ class FrontierExplorer(Node):
         """
         msg = self.shared_map_msg
         if msg is None or self._shared_map_time is None:
+            return None
+        # The central merger republishes leo1's local map on /shared_map while
+        # alignment is still unresolved. That is a useful display fallback,
+        # but it contains no peer information and must never suppress local
+        # frontiers. Wait for the explicit accepted-alignment state.
+        if not self.alignment_locked:
             return None
         age = self._now_sec() - self._shared_map_time
         if age > self.shared_map_max_age:
@@ -843,11 +1112,31 @@ class FrontierExplorer(Node):
         sinfo = msg.info
         sgrid = np.asarray(msg.data, dtype=np.int8).reshape(
             sinfo.height, sinfo.width)
+        # Only SOLIDLY known merged-map areas count as covered. The peer's
+        # lidar glimpsing a room through a window/doorway paints sparse wall
+        # fragments there; treating those patchy cells as "covered" erased
+        # every frontier into the husarion corner rooms and both rovers
+        # declared the map finished with the rooms never entered. A cell
+        # is covered only when most of its neighbourhood is known too.
+        skn = (sgrid != UNKNOWN).astype(np.float32)
+        k = 7
+        csum = np.cumsum(np.cumsum(
+            np.pad(skn, ((1, 0), (1, 0))), axis=0), axis=1)
+        h2, w2 = skn.shape
+        r_lo = np.clip(np.arange(h2) - k // 2, 0, h2)
+        r_hi = np.clip(np.arange(h2) + k // 2 + 1, 0, h2)
+        c_lo = np.clip(np.arange(w2) - k // 2, 0, w2)
+        c_hi = np.clip(np.arange(w2) + k // 2 + 1, 0, w2)
+        area = ((r_hi - r_lo)[:, None] * (c_hi - c_lo)[None, :])
+        window = (csum[r_hi][:, c_hi] - csum[r_hi][:, c_lo]
+                  - csum[r_lo][:, c_hi] + csum[r_lo][:, c_lo])
+        solid = (window / np.maximum(area, 1)) >= 0.75
         ci = ((gx - sinfo.origin.position.x) / sinfo.resolution).astype(int)
         ri = ((gy - sinfo.origin.position.y) / sinfo.resolution).astype(int)
         ok = ((ci >= 0) & (ci < sinfo.width) & (ri >= 0) & (ri < sinfo.height))
         known = np.zeros(rows.size, dtype=bool)
-        known[ok] = sgrid[ri[ok], ci[ok]] != UNKNOWN
+        known[ok] = ((sgrid[ri[ok], ci[ok]] != UNKNOWN)
+                     & solid[ri[ok], ci[ok]])
         mask = np.zeros_like(unknown)
         mask[rows[known], cols[known]] = True
         n = int(known.sum())
@@ -1009,18 +1298,34 @@ class FrontierExplorer(Node):
         return True
 
     def _score(self, cluster, robot):
-        d = math.hypot(cluster['goal'][0] - robot[0],
-                       cluster['goal'][1] - robot[1])
+        # Geodesic distance when the plan cycle computed one; the straight
+        # line is only the fallback. A frontier the current free space does
+        # not reach at all pays a 30 m surcharge rather than being banned.
+        d = cluster.get('geo_self')
+        if d is None:
+            d = math.hypot(cluster['goal'][0] - robot[0],
+                           cluster['goal'][1] - robot[1])
+            if 'geo_self' in cluster:
+                d += 30.0
         if self.frontier_utility == 'ratio':
             # Unknown area per metre driven. min_travel_cost keeps a frontier
             # the rover is standing on from scoring infinitely.
             gain = float(cluster.get('gain', cluster['size_m']))
             return gain / max(d, self.min_travel_cost)
+        if self.frontier_utility == 'information_gain':
+            gain = float(cluster.get('gain', cluster['size_m']))
+            return gain - self.information_gain_travel_weight * d
         # 'linear' stays exactly what office_final_check validated, down to
         # rewarding the frontier's own width rather than the information
         # behind it. Do not quietly feed it the new gain: that would change
         # the measured condition without any run having measured it.
         return self.gain_scale * cluster['size_m'] - self.potential_scale * d
+
+    @staticmethod
+    def _frontier_key(cluster, geometric_score):
+        """Geometric score first; guidance can only break an exact tie."""
+        return (geometric_score, float(cluster.get('tie_breaker', 0.0)),
+                tuple(-v for v in cluster['goal']))
 
     # ----------------------------------------------------------- main cycle
 
@@ -1051,12 +1356,28 @@ class FrontierExplorer(Node):
 
         self._prune_lists()
 
-        # Priority 1: verify item candidates with a dedicated viewpoint goal.
-        if self._handle_verification(robot):
-            return
-
         all_clusters = self._find_frontiers()
         clusters = [c for c in all_clusters if self._eligible(c)]
+        # Price every frontier by the driving that actually reaches it, not
+        # by straight-line distance through walls. Unreachable-on-the-map
+        # frontiers get a heavy surcharge instead of a dispatch that would
+        # fail and burn a ban.
+        geo = self._geodesic_field(robot)
+        for c in clusters:
+            c['geo_self'] = geo(*c['goal']) if geo else None
+        # Finish the room you are in before crossing the building: when any
+        # eligible frontier is nearby BY PATH, only nearby frontiers compete.
+        # Without this the scorer regularly abandoned a nearly-finished room
+        # for a bigger patch far away and had to come back later over ground
+        # it had already covered.
+        if self.local_first_radius > 0.0 and robot is not None:
+            near = [c for c in clusters
+                    if (c['geo_self'] if c.get('geo_self') is not None
+                        else math.hypot(c['goal'][0] - robot[0],
+                                        c['goal'][1] - robot[1]))
+                    <= self.local_first_radius]
+            if near:
+                clusters = near
         self._publish_frontier_markers(clusters)
         self._publish_status(len(clusters))
 
@@ -1085,6 +1406,13 @@ class FrontierExplorer(Node):
                 self.get_logger().info('New frontiers - back to EXPLORING')
                 self.state = STATE_EXPLORING
             self._frontier_step(clusters, robot)
+            return
+
+        # Marker verification must never interrupt reachable unexplored
+        # space. Revisit a candidate only after geometric frontiers are
+        # exhausted; alignment consumes its own detection stream and remains
+        # independent of this item-search queue.
+        if self._handle_verification(robot):
             return
 
         # No frontiers left: sweep walls the camera has not seen yet.
@@ -1118,6 +1446,42 @@ class FrontierExplorer(Node):
             self._hold_since = None
         else:
             self._hold_since = None
+
+        # Unexplored rooms that still touch free space are not a finished map,
+        # even when the frontier mask is briefly empty.
+        open_rooms = [r for r in self._remaining_rooms if self._eligible(r)]
+        open_room_m2 = remaining_room_area_m2(open_rooms)
+        if open_room_m2 >= self.min_remaining_room_m2:
+            self.get_logger().warn(
+                f'{open_room_m2:.1f} m2 of reachable unexplored '
+                f'rooms remain - not finishing',
+                throttle_duration_sec=20.0)
+            self.idle_cycles = 0
+            if open_rooms and not self.navigating:
+                # A room goal Nav2 "completes" without the room shrinking is
+                # re-dispatched every cycle; without a strike path of its own
+                # that is a livelock (leo2 once re-sent the same goal 41
+                # times). After a few fruitless dispatches, strike the goal
+                # like any other survivor.
+                fresh = []
+                for r in open_rooms:
+                    key = (round(r['goal'][0], 1), round(r['goal'][1], 1))
+                    if self._room_goal_attempts.get(key, 0) >= 5:
+                        self.get_logger().warn(
+                            f'Room goal {key} dispatched 5x without the room '
+                            f'shrinking - striking it')
+                        self._add_blacklist(r['goal'])
+                        self._room_goal_attempts.pop(key, None)
+                    else:
+                        fresh.append(r)
+                if fresh:
+                    self._frontier_step(fresh, robot)
+                    if self.goal_pos is not None:
+                        key = (round(self.goal_pos[0], 1),
+                               round(self.goal_pos[1], 1))
+                        self._room_goal_attempts[key] = (
+                            self._room_goal_attempts.get(key, 0) + 1)
+            return
 
         self.idle_cycles += 1
         if (self.idle_cycles >= self.idle_cycles_to_finish
@@ -1262,8 +1626,26 @@ class FrontierExplorer(Node):
                 if pxy is not None:
                     robots.append((peer, pxy))
             if len(robots) > 1:
-                committed = {p: self.peer_claims[p] for p in self.peer_names
-                             if p in self.peer_claims}
+                live_claims = self._live_peer_claims()
+                committed = {p: live_claims[p] for p in self.peer_names
+                             if p in live_claims}
+                # Geodesic travel distances for every robot in the auction,
+                # so a peer "close through a wall" does not win a frontier
+                # it would have to drive around the building to reach.
+                fields = {}
+                for name, xy in robots:
+                    fields[name] = (self._geodesic_field(xy)
+                                    if name != self.robot_name else None)
+
+                def dist_lookup(name, goal, _fields=fields):
+                    if name == self.robot_name:
+                        c = next((c for c in clusters
+                                  if c['goal'] == tuple(goal)
+                                  or c['goal'] == goal), None)
+                        return c.get('geo_self') if c else None
+                    fld = _fields.get(name)
+                    return fld(*goal) if fld else None
+
                 assignment = coordinated_allocation(
                     robots, clusters, committed=committed,
                     potential_scale=self.potential_scale,
@@ -1271,13 +1653,17 @@ class FrontierExplorer(Node):
                     discount_radius=self.discount_radius,
                     discount_strength=self.discount_strength,
                     utility_mode=self.frontier_utility,
-                    min_travel_cost=self.min_travel_cost)
+                    min_travel_cost=self.min_travel_cost,
+                    information_gain_travel_weight=(
+                        self.information_gain_travel_weight),
+                    dist_lookup=dist_lookup)
                 my_goal = assignment.get(self.robot_name)
                 if my_goal is not None:
                     return min(clusters, key=lambda c: math.hypot(
                         c['goal'][0] - my_goal[0], c['goal'][1] - my_goal[1]))
                 # More rovers than frontiers - fall through to greedy best.
-        return max(clusters, key=lambda c: self._score(c, robot))
+        return max(clusters, key=lambda c: self._frontier_key(
+            c, self._score(c, robot)))
 
     def _frontier_step(self, clusters, robot):
         best = self._select_frontier(clusters, robot)
@@ -1342,12 +1728,13 @@ class FrontierExplorer(Node):
                     and not self._is_blocked(c['target'], self.skip_list)]
         # Coordinated item search: leave walls a peer is en route to sweep
         # (its active claim) alone - shared coverage will mark them observed.
-        if self.share_claims and self.peer_claims:
+        live_claims = self._live_peer_claims() if self.share_claims else {}
+        if live_claims:
             clusters = [
                 c for c in clusters
                 if all(math.hypot(c['target'][0] - px, c['target'][1] - py)
                        > self.claim_radius
-                       for px, py in self.peer_claims.values())]
+                       for px, py in live_claims.values())]
         if not clusters:
             return False
         if self.state != STATE_SWEEPING:
@@ -1480,9 +1867,19 @@ class FrontierExplorer(Node):
         d = math.hypot(self.goal_pos[0] - robot[0],
                        self.goal_pos[1] - robot[1])
         now = self.get_clock().now()
-        if self.best_dist_to_goal is None or d < self.best_dist_to_goal - 0.1:
-            self.best_dist_to_goal = d
+        # Straight-line distance to the goal is a poor progress signal in a
+        # walled office: a legal detour through a doorway *increases* it for
+        # tens of seconds.  Any real displacement also counts as progress.
+        moved = (self.last_progress_pos is not None
+                 and math.hypot(robot[0] - self.last_progress_pos[0],
+                                robot[1] - self.last_progress_pos[1]) >= 0.5)
+        if (self.best_dist_to_goal is None or d < self.best_dist_to_goal - 0.1
+                or moved):
+            self.best_dist_to_goal = min(
+                d, self.best_dist_to_goal if self.best_dist_to_goal is not None
+                else d)
             self.last_progress_time = now
+            self.last_progress_pos = (robot[0], robot[1])
             return
         elapsed = (now - self.last_progress_time).nanoseconds / 1e9
         if elapsed <= self.progress_timeout:
@@ -1499,6 +1896,10 @@ class FrontierExplorer(Node):
         self.get_logger().warn(
             f'Still no progress after costmap clear, blacklisting goal '
             f'({self.goal_pos[0]:.2f}, {self.goal_pos[1]:.2f})')
+        # Two stalled attempts are evidence against this goal, but a
+        # max-strike ban removes a 2.4 m disc from play for 900 s - the rest
+        # of a short run - and the finish logic no longer waits for it.  Let
+        # the strike escalation do its job instead.
         self._add_blacklist(self.goal_pos)
         if self.goal_kind == GOAL_VERIFY:
             self.verify_target = None
@@ -1545,6 +1946,7 @@ class FrontierExplorer(Node):
         self.navigating = True
         self.best_dist_to_goal = None
         self.last_progress_time = self.get_clock().now()
+        self.last_progress_pos = (robot[0], robot[1]) if robot else None
         self.cleared_costmaps_for_goal = False
         self.skips_since_dispatch = 0
         self.stats['goals_sent'] += 1
@@ -1649,6 +2051,10 @@ class FrontierExplorer(Node):
         if self.map_msg is None:
             return
         now = self._now_sec()
+        # Keep the active claim alive: peers expire claims after a TTL, so a
+        # healthy long drive must refresh its claim, not fall silent.
+        if self.navigating and self.goal_pos is not None:
+            self._publish_claim(self.goal_pos)
         # Long-horizon wedge check, evaluated even while a goal is active:
         # paths can validate and Nav2 can stay "working" while the robot is
         # physically pinned (e.g. against out-of-bounds mesh through a
@@ -1944,6 +2350,14 @@ class FrontierExplorer(Node):
             'camera_coverage': round(self._coverage_frac, 3),
             'items_confirmed': confirmed,
             'items_seen': len(self.items),
+            'known_marker_ids': sorted(int(mid) for mid in self.items),
+            'alignment_confidence': round(self.alignment_confidence, 3),
+            'alignment_ambiguity': round(self.alignment_ambiguity, 3),
+            'remaining_room_m2': round(self._remaining_room_m2, 1),
+            'soft_alignment_guidance': bool(
+                self.alignment_confidence * (1.0 - self.alignment_ambiguity)
+                >= self.candidate_guidance_min_confidence
+                and not self.alignment_locked),
             'blacklist': len(self.blacklist),
             'navigating': self.navigating,
             'goal': list(self.goal_pos) if self.goal_pos else None,

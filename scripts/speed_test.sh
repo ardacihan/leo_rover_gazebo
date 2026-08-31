@@ -4,8 +4,13 @@
 set -eo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
+if [[ -e /dev/dxg || -d /usr/lib/wsl ]]; then
+  SPEED_LAUNCHER="$ROOT/scripts/sim_gpu_wsl.sh"
+else
+  SPEED_LAUNCHER="$ROOT/scripts/sim_gpu_linux.sh"
+fi
 WORLD="${WORLD:-office_world}" GUI=false NUM_ROBOTS=2 ENABLE_CAMERA=false \
-  "$ROOT/scripts/sim_gpu_wsl.sh"
+  bash "$SPEED_LAUNCHER"
 
 in_sim() { docker exec leo_sim bash -lc "source /opt/ros/humble/setup.bash && source /ros2_ws/install/setup.bash && $1"; }
 

@@ -21,6 +21,7 @@ class AlignmentState:
 
     accepted: Optional[Transform] = None
     accepted_confidence: float = 0.0
+    accepted_residual_m: Optional[float] = None
     candidate: Optional[Transform] = None
     candidate_confidence: float = 0.0
     candidate_reason: str = ""
@@ -38,6 +39,7 @@ class AlignmentState:
         confidence: float,
         *,
         extra_reject_reason: str = "",
+        residual_m: Optional[float] = None,
     ) -> Tuple[bool, str]:
         """
         Decide whether to promote candidate to accepted.
@@ -67,7 +69,20 @@ class AlignmentState:
                 candidate[0] - self.accepted[0], candidate[1] - self.accepted[1]
             )
             yaw_jump = abs(_normalize_angle(candidate[2] - self.accepted[2]))
-            if jump > self.max_transform_jump:
+            # Escape hatch for a wrong early lock: a symmetric office can
+            # produce a confident mirror match while the maps are small, and
+            # the true solution then sits far outside the jump limits. When
+            # the accepted pose no longer fits the current maps (its residual
+            # was refreshed to inf, or the candidate fits clearly better),
+            # geometry authorizes the long jump the consistency guard would
+            # otherwise forbid forever.
+            supersede = (
+                residual_m is not None
+                and self.accepted_residual_m is not None
+                and (math.isinf(self.accepted_residual_m)
+                     or residual_m + 0.03 < self.accepted_residual_m)
+            )
+            if jump > self.max_transform_jump and not supersede:
                 reason = (
                     f"transform jump {jump:.2f} m > max_transform_jump "
                     f"{self.max_transform_jump:.2f}"
@@ -75,7 +90,7 @@ class AlignmentState:
                 self.last_rejection_reason = reason
                 self.candidate_reason = reason
                 return False, reason
-            if yaw_jump > self.max_yaw_jump:
+            if yaw_jump > self.max_yaw_jump and not supersede:
                 reason = (
                     f"yaw jump {math.degrees(yaw_jump):.1f} deg > "
                     f"max_yaw_jump_deg {math.degrees(self.max_yaw_jump):.1f}"
@@ -84,7 +99,27 @@ class AlignmentState:
                 self.candidate_reason = reason
                 return False, reason
 
-            if confidence < self.accepted_confidence + self.min_confidence_improvement:
+            residual_better = (
+                residual_m is not None
+                and self.accepted_residual_m is not None
+                and residual_m + 0.015 < self.accepted_residual_m
+            )
+            # A candidate close to the accepted pose is a tracking update of
+            # the same solution, not a rival mode. The maps keep growing after
+            # the first lock, so refusing every same-mode refresh froze a pose
+            # that fitted the early maps and misfitted the final ones. Accept
+            # the refresh whenever its residual is no worse than what we hold.
+            tracking_update = (
+                jump <= 0.5
+                and yaw_jump <= math.radians(5.0)
+                and residual_m is not None
+                and (self.accepted_residual_m is None
+                     or residual_m <= self.accepted_residual_m + 0.02)
+            )
+            if (not residual_better
+                    and not tracking_update
+                    and confidence < self.accepted_confidence
+                    + self.min_confidence_improvement):
                 reason = (
                     f"confidence {confidence:.2f} does not improve accepted "
                     f"{self.accepted_confidence:.2f} by "
@@ -96,6 +131,8 @@ class AlignmentState:
 
         self.accepted = candidate
         self.accepted_confidence = confidence
+        if residual_m is not None:
+            self.accepted_residual_m = residual_m
         self.candidate_reason = "accepted"
         self.last_rejection_reason = ""
         return True, "accepted"

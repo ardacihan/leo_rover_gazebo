@@ -36,12 +36,13 @@ Two properties that matter:
 from __future__ import annotations
 
 import math
+import json
 from typing import Optional, Tuple
 
 import rclpy
 from geometry_msgs.msg import TransformStamped
 from rclpy.node import Node
-from std_msgs.msg import Bool, Float32
+from std_msgs.msg import Bool, Float32, String
 from tf2_ros import TransformBroadcaster
 
 
@@ -98,10 +99,17 @@ class AlignmentTfBridge(Node):
         # 2026-08-24 it locked at 0.49 confidence with ZERO common tags and a
         # yaw error of 179.9 degrees. With no tag estimate there is also no
         # second opinion, so `require_agreement` cannot save it either.
-        self.declare_parameter("require_tag_evidence", True)
-        self.declare_parameter("require_agreement", True)
+        self.declare_parameter("require_tag_evidence", False)
+        self.declare_parameter("require_agreement", False)
+        self.declare_parameter("require_primary_for_lock", True)
+        self.declare_parameter("require_geometry_ok", True)
+        self.declare_parameter("validation_topic",
+                               "/accepted_alignment_validation")
+        self.declare_parameter("max_lock_residual_m", 0.12)
         self.declare_parameter("max_disagreement_xy", 2.0)
         self.declare_parameter("max_disagreement_yaw_deg", 25.0)
+        self.declare_parameter("min_tag_crosscheck_confidence", 0.35)
+        self.declare_parameter("validation_max_age_sec", 20.0)
 
         self.parent = str(self.get_parameter("parent_frame").value)
         self.child = str(self.get_parameter("child_frame").value)
@@ -110,15 +118,30 @@ class AlignmentTfBridge(Node):
         self.require_tag_evidence = bool(
             self.get_parameter("require_tag_evidence").value)
         self.require_agreement = bool(self.get_parameter("require_agreement").value)
+        self.require_primary = bool(
+            self.get_parameter("require_primary_for_lock").value)
+        self.require_geometry = bool(
+            self.get_parameter("require_geometry_ok").value)
+        self.max_residual = float(
+            self.get_parameter("max_lock_residual_m").value)
         self.max_dis_xy = float(self.get_parameter("max_disagreement_xy").value)
         self.max_dis_yaw = math.radians(
             float(self.get_parameter("max_disagreement_yaw_deg").value))
+        self.min_tag_crosscheck_conf = float(
+            self.get_parameter("min_tag_crosscheck_confidence").value)
+        self.validation_max_age = float(
+            self.get_parameter("validation_max_age_sec").value)
         self._disagree = None
 
         self._primary: Optional[Tuple[float, float, float]] = None
         self._fallback: Optional[Tuple[float, float, float]] = None
         self._primary_conf = 0.0
         self._fallback_conf = 0.0
+        self._residual_m = float("inf")
+        self._geometry_ok = False
+        self._primary_tag_validated = False
+        self._validation_time: Optional[float] = None
+        self._fallback_time: Optional[float] = None
         self._locked = False
         self._lock_time: Optional[float] = None
         self._last_log = 0.0
@@ -138,6 +161,13 @@ class AlignmentTfBridge(Node):
                 Float32,
                 str(self.get_parameter("fallback_confidence_topic").value),
                 lambda m: self._on_confidence(m, primary=False), 10)
+        self.create_subscription(
+            Float32, "/alignment_residual_m", self._on_residual, 10)
+        self.create_subscription(
+            Bool, "/alignment_geometry_ok", self._on_geometry, 10)
+        self.create_subscription(
+            String, str(self.get_parameter("validation_topic").value),
+            self._on_validation, 10)
 
         self.broadcaster = TransformBroadcaster(self)
         self.status_pub = self.create_publisher(
@@ -168,6 +198,7 @@ class AlignmentTfBridge(Node):
             self._primary = self._to_xy_yaw(msg)
         else:
             self._fallback = self._to_xy_yaw(msg)
+            self._fallback_time = self._now()
 
     def _on_confidence(self, msg: Float32, primary: bool):
         if primary:
@@ -175,12 +206,44 @@ class AlignmentTfBridge(Node):
         else:
             self._fallback_conf = float(msg.data)
 
+    def _on_residual(self, msg: Float32):
+        self._residual_m = float(msg.data)
+
+    def _on_geometry(self, msg: Bool):
+        self._geometry_ok = bool(msg.data)
+
+    def _on_validation(self, msg: String):
+        """Atomically consume the pose and geometry that were accepted.
+
+        Candidate diagnostics arrive on separate topics and may be newer than
+        the accepted pose.  This combined record prevents a rejected
+        candidate's confidence/residual from validating a stale transform.
+        """
+        try:
+            data = json.loads(msg.data)
+            self._primary = (float(data['dx']), float(data['dy']),
+                             float(data['yaw']))
+            self._primary_conf = float(data['confidence'])
+            self._residual_m = float(data['residual_m'])
+            self._geometry_ok = bool(data['geometry_ok'])
+            common = int(data.get('common_landmark_count', 0))
+            agreement = bool(data.get('tag_map_agreement', False))
+            # This is evidence attached to the accepted pose itself. It does
+            # not disappear when the tag node restarts, and a later single-tag
+            # weak hint cannot retroactively validate or invalidate that pose.
+            self._primary_tag_validated = common >= 2 and agreement
+            self._validation_time = self._now()
+        except (KeyError, TypeError, ValueError, json.JSONDecodeError):
+            self.get_logger().warn('invalid accepted alignment validation')
+
     # ------------------------------------------------------------------ tick
 
     def _best(self):
         """(estimate, confidence, source) -- the accepted estimate wins."""
         if self._primary is not None:
             return self._primary, self._primary_conf, "map_based"
+        if self.require_primary:
+            return None, 0.0, "waiting_for_geometric_validation"
         if self._fallback is not None:
             return self._fallback, self._fallback_conf, "tag_only"
         return None, 0.0, "none"
@@ -192,16 +255,30 @@ class AlignmentTfBridge(Node):
         """(d_xy, d_yaw) between the tag and grid estimates, or None."""
         if self._primary is None or self._fallback is None:
             return None
+        if (self._fallback_time is None
+                or self._now() - self._fallback_time > self.validation_max_age):
+            return None
         px, py, pyaw = self._primary
         fx, fy, fyaw = self._fallback
         dyaw = abs(math.atan2(math.sin(pyaw - fyaw), math.cos(pyaw - fyaw)))
         return math.hypot(px - fx, py - fy), dyaw
 
     def _tick(self):
+        if (self.require_primary
+                and (self._validation_time is None
+                     or self._now() - self._validation_time
+                     > self.validation_max_age)):
+            if self._locked:
+                self._locked = False
+                self.get_logger().warn(
+                    'accepted alignment validation became stale; dropping lock')
+            self._publish_status(False)
+            self._log_throttled('waiting for a fresh atomic alignment validation')
+            return
         estimate, conf, source = self._best()
 
         # No tag evidence -> no lock, however confident the grid match looks.
-        if self.require_tag_evidence and self._fallback is None:
+        if self.require_tag_evidence and not self._primary_tag_validated:
             if self._locked:
                 self._locked = False
                 self.get_logger().warn(
@@ -209,52 +286,48 @@ class AlignmentTfBridge(Node):
                     "grid matching alone")
             self._publish_status(False)
             self._log_throttled(
-                "withholding transform: no tag estimate yet "
-                f"(grid-only confidence {self._primary_conf:.2f}); the rovers "
-                "have not seen common markers")
+                "withholding transform: the accepted pose has no agreeing "
+                "two-marker evidence")
             return
 
         # Two independent estimates that disagree are evidence against both.
         self._disagree = self._disagreement()
-        if self.require_agreement and self._disagree is not None:
+        if (self.require_agreement and self._disagree is not None
+                and self._fallback_conf >= self.min_tag_crosscheck_conf):
             d_xy, d_yaw = self._disagree
             if d_xy > self.max_dis_xy or d_yaw > self.max_dis_yaw:
-                # They disagree, so the fused estimate is not trustworthy. But
-                # tags are the primary sensor here -- the rovers are meant to
-                # find each other by seeing the same markers, and grid matching
-                # is only the cross-check. A rectilinear world gives the grid
-                # matcher confident 180-degree flips (depot_world 2026-08-24:
-                # grid 9.58 m / 179.9 deg wrong while the tags were 0.75 m /
-                # 0.3 deg right). So prefer the tag estimate on its own when it
-                # is confident enough, and withhold entirely only when it is
-                # not -- withholding a good tag estimate costs all coordination.
-                if self._fallback_conf >= self.min_conf:
-                    estimate, conf, source = (
-                        self._fallback, self._fallback_conf, "tag_only(disagreement)")
-                    self._log_throttled(
-                        f"tag vs grid disagree by {d_xy:.2f} m / "
-                        f"{math.degrees(d_yaw):.1f} deg -- trusting the TAG "
-                        f"estimate alone (confidence {self._fallback_conf:.2f})")
-                else:
-                    if self._locked:
-                        self._locked = False
-                        self.get_logger().warn(
-                            "tag and grid alignment disagree "
-                            f"({d_xy:.2f} m, {math.degrees(d_yaw):.1f} deg) and "
-                            "the tag estimate is weak -- dropping the lock; a "
-                            "confident-but-wrong transform is worse than none")
-                    self._publish_status(False)
-                    self._log_throttled(
-                        f"withholding transform: tag vs grid disagree by "
-                        f"{d_xy:.2f} m / {math.degrees(d_yaw):.1f} deg "
-                        f"(limits {self.max_dis_xy} m / "
-                        f"{math.degrees(self.max_dis_yaw):.0f} deg) and tag "
-                        f"confidence is only {self._fallback_conf:.2f}")
-                    return
+                if self._locked:
+                    self._locked = False
+                    self.get_logger().warn(
+                        "tag and geometrically validated alignment disagree "
+                        f"({d_xy:.2f} m, {math.degrees(d_yaw):.1f} deg); "
+                        "dropping the lock")
+                self._publish_status(False)
+                self._log_throttled(
+                    f"withholding transform: tag vs grid disagree by "
+                    f"{d_xy:.2f} m / {math.degrees(d_yaw):.1f} deg "
+                    f"(limits {self.max_dis_xy} m / "
+                    f"{math.degrees(self.max_dis_yaw):.0f} deg)")
+                return
 
         if estimate is None:
             self._publish_status(False)
             self._log_throttled("waiting for an alignment estimate")
+            return
+
+        geometry_ok = (
+            self._geometry_ok and self._residual_m <= self.max_residual)
+        if self.require_geometry and not geometry_ok:
+            if self._locked:
+                self._locked = False
+                self.get_logger().warn(
+                    f"occupancy residual {self._residual_m:.3f} m; "
+                    "dropping the lock rather than publishing a shifted merge")
+            self._publish_status(False)
+            self._log_throttled(
+                f"withholding transform: occupancy residual "
+                f"{self._residual_m:.3f} m (need <= {self.max_residual:.2f} m "
+                f"and geometry_ok)")
             return
 
         if self._locked:

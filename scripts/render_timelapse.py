@@ -4,7 +4,7 @@
 Reads the `.npz` snapshots written by `merge_timelapse_recorder.py` and draws,
 per frame, a three-panel view of the same instant:
 
-    leo1's map | leo2's map | the shared map, with both trails
+    leo1 map | leo2 map | candidate merge | accepted merge
 
 The point of showing all three together is that it makes the *merge* legible:
 you can watch two separate partial maps grow independently, see the moment the
@@ -107,11 +107,11 @@ def main():
         step = len(snaps) / args.max_frames
         snaps = [snaps[int(i * step)] for i in range(args.max_frames)]
 
-    pw = args.width // 3
+    pw = args.width // 4
     ph = int(pw * 0.85)
     out_path = os.path.join(args.run_dir, 'merge_timelapse.mp4')
     writer = cv2.VideoWriter(out_path, cv2.VideoWriter_fourcc(*'mp4v'),
-                             args.fps, (pw * 3, ph + 40))
+                             args.fps, (pw * 4, ph + 40))
     frames_dir = os.path.join(args.run_dir, 'timelapse_frames')
     os.makedirs(frames_dir, exist_ok=True)
 
@@ -144,12 +144,14 @@ def main():
             panel(d['leo2'], d['leo2_info'], (pw, ph),
                   trail=[(trail2, LEO2)], pose=p2, colour=LEO2,
                   title='leo2  /leo2/map'),
+            panel(d['candidate'], d['candidate_info'], (pw, ph),
+                  title='candidate merge  (preview only)'),
             panel(d['shared'], d['shared_info'], (pw, ph),
                   trail=[(trail1, LEO1), (trail2_shared, LEO2)],
-                  title='merged  /shared_map'),
+                  title='accepted merge  /shared_map'),
         ]
         strip = np.hstack(panels)
-        bar = np.full((40, pw * 3, 3), (250, 250, 250), dtype=np.uint8)
+        bar = np.full((40, pw * 4, 3), (250, 250, 250), dtype=np.uint8)
         status = ('ALIGNED  leo2 in leo1 frame: '
                   f'({tf[0]:+.2f}, {tf[1]:+.2f}, {math.degrees(tf[2]):+.1f} deg)'
                   if locked and math.isfinite(tf[0])
@@ -159,12 +161,13 @@ def main():
                     cv2.FONT_HERSHEY_SIMPLEX, 0.62, colour, 1, cv2.LINE_AA)
         frame = np.vstack([strip, bar])
         writer.write(frame)
-        if i % max(1, len(snaps) // 8) == 0:
-            cv2.imwrite(os.path.join(frames_dir, f'f{i:04d}.png'), frame)
+        if i % max(1, len(snaps) // 60) == 0:
+            cv2.imwrite(os.path.join(frames_dir, f'f{i:04d}.jpg'), frame,
+                        [cv2.IMWRITE_JPEG_QUALITY, 78])
         written += 1
     writer.release()
     size_mb = os.path.getsize(out_path) / 1e6 if os.path.exists(out_path) else 0
-    print(f'{out_path}: {written} frames, {size_mb:.1f} MB, {pw*3}x{ph+40}')
+    print(f'{out_path}: {written} frames, {size_mb:.1f} MB, {pw*4}x{ph+40}')
     return 0
 
 

@@ -1,5 +1,7 @@
 import os
 import sys
+import tempfile
+import xml.etree.ElementTree as ET
 
 from ament_index_python.packages import get_package_share_directory
 
@@ -24,6 +26,7 @@ def resolve_world(world):
     ws_root = os.environ.get('ROS2_WS', '/ros2_ws')
     candidates = [
         os.path.join(ws_root, 'src', 'husarion_gz_worlds', 'worlds', f'{world}.sdf'),
+        os.path.join(ws_root, 'src', 'aws_small_house', 'worlds', f'{world}.sdf'),
         os.path.join(get_package_share_directory('leo_rover_gazebo'),
                      'worlds', f'{world}.sdf'),
     ]
@@ -31,6 +34,48 @@ def resolve_world(world):
         if os.path.exists(path):
             return path
     raise FileNotFoundError(f'World "{world}" not found in: {candidates}')
+
+
+def accelerated_world(world_path, speed):
+    """Return an SDF copy whose simulated clock targets ``speed`` x wall time.
+
+    Scaling the integration step with the requested real-time factor keeps the
+    number of physics updates per wall-second unchanged. Sensor and controller
+    rates remain expressed in simulation time, so data collection is genuinely
+    accelerated without making the ROS graph believe wall time is sim time.
+    """
+    speed = float(speed)
+    if speed <= 0.0:
+        raise ValueError(f'sim_speed must be positive, got {speed}')
+    if abs(speed - 1.0) < 1e-9:
+        return world_path
+
+    tree = ET.parse(world_path)
+    root = tree.getroot()
+    world = root.find('world')
+    if world is None:
+        raise ValueError(f'{world_path}: SDF has no <world> element')
+    physics = world.find('physics')
+    if physics is None:
+        physics = ET.SubElement(world, 'physics', {
+            'name': f'{speed:g}x', 'type': 'dart'})
+    step = physics.find('max_step_size')
+    base_step = float(step.text) if step is not None else 0.001
+    if step is None:
+        step = ET.SubElement(physics, 'max_step_size')
+    step.text = f'{base_step * speed:.9g}'
+    factor = physics.find('real_time_factor')
+    if factor is None:
+        factor = ET.SubElement(physics, 'real_time_factor')
+    factor.text = f'{speed:.9g}'
+
+    stem = os.path.splitext(os.path.basename(world_path))[0]
+    path = os.path.join(tempfile.gettempdir(),
+                        f'leo_{stem}_{speed:g}x_{os.getpid()}.sdf')
+    tree.write(path, encoding='unicode', xml_declaration=True)
+    print(f'[two_robots_gpu] accelerated world: {speed:g}x target, '
+          f'{base_step * speed:g}s physics step -> {path}')
+    return path
 
 
 def launch_setup(context, *args, **kwargs):
@@ -47,7 +92,9 @@ def launch_setup(context, *args, **kwargs):
     xacro_file = os.path.join(pkg_description, 'urdf', 'leo_rover_with_sensors.urdf.xacro')
     ws_root = os.environ.get('ROS2_WS', '/ros2_ws')
     world_name = LaunchConfiguration('world').perform(context)
-    world_path = resolve_world(world_name)
+    source_world_path = resolve_world(world_name)
+    sim_speed = float(LaunchConfiguration('sim_speed').perform(context))
+    world_path = accelerated_world(source_world_path, sim_speed)
 
     # Per-robot spawn poses: explicit leo{i}_pose argument wins, then the
     # per-room table for this world, then the legacy side-by-side fallback.
@@ -214,7 +261,7 @@ def launch_setup(context, *args, **kwargs):
         in ('true', '1', 'yes')
     if spawn_markers == 'auto':
         try:
-            with open(world_path) as fh:
+            with open(source_world_path) as fh:
                 want_markers = 'aruco_markers/textures' not in fh.read()
         except OSError:
             want_markers = True
@@ -247,6 +294,11 @@ def generate_launch_description():
             'enable_camera', default_value='true',
             description='Spawn the RGBD camera sensor (disable for fast '
                         'lidar-only exploration)'),
+        DeclareLaunchArgument(
+            'sim_speed', default_value='1.0',
+            description='Target simulated seconds per wall second. Values '
+                        'above 1 also scale the physics step so update load '
+                        'per wall second stays approximately constant.'),
         DeclareLaunchArgument(
             'leo1_pose', default_value='',
             description='Override leo1 spawn as "x,y,z,R,P,Y" (empty = the '

@@ -29,6 +29,8 @@ from std_msgs.msg import Float32, Header, String
 
 from multi_robot_shared_mapping.map_postprocess import clean_occupancy_grid
 from multi_robot_shared_mapping.map_quality import LocalMapQualityTracker
+from multi_robot_shared_mapping.grid_merge import merge_grids
+from multi_robot_shared_mapping.grid_registration import info_from_message
 
 
 class SharedMapMerger(Node):
@@ -50,6 +52,8 @@ class SharedMapMerger(Node):
         self.declare_parameter("min_alignment_confidence", 0.5)
         self.declare_parameter("use_cleaned_shared_map", True)
         self.declare_parameter("min_local_map_quality", 0.35)
+        self.declare_parameter("max_map_time_skew_sec", 8.0)
+        self.declare_parameter("accepted_transform_max_age_sec", 20.0)
 
         self.declare_parameter("robot2_to_shared_x", 0.0)
         self.declare_parameter("robot2_to_shared_y", 0.0)
@@ -73,6 +77,7 @@ class SharedMapMerger(Node):
         self.waiting_logged = False
         self.low_confidence_logged = False
         self._last_logged_transform = None
+        self._accepted_time: Optional[float] = None
 
         self.quality_leo1 = LocalMapQualityTracker()
         self.quality_leo2 = LocalMapQualityTracker()
@@ -140,6 +145,7 @@ class SharedMapMerger(Node):
         self.accepted_dy = float(msg.transform.translation.y)
         self.accepted_yaw = 2.0 * math.atan2(qz, qw)
         self.accepted_valid = True
+        self._accepted_time = self.get_clock().now().nanoseconds * 1e-9
         self.waiting_logged = False
         current = (self.accepted_dx, self.accepted_dy, self.accepted_yaw)
         if current != self._last_logged_transform:
@@ -175,13 +181,24 @@ class SharedMapMerger(Node):
                     "waiting for valid alignment transform; merging leo1 map only"
                 )
             return False
+        now = self.get_clock().now().nanoseconds * 1e-9
+        if (self._accepted_time is None or
+                now - self._accepted_time > float(self.get_parameter(
+                    "accepted_transform_max_age_sec").value)):
+            return False
+        if self.map1 is None or self.map2 is None:
+            return False
+        t1 = self.map1.header.stamp.sec + self.map1.header.stamp.nanosec * 1e-9
+        t2 = self.map2.header.stamp.sec + self.map2.header.stamp.nanosec * 1e-9
+        if abs(t1 - t2) > float(self.get_parameter(
+                "max_map_time_skew_sec").value):
+            return False
         threshold = float(self.get_parameter("min_alignment_confidence").value)
-        level_ok = self.confidence_level in ("medium", "high")
         conf_ok = (
             self.alignment_confidence is not None
             and self.alignment_confidence >= threshold
         )
-        if not level_ok and not conf_ok:
+        if not conf_ok:
             if not self.low_confidence_logged:
                 self.low_confidence_logged = True
                 self.get_logger().warn(
@@ -209,13 +226,6 @@ class SharedMapMerger(Node):
             return None
         return self.accepted_dx, self.accepted_dy, self.accepted_yaw
 
-    def _transform_point(
-        self, x: float, y: float, transform: Tuple[float, float, float]
-    ) -> Tuple[float, float]:
-        tx, ty, yaw = transform
-        c, s = math.cos(yaw), math.sin(yaw)
-        return c * x - s * y + tx, s * x + c * y + ty
-
     def _merge_maps(
         self, include_leo2: bool, transform: Optional[Tuple[float, float, float]]
     ) -> Optional[OccupancyGrid]:
@@ -226,20 +236,18 @@ class SharedMapMerger(Node):
         if include_leo2 and self.map2 is not None and transform is not None:
             maps.append((self.map2, True))
 
-        resolution = min(m.info.resolution for m, _ in maps)
-        bounds = []
+        entries = []
         for grid, is_r2 in maps:
-            bound = self._map_bounds(grid, is_r2, transform)
-            if bound is None:
-                return None
-            bounds.append(bound)
-
-        min_x = min(b[0] for b in bounds)
-        min_y = min(b[1] for b in bounds)
-        max_x = max(b[2] for b in bounds)
-        max_y = max(b[3] for b in bounds)
-        width = max(1, int(math.ceil((max_x - min_x) / resolution)))
-        height = max(1, int(math.ceil((max_y - min_y) / resolution)))
+            arr = np.asarray(grid.data, dtype=np.int16).reshape(
+                grid.info.height, grid.info.width)
+            entries.append((arr, info_from_message(grid),
+                            transform if is_r2 else None))
+        threshold = int(self.get_parameter("occupied_threshold").value)
+        merged, output_info = merge_grids(entries, threshold)
+        if merged is None:
+            return None
+        min_x, min_y, resolution, _ = output_info
+        height, width = merged.shape
 
         shared = OccupancyGrid()
         shared.header = Header()
@@ -251,56 +259,8 @@ class SharedMapMerger(Node):
         shared.info.origin.position.x = min_x
         shared.info.origin.position.y = min_y
         shared.info.origin.orientation.w = 1.0
-        shared.data = [-1] * (width * height)
-
-        threshold = int(self.get_parameter("occupied_threshold").value)
-        for grid, is_r2 in maps:
-            for iy in range(grid.info.height):
-                for ix in range(grid.info.width):
-                    value = grid.data[iy * grid.info.width + ix]
-                    if value < 0:
-                        continue
-                    x, y = self._grid_to_world(grid, ix, iy)
-                    if is_r2:
-                        x, y = self._transform_point(x, y, transform)
-                    sx = int(math.floor((x - min_x) / resolution))
-                    sy = int(math.floor((y - min_y) / resolution))
-                    if 0 <= sx < width and 0 <= sy < height:
-                        idx = sy * width + sx
-                        shared.data[idx] = self._merge_cell(
-                            shared.data[idx], value, threshold
-                        )
+        shared.data = merged.ravel().tolist()
         return shared
-
-    def _map_bounds(self, grid, is_r2, transform):
-        corners = [(0, 0), (grid.info.width, 0), (0, grid.info.height),
-                   (grid.info.width, grid.info.height)]
-        points = []
-        for ix, iy in corners:
-            x = grid.info.origin.position.x + ix * grid.info.resolution
-            y = grid.info.origin.position.y + iy * grid.info.resolution
-            if is_r2:
-                if transform is None:
-                    return None
-                x, y = self._transform_point(x, y, transform)
-            points.append((x, y))
-        xs, ys = [p[0] for p in points], [p[1] for p in points]
-        return min(xs), min(ys), max(xs), max(ys)
-
-    def _grid_to_world(self, grid, ix, iy):
-        return (
-            grid.info.origin.position.x + (ix + 0.5) * grid.info.resolution,
-            grid.info.origin.position.y + (iy + 0.5) * grid.info.resolution,
-        )
-
-    def _merge_cell(self, current, incoming, threshold):
-        if incoming < 0:
-            return current
-        if current < 0:
-            return incoming
-        if incoming >= threshold or current >= threshold:
-            return 100
-        return 0
 
     def _publish_all(self):
         fusion_ok = self._fusion_allowed()

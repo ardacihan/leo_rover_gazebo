@@ -37,6 +37,7 @@ class Stub:
     shared_map_max_age = 20.0
     map_frame = 'own/map'
     common_frame = 'common'
+    alignment_locked = True
 
     def __init__(self, shared_msg, shared_time=95.0, offset=(0.0, 0.0, 0.0)):
         self.shared_map_msg = shared_msg
@@ -63,17 +64,33 @@ def call(stub, info, unknown):
     return FrontierExplorer._peer_known_mask(stub, info, unknown)
 
 
-def test_masks_only_cells_the_shared_map_knows():
-    shared = np.full((6, 6), UNKNOWN, np.int8)
-    shared[2, 2] = 0        # free in merged map
-    shared[3, 3] = 100      # wall in merged map
-    unknown = np.zeros((6, 6), bool)
-    unknown[2, 2] = unknown[3, 3] = unknown[4, 4] = True
+def test_masks_only_cells_the_shared_map_knows_solidly():
+    # A SOLID known block in the merged map counts as covered; a cell the
+    # merged map does not know stays unmasked.
+    shared = np.full((12, 12), UNKNOWN, np.int8)
+    shared[0:9, 0:9] = 0    # solidly known block (free)
+    shared[4, 4] = 100      # a wall inside it
+    unknown = np.zeros((12, 12), bool)
+    unknown[3, 3] = unknown[4, 4] = unknown[11, 11] = True
     mask = call(Stub(grid_msg(shared)), own_info(), unknown)
     assert mask is not None
-    assert mask[2, 2] and mask[3, 3]
-    assert not mask[4, 4]           # shared map is unknown there too
+    assert mask[3, 3] and mask[4, 4]
+    assert not mask[11, 11]         # shared map is unknown there
     assert mask.sum() == 2
+
+
+def test_patchy_glimpses_do_not_mask():
+    # Sparse wall fragments (a peer's lidar seeing a room through a window)
+    # must NOT count as coverage: treating them as covered erased every
+    # frontier into the husarion corner rooms and exploration finished with
+    # the rooms never entered.
+    shared = np.full((10, 10), UNKNOWN, np.int8)
+    shared[2, 2] = 100      # isolated fragments
+    shared[5, 7] = 100
+    unknown = np.ones((10, 10), bool)
+    mask = call(Stub(grid_msg(shared)), own_info(), unknown)
+    assert mask is not None
+    assert mask.sum() == 0
 
 
 def test_stale_shared_map_disables_masking():
@@ -116,9 +133,10 @@ def test_out_of_shared_bounds_cells_stay_unmasked():
 def test_rotated_offset_maps_cells_correctly():
     # Own frame rotated 180 deg and shifted: own cell (r=0,c=0) at world
     # (0.05, 0.05) lands at (1.0, 1.0) - (0.05, 0.05) = (0.95, 0.95) in the
-    # common frame, which is shared cell (r=9, c=9) of a 10x10 grid.
-    shared = np.full((10, 10), UNKNOWN, np.int8)
-    shared[9, 9] = 0
+    # common frame, which is shared cell (r=9, c=9) of a 10x10 grid. The
+    # shared map is solidly known except one hole at (8,8).
+    shared = np.zeros((10, 10), np.int8)
+    shared[8, 8] = UNKNOWN
     unknown = np.zeros((6, 6), bool)
     unknown[0, 0] = True
     unknown[1, 1] = True    # lands at (0.85, 0.85) -> shared (8,8): unknown
@@ -127,3 +145,58 @@ def test_rotated_offset_maps_cells_correctly():
     assert mask is not None
     assert mask[0, 0]
     assert not mask[1, 1]
+
+
+class CandidateStub:
+    _shared_mask_active = False
+    alignment_locked = False
+    alignment_ambiguity = 0.0
+    candidate_max_age = 20.0
+    candidate_guidance_min_confidence = 0.15
+
+    def __init__(self, robot, peer_grid, transform, confidence):
+        self.robot_name = robot
+        self.candidate_map_msg = grid_msg(peer_grid, frame='peer/map')
+        self._candidate_map_time = 95.0
+        self.candidate_transform = transform
+        self._candidate_transform_time = 95.0
+        self.alignment_confidence = confidence
+
+    def _now_sec(self):
+        return 100.0
+
+
+def candidate(stub, xy):
+    return FrontierExplorer._candidate_redundancy(stub, xy)
+
+
+def test_soft_candidate_guidance_is_zero_below_confidence_floor():
+    peer = np.zeros((20, 20), np.int8)
+    stub = CandidateStub('leo2', peer, (1.0, 1.0, math.pi), 0.10)
+    assert candidate(stub, (0.05, 0.05)) == 0.0
+
+
+def test_ambiguous_candidate_does_not_steer_exploration():
+    peer = np.zeros((20, 20), np.int8)
+    stub = CandidateStub('leo2', peer, (1.0, 1.0, math.pi), 0.9)
+    stub.alignment_ambiguity = 0.95
+    assert candidate(stub, (0.05, 0.05)) == 0.0
+
+
+def test_soft_candidate_guidance_maps_leo2_point_into_leo1_peer_map():
+    peer = np.zeros((20, 20), np.int8)
+    stub = CandidateStub('leo2', peer, (1.0, 1.0, math.pi), 0.8)
+    assert candidate(stub, (0.05, 0.05)) > 0.75
+
+
+def test_soft_candidate_guidance_inverts_transform_for_leo1():
+    peer = np.zeros((20, 20), np.int8)
+    stub = CandidateStub('leo1', peer, (1.0, 1.0, math.pi), 0.8)
+    assert candidate(stub, (0.95, 0.95)) > 0.75
+
+
+def test_accepted_shared_mask_disables_candidate_guidance():
+    peer = np.zeros((20, 20), np.int8)
+    stub = CandidateStub('leo2', peer, (0.0, 0.0, 0.0), 0.9)
+    stub._shared_mask_active = True
+    assert candidate(stub, (0.5, 0.5)) == 0.0

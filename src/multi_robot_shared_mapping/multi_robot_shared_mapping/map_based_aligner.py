@@ -28,7 +28,7 @@ import rclpy
 from geometry_msgs.msg import TransformStamped
 from nav_msgs.msg import OccupancyGrid
 from rclpy.node import Node
-from std_msgs.msg import Float32, String
+from std_msgs.msg import Bool, Float32, String
 
 from multi_robot_shared_mapping.alignment_confidence import (
     ConfidenceInputs,
@@ -43,6 +43,8 @@ from multi_robot_shared_mapping.grid_map_matching import (
     match_maps,
     occupancy_grid_to_points,
 )
+from multi_robot_shared_mapping.grid_registration import (
+    info_from_message, local_refine, quaternion_yaw)
 from multi_robot_shared_mapping import marker_free_matching
 from multi_robot_shared_mapping.map_quality import LocalMapQualityTracker
 from multi_robot_shared_mapping.exploration_policy import (
@@ -53,6 +55,8 @@ from multi_robot_shared_mapping.exploration_policy import (
 )
 from multi_robot_shared_mapping.recovery_advisor import recommend_recovery
 from multi_robot_shared_mapping.tag_landmark_map import geometric_spread
+from multi_robot_shared_mapping.geometric_residual import (
+    geometric_lock_ok, residual_stats)
 
 
 class MapBasedAligner(Node):
@@ -70,6 +74,8 @@ class MapBasedAligner(Node):
         self.declare_parameter("output_topic", "/map_based_transform/leo2_to_leo1")
         self.declare_parameter("candidate_topic", "/alignment_candidate_transform")
         self.declare_parameter("confidence_topic", "/alignment_confidence")
+        self.declare_parameter("accepted_confidence_topic",
+                               "/accepted_alignment_confidence")
         self.declare_parameter("debug_topic", "/alignment_debug_json")
         self.declare_parameter("recovery_topic", "/alignment_recovery_goal")
         self.declare_parameter("parent_map_frame", "leo1/map")
@@ -98,8 +104,38 @@ class MapBasedAligner(Node):
 
         self.declare_parameter("max_tag_map_disagreement_m", 1.0)
         self.declare_parameter("max_tag_map_disagreement_yaw_deg", 15.0)
+        self.declare_parameter("min_common_landmarks_for_hybrid", 2)
         self.declare_parameter("max_free_space_conflict_ratio", 0.15)
         self.declare_parameter("min_occupied_overlap_ratio", 0.25)
+        self.declare_parameter("min_refined_wall_hit", 0.50)
+        # The coarse grid search is quantised at 0.75 m / 15 deg, so a correct
+        # polish routinely moves further than the old 0.90 m / 6 deg region -
+        # it was the single largest reject bucket (132/293 in one run). The
+        # geometry gate still judges the polished pose on wall residuals.
+        self.declare_parameter("max_refinement_translation_m", 2.5)
+        self.declare_parameter("max_refinement_yaw_deg", 12.0)
+        # Confidence alone must not lock a still-shifted overlay.
+        self.declare_parameter("max_lock_residual_m", 0.12)
+        self.declare_parameter("max_lock_residual_p90_m", 0.30)
+        self.declare_parameter("min_undilated_wall_hit", 0.30)
+        # Before anything is accepted, both rovers must have mapped enough
+        # that landmark positions are trustworthy. The heavy lifting against
+        # grid aliasing (mirror locks at ~30 m2, +3 m shifts at ~80 m2) is
+        # done by the common-landmark witness requirement and the landmark
+        # conflict veto; this size gate only screens out the earliest maps.
+        # It is raw grid area INCLUDING the exterior halo, and it must stay
+        # small enough for compact worlds: at 120 the husarion_office leo2
+        # map (85 m2 raw, 3 agreeing landmarks) was blocked for a whole run.
+        self.declare_parameter("min_known_m2_for_first_lock", 60.0)
+        # How far a shared landmark may sit from the peer's estimate of the
+        # same landmark under a candidate transform. Registry noise is ~0.7 m
+        # mean / 1.6 m max; wrong grid modes displace landmarks 12+ m.
+        self.declare_parameter("max_landmark_conflict_m", 2.5)
+        # After a lock, re-run the full global search every Nth cycle. The
+        # tracking window is +/-2 m around the accepted pose, so without this
+        # a wrong early lock is never challenged: the true mode sits outside
+        # the window and the supersede path can never see a better candidate.
+        self.declare_parameter("global_recheck_every_n", 4)
         self.declare_parameter("reset_bad_local_map_recommended", False)
         self.declare_parameter("debug_map_topic", "/leo2/map_transformed_debug")
 
@@ -128,6 +164,9 @@ class MapBasedAligner(Node):
         self._idle_logged = False
         self._last_recovery: Optional[str] = None
         self._mf_counter = 0
+        self._cycle_count = 0
+        self._global_recheck = False
+        self._accepted_evidence = {}
 
         self.create_subscription(
             OccupancyGrid, str(self.get_parameter("map1_topic").value), self._map1_cb, 10
@@ -165,6 +204,9 @@ class MapBasedAligner(Node):
         self.confidence_pub = self.create_publisher(
             Float32, str(self.get_parameter("confidence_topic").value), 10
         )
+        self.accepted_confidence_pub = self.create_publisher(
+            Float32,
+            str(self.get_parameter("accepted_confidence_topic").value), 10)
         self.debug_pub = self.create_publisher(
             String, str(self.get_parameter("debug_topic").value), 10
         )
@@ -173,6 +215,15 @@ class MapBasedAligner(Node):
         )
         self.debug_map_pub = self.create_publisher(
             OccupancyGrid, str(self.get_parameter("debug_map_topic").value), 10
+        )
+        self.residual_pub = self.create_publisher(
+            Float32, "/alignment_residual_m", 10
+        )
+        self.geometry_ok_pub = self.create_publisher(
+            Bool, "/alignment_geometry_ok", 10
+        )
+        self.accepted_validation_pub = self.create_publisher(
+            String, "/accepted_alignment_validation", 10
         )
         self.timer = self.create_timer(
             float(self.get_parameter("match_period_sec").value), self._cycle
@@ -239,6 +290,7 @@ class MapBasedAligner(Node):
         return occupancy_grid_to_points(
             grid.data, grid.info.width, grid.info.height,
             grid.info.resolution, grid.info.origin.position.x, grid.info.origin.position.y,
+            quaternion_yaw(grid.info.origin.orientation),
             occupied_threshold=threshold, select=select,
         )
 
@@ -263,11 +315,7 @@ class MapBasedAligner(Node):
     def _grid_tuple(self, msg: OccupancyGrid):
         h, w = msg.info.height, msg.info.width
         grid = np.asarray(msg.data, dtype=np.int8).reshape(h, w)
-        info = (
-            msg.info.origin.position.x,
-            msg.info.origin.position.y,
-            msg.info.resolution,
-        )
+        info = info_from_message(msg)
         return grid, info
 
     def _cycle_markerfree(self):
@@ -400,8 +448,63 @@ class MapBasedAligner(Node):
         top_k = select_top_candidates(result.candidates, k=5)
         ambiguity_ratio, is_ambiguous = detect_ambiguity(top_k)
 
+        # The sampled matcher identifies a mode. A full-resolution local
+        # polish removes the residual raster/SLAM offset before any lock is
+        # allowed. Geometry remains the primary seed.  Markers may only pick
+        # among modes that the grid matcher already found when those modes are
+        # ambiguous; a noisy landmark fit must never pull refinement into an
+        # unrelated transform basin.
+        # Once a pose is accepted, refine that exact pose against the newest
+        # map pair. A later noisy landmark fit must not drag the local polish
+        # outside its trust region or make a good accepted merge go stale.
+        # Tags remain an independent cross-check for the refined result.
+        seed = (result.dx, result.dy, result.yaw)
+        if self.state.accepted is not None and not self._global_recheck:
+            seed = self.state.accepted
+        elif (is_ambiguous and self._mode() in ("hybrid", "tag")
+              and len(self.common_landmarks) >= 2
+              and self.tag_estimate is not None):
+            for mode_candidate in top_k:
+                geometric_mode = mode_candidate[:3]
+                if tag_map_agree(
+                        self.tag_estimate, geometric_mode,
+                        float(self.get_parameter(
+                            "max_tag_map_disagreement_m").value),
+                        math.radians(float(self.get_parameter(
+                            "max_tag_map_disagreement_yaw_deg").value))):
+                    seed = geometric_mode
+                    break
+        # One shared landmark is already enough to falsify a grid-aliasing
+        # mode ~13 m from the truth. If the best-scoring mode contradicts a
+        # common landmark, polish the best mode that does not.
+        if (self.common_landmarks
+                and (self.state.accepted is None or self._global_recheck)
+                and self._landmark_conflict(seed)):
+            for mode_candidate in top_k:
+                if not self._landmark_conflict(mode_candidate[:3]):
+                    seed = mode_candidate[:3]
+                    break
+        g1, i1 = self._grid_tuple(self.map1)
+        g2, i2 = self._grid_tuple(self.map2)
+        candidate, registration = local_refine(g1, i1, g2, i2, seed)
+
+        # Rectilinear offices often have a second grid-only mode. Two or more
+        # common landmarks that agree with the refined pose disambiguate that
+        # mode; without them, a hybrid candidate remains preview-only however
+        # attractive its occupancy residual looks.
+        marker_disambiguated = (
+            self._mode() in ("hybrid", "tag")
+            and len(self.common_landmarks) >= 2
+            and tag_map_agree(
+                self.tag_estimate, candidate,
+                float(self.get_parameter("max_tag_map_disagreement_m").value),
+                math.radians(float(self.get_parameter(
+                    "max_tag_map_disagreement_yaw_deg").value))))
+        effective_ambiguous = is_ambiguous and not marker_disambiguated
+
         # Hybrid/tag/map: occupancy overlap always computed when maps exist.
-        extra_reject = self._preflight_reject(result, is_ambiguous)
+        extra_reject = self._preflight_reject(
+            result, effective_ambiguous, candidate, registration)
 
         local_q = min(self.quality_leo1.quality, self.quality_leo2.quality)
         free_conflict_score = max(
@@ -409,34 +512,104 @@ class MapBasedAligner(Node):
             / max(1e-6, float(self.get_parameter("max_free_space_conflict_ratio").value))
         )
         conf_inputs = ConfidenceInputs(
-            occupancy_overlap_score=result.normalized_overlap_score,
+            occupancy_overlap_score=registration['wall_hit'],
             free_space_conflict_score=free_conflict_score,
-            transform_stability_score=self._stability((result.dx, result.dy, result.yaw)),
-            unambiguity_score=max(0.0, 1.0 - ambiguity_ratio),
+            transform_stability_score=self._stability(candidate),
+            unambiguity_score=(1.0 if marker_disambiguated
+                               else max(0.0, 1.0 - ambiguity_ratio)),
             local_map_quality_score=local_q,
-            tag_alignment_confidence=self.tag_confidence if self._mode() in ("hybrid", "tag") else None,
+            # A tag channel with nothing to say (no common markers, conf ~0)
+            # must not sit in the weighted mix - its 0.10 weight suppressed
+            # map-only confidence by ~0.09 for entire runs.
+            tag_alignment_confidence=(
+                self.tag_confidence
+                if self._mode() in ("hybrid", "tag")
+                and (self.tag_confidence or 0.0) > 0.05 else None),
             tag_residual_score=self._tag_residual_score(),
             common_landmark_count_score=min(1.0, len(self.common_landmarks) / 4.0),
             landmark_spread_score=min(1.0, self.landmark_spread / 2.0),
         )
         confidence = compute_final_confidence(conf_inputs)
-        candidate = (result.dx, result.dy, result.yaw)
         self._finalize(
-            candidate, confidence, conf_inputs, result, is_ambiguous,
+            candidate, confidence, conf_inputs, result, effective_ambiguous,
             extra_reject or "", top_k=top_k, ambiguity_ratio=ambiguity_ratio,
+            registration=registration,
         )
 
-    def _preflight_reject(self, result: GridMatchResult, is_ambiguous: bool) -> str:
+    def _landmark_conflict(self, candidate) -> str:
+        """A common landmark landing far from where the peer mapped it
+        falsifies the candidate outright.
+
+        The grid matcher aliases in this repetitive office (confident modes
+        3-15 m from the truth); a single shared marker settles which mode is
+        real, because under a wrong mode it lands whole rooms away.
+        """
+        if not self.common_landmarks:
+            return ""
+        limit = float(self.get_parameter("max_landmark_conflict_m").value)
+        c, s = math.cos(candidate[2]), math.sin(candidate[2])
+        for tid in self.common_landmarks:
+            p1 = self.leo1_landmarks.get(tid)
+            p2 = self.leo2_landmarks.get(tid)
+            if p1 is None or p2 is None:
+                continue
+            tx = candidate[0] + c * p2[0] - s * p2[1]
+            ty = candidate[1] + s * p2[0] + c * p2[1]
+            d = math.hypot(tx - p1[0], ty - p1[1])
+            if d > limit:
+                return (
+                    f"common landmark {tid} lands {d:.1f} m from the peer's "
+                    f"position under this candidate (> {limit:.1f} m)")
+        return ""
+
+    def _known_m2(self, grid) -> float:
+        if grid is None:
+            return 0.0
+        values = np.asarray(grid.data, dtype=np.int8)
+        res = float(grid.info.resolution)
+        return float(np.count_nonzero(values >= 0)) * res * res
+
+    def _preflight_reject(self, result: GridMatchResult, is_ambiguous: bool,
+                          candidate, registration) -> str:
         mode = self._mode()
         if not result.success:
             return result.message
-        if result.normalized_overlap_score < float(
-            self.get_parameter("min_occupied_overlap_ratio").value
-        ):
+        min_first = float(
+            self.get_parameter("min_known_m2_for_first_lock").value)
+        # Two agreeing shared landmarks pin the transform on their own; the
+        # size gate then only delays a well-witnessed merge (husarion v4:
+        # a 0.08 m candidate with 2 witnesses was withheld a whole run
+        # because one rover's map stayed at 53 m2).
+        if (self.state.accepted is None and min_first > 0
+                and len(self.common_landmarks) < 2):
+            a1, a2 = self._known_m2(self.map1), self._known_m2(self.map2)
+            if min(a1, a2) < min_first:
+                return (
+                    f"maps too small for a first lock ({a1:.0f}/{a2:.0f} m2 "
+                    f"known < {min_first:.0f} m2): small half-maps of a "
+                    f"symmetric office match their own mirror image")
+        # Grid geometry alone repeatedly locked confident wrong modes in this
+        # building (mirror at ~30 m2, +3 m alias at ~80 m2 interior). The
+        # first acceptance needs one independent witness: a landmark both
+        # rovers have seen, landing in the same place under the candidate.
+        conflict = self._landmark_conflict(candidate)
+        if conflict:
+            return conflict
+        if self.state.accepted is None and not self.common_landmarks:
+            return ("first lock needs a landmark both rovers have seen; "
+                    "grid-only matches alias in this repetitive building")
+        if registration['wall_hit'] < float(
+                self.get_parameter("min_refined_wall_hit").value):
             return (
-                f"overlap ratio {result.normalized_overlap_score:.2f} < "
-                f"min_occupied_overlap_ratio"
+                f"refined wall hit {registration['wall_hit']:.3f} < "
+                f"min_refined_wall_hit"
             )
+        if registration['refinement_translation_m'] > float(
+                self.get_parameter("max_refinement_translation_m").value):
+            return "local refinement escaped its translation trust region"
+        if registration['refinement_yaw_deg'] > float(
+                self.get_parameter("max_refinement_yaw_deg").value):
+            return "local refinement escaped its yaw trust region"
         if result.free_space_conflict_ratio > float(
             self.get_parameter("max_free_space_conflict_ratio").value
         ):
@@ -447,7 +620,7 @@ class MapBasedAligner(Node):
         evidence_reject = fusion_evidence_rejection(
             mode,
             self.tag_estimate,
-            (result.dx, result.dy, result.yaw),
+            candidate,
             is_ambiguous=is_ambiguous,
             max_translation_m=float(
                 self.get_parameter("max_tag_map_disagreement_m").value
@@ -472,6 +645,7 @@ class MapBasedAligner(Node):
         extra_reject: str,
         top_k: Optional[list] = None,
         ambiguity_ratio: float = 0.0,
+        registration: Optional[dict] = None,
     ):
         mode = self._mode()
         self._publish_transform(self.candidate_pub, candidate)
@@ -484,6 +658,14 @@ class MapBasedAligner(Node):
             float(self.get_parameter("max_tag_map_disagreement_m").value),
             math.radians(float(self.get_parameter("max_tag_map_disagreement_yaw_deg").value)),
         )
+        residual, geom_reject = self._geometry_gate(candidate)
+        geometry_aligned = not bool(geom_reject)
+        # Geometry is a mandatory final gate, but never erases a preflight
+        # rejection. In particular, a symmetric office overlay must remain a
+        # preview until independent landmark evidence selects the same mode.
+        if geom_reject:
+            extra_reject = extra_reject or geom_reject
+
         base_min = float(self.get_parameter("min_alignment_confidence").value)
         map_min = float(self.get_parameter("map_mode_min_confidence").value)
         min_conf = min_acceptance_confidence(
@@ -492,6 +674,7 @@ class MapBasedAligner(Node):
             overlap,
             is_ambiguous=is_ambiguous,
             tag_map_agreement=agreement,
+            geometry_aligned=geometry_aligned,
             base_min=base_min,
             map_mode_min=map_min,
         )
@@ -500,6 +683,13 @@ class MapBasedAligner(Node):
         policy_preview = build_policy_debug(
             mode=mode,
             final_confidence=confidence,
+            refined_wall_hit=(registration or {}).get('wall_hit'),
+            refined_forward_hit=(registration or {}).get('forward_hit'),
+            refined_reverse_hit=(registration or {}).get('reverse_hit'),
+            seed_wall_hit=(registration or {}).get('seed_wall_hit'),
+            refinement_translation_m=(registration or {}).get(
+                'refinement_translation_m'),
+            refinement_yaw_deg=(registration or {}).get('refinement_yaw_deg'),
             common_landmark_count=len(self.common_landmarks),
             map_overlap_score=overlap,
             ambiguity_score=ambiguity_ratio,
@@ -541,11 +731,34 @@ class MapBasedAligner(Node):
             map_mode_min=map_min,
         )
 
+        residual_m = residual.get("median_m")
+        # Re-evaluate the accepted pose on the *current synchronized maps*.
+        # The residual saved when it first locked becomes stale as each rover
+        # reveals new walls. If the old pose now fails geometry while this
+        # refined candidate passes, geometry—not an unrelated confidence
+        # increment—must authorize the replacement.
+        if self.state.accepted is not None:
+            accepted_now, accepted_geom_reject = self._geometry_gate(
+                self.state.accepted)
+            accepted_now_m = accepted_now.get("median_m")
+            if accepted_now_m is not None:
+                self.state.accepted_residual_m = float(accepted_now_m)
+            if geometry_aligned and accepted_geom_reject:
+                self.state.accepted_residual_m = float("inf")
         if extra_reject:
             accepted, reason = False, extra_reject
-            self.state.evaluate_candidate(candidate, confidence, extra_reject_reason=extra_reject)
+            self.state.evaluate_candidate(
+                candidate, confidence, extra_reject_reason=extra_reject)
         else:
-            accepted, reason = self.state.evaluate_candidate(candidate, confidence)
+            accepted, reason = self.state.evaluate_candidate(
+                candidate, confidence, residual_m=residual_m)
+        if accepted:
+            self._accepted_evidence = {
+                "common_landmark_count": len(self.common_landmarks),
+                "tag_map_agreement": bool(agreement),
+                "ambiguity_score": float(ambiguity_ratio),
+                "is_ambiguous": bool(is_ambiguous),
+            }
 
         debug = self.state.debug_dict(
             mode,
@@ -567,9 +780,18 @@ class MapBasedAligner(Node):
                 for c in (top_k or [])
             ],
         )
+        policy.pop("reason", None)
         debug.update(policy)
+        debug["reason"] = reason
+        debug["accepted"] = accepted
+        debug.update({
+            "occupancy_residual_m": residual.get("median_m"),
+            "occupancy_residual_p90_m": residual.get("p90_m"),
+            "undilated_wall_hit": residual.get("undilated_hit"),
+            "occupancy_overlap_fraction": residual.get("overlap_fraction"),
+            "geometry_aligned": geometry_aligned,
+        })
         self.debug_pub.publish(String(data=json.dumps(debug)))
-
         tag_initial = (
             f"tag_initial=({self.tag_estimate[0]:.2f},{self.tag_estimate[1]:.2f},"
             f"{self.tag_estimate[2]:.2f})"
@@ -588,10 +810,41 @@ class MapBasedAligner(Node):
         )
         if accepted:
             self.get_logger().info(log)
-            if self.state.accepted is not None:
-                self._publish_transform(self.accepted_pub, self.state.accepted)
         else:
             self.get_logger().warn(log)
+
+        # Keep accepted transform and accepted confidence synchronized. A
+        # rejected candidate's confidence must never unlock an older pose.
+        if self.state.accepted is not None:
+            self._publish_transform(self.accepted_pub, self.state.accepted)
+            self.accepted_confidence_pub.publish(Float32(
+                data=float(self.state.accepted_confidence)))
+            accepted_residual, accepted_reject = self._geometry_gate(
+                self.state.accepted)
+            accepted_median = accepted_residual.get("median_m")
+            accepted_ok = not bool(accepted_reject)
+            self.residual_pub.publish(Float32(
+                data=99.0 if accepted_median is None
+                else float(accepted_median)))
+            self.geometry_ok_pub.publish(Bool(data=accepted_ok))
+            self.accepted_validation_pub.publish(String(data=json.dumps({
+                "dx": self.state.accepted[0],
+                "dy": self.state.accepted[1],
+                "yaw": self.state.accepted[2],
+                "confidence": self.state.accepted_confidence,
+                "residual_m": accepted_median,
+                "residual_p90_m": accepted_residual.get("p90_m"),
+                "undilated_wall_hit": accepted_residual.get(
+                    "undilated_hit"),
+                "overlap_fraction": accepted_residual.get(
+                    "overlap_fraction"),
+                "geometry_ok": accepted_ok,
+                **self._accepted_evidence,
+                "reason": accepted_reject or "geometry aligned",
+            })))
+        else:
+            self.residual_pub.publish(Float32(data=99.0))
+            self.geometry_ok_pub.publish(Bool(data=False))
 
         if recovery:
             payload = json.dumps(recovery)
@@ -601,21 +854,61 @@ class MapBasedAligner(Node):
         elif self._last_recovery is not None:
             self._last_recovery = None
 
+    def _geometry_gate(self, candidate):
+        """Refuse a lock when occupancy walls remain visibly offset."""
+        empty = {"median_m": None, "p90_m": None, "undilated_hit": None}
+        if self.map1 is None or self.map2 is None:
+            return empty, "waiting for both occupancy maps"
+        g1, i1 = self._grid_tuple(self.map1)
+        g2, i2 = self._grid_tuple(self.map2)
+        stats = residual_stats(g1, i1, g2, i2, candidate)
+        ok, why = geometric_lock_ok(
+            stats,
+            max_median_m=float(self.get_parameter("max_lock_residual_m").value),
+            max_p90_m=float(self.get_parameter("max_lock_residual_p90_m").value),
+            min_undilated_hit=float(
+                self.get_parameter("min_undilated_wall_hit").value),
+        )
+        return stats, ("" if ok else why)
+
+
     def _search_window(self):
+        # An accepted pose is the strongest prior: track it. But every Nth
+        # cycle - and immediately when the accepted pose has stopped fitting
+        # the current maps - run the full global window instead, so a wrong
+        # early lock can be challenged and superseded by the true mode.
+        # The tag hint is only trusted when the tag pipeline itself has
+        # confidence in it - a zero-confidence estimate once parked the
+        # search in a 2 m box around an 8 m error for seven minutes.
         mode = self._mode()
-        if mode in ("hybrid", "tag") and self.tag_estimate is not None:
-            return (
-                self.tag_estimate,
-                float(self.get_parameter("hybrid_search_range_xy").value),
-                float(self.get_parameter("hybrid_search_range_yaw").value),
-            )
+        self._cycle_count += 1
+        self._global_recheck = False
         if self.state.accepted is not None:
+            every_n = max(1, int(
+                self.get_parameter("global_recheck_every_n").value))
+            accepted_broken = (
+                self.state.accepted_residual_m is not None
+                and math.isinf(self.state.accepted_residual_m))
+            if accepted_broken or self._cycle_count % every_n == 0:
+                self._global_recheck = True
+                return (
+                    (0.0, 0.0, 0.0),
+                    float(self.get_parameter("map_search_range_xy").value),
+                    float(self.get_parameter("map_search_range_yaw").value),
+                )
             return (
                 self.state.accepted,
                 float(self.get_parameter("hybrid_search_range_xy").value),
                 float(self.get_parameter("hybrid_search_range_yaw").value),
             )
-        # No tags yet: full map search for collaborative map-only alignment.
+        if (mode in ("hybrid", "tag") and self.tag_estimate is not None
+                and (self.tag_confidence or 0.0) >= 0.2):
+            return (
+                self.tag_estimate,
+                float(self.get_parameter("hybrid_search_range_xy").value),
+                float(self.get_parameter("hybrid_search_range_yaw").value),
+            )
+        # No trustworthy prior: full map search for map-only alignment.
         return (
             (0.0, 0.0, 0.0),
             float(self.get_parameter("map_search_range_xy").value),

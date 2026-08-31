@@ -49,6 +49,7 @@ def launch_setup(context, *args, **kwargs):
     # independent baseline stays byte-identical.
     shared_map_topic = LaunchConfiguration(
         'shared_map_topic').perform(context).strip()
+    map_save_dir = LaunchConfiguration('map_save_dir').perform(context).strip()
 
     nodes = []
     for i in range(num_robots):
@@ -57,6 +58,9 @@ def launch_setup(context, *args, **kwargs):
         overrides = {'coordination_mode': mode,
                      'share_claims': share_claims,
                      'common_frame': common_frame}
+        if map_save_dir:
+            overrides['map_save_path'] = os.path.join(
+                map_save_dir, f'{ns}_explorer_map')
         if shared_map_topic and mode == 'coordinated':
             # 'per_robot' -> each explorer consumes ITS OWN rover's merged
             # map (/leo{i}/shared_map, published in that rover's own frame
@@ -135,6 +139,9 @@ def generate_launch_description():
             description="Frame peer poses are compared in. 'map' with "
                         "multirobot_map_merge; 'leo1/map' under tag "
                         'alignment, where no global map frame exists'),
+        DeclareLaunchArgument(
+            'map_save_dir', default_value='',
+            description='Run-isolated directory for explorer map saves'),
         # "xmin,xmax,ymin,ymax" in that rover's own map frame. Frontiers
         # outside it are discarded: they are unreachable by construction, and
         # chasing them wasted half of every run before this existed. Get them

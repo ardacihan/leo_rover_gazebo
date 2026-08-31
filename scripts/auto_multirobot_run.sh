@@ -62,10 +62,28 @@ fi
 ALIGN_MODE="${ALIGN_MODE:-hybrid}"
 TAG_ALIGN="true"
 [[ -n "${SKIP_ARUCO:-}" || "$ALIGN_MODE" == "markerfree" ]] && TAG_ALIGN="false"
+# Known-relative-pose condition: the launch broadcasts the true offset as a
+# static TF and the merger uses it directly. The estimating aligner and its
+# TF bridge must be OFF or their (independent) leo1/map->leo2/map broadcast
+# would fight the static one.
+MAP_ALIGN="true"; ALIGN_TF="true"
+if [[ "$ALIGN_MODE" == "fixed" ]]; then
+  TAG_ALIGN="false"; MAP_ALIGN="false"; ALIGN_TF="false"
+fi
 # Cameras exist for ArUco; a marker-free run does not need them, and two-camera
 # rendering is what triggers the D3D12 segfault at 9-13 min (4/4 runs).
 ENABLE_CAMERA="${ENABLE_CAMERA:-true}"
 [[ -n "${SKIP_ARUCO:-}" ]] && ENABLE_CAMERA="${CAMERA_OVERRIDE:-false}"
+SIM_SPEED="${SIM_SPEED:-2.0}"
+# Landmark-count experiments swap marker sets with more ids.
+ALLOWED_IDS="${ALLOWED_IDS:-0,1,2,3,4,5,6,7,8,9}"
+# Isolation for two independent experiments on one host. Each experiment is
+# a full Leo1+Leo2 stack; a second run must not share the ROS graph or the
+# Gazebo partition of the first.
+CONTAINER_NAME="${CONTAINER_NAME:-leo_sim}"
+ROS_DOMAIN_ID="${ROS_DOMAIN_ID:-0}"
+IGN_PARTITION="${IGN_PARTITION:-leo_${CONTAINER_NAME}}"
+GZ_PARTITION="${GZ_PARTITION:-$IGN_PARTITION}"
 
 if [[ -z "$MODE" || -z "$WORLD" || -z "$OUT" ]]; then
   echo "usage: $0 <coordinated|independent|single> <world> <outdir> [cap_min]" >&2
@@ -80,6 +98,7 @@ NUM_ROBOTS=2
 [[ "$MODE" == "single" ]] && NUM_ROBOTS=1
 
 mkdir -p "$ROOT/$OUT"
+: > "$ROOT/$OUT/run.log"
 LOG() { echo "[multirobot $(date +%H:%M:%S)] $*" | tee -a "$ROOT/$OUT/run.log"; }
 CMD() { echo "$*" >> "$ROOT/$OUT/cmdlines.txt"; }
 
@@ -93,8 +112,8 @@ case "$WORLD" in
   *)                BOUNDS="" ;;
 esac
 
-in_sim()    { docker exec    leo_sim bash -lc "source /opt/ros/humble/setup.bash && source /ros2_ws/install/setup.bash && $1"; }
-in_sim_bg() { docker exec -d leo_sim bash -lc "source /opt/ros/humble/setup.bash && source /ros2_ws/install/setup.bash && $1"; }
+in_sim()    { docker exec    "$CONTAINER_NAME" bash -lc "source /opt/ros/humble/setup.bash && source /ros2_ws/install/setup.bash && export ROS_DOMAIN_ID=$ROS_DOMAIN_ID IGN_PARTITION=$IGN_PARTITION GZ_PARTITION=$GZ_PARTITION && $1"; }
+in_sim_bg() { docker exec -d "$CONTAINER_NAME" bash -lc "source /opt/ros/humble/setup.bash && source /ros2_ws/install/setup.bash && export ROS_DOMAIN_ID=$ROS_DOMAIN_ID IGN_PARTITION=$IGN_PARTITION GZ_PARTITION=$GZ_PARTITION && $1"; }
 
 # Ground truth: leo2's map origin in leo1's map frame, from the same table the
 # launch file spawns from (src/leo_rover_gazebo/launch/spawn_poses.py), so the
@@ -120,12 +139,24 @@ LOG "ground-truth leo2->leo1 offset: x=$GT_X y=$GT_Y yaw=$GT_YAW rad (scoring on
 echo "run: mode=$MODE world=$WORLD explore_cap=${CAP_MIN}min max_wall=${MAX_WALL_MIN}min collection_reserve=${FINALIZE_RESERVE_SEC}s started $(date -Iseconds)" \
   > "$ROOT/$OUT/cmdlines.txt"
 
+# Reject invisible/floating/outside tags before spending GPU time. Mesh-only
+# third-party worlds have no local rasterizable SDF and are checked separately;
+# the authored office/depot maps used by accelerated data runs are mandatory.
+if [[ -f "$ROOT/src/leo_rover_gazebo/worlds/$WORLD.sdf" && "$ENABLE_CAMERA" == "true" ]]; then
+  LOG "validating 5-9 indoor, surface-mounted ArUco placements"
+  "$PYBIN" "$ROOT/scripts/validate_aruco_placement.py" "$WORLD" \
+    --json "$ROOT/$OUT/marker_placement.json" >>"$ROOT/$OUT/run.log" 2>&1 || {
+      LOG "FATAL: marker placement validation failed (see marker_placement.json)"
+      exit 1
+    }
+fi
+
 # ---------- 0. clean process table ----------
 # Stale C++ Nav2 / slam_toolbox binaries from a previous run poison the next
 # one; stopping the container is the only reliable way to be rid of them.
-LOG "stopping any previous sim container"
-docker stop leo_sim >/dev/null 2>&1 || true
-docker rm leo_sim >/dev/null 2>&1 || true
+LOG "stopping any previous $CONTAINER_NAME container (domain=$ROS_DOMAIN_ID partition=$IGN_PARTITION)"
+docker stop "$CONTAINER_NAME" >/dev/null 2>&1 || true
+docker rm "$CONTAINER_NAME" >/dev/null 2>&1 || true
 
 # ---------- 1. sim ----------
 # Pick the GPU path for this host. Under Docker Desktop (Windows/Git-bash) or
@@ -147,21 +178,23 @@ if [[ -z "${SIM_LAUNCHER:-}" ]]; then
 fi
 [[ -f "$SIM_LAUNCHER" ]] || {
   echo "FATAL: sim launcher not found: $SIM_LAUNCHER" >&2; exit 2; }
-LOG "starting sim: world=$WORLD robots=$NUM_ROBOTS cameras=$ENABLE_CAMERA gt_odom_tf=FALSE"
+LOG "starting sim: world=$WORLD robots=$NUM_ROBOTS cameras=$ENABLE_CAMERA gt_odom_tf=FALSE speed=${SIM_SPEED}x"
 LOG "  launcher: $(basename "$SIM_LAUNCHER")"
-CMD "sim: WORLD=$WORLD GUI=false NUM_ROBOTS=$NUM_ROBOTS ENABLE_CAMERA=$ENABLE_CAMERA GT_ODOM_TF=false scripts/$(basename "$SIM_LAUNCHER")"
+CMD "sim: WORLD=$WORLD GUI=false NUM_ROBOTS=$NUM_ROBOTS ENABLE_CAMERA=$ENABLE_CAMERA GT_ODOM_TF=false SIM_SPEED=$SIM_SPEED CONTAINER_NAME=$CONTAINER_NAME ROS_DOMAIN_ID=$ROS_DOMAIN_ID IGN_PARTITION=$IGN_PARTITION scripts/$(basename "$SIM_LAUNCHER")"
 WORLD="$WORLD" GUI=false NUM_ROBOTS="$NUM_ROBOTS" ENABLE_CAMERA="$ENABLE_CAMERA" \
-  GT_ODOM_TF=false bash "$SIM_LAUNCHER" >>"$ROOT/$OUT/run.log" 2>&1
+  GT_ODOM_TF=false SIM_SPEED="$SIM_SPEED" CONTAINER_NAME="$CONTAINER_NAME" \
+  ROS_DOMAIN_ID="$ROS_DOMAIN_ID" IGN_PARTITION="$IGN_PARTITION" \
+  GZ_PARTITION="$GZ_PARTITION" bash "$SIM_LAUNCHER" >>"$ROOT/$OUT/run.log" 2>&1
 
 # Stop only the exact container created above.  The identity check prevents a
 # stale watchdog from ever stopping a later run that reused the leo_sim name.
-SIM_CONTAINER_ID=$(docker inspect --format '{{.Id}}' leo_sim 2>/dev/null || true)
+SIM_CONTAINER_ID=$(docker inspect --format '{{.Id}}' "$CONTAINER_NAME" 2>/dev/null || true)
 hard_stop_epoch=$(( RUN_STARTED_EPOCH + MAX_WALL_MIN * 60 - 5 ))
 watchdog_delay=$(( hard_stop_epoch - $(date +%s) ))
 (( watchdog_delay > 0 )) || watchdog_delay=1
 (
   sleep "$watchdog_delay"
-  current_id=$(docker inspect --format '{{.Id}}' leo_sim 2>/dev/null || true)
+  current_id=$(docker inspect --format '{{.Id}}' "$CONTAINER_NAME" 2>/dev/null || true)
   if [[ -n "$SIM_CONTAINER_ID" && "$current_id" == "$SIM_CONTAINER_ID" ]]; then
     LOG "HARD WALL WATCHDOG: stopping this run before ${MAX_WALL_MIN} min"
     docker stop -t 2 "$SIM_CONTAINER_ID" >/dev/null 2>&1 || true
@@ -181,7 +214,7 @@ for _ in $(seq 1 48); do
   if in_sim "ros2 topic list 2>/dev/null | grep -q '^/$LAST_NS/scan\$'"; then ok=1; break; fi
   sleep 5
 done
-[[ -n "$ok" ]] || { LOG "FATAL: scan topics never appeared"; docker logs --tail 60 leo_sim >>"$ROOT/$OUT/run.log" 2>&1; exit 1; }
+[[ -n "$ok" ]] || { LOG "FATAL: scan topics never appeared"; docker logs --tail 60 "$CONTAINER_NAME" >>"$ROOT/$OUT/run.log" 2>&1; exit 1; }
 
 # ---------- 2. GPU check, inside the first two minutes ----------
 # Cameras are on this run, so RGBD rendering is the GPU load. Without
@@ -260,6 +293,35 @@ for i in $(seq 1 "$NUM_ROBOTS"); do
   [[ "$n" -ge 1 ]] || { LOG "FATAL: /$ns/map has no publisher -- the slam_multi remap regressed"; exit 1; }
 done
 
+# Start the replay record before detectors, alignment, Nav2, or explorers.
+# This preserves the full causal timeline from the first local maps through
+# every candidate and accepted merge, rather than only the mission tail.
+BAG_TOPICS="/clock /tf /tf_static /shared_map /shared_map_candidate /shared_map_raw /shared_map_cleaned"
+BAG_TOPICS="$BAG_TOPICS /alignment_confidence /accepted_alignment_confidence"
+BAG_TOPICS="$BAG_TOPICS /alignment_locked /alignment_debug_json /alignment_residual_m"
+BAG_TOPICS="$BAG_TOPICS /alignment_geometry_ok /accepted_alignment_validation"
+BAG_TOPICS="$BAG_TOPICS /alignment_candidate_transform /exploration_claims"
+BAG_TOPICS="$BAG_TOPICS /map_based_transform/leo2_to_leo1 /vetted_transform/leo2_to_leo1"
+BAG_TOPICS="$BAG_TOPICS /estimated_transform/leo2_to_leo1 /tag_alignment_confidence"
+for i in $(seq 1 "$NUM_ROBOTS"); do
+  ns="leo$i"
+  BAG_TOPICS="$BAG_TOPICS /$ns/map /$ns/scan /$ns/odom /$ns/cmd_vel"
+  BAG_TOPICS="$BAG_TOPICS /$ns/frontier_explorer/status /$ns/frontier_explorer/frontiers"
+  BAG_TOPICS="$BAG_TOPICS /$ns/frontier_explorer/camera_coverage /$ns/frontier_explorer/found_items"
+  BAG_TOPICS="$BAG_TOPICS /$ns/tag_detections /$ns/apriltag_landmarks_data"
+  if [[ "$ENABLE_CAMERA" == "true" ]]; then
+    BAG_TOPICS="$BAG_TOPICS /$ns/camera/image /$ns/camera/camera_info /$ns/aruco/debug_image"
+  fi
+done
+COMPRESS=""
+if in_sim "ros2 pkg list 2>/dev/null | grep -q rosbag2_compression_zstd"; then
+  COMPRESS="--compression-mode message --compression-format zstd"
+fi
+LOG "recording complete ROS playback -> $OUT/bag"
+echo "ros2 bag record -o /ros2_ws/$OUT/bag $COMPRESS $BAG_TOPICS" >> "$ROOT/$OUT/cmdlines.txt"
+in_sim_bg "exec ros2 bag record -o /ros2_ws/$OUT/bag $COMPRESS $BAG_TOPICS > /ros2_ws/$OUT/bag.log 2>&1"
+sleep 3
+
 # ---------- 5. ArUco detectors ----------
 # The hardware-validated detector, one per rover, publishing the MarkerArray
 # contract the aligner consumes. marker_length is the plate side: the sim
@@ -280,11 +342,11 @@ LOG "starting ArUco detectors (marker_length=0.20, frame_is_optical=false)"
 for i in $(seq 1 "$NUM_ROBOTS"); do
   [[ -n "${SKIP_ARUCO:-}" ]] && break
   ns="leo$i"
-  CMD "aruco($ns): ros2 launch leo_nav2_exploration aruco.launch.py profile:=sim robot_ns:=$ns marker_length:=0.20 allowed_ids:=0,1,2,3,4,5,6,7,8,9 detection_topic:=/$ns/tag_detections"
+  CMD "aruco($ns): ros2 launch leo_nav2_exploration aruco.launch.py profile:=sim robot_ns:=$ns marker_length:=0.20 allowed_ids:=${ALLOWED_IDS} detection_topic:=/$ns/tag_detections"
   in_sim_bg "exec ros2 launch leo_nav2_exploration aruco.launch.py \
     profile:=sim use_sim_time:=true robot_ns:=$ns \
-    marker_length:=0.20 max_range:=4.5 min_hits:=3 \
-    allowed_ids:=0,1,2,3,4,5,6,7,8,9 \
+    marker_length:=0.20 max_range:=4.0 min_hits:=3 \
+    allowed_ids:=${ALLOWED_IDS} \
     detection_topic:=/$ns/tag_detections \
     markers_topic:=/$ns/aruco_markers \
     publish_debug_image:=true \
@@ -317,11 +379,11 @@ if [[ "$NUM_ROBOTS" -eq 2 ]]; then
     sleep 6
   else
   LOG "starting alignment + shared map merger (alignment_mode=$ALIGN_MODE, tag_alignment=$TAG_ALIGN, NOT fixed)"
-  CMD "align: ros2 launch multi_robot_shared_mapping shared_align.launch.py alignment_mode:=$ALIGN_MODE enable_tag_alignment:=$TAG_ALIGN enable_map_alignment:=true compare_to_ground_truth:=true ground_truth_x:=$GT_X ground_truth_y:=$GT_Y ground_truth_yaw:=$GT_YAW"
+  CMD "align: ros2 launch multi_robot_shared_mapping shared_align.launch.py alignment_mode:=$ALIGN_MODE enable_tag_alignment:=$TAG_ALIGN enable_map_alignment:=$MAP_ALIGN compare_to_ground_truth:=true ground_truth_x:=$GT_X ground_truth_y:=$GT_Y ground_truth_yaw:=$GT_YAW"
   in_sim_bg "exec ros2 launch multi_robot_shared_mapping shared_align.launch.py \
     use_sim_time:=true alignment_mode:=$ALIGN_MODE \
-    enable_tag_alignment:=$TAG_ALIGN enable_map_alignment:=true \
-    enable_alignment_tf:=true min_tags:=2 \
+    enable_tag_alignment:=$TAG_ALIGN enable_map_alignment:=$MAP_ALIGN \
+    enable_alignment_tf:=$ALIGN_TF min_tags:=2 \
     compare_to_ground_truth:=true \
     ground_truth_x:=$GT_X ground_truth_y:=$GT_Y ground_truth_yaw:=$GT_YAW \
     > /ros2_ws/$OUT/align.log 2>&1"
@@ -375,7 +437,14 @@ COV_TOPIC="/shared_map"; TRAJ_FRAME="leo1/map"
 [[ "$NUM_ROBOTS" -eq 1 ]] && { COV_TOPIC="/leo1/map"; TRAJ_FRAME="leo1/map"; }
 ROBOTS=$(seq -s, 1 "$NUM_ROBOTS" | sed 's/\([0-9]\)/leo\1/g')
 
-in_sim_bg "exec python3 /ros2_ws/scripts/map_coverage.py 15 $BOUNDS $COV_TOPIC > /ros2_ws/$OUT/coverage.log 2>&1"
+# The coverage clip must be expressed in the frame of the monitored map.
+# $BOUNDS is the world-frame box; /shared_map and /leoN/map live in each
+# rover's own map frame, anchored at its spawn. Passing world bounds directly
+# misplaced the clip box and truncated every historical coverage number at
+# ~181 m2 while the maps were actually complete.
+BOUNDS_LEO1=$("$PYBIN" "$ROOT/src/leo_rover_gazebo/launch/spawn_poses.py" "$WORLD" leo1 2>/dev/null | tr ',' ' ')
+[[ -z "$BOUNDS_LEO1" ]] && BOUNDS_LEO1="$BOUNDS"
+in_sim_bg "exec python3 /ros2_ws/scripts/map_coverage.py 15 $BOUNDS_LEO1 $COV_TOPIC > /ros2_ws/$OUT/coverage.log 2>&1"
 in_sim_bg "exec python3 /ros2_ws/scripts/traj_recorder.py $ROBOTS /ros2_ws/$OUT/traj.csv 2.0 $TRAJ_FRAME > /ros2_ws/$OUT/traj.log 2>&1"
 # Per-rover coverage and trajectory in each rover's OWN map frame, always.
 # The two monitors above both depend on the shared frame: /shared_map does not
@@ -385,7 +454,9 @@ in_sim_bg "exec python3 /ros2_ws/scripts/traj_recorder.py $ROBOTS /ros2_ws/$OUT/
 # whose alignment fails must still leave evidence of what each rover did.
 for i in $(seq 1 "$NUM_ROBOTS"); do
   ns="leo$i"
-  in_sim_bg "exec python3 /ros2_ws/scripts/map_coverage.py 15 $BOUNDS /$ns/map > /ros2_ws/$OUT/coverage_$ns.log 2>&1"
+  BOUNDS_NS=$("$PYBIN" "$ROOT/src/leo_rover_gazebo/launch/spawn_poses.py" "$WORLD" "$ns" 2>/dev/null | tr ',' ' ')
+  [[ -z "$BOUNDS_NS" ]] && BOUNDS_NS="$BOUNDS"
+  in_sim_bg "exec python3 /ros2_ws/scripts/map_coverage.py 15 $BOUNDS_NS /$ns/map > /ros2_ws/$OUT/coverage_$ns.log 2>&1"
   in_sim_bg "exec python3 /ros2_ws/scripts/traj_recorder.py $ns /ros2_ws/$OUT/traj_$ns.csv 2.0 $ns/map > /ros2_ws/$OUT/traj_$ns.log 2>&1"
 done
 # map_recorder.py subscribes to a hardcoded /map, which does not exist in
@@ -414,7 +485,7 @@ SHARED_TOPIC=""
 [[ "$EXPLORE_MODE" == "coordinated" && "$NUM_ROBOTS" -eq 2 ]] && SHARED_TOPIC="/shared_map"
 # Distributed: every explorer consumes its OWN rover's merged map.
 [[ -n "${DISTRIBUTED:-}" && -n "$SHARED_TOPIC" ]] && SHARED_TOPIC="per_robot"
-CMD "explore: ros2 launch leo_rover_exploration collab_explore.launch.py num_robots:=$NUM_ROBOTS coordination_mode:=$EXPLORE_MODE common_frame:=leo1/map ${SHARED_TOPIC:+shared_map_topic:=$SHARED_TOPIC}"
+CMD "explore: ros2 launch leo_rover_exploration collab_explore.launch.py num_robots:=$NUM_ROBOTS coordination_mode:=$EXPLORE_MODE common_frame:=leo1/map map_save_dir:=/ros2_ws/$OUT ${SHARED_TOPIC:+shared_map_topic:=$SHARED_TOPIC}"
 # Per-rover world extent, so frontier detection stops chasing cells outside
 # the building. Same source as the spawn poses, so they cannot drift apart.
 L1B="$("$PYBIN" "$ROOT/src/leo_rover_gazebo/launch/spawn_poses.py" "$WORLD" leo1 2>/dev/null || true)"
@@ -423,6 +494,7 @@ LOG "  frontier bounds: leo1 [$L1B] leo2 [$L2B]"
 in_sim_bg "exec ros2 launch leo_rover_exploration collab_explore.launch.py \
   num_robots:=$NUM_ROBOTS coordination_mode:=$EXPLORE_MODE \
   common_frame:=leo1/map leo1_bounds:=$L1B leo2_bounds:=$L2B \
+  map_save_dir:=/ros2_ws/$OUT \
   ${SHARED_TOPIC:+shared_map_topic:=$SHARED_TOPIC} \
   > /ros2_ws/$OUT/explorer.log 2>&1"
 
@@ -449,9 +521,9 @@ while [[ $(date +%s) -lt $deadline ]]; do
   sleep_for=60
   (( remaining < sleep_for )) && sleep_for=$remaining
   sleep "$sleep_for"
-  if ! docker ps --format '{{.Names}}' | grep -qx leo_sim; then
+  if ! docker ps --format '{{.Names}}' | grep -qx "$CONTAINER_NAME"; then
     LOG "FATAL: container died mid-run"
-    docker logs --tail 100 leo_sim >>"$ROOT/$OUT/run.log" 2>&1 || true
+    docker logs --tail 100 "$CONTAINER_NAME" >>"$ROOT/$OUT/run.log" 2>&1 || true
     exit 1
   fi
   # Gazebo's headless server has segfaulted inside the WSL D3D12 driver
@@ -464,7 +536,7 @@ while [[ $(date +%s) -lt $deadline ]]; do
     stalls=$((stalls + 1))
     if [[ "$stalls" -ge 2 ]]; then
       LOG "FATAL: sim time frozen at ${sim_t}s for 2 polls - Gazebo is dead."
-      docker logs --tail 40 leo_sim 2>&1 | grep -iE "d3d12|segmentation|process has died"         | tail -10 | tee -a "$ROOT/$OUT/run.log" || true
+      docker logs --tail 40 "$CONTAINER_NAME" 2>&1 | grep -iE "d3d12|segmentation|process has died"         | tail -10 | tee -a "$ROOT/$OUT/run.log" || true
       gz_dead=1
       break
     fi
@@ -532,6 +604,8 @@ if [[ "$NUM_ROBOTS" -eq 2 ]]; then
   LOG "saving merged map (/shared_map, VOLATILE-compatible saver)"
   in_sim "python3 /ros2_ws/scripts/save_map_volatile.py /shared_map /ros2_ws/$OUT/merged_map 30" \
     > "$ROOT/$OUT/map_saver.log" 2>&1 || LOG "merged map not saved (see map_saver.log)"
+  in_sim "python3 /ros2_ws/scripts/save_map_volatile.py /shared_map_candidate /ros2_ws/$OUT/candidate_map 15" \
+    >> "$ROOT/$OUT/map_saver.log" 2>&1 || LOG "candidate preview map not saved"
   fi
 fi
 for i in $(seq 1 "$NUM_ROBOTS"); do
@@ -543,13 +617,27 @@ done
 
 # ---------- 13. media + teardown ----------
 LOG "flushing recorders"
-in_sim 'pkill -INT -f "merge_timelapse_recorder[.]py" || true; pkill -INT -f "map_coverage[.]py" || true; pkill -INT -f "traj_recorder[.]py" || true; pkill -INT -f "alignment_recorder[.]py" || true' || true
+in_sim 'pkill -INT -f "ros2 bag record" || true; pkill -INT -f "merge_timelapse_recorder[.]py" || true; pkill -INT -f "map_coverage[.]py" || true; pkill -INT -f "traj_recorder[.]py" || true; pkill -INT -f "alignment_recorder[.]py" || true' || true
 sleep 12
+
+LOG "validating rosbag metadata and replay topic inventory"
+if ! in_sim "test -s /ros2_ws/$OUT/bag/metadata.yaml && ros2 bag info /ros2_ws/$OUT/bag" \
+    > "$ROOT/$OUT/bag_info.txt" 2>&1; then
+  LOG "FATAL: rosbag did not close into a replayable recording"
+  RECORDING_OK=0
+else
+  RECORDING_OK=1
+fi
 
 # Render before the container stops: the ROS image also carries the known-good
 # matplotlib/OpenCV versions, so presentation artifacts do not depend on the
 # host Python environment.  A run that reaches the cap still gets reviewable
 # evidence rather than only raw logs.
+LOG "scoring occupancy residual of the accepted merge"
+"$PYBIN" "$ROOT/scripts/score_merge_geometry.py" "$ROOT/$OUT" \
+  | tee "$ROOT/$OUT/geometry_score.json" \
+  >> "$ROOT/$OUT/media.log" 2>&1 || LOG "WARNING: merge geometry still offset"
+
 LOG "rendering final maps, trajectories, curves and live-merge video"
 in_sim "python3 /ros2_ws/scripts/render_multirobot_media.py /ros2_ws/$OUT \
   --world $WORLD --title ${WORLD}_${MODE}" \
@@ -558,8 +646,13 @@ in_sim "python3 /ros2_ws/scripts/render_timelapse.py /ros2_ws/$OUT \
   --fps 6 --max-frames 200" \
   >> "$ROOT/$OUT/media.log" 2>&1 || LOG "WARNING: merge-video rendering failed"
 
-LOG "stopping the container"
-docker stop leo_sim >/dev/null 2>&1 || true
+# Dashboards are built once for the whole batch by
+# scripts/build_final_dashboard.py (see scripts/finalize_runs.sh);
+# the per-run HTML builders were removed.
+
+LOG "stopping $CONTAINER_NAME"
+docker stop "$CONTAINER_NAME" >/dev/null 2>&1 || true
 elapsed_wall=$(( $(date +%s) - RUN_STARTED_EPOCH ))
 LOG "done in ${elapsed_wall}s wall time -> $OUT"
+[[ "$RECORDING_OK" -eq 1 ]] || exit 4
 [[ -n "$finished" ]] || exit 3

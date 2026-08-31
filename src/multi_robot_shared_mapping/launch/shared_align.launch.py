@@ -65,7 +65,27 @@ def generate_launch_description():
             "map_transform_topic": "/vetted_transform/leo2_to_leo1",
             "confidence_topic": "/vetted_alignment_confidence",
             "min_alignment_confidence": min_conf,
+            # Consumed ONLY in alignment_mode 'fixed' (the known-relative-pose
+            # experimental condition): the true spawn offset, handed over.
+            "robot2_to_shared_x": ParameterValue(gt_x, value_type=float),
+            "robot2_to_shared_y": ParameterValue(gt_y, value_type=float),
+            "robot2_to_shared_yaw": ParameterValue(gt_yaw, value_type=float),
         }],
+    )
+
+    # Known-relative-pose condition: broadcast the true leo1/map -> leo2/map
+    # transform statically so coordination works from t=0 with no estimation.
+    fixed_alignment_tf = Node(
+        package="tf2_ros",
+        executable="static_transform_publisher",
+        name="fixed_alignment_tf",
+        arguments=[
+            "--x", gt_x, "--y", gt_y, "--yaw", gt_yaw,
+            "--frame-id", "leo1/map", "--child-frame-id", "leo2/map",
+        ],
+        parameters=[{"use_sim_time": use_sim_time}],
+        condition=IfCondition(PythonExpression(
+            ["'", alignment_mode, "' == 'fixed'"])),
     )
 
     tag_based_map_aligner = Node(
@@ -97,6 +117,7 @@ def generate_launch_description():
             "use_sim_time": use_sim_time,
             "alignment_mode": alignment_mode,
             "min_alignment_confidence": min_conf,
+            "accepted_confidence_topic": "/accepted_alignment_confidence",
         }],
         condition=IfCondition(PythonExpression([
             "'", cfg("enable_tag_alignment"), "' == 'true' or '",
@@ -116,15 +137,14 @@ def generate_launch_description():
             "parent_frame": "leo1/map",
             "child_frame": "leo2/map",
             "min_confidence": min_conf,
-            # require_tag_evidence was the defense against the OLD global
-            # grid matcher, which locked confident 180-degree flips. In
-            # markerfree mode the aligner's own margin abstention is that
-            # defense (benchmarked: zero confident-wrong on 10 pairs), and
-            # there are no tags by construction -- keeping the tag gate on
-            # would make marker-free locking impossible.
-            "require_tag_evidence": ParameterValue(
-                PythonExpression(["'", alignment_mode, "' != 'markerfree'"]),
-                value_type=bool),
+            "confidence_topic": "/accepted_alignment_confidence",
+            "require_primary_for_lock": True,
+            # The aligner now abstains on ambiguous grid modes and requires
+            # full-resolution geometry validation. Markers can break a tie
+            # between those modes, but noisy marker SLAM must not veto a
+            # distinctive occupancy alignment or become its refinement seed.
+            "require_tag_evidence": False,
+            "require_agreement": False,
         }],
         condition=IfCondition(cfg("enable_alignment_tf")),
     )
@@ -138,6 +158,7 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
+        fixed_alignment_tf,
         DeclareLaunchArgument("use_sim_time", default_value="true"),
         # fixed | tag | map | hybrid. Never 'fixed' for an honest run.
         DeclareLaunchArgument("alignment_mode", default_value="hybrid"),

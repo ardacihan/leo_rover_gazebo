@@ -153,6 +153,8 @@ class _Track:
         # running mean gives a clean number to check extrinsics against.
         self.best_range = float('inf')
         self.best_pos = None
+        # Consecutive samples rejected as too far from the running mean.
+        self.outliers = 0
 
 
 class ArucoDetector(Node):
@@ -171,8 +173,12 @@ class ArucoDetector(Node):
         p('dictionary', 'DICT_4X4_50')
         p('marker_length', 0.15)          # side of the black square, metres
         p('max_range', 6.0)               # beyond this the pose is not trusted
-        p('min_marker_px', 18.0)          # smaller than this -> ignore
-        p('max_reprojection_error_px', 4.0)
+        p('max_update_jump_m', 1.5)       # confirmed marker: reject far samples
+        # A marker under ~22 px or with a sloppy PnP fit contributes more
+        # noise than signal to the registry; tightened 18->22 px and
+        # 4.0->3.0 px after the 2026-08-30 accuracy pass.
+        p('min_marker_px', 22.0)          # smaller than this -> ignore
+        p('max_reprojection_error_px', 3.0)
         p('min_hits', 3)                  # sightings before a marker is trusted
         # Ids you actually put on the wall. Anything else is rejected outright.
         # DICT_4X4_50 has weak error correction and office scenes are full of
@@ -204,6 +210,7 @@ class ArucoDetector(Node):
         self.map_frame = g('map_frame')
         self.marker_length = float(g('marker_length'))
         self.max_range = float(g('max_range'))
+        self.max_update_jump = float(g('max_update_jump_m'))
         self.min_marker_px = float(g('min_marker_px'))
         self.max_reproj = float(g('max_reprojection_error_px'))
         self.min_hits = int(g('min_hits'))
@@ -363,6 +370,26 @@ class ArucoDetector(Node):
 
         with self.lock:
             tr = self.tracks.setdefault(mid, _Track())
+            # A confirmed wall marker is static. A new sample far from the
+            # running mean is either a SLAM pose excursion or a misread id,
+            # and at close range its weight would wreck the average (observed:
+            # one drift episode put a marker 14 m off). Reject it - unless
+            # rejections persist and agree, in which case the map itself
+            # moved (relocalization) and the track restarts from scratch.
+            if tr.confirmed:
+                jump = float(np.linalg.norm(map_pos[:2] - tr.pos[:2]))
+                if jump > self.max_update_jump:
+                    tr.outliers += 1
+                    if tr.outliers >= 8:
+                        self.get_logger().warn(
+                            f'ArUco {mid}: {tr.outliers} consecutive samples '
+                            f'~{jump:.1f} m from the confirmed position - '
+                            f'restarting the track')
+                        tr.__init__()
+                    else:
+                        return None
+                else:
+                    tr.outliers = 0
             tr.hits += 1
             # A wall marker is static, so averaging across frames beats
             # single-frame corner noise -- but only if near sightings dominate.
